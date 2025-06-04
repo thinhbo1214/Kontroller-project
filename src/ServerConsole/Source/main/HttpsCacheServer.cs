@@ -7,13 +7,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerConsole
+namespace ServerConsole.Source.main
 {
-    class HttpsCacheServer : NetCoreServer.HttpsServer
+    class HttpsCacheServer : HttpsServer
     {
         public HttpsCacheServer(SslContext context, IPAddress address, int port) : base(context, address, port) { }
 
-        protected override SslSession CreateSession() { return new HttpsCacheSession(this); }
+        protected override SslSession CreateSession() { return new HttpsSessionController(this); }
 
         protected override void OnError(SocketError error)
         {
