@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API Cache Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Test HTTP Cache Server API</h1>
+
+    <div class="section">
+      <h2>GET Cache Value</h2>
+      <input type="text" id="getKey" placeholder="Enter key to GET" />
+      <button onclick="getCacheValue()">GET</button>
+    </div>
+
+    <div class="section">
+      <h2>POST/PUT Cache Value</h2>
+      <input type="text" id="putKey" placeholder="Enter key" />
+      <textarea id="putValue" placeholder="Enter value"></textarea>
+      <button onclick="putCacheValue()">POST/PUT</button>
+    </div>
+
+    <div class="section">
+      <h2>DELETE Cache Value</h2>
+      <input type="text" id="deleteKey" placeholder="Enter key to DELETE" />
+      <button onclick="deleteCacheValue()">DELETE</button>
+    </div>
+
+    <div class="section">
+      <h2>Response</h2>
+      <pre id="response"></pre>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
