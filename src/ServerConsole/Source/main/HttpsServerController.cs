@@ -1,4 +1,4 @@
-﻿using NetCoreServer;
+﻿using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ServerConsole.Source.main
 {
-    class HttpsCacheServer : HttpsServer
+    class HttpsServerController : HttpsServer
     {
-        public HttpsCacheServer(SslContext context, IPAddress address, int port) : base(context, address, port) { }
+        public HttpsServerController(SslContext context, IPAddress address, int port) : base(context, address, port) { }
 
         protected override SslSession CreateSession() { return new HttpsSessionController(this); }
 

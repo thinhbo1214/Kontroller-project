@@ -15,6 +15,7 @@ namespace ServerConsole.Source.extra
             handlers = new List<IHttpsHandler>()
             {
                 new CacheHandler(),
+                new LoginHandler(),
                 // Thêm các handler khác ở đây
             };
         }

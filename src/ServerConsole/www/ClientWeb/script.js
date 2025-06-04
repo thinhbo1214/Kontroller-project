@@ -1,13 +1,48 @@
-const apiBase = '/api/cache';
+const apiBaseCache = '/api/cache';
+const apiBaseLogin = '/api/login';
 
 function showResponse(text) {
   const pre = document.getElementById('response');
   pre.textContent = text;
 }
 
+async function login() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!username || !password) {
+    alert('Username and password are required!');
+    return;
+  }
+
+  const payload = { username, password };
+
+  try {
+    const res = await fetch(apiBaseLogin, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      showResponse(`Login failed: ${res.status} ${await res.text()}`);
+      return;
+    }
+
+    // Giả sử server trả về JSON token hoặc thông báo
+    const data = await res.json();
+    showResponse('Login success:\n' + JSON.stringify(data, null, 2));
+  } catch (err) {
+    showResponse('Request failed: ' + err.message);
+  }
+}
+
+// Các hàm cache hiện tại, chỉ đổi tên apiBase thành apiBaseCache
 async function getCacheValue() {
   const key = document.getElementById('getKey').value.trim();
-  let url = apiBase;
+  let url = apiBaseCache;
   if (key) {
     url += '?key=' + encodeURIComponent(key);
   }
@@ -42,8 +77,8 @@ async function putCacheValue() {
   }
 
   try {
-    const res = await fetch(apiBase + '?key=' + encodeURIComponent(key), {
-      method: 'POST', // or 'PUT' if you want to test PUT
+    const res = await fetch(apiBaseCache + '?key=' + encodeURIComponent(key), {
+      method: 'POST',
       headers: {
         'Content-Type': 'text/plain'
       },
@@ -67,7 +102,7 @@ async function deleteCacheValue() {
   }
 
   try {
-    const res = await fetch(apiBase + '?key=' + encodeURIComponent(key), {
+    const res = await fetch(apiBaseCache + '?key=' + encodeURIComponent(key), {
       method: 'DELETE'
     });
     if (!res.ok) {

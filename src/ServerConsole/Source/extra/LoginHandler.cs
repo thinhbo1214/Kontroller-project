@@ -4,18 +4,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+
 
 namespace ServerConsole.Source.extra
 {
-    internal class LoginHandler //: IHttpsHandler
+    internal class LoginHandler : HttpsHandlerBase
     {
-        public string Type => "/api/login";
-        public string DecodKeyValue(string key) => ((IHttpsHandler)this).DecodKeyValue(key);
-        public void Handle(HttpRequest request, HttpsSession session)
+        public class LoginRequest
         {
-            var rawKey = request.Url; 
-            var decodedKey = DecodKeyValue(rawKey);
-            Console.WriteLine($"Decoded login key: {decodedKey}");
+            public string username { get; set; }
+            public string password { get; set; }
+            public LoginRequest()
+            {
+                username = "";
+                password = "";
+            }
+        }
+        public override string Type => "/api/login";
+
+        public override void Handle(HttpRequest request, HttpsSession session)
+        {
+            var value = request.Body;
+            if (string.IsNullOrEmpty(value))
+            {
+                // Xử lý khi body rỗng hoặc null
+                Console.WriteLine("Request body is empty.");
+            }
+            else
+            {
+                LoginRequest? loginReq = JsonSerializer.Deserialize<LoginRequest>(value);
+                if (loginReq == null)
+                {
+                    // Xử lý khi deserialize thất bại
+                    Console.WriteLine("Deserialize JSON failed.");
+                    // Có thể trả về lỗi HTTP hoặc xử lý khác
+                    return;
+                }
+                // Xử lý tiếp với loginReq đã chắc chắn không null
+                Console.WriteLine($"Username: {loginReq.username}");
+
+                Console.WriteLine($"Password: {loginReq.password}");
+                Console.WriteLine("Login successfully");
+            }
         }
 
     }

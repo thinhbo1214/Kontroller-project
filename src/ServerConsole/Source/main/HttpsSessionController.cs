@@ -1,5 +1,5 @@
-﻿using NetCoreServer;
-using ServerConsole.Source.extra;
+﻿using ServerConsole.Source.extra;
+using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
