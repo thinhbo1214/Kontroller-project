@@ -1,0 +1,8 @@
+.vs
+bin
+NetCoreServer
+obj
+tools
+www
+ServerConsole.sln
+ServerConsole.csproj
