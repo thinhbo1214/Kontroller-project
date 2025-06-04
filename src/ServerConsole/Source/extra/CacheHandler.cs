@@ -1,0 +1,111 @@
+﻿using NetCoreServer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ServerConsole.Source.extra
+{
+    internal class CacheHandler : IHttpsHandler
+    {
+        public string Type => "/api/cache";
+        public void Handle(HttpRequest request, HttpsSession session)
+        {
+            switch(request.Method.ToUpper())
+            {
+                case "HEAD":
+                    HeadHandle(session); break;
+                case "GET":
+                    GetHandle(request, session); break;
+                case "POST":
+                    PostHandle(request, session); break;
+                case "PUT":
+                    PutHandle(request, session); break;
+                case "DELETE":
+                    DeleteHandle(request, session); break;
+                case "OPTION":
+                    ((IHttpsHandler)this).OptionsHandle(request, session); break;
+                case "TRACE":
+                    ((IHttpsHandler)this).TraceHandle(request, session); break;
+                default:
+                    ((IHttpsHandler)this).ErrorHandle(request, session); break;
+            }
+        }
+        public void HeadHandle(HttpsSession session)
+        {
+            session.SendResponseAsync(session.Response.MakeHeadResponse());
+        }
+        public void GetHandle(HttpRequest request, HttpsSession session)
+        {
+            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+
+            if (string.IsNullOrEmpty(key))
+            {
+                // Response with all cache values
+                session.SendResponseAsync(session.Response.MakeGetResponse(CommonCache.GetInstance().GetAllCache(), "application/json; charset=UTF-8"));
+            }
+            // Get the cache value by the given key
+            else if (CommonCache.GetInstance().GetCacheValue(key, out var value))
+            {
+                // Response with the cache value
+                session.SendResponseAsync(session.Response.MakeGetResponse(value));
+            }
+            else if (DatabaseManager.TryGetFile(key, out var fileContent))
+            {
+                // Nếu file tồn tại trong máy chủ, đưa vào cache rồi trả ra
+                CommonCache.GetInstance().PutCacheValue(key, fileContent);
+                session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
+            }
+            else
+                session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Required cache value was not found for the key: " + key));
+
+        }
+        public void PostHandle(HttpRequest request, HttpsSession session)
+        {
+            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+            var value = request.Body;
+
+            // Put the cache value
+            CommonCache.GetInstance().PutCacheValue(key, value);
+
+            // Lưu vào ổ đĩa
+            DatabaseManager.SaveFile(key, value);
+
+            // Response with the cache value
+            session.SendResponseAsync(session.Response.MakeOkResponse());
+        }
+        public void PutHandle(HttpRequest request, HttpsSession session)
+        {
+            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+            var value = request.Body;
+
+            // Put the cache value
+            CommonCache.GetInstance().PutCacheValue(key, value);
+
+            // Lưu vào ổ đĩa
+            DatabaseManager.SaveFile(key, value);
+
+            // Response with the cache value
+            session.SendResponseAsync(session.Response.MakeOkResponse());
+        }
+        public void DeleteHandle(HttpRequest request, HttpsSession session)
+        {
+            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+
+            // Delete the cache value
+            if (CommonCache.GetInstance().DeleteCacheValue(key, out var value))
+            {
+                DatabaseManager.DeleteFile(key, out _); // xóa luôn file gốc
+                                                        // Response with the cache value
+                session.SendResponseAsync(session.Response.MakeGetResponse(value));
+            }
+            else if (DatabaseManager.DeleteFile(key, out var fileContent))
+            {
+                session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
+            }
+            else
+                session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Deleted cache value was not found for the key: " + key));
+        }
+    }
+}

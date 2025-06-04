@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 
-namespace ServerConsole
+namespace ServerConsole.Source.main
 {
     class Server
     {

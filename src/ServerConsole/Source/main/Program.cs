@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerConsole
+namespace ServerConsole.Source.main
 {
     class Program
     {
@@ -16,9 +16,7 @@ namespace ServerConsole
         {
             var server = new Server();
 
-            server.Run();
-
-            
+            server.Run();           
         }
     }
 }
