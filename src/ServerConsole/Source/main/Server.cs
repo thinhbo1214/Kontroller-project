@@ -1,4 +1,4 @@
-﻿using NetCoreServer;
+﻿using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Concurrent;
 using System.Net;
@@ -17,7 +17,7 @@ namespace ServerConsole.Source.main
         int port;
         string www;
         SslContext context;
-        HttpsCacheServer server;
+        HttpsServerController server;
 
         public Server()
         {
@@ -34,7 +34,7 @@ namespace ServerConsole.Source.main
             context = new SslContext(SslProtocols.Tls13, new X509Certificate2(certificate, password));
 
             // Create a new HTTP server
-            server = new HttpsCacheServer(context, IPAddress.Any, port);
+            server = new HttpsServerController(context, IPAddress.Any, port);
             server.AddStaticContent(www, "/api");
         }
 

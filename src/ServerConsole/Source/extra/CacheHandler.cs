@@ -7,38 +7,17 @@ using System.Threading.Tasks;
 
 namespace ServerConsole.Source.extra
 {
-    internal class CacheHandler : IHttpsHandler
+    internal class CacheHandler : HttpsHandlerBase
     {
-        public string Type => "/api/cache";
-        public void Handle(HttpRequest request, HttpsSession session)
-        {
-            switch(request.Method.ToUpper())
-            {
-                case "HEAD":
-                    HeadHandle(session); break;
-                case "GET":
-                    GetHandle(request, session); break;
-                case "POST":
-                    PostHandle(request, session); break;
-                case "PUT":
-                    PutHandle(request, session); break;
-                case "DELETE":
-                    DeleteHandle(request, session); break;
-                case "OPTION":
-                    ((IHttpsHandler)this).OptionsHandle(request, session); break;
-                case "TRACE":
-                    ((IHttpsHandler)this).TraceHandle(request, session); break;
-                default:
-                    ((IHttpsHandler)this).ErrorHandle(request, session); break;
-            }
-        }
-        public void HeadHandle(HttpsSession session)
+        public override string Type => "/api/cache";
+
+        public override void HeadHandle(HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeHeadResponse());
         }
-        public void GetHandle(HttpRequest request, HttpsSession session)
+        public override void GetHandle(HttpRequest request, HttpsSession session)
         {
-            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+            var key = DecodKeyValue(request.Url);
 
             if (string.IsNullOrEmpty(key))
             {
@@ -61,9 +40,9 @@ namespace ServerConsole.Source.extra
                 session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Required cache value was not found for the key: " + key));
 
         }
-        public void PostHandle(HttpRequest request, HttpsSession session)
+        public override void PostHandle(HttpRequest request, HttpsSession session)
         {
-            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+            var key = DecodKeyValue(request.Url);
             var value = request.Body;
 
             // Put the cache value
@@ -75,9 +54,9 @@ namespace ServerConsole.Source.extra
             // Response with the cache value
             session.SendResponseAsync(session.Response.MakeOkResponse());
         }
-        public void PutHandle(HttpRequest request, HttpsSession session)
+        public override void PutHandle(HttpRequest request, HttpsSession session)
         {
-            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+            var key = DecodKeyValue(request.Url);
             var value = request.Body;
 
             // Put the cache value
@@ -89,9 +68,9 @@ namespace ServerConsole.Source.extra
             // Response with the cache value
             session.SendResponseAsync(session.Response.MakeOkResponse());
         }
-        public void DeleteHandle(HttpRequest request, HttpsSession session)
+        public override void DeleteHandle(HttpRequest request, HttpsSession session)
         {
-            var key = ((IHttpsHandler)this).DecodKeyValue(request.Url);
+            var key = DecodKeyValue(request.Url);
 
             // Delete the cache value
             if (CommonCache.GetInstance().DeleteCacheValue(key, out var value))
