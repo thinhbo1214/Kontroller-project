@@ -7,15 +7,16 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
+using static ServerConsole.Source.Core.Simulation;
+using ServerConsole.Source.Core;
+using ServerConsole.Source.Event;
 
 namespace ServerConsole.Source.main
 {
     class HttpsSessionController : HttpsSession
     {
-        private readonly HttpsHandlerFactory handlerFactory;
         public HttpsSessionController(HttpsServer server) : base(server)
         {
-            handlerFactory = new HttpsHandlerFactory();
 
         }
 
@@ -25,14 +26,10 @@ namespace ServerConsole.Source.main
             Console.WriteLine(request);
             //Console.WriteLine($"Request {request.Method} {request.Url}");
 
-            var handler = handlerFactory.GetHandler(request.Url);
-
-            if (handler != null)
-            {
-                handler.Handle(request, this);
-            }
-            else
-                SendResponseAsync(Response.MakeErrorResponse(404, "Unknown API route"));
+            // Lập lịch sự kiện
+            var ev = Schedule<APIEvent>(0.25f);
+            ev.request = new HttpRequestCopy(request);
+            ev.session = this;
 
         }
 
