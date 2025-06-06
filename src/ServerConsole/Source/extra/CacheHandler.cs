@@ -1,4 +1,5 @@
-﻿using NetCoreServer;
+﻿using ServerConsole.Source.Event;
+using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,12 @@ namespace ServerConsole.Source.extra
                 // Response with the cache value
                 session.SendResponseAsync(session.Response.MakeGetResponse(value));
             }
-            else if (DatabaseManager.TryGetFile(key, out var fileContent))
-            {
-                // Nếu file tồn tại trong máy chủ, đưa vào cache rồi trả ra
-                CommonCache.GetInstance().PutCacheValue(key, fileContent);
-                session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
-            }
+            //else if (DatabaseManager.TryGetFile(key, out var fileContent))
+            //{
+            //    // Nếu file tồn tại trong máy chủ, đưa vào cache rồi trả ra
+            //    CommonCache.GetInstance().PutCacheValue(key, fileContent);
+            //    session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
+            //}
             else
                 session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Required cache value was not found for the key: " + key));
 
@@ -49,7 +50,7 @@ namespace ServerConsole.Source.extra
             CommonCache.GetInstance().PutCacheValue(key, value);
 
             // Lưu vào ổ đĩa
-            DatabaseManager.SaveFile(key, value);
+            //DatabaseManager.SaveFile(key, value);
 
             // Response with the cache value
             session.SendResponseAsync(session.Response.MakeOkResponse());
@@ -63,7 +64,7 @@ namespace ServerConsole.Source.extra
             CommonCache.GetInstance().PutCacheValue(key, value);
 
             // Lưu vào ổ đĩa
-            DatabaseManager.SaveFile(key, value);
+            //DatabaseManager.SaveFile(key, value);
 
             // Response with the cache value
             session.SendResponseAsync(session.Response.MakeOkResponse());
@@ -75,14 +76,14 @@ namespace ServerConsole.Source.extra
             // Delete the cache value
             if (CommonCache.GetInstance().DeleteCacheValue(key, out var value))
             {
-                DatabaseManager.DeleteFile(key, out _); // xóa luôn file gốc
+                //DatabaseManager.DeleteFile(key, out _); // xóa luôn file gốc
                                                         // Response with the cache value
                 session.SendResponseAsync(session.Response.MakeGetResponse(value));
             }
-            else if (DatabaseManager.DeleteFile(key, out var fileContent))
-            {
-                session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
-            }
+            //else if (DatabaseManager.DeleteFile(key, out var fileContent))
+            //{
+            //    session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
+            //}
             else
                 session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Deleted cache value was not found for the key: " + key));
         }

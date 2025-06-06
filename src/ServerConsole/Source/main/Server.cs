@@ -1,4 +1,5 @@
-﻿using ServerConsole.Source.NetCoreServer;
+﻿using ServerConsole.Source.Core;
+using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Concurrent;
 using System.Net;
@@ -18,6 +19,7 @@ namespace ServerConsole.Source.main
         string www;
         SslContext context;
         HttpsServerController server;
+        volatile bool running = true;
 
         public Server()
         {
@@ -46,12 +48,23 @@ namespace ServerConsole.Source.main
 
             Console.WriteLine();
 
+            Task simulationTask = Task.Run(() =>
+            {
+                while (running)
+                {
+                    Simulation.Tick();
+                    Thread.Sleep(10);
+                }
+            });
+
             // Start the server
             Console.Write("Server starting...");
             server.Start();
             Console.WriteLine("Done!");
 
             Console.WriteLine("Press Enter to stop the server or '!' to restart the server...");
+
+
 
             // Perform text input
             for (; ; )
@@ -72,6 +85,8 @@ namespace ServerConsole.Source.main
             // Stop the server
             Console.Write("Server stopping...");
             server.Stop();
+            running = false;
+            simulationTask.Wait();
             Console.WriteLine("Done!");
         }
     }
