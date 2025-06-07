@@ -1,9 +1,10 @@
-﻿using NetCoreServer;
+﻿using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServerConsole.Source.extra
 {
@@ -22,8 +23,12 @@ namespace ServerConsole.Source.extra
         public virtual bool CanHandle(string path) => path.StartsWith(Type, StringComparison.OrdinalIgnoreCase);
         public virtual void Handle(HttpRequest request, HttpsSession session) 
         {
+            Console.WriteLine("%");
+            Console.WriteLine($"Request handling:");
+            Console.WriteLine("%");
             switch (request.Method.ToUpper())
             {
+                
                 case "HEAD":
                     HeadHandle(session); break;
                 case "GET":
