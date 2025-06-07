@@ -1,11 +1,12 @@
-﻿using NetCoreServer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
-
+using ServerConsole.Source.NetCoreServer;
+using ServerConsole.Source.Core;
+using ServerConsole.Source.Event;
 
 namespace ServerConsole.Source.extra
 {
@@ -30,6 +31,7 @@ namespace ServerConsole.Source.extra
             {
                 // Xử lý khi body rỗng hoặc null
                 Console.WriteLine("Request body is empty.");
+                session.SendResponseAsync(session.Response.MakeErrorResponse(400, "Request body is empty."));
             }
             else
             {
@@ -46,6 +48,7 @@ namespace ServerConsole.Source.extra
 
                 Console.WriteLine($"Password: {loginReq.password}");
                 Console.WriteLine("Login successfully");
+                session.SendResponseAsync(session.Response.MakeOkResponse());
             }
         }
 
