@@ -8,4 +8,4 @@
 
 - **Link slack**: https://app.slack.com/client/T0MAPCD1U/C08UMQVFD3J
   
-- **Link drive**: ...
+- **Link drive**: https://drive.google.com/drive/folders/18bmKYSihVVwWoHVmZzj2F0dnmUuyPx8G?usp=drive_link
