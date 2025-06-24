@@ -1,4 +1,5 @@
 ﻿using ServerConsole.Source.Event;
+using ServerConsole.Source.Extra;
 using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerConsole.Source.extra
+namespace ServerConsole.Source.Handler
 {
-    internal class CacheHandler : HttpsHandlerBase
+    internal class APICacheHandler : HandlerBase
     {
         public override string Type => "/api/cache";
 

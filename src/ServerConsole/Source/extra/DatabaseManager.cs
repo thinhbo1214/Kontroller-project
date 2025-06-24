@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
 
-namespace ServerConsole.Source.extra
+namespace ServerConsole.Source.Extra
 {
     public class DatabaseManager : IDisposable
     {

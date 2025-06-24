@@ -1,4 +1,4 @@
-﻿using ServerConsole.Source.extra;
+﻿using ServerConsole.Source.Extra;
 using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -11,11 +11,11 @@ using static ServerConsole.Source.Core.Simulation;
 using ServerConsole.Source.Core;
 using ServerConsole.Source.Event;
 
-namespace ServerConsole.Source.main
+namespace ServerConsole.Source.MainApp
 {
-    class HttpsSessionController : HttpsSession
+    class SessionController : HttpsSession
     {
-        public HttpsSessionController(HttpsServer server) : base(server)
+        public SessionController(HttpsServer server) : base(server)
         {
 
         }

@@ -7,10 +7,11 @@ using System.Text.Json;
 using ServerConsole.Source.NetCoreServer;
 using ServerConsole.Source.Core;
 using ServerConsole.Source.Event;
+using ServerConsole.Source.Extra;
 
-namespace ServerConsole.Source.extra
+namespace ServerConsole.Source.Handler
 {
-    internal class LoginHandler : HttpsHandlerBase
+    internal class APILoginHandler : HandlerBase
     {
         public class LoginRequest
         {
