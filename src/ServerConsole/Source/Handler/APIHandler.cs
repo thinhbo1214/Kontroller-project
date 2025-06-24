@@ -1,26 +1,27 @@
 ﻿using ServerConsole.Source.Core;
 using ServerConsole.Source.Event;
+using ServerConsole.Source.Interface;
 using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using static ServerConsole.Source.Core.Simulation;
 
-namespace ServerConsole.Source.extra
+namespace ServerConsole.Source.Handler
 {
     internal class APIHandler
     {
-        private readonly static List<IHttpsHandler> handlers = new()
+        private readonly static List<IHandler> handlers = new()
         {
-            Simulation.GetModel<CacheHandler>(),
-            Simulation.GetModel<LoginHandler>(),
+            GetModel<APICacheHandler>(),
+            GetModel<APILoginHandler>(),
         };
 
         // Trả về IApiEvent thay vì Event gốc
         private readonly static Dictionary<Type, Func<IApiEvent>> handlerEventMap = new()
         {
-            { typeof(CacheHandler), () => Schedule<CacheHandleEvent>(0.25f) },
-            { typeof(LoginHandler), () => Schedule<LoginHandlerEvent>(0.25f) }
+            { typeof(APICacheHandler), () => Schedule<CacheEvent>(0.25f) },
+            { typeof(APILoginHandler), () => Schedule<APILoginEvent>(0.25f) }
         };
 
         public void Handle(HttpRequest request, HttpsSession session)

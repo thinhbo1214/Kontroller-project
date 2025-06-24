@@ -1,5 +1,7 @@
-﻿using ServerConsole.Source.Core;
-using ServerConsole.Source.extra;
+﻿using ServerConsole.Source.Handler;
+using ServerConsole.Source.Core;
+using ServerConsole.Source.Extra;
+using ServerConsole.Source.Interface;
 using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ServerConsole.Source.Event
 {
-    public class LoginHandlerEvent : Simulation.Event<LoginHandlerEvent>, IApiEvent
+    public class APILoginEvent : Simulation.Event<APILoginEvent>, IApiEvent
     {
         public HttpRequest request { get; set; }
         public HttpsSession session { get; set; }
@@ -27,7 +29,7 @@ namespace ServerConsole.Source.Event
                         await ConcurrencyLimiter.Limiter.WaitAsync();
                         try
                         {
-                            Simulation.GetModel<LoginHandler>().Handle(request, session);
+                            Simulation.GetModel<APILoginHandler>().Handle(request, session);
                         }
                         finally
                         {

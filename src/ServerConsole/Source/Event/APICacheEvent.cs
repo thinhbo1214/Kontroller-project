@@ -1,5 +1,7 @@
-﻿using ServerConsole.Source.Core;
-using ServerConsole.Source.extra;
+﻿using ServerConsole.Source.Handler;
+using ServerConsole.Source.Core;
+using ServerConsole.Source.Extra;
+using ServerConsole.Source.Interface;
 using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ServerConsole.Source.Event
 {
-    internal class CacheHandleEvent : Simulation.Event<CacheHandleEvent>, IApiEvent
+    internal class CacheEvent : Simulation.Event<CacheEvent>, IApiEvent
     {
         public HttpRequest request { get; set; }
         public HttpsSession session { get; set; }
@@ -24,7 +26,7 @@ namespace ServerConsole.Source.Event
                     await ConcurrencyLimiter.Limiter.WaitAsync();
                     try
                     {
-                        Simulation.GetModel<CacheHandler>().Handle(request, session);
+                        Simulation.GetModel<APICacheHandler>().Handle(request, session);
                     }
                     finally
                     {

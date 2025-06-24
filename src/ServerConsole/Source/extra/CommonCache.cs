@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerConsole.Source.extra
+namespace ServerConsole.Source.Extra
 {
     class CommonCache
     {

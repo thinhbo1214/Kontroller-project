@@ -9,19 +9,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 
-namespace ServerConsole.Source.main
+namespace ServerConsole.Source.MainApp
 {
-    class Server
+    class ServerPresenter
     {
         string certificate;
         string password;
         int port;
         string www;
         SslContext context;
-        HttpsServerController server;
+        ServerController server;
         volatile bool running = true;
 
-        public Server()
+        public ServerPresenter()
         {
             certificate = Path.Combine(AppContext.BaseDirectory, @"..\..\..\tools\certificates\server.pfx");
             password = "qwerty";
@@ -36,7 +36,7 @@ namespace ServerConsole.Source.main
             context = new SslContext(SslProtocols.Tls13, new X509Certificate2(certificate, password));
 
             // Create a new HTTP server
-            server = new HttpsServerController(context, IPAddress.Any, port);
+            server = new ServerController(context, IPAddress.Any, port);
             server.AddStaticContent(www, "/api");
         }
 

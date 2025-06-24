@@ -1,4 +1,5 @@
-﻿using ServerConsole.Source.NetCoreServer;
+﻿using ServerConsole.Source.Interface;
+using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace ServerConsole.Source.extra
+namespace ServerConsole.Source.Extra
 {
-    public abstract class HttpsHandlerBase : IHttpsHandler
+    public abstract class HandlerBase : IHandler
     {
         public abstract string Type { get; }
         public virtual string DecodKeyValue(string key)
