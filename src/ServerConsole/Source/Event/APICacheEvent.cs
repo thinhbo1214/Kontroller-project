@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServerConsole.Source.Manager;
 
 namespace ServerConsole.Source.Event
 {
@@ -23,15 +24,19 @@ namespace ServerConsole.Source.Event
                 Task.Run(async () =>
                 {
                     // Đảm bảo đồng độ ko quá nhiều luồng
-                    await ConcurrencyLimiter.Limiter.WaitAsync();
+                    await Simulation.GetModel<SimulationManager>().Limiter.WaitAsync();
                     try
                     {
                         Simulation.GetModel<APICacheHandler>().Handle(request, session);
                     }
+                    catch (Exception ex)               
+                    {
+                        Simulation.GetModel<LogManager>().Log("Lỗi trong APICacheEvent: " + ex.ToString(), LogLevel.ERROR);
+                    }
                     finally
                     {
                         // Giải phóng luồng đã hoàn thành
-                        ConcurrencyLimiter.Limiter.Release();
+                        Simulation.GetModel<SimulationManager>().Limiter.Release();
                     }
                 });
 

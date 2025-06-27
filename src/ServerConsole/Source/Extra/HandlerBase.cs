@@ -24,12 +24,8 @@ namespace ServerConsole.Source.Extra
         public virtual bool CanHandle(string path) => path.StartsWith(Type, StringComparison.OrdinalIgnoreCase);
         public virtual void Handle(HttpRequest request, HttpsSession session) 
         {
-            Console.WriteLine("%");
-            Console.WriteLine($"Request handling:");
-            Console.WriteLine("%");
             switch (request.Method.ToUpper())
-            {
-                
+            { 
                 case "HEAD":
                     HeadHandle(session); break;
                 case "GET":
