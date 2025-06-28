@@ -1,6 +1,14 @@
 const apiBaseCache = '/api/cache';
 const apiBaseLogin = '/api/login';
 
+// ✅ Hàm wrapper cho fetch: luôn gửi kèm cookie (session)
+function fetchWithSession(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    credentials: 'include' // 👈 Tự động gửi + nhận cookie (sessionId)
+  });
+}
+
 function showResponse(text) {
   const pre = document.getElementById('response');
   pre.textContent = text;
@@ -18,7 +26,7 @@ async function login() {
   const payload = { username, password };
 
   try {
-    const res = await fetch(apiBaseLogin, {
+    const res = await fetchWithSession(apiBaseLogin, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -31,7 +39,6 @@ async function login() {
       return;
     }
 
-    // Giả sử server trả về JSON token hoặc thông báo
     const data = await res.json();
     showResponse('Login success:\n' + JSON.stringify(data, null, 2));
   } catch (err) {
@@ -39,7 +46,6 @@ async function login() {
   }
 }
 
-// Các hàm cache hiện tại, chỉ đổi tên apiBase thành apiBaseCache
 async function getCacheValue() {
   const key = document.getElementById('getKey').value.trim();
   let url = apiBaseCache;
@@ -48,11 +54,12 @@ async function getCacheValue() {
   }
 
   try {
-    const res = await fetch(url, { method: 'GET' });
+    const res = await fetchWithSession(url, { method: 'GET' });
     if (!res.ok) {
       showResponse(`Error ${res.status}: ${await res.text()}`);
       return;
     }
+
     const contentType = res.headers.get('content-type');
     let data;
     if (contentType && contentType.includes('application/json')) {
@@ -77,17 +84,19 @@ async function putCacheValue() {
   }
 
   try {
-    const res = await fetch(apiBaseCache + '?key=' + encodeURIComponent(key), {
+    const res = await fetchWithSession(apiBaseCache + '?key=' + encodeURIComponent(key), {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain'
       },
       body: value
     });
+
     if (!res.ok) {
       showResponse(`Error ${res.status}: ${await res.text()}`);
       return;
     }
+
     showResponse('Success: Value saved for key "' + key + '"');
   } catch (err) {
     showResponse('Request failed: ' + err.message);
@@ -102,13 +111,15 @@ async function deleteCacheValue() {
   }
 
   try {
-    const res = await fetch(apiBaseCache + '?key=' + encodeURIComponent(key), {
+    const res = await fetchWithSession(apiBaseCache + '?key=' + encodeURIComponent(key), {
       method: 'DELETE'
     });
+
     if (!res.ok) {
       showResponse(`Error ${res.status}: ${await res.text()}`);
       return;
     }
+
     const text = await res.text();
     showResponse('Deleted value: ' + text);
   } catch (err) {
