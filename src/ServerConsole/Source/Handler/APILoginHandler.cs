@@ -27,6 +27,7 @@ namespace ServerConsole.Source.Handler
 
         public override void Handle(HttpRequest request, HttpsSession session)
         {
+
             var value = request.Body;
             if (string.IsNullOrEmpty(value))
             {

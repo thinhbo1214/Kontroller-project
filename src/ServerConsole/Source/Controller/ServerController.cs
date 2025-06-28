@@ -1,4 +1,7 @@
-﻿using ServerConsole.Source.NetCoreServer;
+﻿using ServerConsole.Source.Core;
+using ServerConsole.Source.MainApp;
+using ServerConsole.Source.Manager;
+using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +10,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerConsole.Source.MainApp
+namespace ServerConsole.Source.Controller
 {
     class ServerController : HttpsServer
     {
@@ -17,7 +20,7 @@ namespace ServerConsole.Source.MainApp
 
         protected override void OnError(SocketError error)
         {
-            Console.WriteLine($"HTTPS server caught an error: {error}");
+            Simulation.GetModel<LogManager>().Log($"HTTPS server caught an error: {error}", LogLevel.ERROR);
         }
     }
 }

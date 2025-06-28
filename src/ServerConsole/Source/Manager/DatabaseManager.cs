@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
 
-namespace ServerConsole.Source.Extra
+namespace ServerConsole.Source.Manager
 {
-    public class DatabaseManager : IDisposable
+    public class DatabaseManager
     {
         private readonly string _basePath; // Nơi chứa thư mục gốc chứa file sql
         private readonly string _connectionString;
@@ -27,7 +27,11 @@ namespace ServerConsole.Source.Extra
             _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
-
+        public DatabaseManager()
+        {
+            _basePath = "D:/MyServerData";
+            _connectionString = "Server=localhost;Database=MyDatabase;Integrated Security=True;";
+        }
         /// <summary>
         /// Lấy câu lệnh SQL từ cache hoặc đọc file, hỗ trợ thư mục con (ví dụ "users/get_user_by_id")
         /// </summary>
@@ -209,10 +213,6 @@ namespace ServerConsole.Source.Extra
         /// <summary>
         /// Giải phóng tài nguyên
         /// </summary>
-        public void Dispose()
-        {
-            CloseConnection();
-        }
     }
 }
 

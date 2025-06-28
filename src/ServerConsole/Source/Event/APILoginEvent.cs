@@ -1,7 +1,8 @@
-﻿using ServerConsole.Source.Handler;
-using ServerConsole.Source.Core;
+﻿using ServerConsole.Source.Core;
 using ServerConsole.Source.Extra;
+using ServerConsole.Source.Handler;
 using ServerConsole.Source.Interface;
+using ServerConsole.Source.Manager;
 using ServerConsole.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -26,15 +27,19 @@ namespace ServerConsole.Source.Event
                     Task.Run(async () =>
                     {
                         // Đảm bảo đồng độ ko quá nhiều luồng
-                        await ConcurrencyLimiter.Limiter.WaitAsync();
+                        await Simulation.GetModel<SimulationManager>().Limiter.WaitAsync();
                         try
                         {
                             Simulation.GetModel<APILoginHandler>().Handle(request, session);
                         }
+                        catch (Exception ex)
+                        {
+                            Simulation.GetModel<LogManager>().Log("Lỗi trong APILoginEvent: " + ex.ToString(), LogLevel.ERROR);
+                        }
                         finally
                         {
                             // Giải phóng luồng đã hoàn thành
-                            ConcurrencyLimiter.Limiter.Release();
+                            Simulation.GetModel<SimulationManager>().Limiter.Release();
                         }
                     });
 
