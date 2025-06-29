@@ -51,7 +51,7 @@ namespace ServerConsole.Source.Presenter
 
             context = new SslContext(SslProtocols.Tls13, new X509Certificate2(certificate, password));
             server = new ServerController(context, IPAddress.Any, port);
-            server.AddStaticContent(www, "/api");
+            server.AddStaticContent(www);
 
             //Simulation.GetModel<LogManager>().Log($"HTTPS server website: https://localhost:{port}/api/index.html");
 
