@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ServerConsole.Source.Core;
+using ServerConsole.Source.Event;
+using ServerConsole.Source.Extra;
+using ServerConsole.Source.Manager;
+using ServerConsole.Source.NetCoreServer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using ServerConsole.Source.NetCoreServer;
-using ServerConsole.Source.Core;
-using ServerConsole.Source.Event;
-using ServerConsole.Source.Extra;
+using System.Threading.Tasks;
 
 namespace ServerConsole.Source.Handler
 {
@@ -27,31 +28,42 @@ namespace ServerConsole.Source.Handler
 
         public override void Handle(HttpRequest request, HttpsSession session)
         {
+            string? oldSessionId = CookieHelper.GetSession(request); // lấy sessionId cũ
+            string ip = (session.Socket.RemoteEndPoint as System.Net.IPEndPoint)?.Address.ToString() ?? "unknown";
+
+            var sessionManager = Simulation.GetModel<SessionManager>();
+
+            if (oldSessionId != null)
+            {
+                session.SendResponseAsync(session.Response.MakeOkResponse());
+                return;
+            }    
 
             var value = request.Body;
             if (string.IsNullOrEmpty(value))
             {
-                // Xử lý khi body rỗng hoặc null
-                Console.WriteLine("Request body is empty.");
                 session.SendResponseAsync(session.Response.MakeErrorResponse(400, "Request body is empty."));
+                return;
             }
-            else
-            {
-                LoginRequest? loginReq = JsonSerializer.Deserialize<LoginRequest>(value);
-                if (loginReq == null)
-                {
-                    // Xử lý khi deserialize thất bại
-                    Console.WriteLine("Deserialize JSON failed.");
-                    // Có thể trả về lỗi HTTP hoặc xử lý khác
-                    return;
-                }
-                // Xử lý tiếp với loginReq đã chắc chắn không null
-                Console.WriteLine($"Username: {loginReq.username}");
 
-                Console.WriteLine($"Password: {loginReq.password}");
-                Console.WriteLine("Login successfully");
-                session.SendResponseAsync(session.Response.MakeOkResponse());
+            var loginReq = JsonSerializer.Deserialize<LoginRequest>(value);
+            if (loginReq == null)
+            {
+                session.SendResponseAsync(session.Response.MakeErrorResponse(400, "Request body invalid."));
+                return;
             }
+
+            // TODO: kiểm tra username/password ở đây, ví dụ:
+            // if (!CheckLogin(loginReq.username, loginReq.password)) { ... }
+
+            // Đăng nhập thành công:
+            string newSessionId = Guid.NewGuid().ToString(); // sessionId mới
+            sessionManager.Store(newSessionId, 123, ip);         // lưu phiên
+
+            var response = session.Response.MakeOkResponse(); // phản hồi oke
+            CookieHelper.SetSession(response, newSessionId); // set cookie
+
+            session.SendResponseAsync(response);
         }
 
     }
