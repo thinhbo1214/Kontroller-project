@@ -8,7 +8,6 @@ function fetchWithSession(url, options = {}) {
     credentials: 'include' // 👈 Tự động gửi + nhận cookie (sessionId)
   });
 }
-
 function showResponse(text) {
   const pre = document.getElementById('response');
   pre.textContent = text;
@@ -34,13 +33,12 @@ async function login() {
       body: JSON.stringify(payload)
     });
 
-    if (!res.ok) {
-      showResponse(`Login failed: ${res.status} ${await res.text()}`);
-      return;
+    if (res.ok) {
+      showResponse('Login thành công');
+    } else {
+      const text = await res.text();
+      showResponse(`Login thất bại: ${res.status} ${text}`);
     }
-
-    const data = await res.json();
-    showResponse('Login success:\n' + JSON.stringify(data, null, 2));
   } catch (err) {
     showResponse('Request failed: ' + err.message);
   }

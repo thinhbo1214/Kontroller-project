@@ -27,11 +27,12 @@ namespace ServerConsole.Source.Manager
         {
             public int UserId;
             public DateTime ExpireAt;
+            public string IpAddress = "";
 
             public bool IsExpired => DateTime.UtcNow > ExpireAt;
         }
 
-        public void Store(string sessionId, int userId, TimeSpan? ttl = null)
+        public void Store(string sessionId, int userId, string ipAddress, TimeSpan? ttl = null)
         {
             ttl ??= TimeSpan.FromHours(1);
             using (new WriteLock(_lock))
@@ -39,22 +40,29 @@ namespace ServerConsole.Source.Manager
                 _sessions[sessionId] = new SessionEntry
                 {
                     UserId = userId,
-                    ExpireAt = DateTime.UtcNow + ttl.Value
+                    ExpireAt = DateTime.UtcNow + ttl.Value,
+                    IpAddress = ipAddress
                 };
             }
         }
 
-        public int? GetUserId(string sessionId)
+        public int? GetUserId(string sessionId, string currentIp)
         {
             using (new ReadLock(_lock))
             {
                 if (_sessions.TryGetValue(sessionId, out var entry))
                 {
                     if (!entry.IsExpired)
-                        return entry.UserId;
+                    {
+                        if (entry.IpAddress == currentIp)
+                            return entry.UserId;
+
+                        Simulation.GetModel<LogManager>()?.Log($"Phiên đăng nhập của user {entry.UserId} đang bị truy cập từ IP khác. Gốc: {entry.IpAddress}, Hiện tại: {currentIp}", LogLevel.WARN);
+                    }
                 }
             }
-            Remove(sessionId); // nếu đã hết hạn thì xoá
+
+            Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
             return null;
         }
 
