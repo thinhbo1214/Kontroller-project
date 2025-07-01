@@ -12,29 +12,36 @@
   <div class="container">
     <div class="section">
       <h2>Login</h2>
-      <input type="text" id="loginUsername" placeholder="Username" />
-      <input type="password" id="loginPassword" placeholder="Password" />
-      <button onclick="login()">Login</button>
+      <input type="text" id="inputUsername-post-login" placeholder="Username" />
+      <input type="password" id="inputPassword-post-login" placeholder="Password" />
+      <button id ="button-post-login">Login</button>
     </div>
     <h1>Test HTTP Cache Server API</h1>
 
     <div class="section">
       <h2>GET Cache Value</h2>
-      <input type="text" id="getKey" placeholder="Enter key to GET" />
-      <button onclick="getCacheValue()">GET</button>
+      <input type="text" id="inputKey-get-cache" placeholder="Enter key to GET" />
+      <button id="button-get-cache">GET</button>
     </div>
 
     <div class="section">
-      <h2>POST/PUT Cache Value</h2>
-      <input type="text" id="putKey" placeholder="Enter key" />
-      <textarea id="putValue" placeholder="Enter value"></textarea>
-      <button onclick="putCacheValue()">POST/PUT</button>
+      <h2>POST Cache Value</h2>
+      <input type="text" id="inputKey-post-cache" placeholder="Enter key" />
+      <textarea id="inputValue-post-cache" placeholder="Enter value"></textarea>
+      <button id="button-post-cache">POST</button>
+    </div>
+
+    <div class="section">
+      <h2>PUT Cache Value</h2>
+      <input type="text" id="inputKey-put-cache" placeholder="Enter key" />
+      <textarea id="inputValue-put-cache" placeholder="Enter value"></textarea>
+      <button id="button-put-cache">PUT</button>
     </div>
 
     <div class="section">
       <h2>DELETE Cache Value</h2>
-      <input type="text" id="deleteKey" placeholder="Enter key to DELETE" />
-      <button onclick="deleteCacheValue()">DELETE</button>
+      <input type="text" id="inputKey-delete-cache" placeholder="Enter key to DELETE" />
+      <button id="button-delete-cache">DELETE</button>
     </div>
 
     <div class="section">
@@ -43,6 +50,6 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+<script type="module" src="event.js"></script>
 </body>
 </html>
