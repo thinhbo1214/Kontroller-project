@@ -46,7 +46,7 @@ namespace ServerConsole.Source.Presenter
 
             certificate = Path.Combine(AppContext.BaseDirectory, @"..\..\..\tools\certificates\server.pfx");
             password = "qwerty";
-            port = 8443;
+            port = 443;
             www = Path.Combine(AppContext.BaseDirectory, @"../../../www/ClientWeb");
 
             context = new SslContext(SslProtocols.Tls13, new X509Certificate2(certificate, password));
