@@ -19,7 +19,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t lucifer251/serverconsole:latest .
+        run: docker build -f src/ServerConsole/Dockerfile -t lucifer251/serverconsole:latest src/ServerConsole
+
 
       - name: Push Docker image
         run: docker push lucifer251/serverconsole:latest
