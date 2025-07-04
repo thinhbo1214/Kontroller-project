@@ -38,29 +38,43 @@ namespace ServerConsole.Source.Presenter
         /// </summary>
         public void Start()
         {
-            if (_presenterTask != null && !_presenterTask.IsCompleted)
-                return; // đã chạy rồi
+            try
+            {
+                if (_presenterTask != null && !_presenterTask.IsCompleted)
+                    return; // đã chạy rồi
 
-            if (_cts.IsCancellationRequested)
-                _cts = new CancellationTokenSource(); // Reset token nếu đã huỷ trước đó
+                if (_cts.IsCancellationRequested)
+                    _cts = new CancellationTokenSource(); // Reset token nếu đã huỷ trước đó
+                Simulation.GetModel<LogManager>().Log(AppContext.BaseDirectory);
 
-            certificate = Path.Combine(AppContext.BaseDirectory, @"..\..\..\tools\certificates\server.pfx");
-            password = "qwerty";
-            port = 443;
-            www = Path.Combine(AppContext.BaseDirectory, @"../../../www/ClientWeb");
+                //certificate = Path.Combine(AppContext.BaseDirectory, @"..\..\..\tools\certificates\server.pfx");
+                certificate = Path.Combine(AppContext.BaseDirectory, "tools", "certificates", "server.pfx");
+                Simulation.GetModel<LogManager>().Log(certificate);
 
-            context = new SslContext(SslProtocols.Tls13, new X509Certificate2(certificate, password));
-            server = new ServerController(context, IPAddress.Any, port);
-            server.AddStaticContent(www);
+                password = "qwerty";
+                port = 443;
+                //www = Path.Combine(AppContext.BaseDirectory, @"../../../www/ClientWeb");
+                www = Path.Combine(AppContext.BaseDirectory, "www", "ClientWeb");
+                Simulation.GetModel<LogManager>().Log(www);
 
-            //Simulation.GetModel<LogManager>().Log($"HTTPS server website: https://localhost:{port}/api/index.html");
+                context = new SslContext(SslProtocols.Tls13, new X509Certificate2(certificate, password));
+                server = new ServerController(context, IPAddress.Any, port);
+                server.AddStaticContent(www);
 
-            Simulation.GetModel<LogManager>().Log("Server starting...");
-            server.Start();
-            Simulation.GetModel<LogManager>().Log("Server started...");
+                //Simulation.GetModel<LogManager>().Log($"HTTPS server website: https://localhost:{port}/api/index.html");
 
-            Simulation.GetModel<LogManager>().Log("Server Presenter starting...");
-            _presenterTask = Task.Run(() => Run(_cts.Token));
+                Simulation.GetModel<LogManager>().Log("Server starting...");
+                server.Start();
+                Simulation.GetModel<LogManager>().Log("Server started...");
+
+                Simulation.GetModel<LogManager>().Log("Server Presenter starting...");
+                _presenterTask = Task.Run(() => Run(_cts.Token));
+            }
+            catch (Exception ex)
+            {
+                Simulation.GetModel<LogManager>().Log(ex);
+            }
+
         }
 
         /// <summary>

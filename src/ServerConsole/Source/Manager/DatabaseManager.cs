@@ -29,7 +29,8 @@ namespace ServerConsole.Source.Manager
         }
         public DatabaseManager()
         {
-            _basePath = "D:/MyServerData";
+            //certificate = Path.Combine(AppContext.BaseDirectory, @"..\..\..\tools\certificates\server.pfx");
+            _basePath = Path.Combine(AppContext.BaseDirectory, "MyServerData");
             _connectionString = "Server=localhost;Database=MyDatabase;Integrated Security=True;";
         }
         /// <summary>
