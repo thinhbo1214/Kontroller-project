@@ -1,8 +1,7 @@
 .vs
 bin
-NetCoreServer
 obj
 tools
 ServerConsole.sln
-ServerConsole.csproj
-core
+Core
+NetCoreServer
