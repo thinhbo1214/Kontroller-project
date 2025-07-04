@@ -10,4 +10,5 @@
   
 - **Link drive**: https://drive.google.com/drive/folders/18bmKYSihVVwWoHVmZzj2F0dnmUuyPx8G?usp=drive_link
 
-- **Link docker**: docker pull lucifer251/serverconsole:latest 
+- **Link docker**: https://hub.docker.com/repositories/lucifer251
+
