@@ -6,5 +6,5 @@
 docker pull lucifer251/serverconsole:latest
 docker run --rm -it -p 443:443 lucifer251/serverconsole:latest
 
-sau đó vào trình duyệt gõ https://127.0.0.1/
+Sau đó vào trình duyệt gõ https://127.0.0.1/
 
