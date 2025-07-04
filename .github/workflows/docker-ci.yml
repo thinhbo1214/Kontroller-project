@@ -3,6 +3,9 @@ name: Auto Build Docker Image
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'src/ServerConsole/**'               # Chỉ chạy nếu có thay đổi trong thư mục này
+      - '.github/workflows/docker-ci.yml'    # Và chạy nếu bạn chỉnh sửa chính file workflow
 
 jobs:
   build:
@@ -20,7 +23,6 @@ jobs:
 
       - name: Build Docker image
         run: docker build -f src/ServerConsole/Dockerfile -t lucifer251/serverconsole:latest src/ServerConsole
-
 
       - name: Push Docker image
         run: docker push lucifer251/serverconsole:latest
