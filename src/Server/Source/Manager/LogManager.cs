@@ -86,7 +86,6 @@ namespace Server.Source.Manager
             _logFilePath = Path.Combine(logDir, $"log_{date}.txt");
 
             // Khởi chạy task xử lý log chạy nền
-            Simulation.GetModel<LogManager>().Log("LogManager starting...");
             _logTask = Task.Run(() => Run(_cts.Token));
         }
 
@@ -126,7 +125,6 @@ namespace Server.Source.Manager
         private async Task Run(CancellationToken token)
         {
             var currentDate = DateTime.Now.Date;
-            Simulation.GetModel<LogManager>().Log("LogManager started...");
             while (!token.IsCancellationRequested)
             {
                 try

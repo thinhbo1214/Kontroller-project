@@ -1,4 +1,5 @@
-﻿using Server.Source.Controller;
+﻿using Microsoft.VisualBasic.Logging;
+using Server.Source.Controller;
 using Server.Source.Core;
 using Server.Source.Manager;
 using Server.Source.Model;
@@ -11,6 +12,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using static Server.Source.Model.ModelServer;
 
 namespace Server.Source.Presenter
 {
@@ -24,10 +26,12 @@ namespace Server.Source.Presenter
         {
             // listen to View
             Simulation.GetModel<ViewServer>().OnClickedStart += SetUp;
+            Simulation.GetModel<ViewServer>().OnClickedStop += Stop;
 
             //listen to Model
             Simulation.GetModel<ModelServer>().CongfiguredServer += Start;
             Simulation.GetModel<ModelServer>().OnAddedLog += UpdateLog;
+            Simulation.GetModel<ModelServer>().OnChangedData += UpdateStatus;
 
             //listean to LogManager
             Simulation.GetModel<LogManager>().OnLogPrinted += Log;
@@ -66,7 +70,24 @@ namespace Server.Source.Presenter
 
             });
         }
-        
+        private void Stop()
+        {
+            Task.Run(() => {
+                try
+                {
+                    Simulation.GetModel<SessionManager>().Stop();
+                    Simulation.GetModel<SimulationManager>().Stop();
+                    Simulation.GetModel<ModelServer>().Server.Stop();
+                    Simulation.GetModel<LogManager>().Log("Server stopped.");
+                }
+                catch (Exception ex)
+                {
+                    Simulation.GetModel<LogManager>().Log(ex);
+                }
+
+            });
+        }
+
         private void SetUp(int port = -1, string www = "", string certificate = "")
         {
             Task.Run(() => {
@@ -101,6 +122,20 @@ namespace Server.Source.Presenter
                 try
                 {
                     Simulation.GetModel<ViewServer>().UpdateLogView(log);
+                }
+                catch (Exception ex)
+                {
+                    Simulation.GetModel<LogManager>().Log(ex);
+                }
+            });
+        }
+
+        private void UpdateStatus(ServerStatus status)
+        {
+            Task.Run(() => {
+                try
+                {
+                    Simulation.GetModel<ViewServer>().UpdateStatus(status);
                 }
                 catch (Exception ex)
                 {

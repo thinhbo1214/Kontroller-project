@@ -37,7 +37,6 @@ namespace Server.Source.Manager
             if (_cts.IsCancellationRequested)
                 _cts = new CancellationTokenSource(); // Reset token nếu đã huỷ trước đó
 
-            Simulation.GetModel<LogManager>().Log("SimulationManager starting...");
             _simulationTask = Task.Run(() => Run(_cts.Token));
         }
 
@@ -75,7 +74,6 @@ namespace Server.Source.Manager
         /// <param name="token">CancellationToken để dừng an toàn</param>
         private async Task Run(CancellationToken token)
         {
-            Simulation.GetModel<LogManager>().Log("SimulationManager started...");
             while (!token.IsCancellationRequested)
             {
                 try
