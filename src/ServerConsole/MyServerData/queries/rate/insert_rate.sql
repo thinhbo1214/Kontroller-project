@@ -1,0 +1,1 @@
+INSERT INTO Rate (rateID, value, userID, reviewID, gameID) VALUES (?, ?, ?, ?, ?)
