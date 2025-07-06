@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Microsoft.VisualBasic.ApplicationServices;
+using Newtonsoft.Json.Linq;
 using Server.Source.Core;
 using Server.Source.Event;
 using Server.Source.Extra;
@@ -31,24 +32,18 @@ namespace Server.Source.Handler
 
         public override void Handle(HttpRequest request, HttpsSession session)
         {
-            string? oldSessionId = CookieHelper.GetSession(request); // lấy sessionId cũ
-
+            string? oldToken = TokenHelper.GetToken(request); // lấy token từ request
             var sessionManager = Simulation.GetModel<SessionManager>();
 
-            if (oldSessionId != null)
+            if (sessionManager.Authorization(request, out int userId, session))
             {
-                session.SendResponseAsync(session.Response.MakeOkResponse());
-                return;
-            }    
+                var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Login success", userId = userId }); // tạo response
+                session.SendResponseAsync(response); // gửi response
 
-            var value = request.Body;
-            if (string.IsNullOrEmpty(value))
-            {
-                var errorResponse = JsonHelper.MakeJsonResponse(session.Response, new { error = "Request body is empty." }, 400);
-                session.SendResponseAsync(errorResponse);
                 return;
             }
 
+            var value = request.Body;
             var loginReq = JsonHelper.Deserialize<LoginRequest>(value);
             if (loginReq == null)
             {
@@ -66,10 +61,10 @@ namespace Server.Source.Handler
                 string newSessionId = Guid.NewGuid().ToString(); // sessionId mới
                 sessionManager.Store(newSessionId, 123);         // lưu phiên
 
-                var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Login success", userId = 123 }); // tạo response
-                CookieHelper.SetSession(response, newSessionId); // set cookie
-                Simulation.GetModel<LogManager>().Log(response.ToString()); // báo log
+                var token = TokenHelper.CreateToken(newSessionId, 60); // tạo token
+                var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Login success", userId = 123 }, 200, token); // tạo response
 
+                Simulation.GetModel<LogManager>().Log(response.ToString()); // báo log
 
                 session.SendResponseAsync(response); // gửi response
 
