@@ -27,12 +27,11 @@ namespace Server.Source.Manager
         {
             public int UserId;
             public DateTime ExpireAt;
-            public string IpAddress = "";
 
             public bool IsExpired => DateTime.UtcNow > ExpireAt;
         }
 
-        public void Store(string sessionId, int userId, string ipAddress, TimeSpan? ttl = null)
+        public void Store(string sessionId, int userId, TimeSpan? ttl = null)
         {
             ttl ??= TimeSpan.FromHours(1);
             using (new WriteLock(_lock))
@@ -41,12 +40,11 @@ namespace Server.Source.Manager
                 {
                     UserId = userId,
                     ExpireAt = DateTime.UtcNow + ttl.Value,
-                    IpAddress = ipAddress
                 };
             }
         }
 
-        public int? GetUserId(string sessionId, string currentIp)
+        public int? GetUserId(string sessionId)
         {
             using (new ReadLock(_lock))
             {
@@ -54,16 +52,30 @@ namespace Server.Source.Manager
                 {
                     if (!entry.IsExpired)
                     {
-                        if (entry.IpAddress == currentIp)
-                            return entry.UserId;
-
-                        Simulation.GetModel<LogManager>()?.Log($"Phiên đăng nhập của user {entry.UserId} đang bị truy cập từ IP khác. Gốc: {entry.IpAddress}, Hiện tại: {currentIp}", LogLevel.WARN);
+                        return entry.UserId;
                     }
                 }
             }
 
             Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
             return null;
+        }
+
+        public bool IsUser(string sessionId)
+        {
+            using (new ReadLock(_lock))
+            {
+                if (_sessions.TryGetValue(sessionId, out var entry))
+                {
+                    if (!entry.IsExpired)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
+            return false;
         }
 
         public void Remove(string sessionId)

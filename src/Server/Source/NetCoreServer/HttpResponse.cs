@@ -180,7 +180,7 @@ namespace Server.Source.NetCoreServer
             sb.AppendLine($"Status: {Status}");
             sb.AppendLine($"Status phrase: {StatusPhrase}");
             sb.AppendLine($"Protocol: {Protocol}");
-            sb.AppendLine($"Headers: {Headers}");
+            sb.AppendLine($"Headers: {Headers}");   
             for (int i = 0; i < Headers; i++)
             {
                 var header = Header(i);

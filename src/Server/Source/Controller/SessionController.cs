@@ -1,4 +1,5 @@
-﻿using Server.Source.Core;
+﻿using Azure;
+using Server.Source.Core;
 using Server.Source.Event;
 using Server.Source.Extra;
 using Server.Source.Manager;
@@ -25,7 +26,25 @@ namespace Server.Source.Controller
         {
             // Show HTTP request content
             //Console.WriteLine(request);
-            Simulation.GetModel<LogManager>().Log($"[SesionID {this.Id} ] Request {request.Method} {request.Url}");
+            string sessionId = CookieHelper.GetSession(request);
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                int? userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+
+                if (userId != null)
+                {
+                    Simulation.GetModel<LogManager>().Log($"[UserID {userId} ] Request {request.Method} {request.Url}");
+                }
+                else
+                {
+                    Simulation.GetModel<LogManager>().Log($"[Invalid SessionID {sessionId}] → Removing session cookie.");
+                    CookieHelper.RemoveSession(this.Response);
+                }
+            }
+            else
+            {
+                Simulation.GetModel<LogManager>().Log($"[SesionID {this.Id} ] Request {request.Method} {request.Url}");
+            }
 
             // Lập lịch sự kiện
             var ev = Schedule<APIEvent>(0.25f);
