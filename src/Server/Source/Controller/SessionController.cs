@@ -4,6 +4,7 @@ using Server.Source.Core;
 using Server.Source.Event;
 using Server.Source.Extra;
 using Server.Source.Manager;
+using Server.Source.Model;
 using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Server.Source.Controller
 
         protected override void OnReceivedRequest(HttpRequest request)
         {
+            Simulation.GetModel<ModelServer>().UpdateNumberRequest();
+
             if (Simulation.GetModel<SessionManager>().Authorization(request, out int userId, this))
             {
                 Simulation.GetModel<LogManager>().Log($"[UserID: {userId} ] Request {request.Method} {request.Url}");
@@ -40,7 +43,6 @@ namespace Server.Source.Controller
             ev.session = this;
 
         }
-
         protected override void OnReceivedRequestError(HttpRequest request, string error)
         {
             Simulation.GetModel<LogManager>().Log($"Request error: {error}", LogLevel.ERROR);

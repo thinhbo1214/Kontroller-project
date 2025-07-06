@@ -14,7 +14,7 @@ namespace Server.Source.Manager
     {
         private readonly ReaderWriterLockSlim _lock = new();
         private readonly Dictionary<string, SessionEntry> _sessions = new();
-
+        public int NumberSession => _sessions.Count;
         /// <summary>
         /// Bộ điều khiển tín hiệu hủy để dừng task một cách an toàn.
         /// </summary>
@@ -154,6 +154,7 @@ namespace Server.Source.Manager
             {
                 ae.Handle(e => e is OperationCanceledException);
             }
+            Simulation.GetModel<LogManager>().Log("SessionManager stopped.");
         }
 
         /// <summary>

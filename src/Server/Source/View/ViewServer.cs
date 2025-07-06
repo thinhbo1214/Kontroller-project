@@ -1,13 +1,18 @@
-﻿using Server.Source.Core;
+﻿using Microsoft.IdentityModel.Tokens;
+using Server.Source.Core;
 using Server.Source.Manager;
+using Server.Source.Model;
 using Server.Source.Presenter;
 using System.Diagnostics;
+using System.Windows.Forms;
+using static Server.Source.Model.ModelServer;
 
 namespace Server.Source.View
 {
     public partial class ViewServer : Form
     {
         public event Action<int, string, string> OnClickedStart;
+        public event Action OnClickedStop;
         public void UpdateLogView(string log)
         {
             if (InvokeRequired)
@@ -18,6 +23,20 @@ namespace Server.Source.View
             }
             listLog.AppendText(log + Environment.NewLine);
         }
+        public void UpdateStatus(ServerStatus status)
+        {
+            if (InvokeRequired)
+            {
+                // Đảm bảo gọi trên luồng UI không gây lỗi cross-thread
+                BeginInvoke(new Action(() => UpdateStatus(status)));
+                return;
+            }
+            labelRTime.Text = "Running Time: " + status.ElapsedTime.ToString();
+            labelPortRunning.Text = "Running Port: " + status.Port.ToString();
+            labelNRequest.Text = "Number of Request: " + status.NumberRequest.ToString();
+            labelNUser.Text = "Number of User: " + status.NumberUser.ToString();
+
+        }
 
         public ViewServer()
         {
@@ -26,9 +45,28 @@ namespace Server.Source.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OnClickedStart?.Invoke(int.Parse(textBox1.Text), textBox3.Text, textBox2.Text);
+            if (!textBox1.Text.IsNullOrEmpty() && !textBox2.Text.IsNullOrEmpty() && !textBox3.Text.IsNullOrEmpty())
+            {
+                labelActive.Text = "Active: true";
+                Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
+                buttonStart.Enabled = false;
+                OnClickedStart?.Invoke(int.Parse(textBox1.Text), textBox3.Text, textBox2.Text);
+                buttonStop.Enabled = true;
+                timer1.Start();
+            }
+            else
+            {
+                MessageBox.Show("Không để trống");
+            }
         }
-
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            labelActive.Text = "Active: false";
+            OnClickedStop?.Invoke();
+            buttonStop.Enabled = false;
+            buttonStart.Enabled = true;
+            timer1.Stop();
+        }
         private void textBox2_DoubleClick(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -115,6 +153,23 @@ namespace Server.Source.View
             {
                 MessageBox.Show("Không thể mở link: " + ex.Message);
             }
+        }
+
+        private void buttonClearLog_Click(object sender, EventArgs e)
+        {
+            listLog.Clear();
+            MessageBox.Show("Đã xoá logs!!!");
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Simulation.GetModel<ModelServer>().ElapsedTime += TimeSpan.FromMilliseconds(100);
+
+        }
+
+        private void labelWeb_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
