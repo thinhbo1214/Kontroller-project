@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.VisualBasic.ApplicationServices;
 using Server.Source.Core;
 using Server.Source.Event;
 using Server.Source.Extra;
@@ -24,26 +25,13 @@ namespace Server.Source.Controller
 
         protected override void OnReceivedRequest(HttpRequest request)
         {
-            // Show HTTP request content
-            //Console.WriteLine(request);
-            string sessionId = CookieHelper.GetSession(request);
-            if (!string.IsNullOrEmpty(sessionId))
+            if (Simulation.GetModel<SessionManager>().Authorization(request, out int userId, this))
             {
-                int? userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
-
-                if (userId != null)
-                {
-                    Simulation.GetModel<LogManager>().Log($"[UserID {userId} ] Request {request.Method} {request.Url}");
-                }
-                else
-                {
-                    Simulation.GetModel<LogManager>().Log($"[Invalid SessionID {sessionId}] → Removing session cookie.");
-                    CookieHelper.RemoveSession(this.Response);
-                }
+                Simulation.GetModel<LogManager>().Log($"[UserID: {userId} ] Request {request.Method} {request.Url}");
             }
             else
             {
-                Simulation.GetModel<LogManager>().Log($"[SesionID {this.Id} ] Request {request.Method} {request.Url}");
+                Simulation.GetModel<LogManager>().Log($"[UserID: {userId} Unknown] Request {request.Method} {request.Url}");
             }
 
             // Lập lịch sự kiện

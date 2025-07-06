@@ -1,4 +1,6 @@
-﻿using Server.Source.NetCoreServer;
+﻿using Server.Source.Core;
+using Server.Source.Manager;
+using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +11,6 @@ namespace Server.Source.Extra
 {
     public static class TokenHelper
     {
-        private static Dictionary<TokeType, string> types;
-        static TokenHelper()
-        {
-            types = new Dictionary<TokeType, string>
-            {
-                {TokeType.X_Token_Authorization, "X_Token_Authorization"},
-            };
-        }
-
         public static string CreateToken(string sessionId, int minutes)
         {
             var expire = DateTimeOffset.UtcNow.AddMinutes(minutes).ToUnixTimeSeconds();
@@ -47,12 +40,12 @@ namespace Server.Source.Extra
 
         public static void SetToken(HttpResponse response, string sessionId, int minutes = 60)
         {
-            response.SetHeader(types[TokeType.X_Token_Authorization], CreateToken(sessionId, minutes));
+            response.SetHeader("X_Token_Authorization", $"{TokenHelper.CreateToken(sessionId, minutes)}");
         }
 
         public static void RemoveToken(HttpResponse response)
         {
-            response.SetHeader(types[TokeType.X_Token_Authorization], "");
+            response.SetHeader("X_Token_Authorization", "");
         }
 
         public static string? GetToken(HttpRequest request)
@@ -60,17 +53,11 @@ namespace Server.Source.Extra
             for (int i = 0; i < request.Headers; i++)
             {
                 var (key, value) = request.Header(i);
-                if (key == types[TokeType.X_Token_Authorization])
+                if (key == "X_Token_Authorization")
                     return value;
             }
             return null;
         }
-    }
-
-    public enum TokeType
-    {
-        /// <summary>Thông tin chung</summary>
-        X_Token_Authorization,
     }
 
 }
