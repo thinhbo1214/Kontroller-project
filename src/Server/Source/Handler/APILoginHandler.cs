@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Server.Source.Handler
 {
@@ -29,15 +30,33 @@ namespace Server.Source.Handler
             }
         }
         public override string Type => "/api/login";
+        
+        public HttpResponse NewUserSession(int userId, HttpResponse response)
+        {
+            string newSessionId = Guid.NewGuid().ToString(); // sessionId mới
+            Simulation.GetModel<SessionManager>().Store(newSessionId, userId);         // lưu phiên
 
+            var token = TokenHelper.CreateToken(newSessionId, 60); // tạo token
+            response = JsonHelper.MakeJsonResponse(response, new { message = "Login success", userId = userId }, 200, token); // tạo response
+
+            return response;
+        }
+        public int CheckAccount(string username = "", string password = "")
+        {
+            if (username == "admin" && password == "admin")
+            {
+                return 123;
+            }
+            return -1;
+        }
         public override void Handle(HttpRequest request, HttpsSession session)
         {
             string? oldToken = TokenHelper.GetToken(request); // lấy token từ request
             var sessionManager = Simulation.GetModel<SessionManager>();
 
-            if (sessionManager.Authorization(request, out int userId, session))
+            if (sessionManager.Authorization(request, out int id, session))
             {
-                var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Login success", userId = userId }); // tạo response
+                var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Login success", userId = id }); // tạo response
                 session.SendResponseAsync(response); // gửi response
 
                 return;
@@ -56,19 +75,13 @@ namespace Server.Source.Handler
             // if (!CheckLogin(loginReq.username, loginReq.password)) { ... }
 
             // Đăng nhập thành công:
-            if (loginReq.username == "admin" && loginReq.password == "admin")
+            int userId = CheckAccount(loginReq.username, loginReq.password);
+            if (userId > 0)
             {
-                string newSessionId = Guid.NewGuid().ToString(); // sessionId mới
-                sessionManager.Store(newSessionId, 123);         // lưu phiên
-
-                var token = TokenHelper.CreateToken(newSessionId, 60); // tạo token
-                var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Login success", userId = 123 }, 200, token); // tạo response
-
-                Simulation.GetModel<LogManager>().Log(response.ToString()); // báo log
+                var response = NewUserSession(userId, session.Response);
 
                 session.SendResponseAsync(response); // gửi response
 
-                Simulation.GetModel<LogManager>().Log($"Login success, sessionId = {newSessionId}"); // báo log
                 return;
             }
 
