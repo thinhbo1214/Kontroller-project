@@ -1,4 +1,6 @@
-﻿using Server.Source.Core;
+﻿using Server.Source.Controller;
+using Server.Source.Core;
+using Server.Source.Extra;
 using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ namespace Server.Source.Manager
     {
         private readonly ReaderWriterLockSlim _lock = new();
         private readonly Dictionary<string, SessionEntry> _sessions = new();
-
+        public int NumberSession => _sessions.Count;
         /// <summary>
         /// Bộ điều khiển tín hiệu hủy để dừng task một cách an toàn.
         /// </summary>
@@ -77,7 +79,25 @@ namespace Server.Source.Manager
             Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
             return false;
         }
-
+        public bool Authorization(HttpRequest request, out int userId, HttpsSession session = null)
+        {
+            userId = -1;
+            string token = TokenHelper.GetToken(request);
+            if (TokenHelper.TryParseToken(token, out var sessionId))
+            {
+                int? id = GetUserId(sessionId);
+                if (id != null)
+                {
+                    userId = id.Value;
+                    return true;
+                }
+                else if(session != null)
+                {
+                    TokenHelper.RemoveToken(session.Response);
+                }
+            }    
+            return false;
+        }
         public void Remove(string sessionId)
         {
             using (new WriteLock(_lock))
@@ -134,6 +154,7 @@ namespace Server.Source.Manager
             {
                 ae.Handle(e => e is OperationCanceledException);
             }
+            Simulation.GetModel<LogManager>().Log("SessionManager stopped.");
         }
 
         /// <summary>

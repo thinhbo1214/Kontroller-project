@@ -1,8 +1,10 @@
 ﻿using Azure;
+using Microsoft.VisualBasic.ApplicationServices;
 using Server.Source.Core;
 using Server.Source.Event;
 using Server.Source.Extra;
 using Server.Source.Manager;
+using Server.Source.Model;
 using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -24,26 +26,15 @@ namespace Server.Source.Controller
 
         protected override void OnReceivedRequest(HttpRequest request)
         {
-            // Show HTTP request content
-            //Console.WriteLine(request);
-            string sessionId = CookieHelper.GetSession(request);
-            if (!string.IsNullOrEmpty(sessionId))
-            {
-                int? userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+            Simulation.GetModel<ModelServer>().UpdateNumberRequest();
 
-                if (userId != null)
-                {
-                    Simulation.GetModel<LogManager>().Log($"[UserID {userId} ] Request {request.Method} {request.Url}");
-                }
-                else
-                {
-                    Simulation.GetModel<LogManager>().Log($"[Invalid SessionID {sessionId}] → Removing session cookie.");
-                    CookieHelper.RemoveSession(this.Response);
-                }
+            if (Simulation.GetModel<SessionManager>().Authorization(request, out int userId, this))
+            {
+                Simulation.GetModel<LogManager>().Log($"[UserID: {userId} ] Request {request.Method} {request.Url}");
             }
             else
             {
-                Simulation.GetModel<LogManager>().Log($"[SesionID {this.Id} ] Request {request.Method} {request.Url}");
+                Simulation.GetModel<LogManager>().Log($"[UserID: {userId} Unknown] Request {request.Method} {request.Url}");
             }
 
             // Lập lịch sự kiện
@@ -52,7 +43,6 @@ namespace Server.Source.Controller
             ev.session = this;
 
         }
-
         protected override void OnReceivedRequestError(HttpRequest request, string error)
         {
             Simulation.GetModel<LogManager>().Log($"Request error: {error}", LogLevel.ERROR);
