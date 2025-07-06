@@ -1,4 +1,5 @@
-﻿using Server.Source.NetCoreServer;
+﻿using Microsoft.IdentityModel.Tokens;
+using Server.Source.NetCoreServer;
 using System;
 using System.Text.Json;
 
@@ -30,9 +31,18 @@ namespace Server.Source.Extra
                 return default;
             }
         }
-        public static HttpResponse MakeJsonResponse(this HttpResponse response, object data, int status = 200)
+        public static HttpResponse MakeJsonResponse(this HttpResponse response, object data, int status = 200, string token ="")
         {
             response.SetBegin(status);
+
+            //response.SetHeader("Access-Control-Expose-Headers", "X_Token_Authorization");
+            //response.SetHeader("X_Token_Authorization", $"{TokenHelper.CreateToken(Guid.NewGuid().ToString(), 60)}");
+            if (!token.IsNullOrEmpty())
+            {
+                response.SetHeader("Access-Control-Expose-Headers", "X_Token_Authorization");
+                response.SetHeader("X_Token_Authorization", $"{token}");
+            }
+
             response.SetContentType(".json");
             response.SetBody(JsonHelper.Serialize(data));
             return response;

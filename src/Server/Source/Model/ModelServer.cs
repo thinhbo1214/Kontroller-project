@@ -16,7 +16,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-
+using Timer = System.Windows.Forms.Timer;
 namespace Server.Source.Model
 {
     public class ModelServer
@@ -46,6 +46,35 @@ namespace Server.Source.Model
         /// </summary>
         private readonly BlockingCollection<string> _logQueue = new();
         public event Action<string> OnAddedLog;
+
+        // Dữ liệu hiện
+        public class ServerStatus
+        {
+            public TimeSpan ElapsedTime { get; set; }
+            public int NumberRequest { get; set; }
+            public int NumberUser { get; set; }
+            public int Port { get; set; }
+
+        }
+        public event Action<ServerStatus> OnChangedData;
+
+        private TimeSpan elapsedTime = TimeSpan.Zero;
+        public TimeSpan ElapsedTime { get => elapsedTime; set { elapsedTime = value; NotifyChanged(); }  }
+
+
+        private int numberRequest = 0;
+        public int NumberRequest { get => numberRequest; set => numberRequest = value; }
+        public void UpdateNumberRequest()
+        {
+            lock (this) 
+            {
+                NumberRequest++;
+            }
+        }
+
+        private int numberUser = 0;
+        public int NumberUser { get => numberUser; set => numberUser = value; }
+
 
         public ModelServer() 
         {
@@ -85,5 +114,17 @@ namespace Server.Source.Model
             OnAddedLog?.Invoke(logEntry);
         }
 
+        private void NotifyChanged()
+        {
+            NumberUser = Simulation.GetModel<SessionManager>().NumberSession;
+
+            OnChangedData?.Invoke(new ServerStatus
+            {
+                ElapsedTime = ElapsedTime,
+                NumberRequest = NumberRequest,
+                NumberUser = NumberUser,
+                Port = Port,
+            });
+        }
     }
 }
