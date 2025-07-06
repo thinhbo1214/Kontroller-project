@@ -1,4 +1,6 @@
-﻿using Server.Source.NetCoreServer;
+﻿using Server.Source.Core;
+using Server.Source.Manager;
+using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +23,14 @@ namespace Server.Source.Extra
 
         public static string? GetSession(HttpRequest request)
         {
-            for (int i = 0; i < request.Cookies; i++)
+            if (request.Cookies > 0)
             {
-                var (key, value) = request.Cookie(i);
-                if (key == "sessionId")
-                    return value;
+                for (int i = 0; i < request.Cookies; i++)
+                {
+                    var (key, value) = request.Cookie(i);
+                    if (key == "sessionId")
+                        return value;
+                }
             }
             return null;
         }

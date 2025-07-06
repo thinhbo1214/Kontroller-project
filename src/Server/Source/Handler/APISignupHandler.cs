@@ -1,4 +1,6 @@
-﻿using Server.Source.Extra;
+﻿using Server.Source.Core;
+using Server.Source.Extra;
+using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -28,23 +30,27 @@ namespace Server.Source.Handler
             var value = request.Body;
             if (string.IsNullOrEmpty(value))
             {
-                session.SendResponseAsync(session.Response.MakeErrorResponse(400, "Request body is empty."));
+                var errorResponse = JsonHelper.MakeJsonResponse(session.Response, new { error = "Request body is empty." }, 400);
+                session.SendResponseAsync(errorResponse);
                 return;
             }
 
-            SignupRequest? signupReq = JsonSerializer.Deserialize<SignupRequest>(value);
+            SignupRequest? signupReq = JsonHelper.Deserialize<SignupRequest>(value);
 
             if (signupReq == null)
             {
                 // Xử lý khi deserialize thất bại
-                Console.WriteLine("Deserialize JSON failed.");
+                var errorResponse = JsonHelper.MakeJsonResponse(session.Response, new { error = "Request body invalid." }, 400);
+                session.SendResponseAsync(errorResponse);
+
                 // Có thể trả về lỗi HTTP hoặc xử lý khác
                 return;
             }
-            Console.WriteLine($"Username: {signupReq.username}");
-            Console.WriteLine($"Password: {signupReq.password}");
-            Console.WriteLine("Signup successfully");
-            session.SendResponseAsync(session.Response.MakeOkResponse());
+            // Giả sử đăng ký thành công
+            var response = JsonHelper.MakeJsonResponse(session.Response, new { message = "Signup successful", username = signupReq.username });
+            session.SendResponseAsync(response);
+
+            Simulation.GetModel<LogManager>().Log($"Sigup success");
         }
     }
 }
