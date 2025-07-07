@@ -14,16 +14,7 @@ User:
       type: string
       example: '001'
     diary:
-      type: object
-      properties:
-        gameLogged:
-          type: array
-          items:
-            $ref: './Game.yml#/Game'
-        dateLogged:
-          type: string
-          format: date
-          example: '2022-01-01'
+      $ref: './Diary.yml#/Diary'
     playLaterList:
       type: array
       items:
@@ -43,3 +34,13 @@ User:
       type: array
       items:
         $ref: './Activity.yml#/Activity'
+
+Account:
+  type: object
+  properties:
+    username:
+      type: string
+      example: 'admin'
+    password:
+      type: string
+      example: 'admin'
