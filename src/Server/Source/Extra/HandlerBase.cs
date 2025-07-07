@@ -12,6 +12,7 @@ namespace Server.Source.Extra
     public abstract class HandlerBase : IHandler
     {
         public abstract string Type { get; }
+
         public virtual string DecodKeyValue(string key)
         {
             // Decode the key value
@@ -21,6 +22,7 @@ namespace Server.Source.Extra
 
             return key;
         }
+
         public virtual bool CanHandle(string path) => path.StartsWith(Type, StringComparison.OrdinalIgnoreCase);
         public virtual void Handle(HttpRequest request, HttpsSession session) 
         {

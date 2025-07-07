@@ -19,7 +19,7 @@ namespace Server.Source.Handler
         }
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
-            var key = DecodKeyValue(request.Url);
+            var key = DecodeHelper.GetParamWithURL("key", request.Url);
 
             if (string.IsNullOrEmpty(key))
             {
@@ -44,7 +44,8 @@ namespace Server.Source.Handler
         }
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
-            var key = DecodKeyValue(request.Url);
+            var key = DecodeHelper.GetParamWithURL("key", request.Url);
+
             var value = request.Body;
 
             // Put the cache value
@@ -58,7 +59,7 @@ namespace Server.Source.Handler
         }
         public override void PutHandle(HttpRequest request, HttpsSession session)
         {
-            var key = DecodKeyValue(request.Url);
+            var key = DecodeHelper.GetParamWithURL("key", request.Url);
             var value = request.Body;
 
             // Put the cache value
@@ -72,7 +73,7 @@ namespace Server.Source.Handler
         }
         public override void DeleteHandle(HttpRequest request, HttpsSession session)
         {
-            var key = DecodKeyValue(request.Url);
+            var key = DecodeHelper.GetParamWithURL("key", request.Url);
 
             // Delete the cache value
             if (CommonCache.GetInstance().DeleteCacheValue(key, out var value))
