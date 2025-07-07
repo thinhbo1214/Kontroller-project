@@ -1,0 +1,45 @@
+User:
+  type: object
+  properties:
+    userID:
+      type: string
+      example: '001'
+    username:
+      type: string
+      example: 'admin'
+    email:
+      type: string
+      example: 'admin@kontroller.com'
+    avatar:
+      type: string
+      example: '001'
+    diary:
+      type: object
+      properties:
+        gameLogged:
+          type: array
+          items:
+            $ref: './Game.yml#/Game'
+        dateLogged:
+          type: string
+          format: date
+          example: '2022-01-01'
+    playLaterList:
+      type: array
+      items:
+        $ref: './Game.yml#/Game'
+    isLoggedIn:
+      type: boolean
+      example: true
+    followers:
+      type: array
+      items:
+        $ref: './User.yml#/User'
+    lists:
+      type: array
+      items:
+        $ref: './List.yml#/List'
+    activity:
+      type: array
+      items:
+        $ref: './Activity.yml#/Activity'
