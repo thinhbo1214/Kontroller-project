@@ -40,12 +40,11 @@ Game:
       example: 'https://example.com/backdrop.jpg'
     details:
       type: array
-      description: Additional features or technical details about the game.
+      description: Additional details about the game including studios, countries and languages.
       items:
         type: string
       example:
-        - 'Multiplayer support'
-        - 'Cross-platform play'
+        - 'Nintendo, Japan, Languages supported: English, Japanese, Spanish'
     services:
       type: array
       description: List of platforms or digital stores where the game is available.
