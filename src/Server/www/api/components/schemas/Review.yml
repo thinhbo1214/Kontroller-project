@@ -27,6 +27,7 @@ Review:
       description: The date the review was created, in YYYY-MM-DD format.
       example: '2023-10-01'
     likes:
-      type: integer
-      description: Number of likes this review has received from other users.
-      example: 10
+      type: array
+      description: The number of likes a review receives, as well as the users who like it.
+      items:
+        $ref: './User.yml#/User'
