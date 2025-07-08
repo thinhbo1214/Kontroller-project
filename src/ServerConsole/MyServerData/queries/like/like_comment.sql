@@ -1,1 +1,0 @@
-INSERT INTO Likes (userID, targetType, likedDate, commentID) VALUES (?, 'comment', ?, ?)

@@ -1,1 +1,0 @@
-INSERT INTO Review (reviewID, content, reviewDate, userID, gameID) VALUES (?, ?, ?, ?, ?);
