@@ -4,8 +4,7 @@ User:
   properties:
     userID:
       type: string 
-      description:
-       Unique identifier for the user.
+      description: Unique identifier for the user.
       example: '001'
     account:
       $ref: './User.yml#/Account''
