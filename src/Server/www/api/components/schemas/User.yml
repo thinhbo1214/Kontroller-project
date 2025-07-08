@@ -1,46 +1,62 @@
 User:
   type: object
+  description: Represents a user in the system, including personal information and game-related data.
   properties:
     userID:
       type: string
+      description: Unique identifier for the user.
       example: '001'
     username:
       type: string
+      description: Display name or account name of the user.
       example: 'admin'
     email:
       type: string
+      format: email
+      description: Email address associated with the user.
       example: 'admin@kontroller.com'
     avatar:
       type: string
+      description: Identifier or URL for the user's avatar image.
       example: '001'
     diary:
       $ref: './Diary.yml#/Diary'
+      description: The user's personal game activity log. (Suggestion:use `diaryId` instead of full object if only reference is needed.)
     playLaterList:
       type: array
+      description: List of games the user marked to play later. (Suggestion:use `gameId` instead of full object if only reference is needed.)
       items:
         $ref: './Game.yml#/Game'
     isLoggedIn:
       type: boolean
+      description: Indicates whether the user is currently logged in.
       example: true
     followers:
       type: array
+      description: List of users who follow this user. (Suggestion:use `userId` instead of full object if only reference is needed.)
       items:
-        $ref: './User.yml#/User'
+        $ref: './User.yml#/User' 
     lists:
       type: array
+      description: Custom game lists created by the user. (Suggestion:use `listId` instead of full object if only reference is needed.)
       items:
         $ref: './List.yml#/List'
     activity:
       type: array
+      description: Recorded actions the user has performed in the system. (Suggestion:use `activityId` instead of full object if only reference is needed.)
       items:
         $ref: './Activity.yml#/Activity'
 
+
 Account:
   type: object
+  description: Account credentials used for authentication (e.g., login form).
   properties:
     username:
       type: string
+      description: The username used to log into the system.
       example: 'admin'
     password:
       type: string
+      description: The password used to authenticate the user. Should be encrypted in storage.
       example: 'admin'

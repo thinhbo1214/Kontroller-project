@@ -46,7 +46,10 @@ namespace Server.Source.Extra
                     ErrorHandle(request, session); break;
             }
         }
-        public virtual void HeadHandle(HttpsSession session) { }
+        public virtual void HeadHandle(HttpsSession session) 
+        {
+            session.SendResponseAsync(session.Response.MakeHeadResponse());
+        }
         public virtual void GetHandle(HttpRequest request, HttpsSession session) { }
         public virtual void PostHandle(HttpRequest request, HttpsSession session) { }
         public virtual void PutHandle(HttpRequest request, HttpsSession session) { }

@@ -13,10 +13,6 @@ namespace Server.Source.Handler
     {
         public override string Type => "/api/cache";
 
-        public override void HeadHandle(HttpsSession session)
-        {
-            session.SendResponseAsync(session.Response.MakeHeadResponse());
-        }
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var key = DecodeHelper.GetParamWithURL("key", request.Url);

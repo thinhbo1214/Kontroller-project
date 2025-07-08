@@ -89,6 +89,13 @@
   description: Forbidden
 404: # Mã trạng thái HTTP 404 - Không tìm thấy
   description: Not Found
+  content:
+  application/json:
+    schema:
+      $ref: './BaseResponse.yml#/BaseResponse'
+    example:
+      success: false
+      message: 'Not Found'
 405: # Mã trạng thái HTTP 405 - Phương thức không được hỗ trợ
   description: Method Not Allowed
 406: # Mã trạng thái HTTP 406 - Không thể chấp nhận

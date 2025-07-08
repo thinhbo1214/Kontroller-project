@@ -1,0 +1,32 @@
+Review:
+  type: object
+  description: A written review by a user that includes their thoughts and rating for a game.
+  properties:
+    reviewId:
+      type: string
+      description: Unique identifier for the review.
+      example: '001'
+    content:
+      type: string
+      description: The main body of the review written by the user.
+      example: 'This is a review.'
+    author:
+      $ref: './User.yml#/User'
+      description: The user who wrote the review. (Suggestion:use `userId` instead of full object if only reference is needed.)
+    rating:
+      $ref: './Rate.yml#/Rate'
+      description: The rating score associated with the review. (Suggestion:use `rateId` instead of full object if only reference is needed.)
+    comments:
+      type: array
+      description: List of comments made by other users in response to the review. (Suggestion:use `commentId` instead of full object if only reference is needed.)
+      items:
+        $ref: './Comment.yml#/Comment'
+    dateCreated:
+      type: string
+      format: date
+      description: The date the review was created, in YYYY-MM-DD format.
+      example: '2023-10-01'
+    likes:
+      type: integer
+      description: Number of likes this review has received from other users.
+      example: 10

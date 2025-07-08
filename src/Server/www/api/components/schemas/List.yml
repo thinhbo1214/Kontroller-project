@@ -1,0 +1,26 @@
+List:
+  type: object
+  description: A user-defined collection of games, typically grouped by theme, preference, or custom purpose.
+  properties:
+    listId:
+      type: string
+      description: Unique identifier for the list.
+      example: '001'
+    name:
+      type: string
+      description: The name or title of the list created by the user.
+      example: 'My Favorite Games'
+    description:
+      type: string
+      description: A short explanation of what the list contains or why it was created.
+      example: 'A collection of my favorite games.'
+    games:
+      type: array
+      description: Array of games included in this list. (Suggestion:use `gameId` instead of full object if only reference is needed.)
+      items:
+        $ref: './Game.yml#/Game'
+    dateCreated:
+      type: string
+      format: date
+      description: The date the list was created, in YYYY-MM-DD format.
+      example: '2023-10-01'
