@@ -1,19 +1,17 @@
 ﻿using Server.Source.Core;
 using Server.Source.Extra;
 using Server.Source.Handler;
-using Server.Source.Interface;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Source.Event
 {
-    public class APILoginEvent : Simulation.Event<APILoginEvent>, IApiEvent
+    public class APIUserEvent: Simulation.Event<APIUserEvent>
     {
         public HttpRequest request { get; set; }
         public HttpsSession session { get; set; }
@@ -30,12 +28,12 @@ namespace Server.Source.Event
                         await Simulation.GetModel<SimulationManager>().Limiter.WaitAsync();
                         try
                         {
-                            Simulation.GetModel<APILoginHandler>().Handle(request, session);
+                            Simulation.GetModel<APIUserHandler>().Handle(request, session);
                         }
                         catch (Exception ex)
                         {
                             session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 500));
-                            Simulation.GetModel<LogManager>().Log("Lỗi trong APILoginEvent: " + ex.ToString(), LogLevel.ERROR);
+                            Simulation.GetModel<LogManager>().Log("Lỗi trong APIUserHandle: " + ex.ToString(), LogLevel.ERROR);
                         }
                         finally
                         {

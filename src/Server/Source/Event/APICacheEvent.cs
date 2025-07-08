@@ -31,6 +31,7 @@ namespace Server.Source.Event
                     }
                     catch (Exception ex)               
                     {
+                        session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 500));
                         Simulation.GetModel<LogManager>().Log("Lỗi trong APICacheEvent: " + ex.ToString(), LogLevel.ERROR);
                     }
                     finally
