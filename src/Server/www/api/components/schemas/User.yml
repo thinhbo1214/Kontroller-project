@@ -3,22 +3,23 @@ User:
   description: Represents a user in the system, including personal information and game-related data.
   properties:
     userID:
-      type: string
-      description: Unique identifier for the user.
+      type: string 
+      description:
+       Unique identifier for the user.
       example: '001'
-    username:
-      type: string
-      description: Display name or account name of the user.
-      example: 'admin'
+    account:
+      $ref: './User.yml#/Account''
     email:
       type: string
       format: email
-      description: Email address associated with the user.
+      description:
+       Email address associated with the user.
+       Optional:only visible to owner or admin.
       example: 'admin@kontroller.com'
     avatar:
       type: string
-      description: Identifier or URL for the user's avatar image.
-      example: '001'
+      description: URL for the user's avatar image.
+      example: 'https://example.com/avatar.jpg'
     diary:
       $ref: './Diary.yml#/Diary'
       description: The user's personal game activity log. (Suggestion:use `diaryId` instead of full object if only reference is needed.)
@@ -58,5 +59,7 @@ Account:
       example: 'admin'
     password:
       type: string
-      description: The password used to authenticate the user. Should be encrypted in storage.
+      description: 
+        The password used to authenticate the user. Should be encrypted in storage.
+        Optional:only visible to owner or admin.
       example: 'admin'
