@@ -1,0 +1,92 @@
+Account:
+  description: Contains all SQL queries related to the Account entity.
+
+  queries:
+    - name: GetAllAccounts
+      description: Retrieve all active accounts.
+      path: accounts/get_all_accounts
+      parameters: []
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: username
+            type: string
+          - name: password
+            type: string
+            format: hashed  # Indicates that the password is stored in a hashed format
+
+    - name: GetAccountByUsername
+      description: Retrieve an account by its username.
+      path: accounts/get_account_by_username
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: false
+        columns:
+          - name: username
+            type: string
+          - name: password
+            type: string
+            format: hashed
+
+    - name: CheckAccountExists
+      description: Check if an account exists by its username.
+      path: accounts/check_account_exists
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # 1 if exists, 0 otherwise
+
+    - name: UpdateAccountPassword
+      description: Update the password for a specific account.
+      path: accounts/update_account_password
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+        - name: "@Password"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: InsertAccount
+      description: Insert a new account into the database.
+      path: accounts/insert_account
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+        - name: "@Password"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: DeleteAccount
+      description: Delete an account by its username.
+      path: accounts/delete_account
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: CountAccounts
+      description: Count the total number of accounts.
+      path: accounts/count_accounts
+      parameters: []
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of accounts
