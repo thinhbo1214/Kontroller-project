@@ -20,7 +20,7 @@ namespace Server.Source.Data
         /// <summary>
         /// Account credentials used for authentication (e.g., login form).
         /// </summary>
-        public UserAccount account;
+        public Account account;
 
         /// <summary>
         /// Email address associated with the user. Optional:only visible to owner or admin.
@@ -68,7 +68,7 @@ namespace Server.Source.Data
         public User()
         {
             userId = "";
-            account = new UserAccount();
+            account = new Account();
             email = "";
             avatar = "";
             diary = new Diary();

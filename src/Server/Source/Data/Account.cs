@@ -9,7 +9,7 @@ namespace Server.Source.Data
     /// <summary>
     /// Account credentials used for authentication (e.g., login form).
     /// </summary>
-    public class UserAccount
+    public class Account
     {
         /// <summary>
         /// The username used to log into the system.
@@ -21,7 +21,7 @@ namespace Server.Source.Data
         /// Optional:only visible to owner or admin.
         /// </summary>
         public string password { get; set; }
-        public UserAccount()
+        public Account()
         {
             username = "";
             password = "";

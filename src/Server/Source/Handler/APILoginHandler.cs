@@ -32,7 +32,7 @@ namespace Server.Source.Handler
             }
 
             var value = request.Body;
-            var loginReq = JsonHelper.Deserialize<UserAccount>(value);
+            var loginReq = JsonHelper.Deserialize<Account>(value);
             if (loginReq == null)
             {
                 var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
