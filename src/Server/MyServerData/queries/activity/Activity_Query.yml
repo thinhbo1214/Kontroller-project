@@ -1,0 +1,161 @@
+Activity:
+  description: Contains all SQL queries related to the Acivity entity.
+  queries:
+####### Query activity #######
+    - name: GetAllActivities
+      description: Retrieve all activities.
+      path: activity/get_all_activities
+      parameters: []
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: activityId
+            type: string
+          - name: content
+            type: string
+          - name: dateDo
+            type: string
+
+    - name: GetActivityByUserId
+      description: Retrieve a specific activity by its ID.
+      path: activity/get_activity_by_userid
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@ActivityId"
+          type: string
+          required: true 
+      result:
+        type: DataTable # Query
+        returnsMany: false
+        columns:
+          - name: activityId
+            type: string
+          - name: content
+            type: string
+          - name: dateDo
+            type: string
+
+    - name: GetAllActivitiesByUserId
+      description: Retrieve all activities by a specific user ID.
+      path: activity/get_all_activities_by_userid
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: activityId
+            type: string
+          - name: content
+            type: string
+          - name: dateDo
+            type: string
+    
+    - name: GetAllActivitiesByUserIdWithDate
+      description: Retrieve all activities by a specific user ID with date filtering.
+      path: activity/get_all_activities_by_userid_with_date
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: activityId
+            type: string
+          - name: content
+            type: string
+          - name: dateDo
+            type: string
+
+####### Non-query activity #######
+    - name: InsertActivity
+      description: Insert a new activity into the database.
+      path: activity/insert_activity
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true 
+        - name: "@Content"
+          type: string
+          required: true  
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: DeleteAccount
+      description: Delete an account by its user ID.
+      path: accounts/delete_account
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@ActivityId"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+####### Scalar queries activity #######
+    - name: CountActivities
+      description: Count the total number of activities.
+      path: activity/count_activities
+      parameters: []
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of activities
+
+    - name: CountActivitiesWithDate
+      description: Count the total number of activities within a date range.
+      path: activity/count_activities_with_date
+      parameters:
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of activities within the date range
+
+    - name: CountActivitiesByUserId
+      description: Count the total number of activities for a specific user ID.
+      path: activity/count_activities_by_userid
+      parameters: 
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of activities
+
+    - name: CountActivitiesByUserIdWithDate
+      description: Count the total number of activities for a specific user ID within a date range.
+      path: activity/count_activities_by_userid_with_date
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of activities within the date range 
