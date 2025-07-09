@@ -18,8 +18,8 @@ Comment:
       format: date
       description: The date the comment was created, in YYYY-MM-DD format.
       example: '2023-10-01'
-   likes:
+    reactions:
       type: array
-      description: The number of likes a comment receives, as well as the users who like it.
+      description: List of reactions made by users in response to the comment.
       items:
-        $ref: './User.yml#/User'
+        $ref: './Reaction.yml#/Reaction'
