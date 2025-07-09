@@ -1,7 +1,7 @@
 Account:
   description: Contains all SQL queries related to the Account entity.
-
   queries:
+####### Query account #######
     - name: GetAllAccounts
       description: Retrieve all active accounts.
       path: accounts/get_all_accounts
@@ -33,17 +33,7 @@ Account:
             type: string
             format: hashed
 
-    - name: CheckAccountExists
-      description: Check if an account exists by its username.
-      path: accounts/check_account_exists
-      parameters:
-        - name: "@Username"
-          type: string
-          required: true
-      result:
-        type: scalar # Count, Sum, Min, Max
-        datatype: int  # 1 if exists, 0 otherwise
-
+####### Non-query account #######
     - name: UpdateAccountPassword
       description: Update the password for a specific account.
       path: accounts/update_account_password
@@ -83,6 +73,7 @@ Account:
         type: affected_rows # NonQuery
         datatype: int
 
+####### Scalar queries account #######
     - name: CountAccounts
       description: Count the total number of accounts.
       path: accounts/count_accounts
@@ -90,3 +81,14 @@ Account:
       result:
         type: scalar # Count, Sum, Min, Max
         datatype: int  # Returns the total count of accounts
+
+    - name: CheckAccountExists
+      description: Check if an account exists by its username.
+      path: accounts/check_account_exists
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # 1 if exists, 0 otherwise

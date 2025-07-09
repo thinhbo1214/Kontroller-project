@@ -1,0 +1,385 @@
+Comment:
+  description: Contains all SQL queries related to the Comment entity.
+  queries:
+####### Query comment #######
+    - name: GetAllComments
+      description: Retrieve all comments.
+      path: comment/get_all_comments
+      parameters: []
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+
+    - name: GetCommentByReviewId
+      description: Retrieve a specific comment by review ID.
+      path: comment/get_comment_by_reviewid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@CommentId"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: false
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+
+    - name: GetAllCommentsByReviewId
+      description: Retrieve all comments by a specific review ID.
+      path: comment/get_all_comments_by_reviewid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+    
+    - name: GetAllCommentsByReviewIdWithDate
+      description: Retrieve all comments by a specific review ID with date filtering.
+      path: comment/get_all_comments_by_reviewid_with_date
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+
+    - name: GetAllCommentsByUserId
+      description: Retrieve all comments made by a specific user ID.
+      path: comment/get_all_comments_by_userid
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+    
+    - name: GetAllCommentsByUserIdWithDate
+      description: Retrieve all comments made by a specific user ID with date filtering.
+      path: comment/get_all_comments_by_userid_with_date
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+
+    - name: GetAllCommentsByReviewIdAndUserId
+      description: Retrieve all comments for a specific review ID made by a specific user ID.
+      path: comment/get_all_comments_by_reviewid_and_userid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+    
+    - name: GetAllCommentsByReviewIdAndUserIdWithDate
+      description: Retrieve all comments for a specific review ID made by a specific user ID with date
+      path: comment/get_all_comments_by_reviewid_and_userid_with_date
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: DataTable # Query
+        returnsMany: true
+        columns:
+          - name: commentId
+            type: string
+          - name: content
+            type: string
+          - name: author
+            type: object # User
+          - name: dateCreated
+            type: string
+          - name: reactions
+            type: array # Reaction
+          
+
+####### Non-query comment #######
+    - name: InsertComment
+      description: Insert a new comment into the database.
+      path: comment/insert_comment
+      parameters:
+        - name: "@Content"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@ReviewId"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+    
+    - name: UpdateComment
+      description: Update an existing comment in the database.
+      path: comment/update_comment
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@CommentId"
+          type: string
+          required: true
+        - name: "@Content"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: DeleteComment
+      description: Delete a comment from the database.
+      path: comment/delete_comment
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@CommentId"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+    
+    - name: DeleteAllCommentsByReviewId
+      description: Delete all comments associated with a specific review ID.
+      path: comment/delete_all_comments_by_reviewid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+    
+    - name: DeleteAllCommentsByUserId
+      description: Delete all comments made by a specific user ID.
+      path: comment/delete_all_comments_by_userid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+####### Scalar queries comment #######
+    - name: CountComments
+      description: Count the total number of comments.
+      path: comment/count_comments
+      parameters: []
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments
+
+    - name: CountCommentsByWithDate
+      description: Count the total number of comments with date filtering.
+      path: comment/count_comments_with_date
+      parameters:
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments within the date range
+
+    - name: CountCommentsByReviewId
+      description: Count the total number of comments for a specific review ID.
+      path: comment/count_comments_by_reviewid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments for the review ID 
+
+    - name: CountCommentsByReviewIdWithDate
+      description: Count the total number of comments for a specific review ID within a date range.
+      path: comment/count_comments_by_reviewid_with_date  
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments for the review ID within the date range
+
+    - name: CountCommentsByUserId
+      description: Count the total number of comments made by a specific user ID.
+      path: comment/count_comments_by_userid
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments made by the user ID
+
+    - name: CountCommentsByUserIdWithDate
+      description: Count the total number of comments made by a specific user ID within a date range
+      path: comment/count_comments_by_userid_with_date
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments made by the user ID within the date range
+
+    - name: CountCommentsByReviewIdAndUserId
+      description: Count the total number of comments for a specific review ID made by a specific user
+      path: comment/count_comments_by_reviewid_and_userid
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments for the review ID made by the user ID
+
+    - name: CountCommentsByReviewIdAndUserIdWithDate
+      description: Count the total number of comments for a specific review ID made by a specific user within a date range
+      path: comment/count_comments_by_reviewid_and_userid_with_date
+      parameters:
+        - name: "@ReviewId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@StartDate"
+          type: string
+          required: true
+        - name: "@EndDate"
+          type: string
+          required: true
+      result:
+        type: scalar # Count, Sum, Min, Max
+        datatype: int  # Returns the total count of comments for the review ID within the date range  
