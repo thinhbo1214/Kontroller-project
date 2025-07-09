@@ -14,10 +14,14 @@ namespace Server.Source.Manager
         private readonly string _basePath; // Nơi chứa thư mục gốc chứa file sql
         private readonly string _connectionString;
 
-        // Cache sql: key -> câu lệnh sql, key dạng "folder/file" hoặc "file"
+        /// <summary>
+        /// Cache sql: key -> câu lệnh sql, key dạng "folder/file" hoặc "file"
+        /// </summary>
         private readonly Dictionary<string, string> _sqlCache = new Dictionary<string, string>();
 
-        // Dùng để kiểm tra file thay đổi hay chưa
+        /// <summary>
+        /// Dùng để kiểm tra file thay đổi hay chưa
+        /// </summary>
         private readonly Dictionary<string, DateTime> _fileLastWriteTime = new Dictionary<string, DateTime>();
 
         private SqlConnection? _connection;
