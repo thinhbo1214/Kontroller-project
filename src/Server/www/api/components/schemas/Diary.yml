@@ -6,11 +6,15 @@ Diary:
       type: string
       description: Unique identifier for the diary entry.
       example: '001'
+
     gameLogged:
       type: array
-      description: List of games associated with this diary entry.(Suggestion:use `gameId` instead of full object if only reference is needed.)
+      description: 
+        List of games associated with this diary entry.
+        Suggestion:use `gameId` instead of full object if only reference is needed.
       items:
         $ref: './Game.yml#/Game'
+        
     dateLogged:
       type: string
       format: date

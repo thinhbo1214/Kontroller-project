@@ -6,13 +6,18 @@ Reation:
       type: string
       description: Unique identifier for the reaction.
       example: '001'
+
     reactionType:
       type: string
       description: URL of the reaction type, such as an emoji or icon representing the reaction.
       example: 'https://example.com/reaction.png'
+
     author:
       $ref: './User.yml#/User'
-      description: The user who performed the reaction.
+      description: 
+        The user who performed the reaction.
+        Suggestion:use `username` instead of full object if only reference is needed.
+        
     dateDo:
       type: string
       format: date

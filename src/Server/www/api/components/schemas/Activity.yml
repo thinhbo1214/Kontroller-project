@@ -6,10 +6,12 @@ Activity:
       type: string
       description: Unique identifier for the activity.
       example: '001'
+
     content:
       type: string
       description: Description or content of the activity performed by the user.
       example: 'This is an activity.'
+      
     dateDo:
       type: string
       format: date
