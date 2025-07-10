@@ -6,8 +6,10 @@ User:
       type: string 
       description: Unique identifier for the user.
       example: '001'
+
     account:
       $ref: './User.yml#/Account''
+
     email:
       type: string
       format: email
@@ -15,35 +17,60 @@ User:
        Email address associated with the user.
        Optional:only visible to owner or admin.
       example: 'admin@kontroller.com'
+
     avatar:
       type: string
       description: URL for the user's avatar image.
       example: 'https://example.com/avatar.jpg'
+
     diary:
       $ref: './Diary.yml#/Diary'
-      description: The user's personal game activity log. (Suggestion:use `diaryId` instead of full object if only reference is needed.)
+      description: 
+        The user's personal game activity log. 
+        Suggestion:use `diaryId` instead of full object if only reference is needed.
+
     playLaterList:
       type: array
-      description: List of games the user marked to play later. (Suggestion:use `gameId` instead of full object if only reference is needed.)
+      description: 
+        List of games the user marked to play later. 
+        Suggestion:use `gameId` instead of full object if only reference is needed.
       items:
         $ref: './Game.yml#/Game'
+
     isLoggedIn:
       type: boolean
       description: Indicates whether the user is currently logged in.
       example: true
+
     followers:
       type: array
-      description: List of users who follow this user. (Suggestion:use `userId` instead of full object if only reference is needed.)
+      description: 
+        List of users who follow this user. 
+        Suggestion:use `userId` instead of full object if only reference is needed.
       items:
         $ref: './User.yml#/User' 
+
+    following:
+      type: array
+      description:
+        List of users that this user follows.
+        Suggestion:use `userId` instead of full object if only reference is needed.
+      items:
+        $ref: './User.yml#/User'
+
     lists:
       type: array
-      description: Custom game lists created by the user. (Suggestion:use `listId` instead of full object if only reference is needed.)
+      description:
+        Custom game lists created by the user. 
+        Suggestion:use `listId` instead of full object if only reference is needed.
       items:
         $ref: './List.yml#/List'
+
     activity:
       type: array
-      description: Recorded actions the user has performed in the system. (Suggestion:use `activityId` instead of full object if only reference is needed.)
+      description: 
+        Recorded actions the user has performed in the system.
+        Suggestion:use `activityId` instead of full object if only reference is needed.
       items:
         $ref: './Activity.yml#/Activity'
 
@@ -56,6 +83,7 @@ Account:
       type: string
       description: The username used to log into the system.
       example: 'admin'
+
     password:
       type: string
       description: 

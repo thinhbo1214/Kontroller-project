@@ -6,20 +6,28 @@ Comment:
       type: string
       description: Unique identifier for the comment.
       example: '001'
+
     content:
       type: string
       description: The content of the comment.
       example: 'This is a comment.'
+
     author:
       $ref: './User.yml#/User'
-      description: The user who created the comment. (Suggestion:use `userId` instead of full object if only reference is needed.)
+      description: 
+        The user who created the comment. 
+        Suggestion:use `username` instead of full object if only reference is needed.
+        
     dateCreated:
       type: string
       format: date
       description: The date the comment was created, in YYYY-MM-DD format.
       example: '2023-10-01'
+
     reactions:
       type: array
-      description: List of reactions made by users in response to the comment.
+      description: 
+        List of reactions made by users in response to the comment.
+        Suggestion:use `reactionId` instead of full object if only reference is needed.
       items:
         $ref: './Reaction.yml#/Reaction'
