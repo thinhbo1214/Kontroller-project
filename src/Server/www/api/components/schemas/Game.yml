@@ -65,3 +65,22 @@ Game:
       example:
         - 'Steam'
         - 'Epic Games Store'
+SearchGameQuery:
+  type: object
+  description: Parameters used to search for games.
+  properties:
+    title:
+      type: string
+      description: Game title to search by (optional, partial match allowed).
+      example: 'Wukong'
+
+    genre:
+      type: string
+      description: Filter by game genre (optional).
+      example: 'Action RPG'
+
+    minRating:
+      type: number
+      format: float
+      description: Minimum average rating of the game (optional).
+      example: 8.0
