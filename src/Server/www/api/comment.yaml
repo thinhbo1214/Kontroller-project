@@ -1,0 +1,58 @@
+get:
+  summary: Get comment by ID
+  operationId: GetComment
+  parameters:
+    - name: commentId
+      in: query
+      required: true
+      schema:
+        type: string
+        example: 'cmt001'
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            $ref: './components/schemas/Comment.yml#/Comment'
+post:
+  summary: Create a new comment
+  operationId: CreateComment
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/Comment.yml#/Comment'
+  responses:
+    201:
+      description: Comment created successfully
+put:
+  summary: Update an existing comment
+  operationId: UpdateComment
+  parameters:
+    - name: commentId
+      in: query
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/Comment.yml#/Comment'
+  responses:
+    200:
+      description: Comment updated
+delete:
+  summary: Delete a comment
+  operationId: DeleteComment
+  parameters:
+    - name: commentId
+      in: query
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: Comment deleted
