@@ -1,125 +1,79 @@
 get:
   tags:
     - game   # Thẻ mô tả chức năng của phương thức
-  summary: Get all list game  # Mô tả ngắn gọn về chức năng của phương thức
-  operationId: GetListGame  # Tên định danh duy nhất cho phương thức
-  parameters: # Tham số đầu vào của phương thức
-    - name: key # Tên tham số
-      in: query # Vị trí tham số (query, path, header, body)
-      description: Game title to search (optional) # Mô tả tham số
-      required: false # Có bắt buộc tham số này hay không
-      schema: # Định dạng dữ liệu của tham số
-        type: string # Loại dữ liệu (string, integer, number, boolean, array, object)
-        example: 'Black with Wukong' # Ví dụ giá trị của tham số
-  responses: # Các phản hồi của phương thức
-    200: # Mã trạng thái HTTP 200 - Thành công
-      description: Success # Mô tả phản hồi
-      content: # Nội dung phản hồi
-        application/json: # Định dạng phản hồi là JSON
-          schema: # Định nghĩa cấu trúc dữ liệu của phản hồi
-            type: object  # Loại dữ liệu là object
-            properties: # Các thuộc tính của object
-              key: # Tên thuộc tính
-                type: string # Loại dữ liệu của thuộc tính
-                example: 'game001' # Ví dụ giá trị của thuộc tính
-              value:  # Tên thuộc tính
-                type: string # Loại dữ liệu của thuộc tính
-                example: 'Black with Wukong' # Ví dụ giá trị của thuộc tính
-              genre:
-                type: string
-                example: 'MOBA'
-              avgRating:
-                type: number
-                example: 9.1
-              services:
-                type: array
-                items:
-                  type: string
-                example: ['Steam', 'Epic Games']
-        text/plain: # Định dạng phản hồi là văn bản
-          schema: # Định nghĩa cấu trúc dữ liệu của phản hồi
-            type: string # Loại dữ liệu là string
-            example: '{"gameId":"game001","title":"Black with Wukong"}' # Ví dụ giá trị của phản hồi
-    404: # Mã trạng thái HTTP 404 - Không tìm thấy
-      description: Game key not found # Mô tả phản hồi
-    500: # Mã trạng thái HTTP 500 - Lỗi máy chủ nội bộ
-      description: Internal server error # Mô tả phản hồi
-
-post:
-  tags:
-    - Game
-  summary: Create new game
-  operationId: CreateGame
+  summary: Get the game data  # Mô tả ngắn gọn về chức năng của phương thức
+  operationId: GetGameData  # Tên định danh duy nhất cho phương thức
   parameters:
     - name: gameId
       in: query
-      description: GameID
+      description: Game ID (required)
       required: true
       schema:
         type: string
         example: 'game001'
-  requestBody:
-    description: Game data to create
-    required: true
-    content:
-      text/plain:
-        schema:
-          type: string
-          example: 'Black with Wukong'
   responses:
     200:
-      description: Created successfully
+      description: Success
       content:
-        text/plain:
+        application/json:
           schema:
-            type: string
-            example: 'OK'
+            $ref: './components/schemas/Game.yml#/Game'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    404:
+      $ref: './components/responses/AllStatusCode.yml#/404'
     500:
-      description: Internal server error
+      $ref: './components/responses/AllStatusCode.yml#/500'
+
+post:
+  tags:
+    - game
+  summary: Create new game data
+  operationId: CreateGameData
+  requestBody:
+    description: Provide the game data to create a new game.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/Game.yml#/Game'
+  responses:
+    200:
+      $ref: './components/responses/AllStatusCode.yml#/200'
+    201:
+      $ref: './components/responses/AllStatusCode.yml#/201'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
 
 put:
   tags:
-    - Game
-  summary: Modify exiting game
-  operationId: ModifyCacheValue
-  parameters:
-    - name: key
-      in: query
-      description: Game ID
-      required: true
-      schema:
-        type: string
-        example: 'game001'
+    - game
+  summary: Modify the game data
+  operationId: ModifyGameData
   requestBody:
-    description: Updated game data
+    description: Provide the updated fields for the game.
     required: true
     content:
-      text/plain:
+      application/json:
         schema:
-          type: string
-          example: 'Black with Wukong - Updated'
-        genre:
-          type: string
-          example: 'MOBA'
-        description:
-          type: string
-          example: 'Updated description...'
+          $ref: './components/schemas/Game.yml#/Game'
   responses:
     200:
-      description: Modified successfully
-      content:
-        text/plain:
-          schema:
-            type: string
-            example: 'OK'
+      $ref: './components/responses/AllStatusCode.yml#/200'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    401:
+      $ref: './components/responses/AllStatusCode.yml#/401'
     500:
-      description: Internal server error
+      $ref: './components/responses/AllStatusCode.yml#/500'
 
 delete:
   tags:
     - game
-  summary: Delete game
-  operationId: DeleteGame
+  summary: Delete the game, including all related data
+  operationId: DeleteGameData
   parameters:
     - name: gameId
       in: query
@@ -130,40 +84,10 @@ delete:
         example: 'game001'
   responses:
     200:
-      description: Deleted successfully
-      content:
-        text/plain:
-          schema:
-            type: string
-            example: 'Deleted'
-    404:
-      description: Game not found
+      $ref: './components/responses/AllStatusCode.yml#/200'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    401:
+      $ref: './components/responses/AllStatusCode.yml#/401'
     500:
-      description: Internal server error
-
-head:
-  tags:
-    - game
-  summary: Get game metadata headers
-  operationId: GetGameHeaders
-  responses:
-    200:
-      description: Returns game metadata headers
-    500:
-      description: Internal server error
-
-options:
-  tags:
-    - game
-  summary: Get the game options
-  operationId: GetGameOptions
-  responses:
-    200:
-      description: List supported methods
-      content:
-        text/plain:
-          schema:
-            type: string
-            example: 'GET, POST, PUT, DELETE, HEAD, OPTIONS'
-    500:
-      description: Internal server error
+      $ref: './components/responses/AllStatusCode.yml#/500'
