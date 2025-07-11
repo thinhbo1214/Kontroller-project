@@ -1,4 +1,6 @@
 get:
+  tag:
+    -comment
   summary: Get comment by ID
   operationId: GetComment
   parameters:
@@ -10,6 +12,7 @@ get:
         example: 'cmt001'
   responses:
     200:
+      description: Success
       content:
         application/json:
           schema:
@@ -25,8 +28,10 @@ post:
           $ref: './components/schemas/Comment.yml#/Comment'
   responses:
     201:
-      description: Comment created successfully
+      description: ./components/responses/AllStatusCode.yml#/201'
 put:
+  tag:
+    -comment
   summary: Update an existing comment
   operationId: UpdateComment
   parameters:
@@ -43,8 +48,16 @@ put:
           $ref: './components/schemas/Comment.yml#/Comment'
   responses:
     200:
-      description: Comment updated
+      $ref: './components/responses/AllStatusCode.yml#/200'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    401:
+      $ref: './components/responses/AllStatusCode.yml#/401'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
 delete:
+  tag:
+    -comment
   summary: Delete a comment
   operationId: DeleteComment
   parameters:
@@ -55,4 +68,10 @@ delete:
         type: string
   responses:
     200:
-      description: Comment deleted
+      $ref: './components/responses/AllStatusCode.yml#/200'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    401:
+      $ref: './components/responses/AllStatusCode.yml#/401'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
