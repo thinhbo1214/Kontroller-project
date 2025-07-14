@@ -5,7 +5,32 @@ Diary:
     - name: GetAllDiaries
       description: Retrieves all diaries.
       path: queries/diary/get_all_diaries
+      access: [admin]
       parameters: []
+      result:
+        type: DataTable
+        returnsMany: true
+        columns:
+          - name: diaryId
+            type: string           
+          - name: gameLogged
+            type: array
+            items:
+              type: string
+              format: gameId
+          - name: dateLogged
+            type: string
+            format: date
+
+    - name: GetDiary
+      description: Retrieves a diary by its ID.
+      path: queries/diary/get_diary_by_id
+      access: [admin]
+      parameters:
+        - name: "@DiaryId"       
+          type: string
+          format: diaryId         
+          required: true
       result:
         type: DataTable
         returnsMany: true
@@ -14,6 +39,9 @@ Diary:
             type: string
           - name: gameLogged
             type: array
+            items:
+              type: string
+              format: gameId
           - name: dateLogged
             type: string
             format: date
@@ -21,11 +49,12 @@ Diary:
     - name: GetDiaryByUserId
       description: Retrieves a diary by user ID.
       path: queries/diary/get_diary_by_user_id
+      access: [admin, user]
       parameters:
         - name: "@UserId"
           type: string
-          description: The ID of the user whose diary is being retrieved.
-          required: 
+          format: userId      
+          required: true
       result:
         type: DataTable
         returnsMany: true
@@ -34,90 +63,141 @@ Diary:
             type: string
           - name: gameLogged
             type: array
+            items:
+              type: string
+              format: gameId
           - name: dateLogged
             type: string
             format: date
-    
-    - name: GetDiaryByDiaryId
-      description: Retrieves a diary by its ID.
-      path: queries/diary/get_diary_by_id
+
+    - name: GetDiaryByUsername
+      description: Retrieves a diary by username.
+      path: queries/diary/get_diary_by_username
+      access: [admin, user]
       parameters:
-        - name: "@DiaryId"
+        - name: "@Username"
           type: string
-          description: The ID of the diary being retrieved.
+          format: username
           required: true
       result:
         type: DataTable
-        returnsMany: false
+        returnsMany: true
         columns:
           - name: diaryId
             type: string
           - name: gameLogged
             type: array
+            items:
+              type: string
+              format: gameId
           - name: dateLogged
             type: string
             format: date
     
-####### Non-query diary #######
-    - name: InsertDiary
-      description: Inserts a new diary entry.
-      path: queries/diary/insert_diary
-      parameters:
-        - name: "@GameLogged"
-          type: array
-          description: The list of games associated with the diary entry.
-          required: true
-      result:
-        type: affected_rows # NonQuery
-        datatype: int
-    
+####### Non-query diary #######    
     - name: InsertGameToDiary
       description: Inserts a game into an existing diary entry.
       path: queries/diary/insert_game_to_diary
+      access: [admin]
       parameters:
         - name: "@DiaryId"
           type: string
-          description: The ID of the diary entry to which the game will be added.
+          format: diaryId
+          required: true
+        - name: "@GameId"
+          type: string
+          format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
         datatype: int
     
-    - name: InsertGameToDiaryByUserId
-      description: Inserts a game into all diary entries for a specific user.
+    - name: InsertGameToDiaryByUser
+      description: Inserts a game into diary entry for a specific user.
       path: queries/diary/insert_game_to_diary_by_user_id
+      access: [admin, user]
       parameters:
         - name: "@UserId"
           type: string
-          description: The ID of the user whose diary entries will be updated.
+          format: userId
+          required: true
+        - name: "@GameId"
+          type: string
+          format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
         datatype: int
 
-    - name: UpdateDiaryByDiaryId
-      description: Updates an existing diary entry.
-      path: queries/diary/update_diary
+    - name: InsertGamesToDiary
+      description: Inserts multiple games into diary entry
+      path: queries/diary/insert_games_to_diary
+      access: [admin]
       parameters:
         - name: "@DiaryId"
           type: string
-          description: The ID of the diary entry to update.
+          format: diaryId
           required: true
         - name: "@GameLogged"
           type: array
-          description: The updated list of games associated with the diary entry.
+          items:
+            type: string
+            format: gameId
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: InsertGamesToDiaryByUser
+      description: Inserts multiple games into an existing diary entry for a specific user.
+      path: queries/diary/insert_games_to_diary_by_user_id
+      access: [admin, user]
+      parameters:
+        - name: "@UserId"
+          type: string
+          format: userId
+          required: true
+        - name: "@GameLogged"
+          type: array
+          items:
+            type: string
+            format: gameId
+      result: 
+        type: affected_rows # NonQuery
+        datatype: int
+
+    - name: UpdateDiary
+      description: Updates an existing diary entry.
+      path: queries/diary/update_diary
+      access: [admin]
+      parameters:
+        - name: "@DiaryId"
+          type: string
+          format: diaryId
+          required: true
+        - name: "@GameLogged"
+          type: array
+          items:
+            type: string
+            format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
         datatype: int
 
-    - name: UpdateDiaryByUserId
+    - name: UpdateDiaryByUser
       description: Updates all diary entries for a specific user.
       path: queries/diary/update_diary_by_user_id
+      access: [admin, user]
       parameters:
         - name: "@UserId"
           type: string
-          description: The ID of the user whose diary entries are to be updated.
+          format: userId
+          required: true
+        - name: "@GameLogged"
+          type: array
+          items:
+            type: string
+            format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
@@ -126,61 +206,91 @@ Diary:
     - name: DeleteGameFromDiary
       description: Deletes a game from an existing diary entry.
       path: queries/diary/delete_game_from_diary
+      access: [admin]
       parameters:
         - name: "@DiaryId"
           type: string
-          description: The ID of the diary entry from which the game will be removed.
+          format: diaryId
           required: true
         - name: "@GameId"
           type: string
-          description: The ID of the game to be removed from the diary entry.
+          format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
         datatype: int
       
-    - name: DeleteGameFromDiaryByUserId
+    - name: DeleteGameFromDiaryByUser
       description: Deletes a game from all diary entries for a specific user.
       path: queries/diary/delete_game_from_diary_by_user_id
+      access: [admin, user]
       parameters:
         - name: "@UserId"
           type: string
-          description: The ID of the user whose diary entries will be updated.
+          format: userId
           required: true
         - name: "@GameId"
           type: string
-          description: The ID of the game to be removed from the diary entries.
+          format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
         datatype: int
 
-    - name: DeleteDiaryByDiaryId
-      description: Deletes a diary entry by its ID.
-      path: queries/diary/delete_diary
+    - name: DeleteGamesFromDiary
+      description: Deletes multiple games from an existing diary entry.
+      path: queries/diary/delete_games_from_diary
+      access: [admin]
       parameters:
         - name: "@DiaryId"
           type: string
-          description: The ID of the diary entry to delete.
+          format: diaryId
+          required: true
+        - name: "@GameIds"
+          type: array
+          items:
+              type: string
+              format: gameId
           required: true
       result:
-        type: affected_rows # NonQuery
-        datatype: int
+      type: affected_rows # NonQuery
+      datatype: int
 
-    - name: DeleteDiaryByUserId
-      description: Deletes all diary entries for a specific user.
-      path: queries/diary/delete_diary_by_user_id
+    - name: DeleteGamesFromDiaryByUser
+      description: Deletes multiple games from all diary entries for a specific user.
+      path: queries/diary/delete_games_from_diary_by_user_id
+      access: [admin, user]
       parameters:
         - name: "@UserId"
           type: string
-          description: The ID of the user whose diary entries are to be deleted.
+          format: userId
+          required: true
+        - name: "@GameIds"
+          type: array
+          items:
+              type: string
+              format: gameId
           required: true
       result:
         type: affected_rows # NonQuery
         datatype: int
       
+    - name: DeleteDiary
+      description: Deletes a diary entry.
+      path: queries/diary/delete_diary
+      access: [admin]
+      parameters:
+      - name: "@DiaryId"
+        type: string
+        format: diaryId
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+
     - name: DeleteAllDiaries
       description: Deletes all diary entries.
+      path: queries/diary/delete_all_diaries
+      access: [admin]
       parameters: []
       result:
         type: affected_rows # NonQuery
@@ -190,7 +300,23 @@ Diary:
     - name: CountDiaries
       description: Counts the total number of diary entries.
       path: queries/diary/count_diaries
+      access: [admin]
       parameters: []
+      result:
+        type: Scalar
+        datatype: int
+
+    - name: CountDiariesWithDate
+      description: Count the total number of diaries with date filtering.
+      path: queries/diary/count_diaries_with_date
+      access: [admin]
+      parameters:
+        - name: "@StartDate"
+          type: string
+          format: date
+        - name: "@EndDate"
+          type: string
+          format: date
       result:
         type: Scalar
         datatype: int
@@ -201,7 +327,21 @@ Diary:
       parameters:
         - name: "@DiaryId"
           type: string
+          format: diaryId
           description: The ID of the diary for which to count games.
+          required: true
+      result:
+        type: Scalar
+        datatype: int
+
+    - name: CountGamesInDiaryByUser
+      description: Counts the total number of games in a specific diary for a specific user.
+      path: queries/diary/count_games_in_diary_by_user
+      access: [admin, user]
+      parameters:
+        - name: "@UserId"
+          type: string
+          format: userId
           required: true
       result:
         type: Scalar

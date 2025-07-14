@@ -374,9 +374,6 @@ Comment:
       path: comment/delete_all_comments_by_username
       access: [admin, user]
       parameters:
-        - name: "@ReviewId"
-          type: string
-          required: true
         - name: "@Username"
           type: string
           required: true

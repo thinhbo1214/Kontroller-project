@@ -13,6 +13,7 @@ Account:
         columns:
           - name: username
             type: string
+
           - name: password
             type: string
             format: hashed  # Indicates that the password is stored in a hashed format
@@ -31,11 +32,28 @@ Account:
         columns:
           - name: username
             type: string
+
           - name: password
             type: string
             format: hashed
 
 ####### Non-query account #######
+    - name: InsertAccount
+      description: Insert a new account into the database.
+      path: accounts/insert_account
+      access: [admin, user]  # Cả admin và user đều có thể gọi
+      parameters:
+        - name: "@Username"
+          type: string
+          required: true
+
+        - name: "@Password"
+          type: string
+          required: true
+      result:
+        type: affected_rows # NonQuery
+        datatype: int
+        
     - name: UpdateAccountPasswordByUser
       description: Update the password for a specific account.
       path: accounts/update_account_password_by_user
@@ -44,9 +62,11 @@ Account:
         - name: "@Username"
           type: string
           required: true
+
         - name: "@Password"
           type: string
-          required: 
+          required: true
+
         - name: "@NewPassword"
           type: string
           required: true
@@ -62,22 +82,8 @@ Account:
         - name: "@Username"
           type: string
           required: true
-        - name: "@NewPassword"
-          type: string
-          required: true
-      result:
-        type: affected_rows # NonQuery
-        datatype: int
 
-    - name: InsertAccount
-      description: Insert a new account into the database.
-      path: accounts/insert_account
-      access: [admin, user]  # Cả admin và user đều có thể gọi
-      parameters:
-        - name: "@Username"
-          type: string
-          required: true
-        - name: "@Password"
+        - name: "@NewPassword"
           type: string
           required: true
       result:
