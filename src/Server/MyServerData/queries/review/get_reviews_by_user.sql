@@ -1,1 +1,0 @@
-SELECT * FROM Review WHERE userID = ?;
