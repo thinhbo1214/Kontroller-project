@@ -26,7 +26,7 @@ jobs:
 
     - name: Tải extra_files.zip từ Google Drive bằng gdown
       run: |
-        gdown https://drive.google.com/uc?id=1HuwwtuoEaj-EV7qxzNsAsIlJRHqKQv71
+        gdown https://drive.google.com/uc?id=1P0lyEKjT8sPLQ_hBRhajaEvZQeY5zKa9
 
     - name: Kiểm tra file extra_files.zip
       run: dir extra_files.zip
