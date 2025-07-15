@@ -177,19 +177,30 @@ namespace Server.Source.View
         {
             try
             {
-                // Tên file batch nằm cùng thư mục exe
-                string batchFile = Path.Combine(Application.StartupPath, "Run_xampp.bat");
+                // Đường dẫn đến file batch trong thư mục extra_files
+                string batchFile = Path.Combine(Application.StartupPath, "extra_files", "Run_xampp.bat");
+
+                if (!File.Exists(batchFile))
+                {
+                    MessageBox.Show("File batch không tồn tại: " + batchFile);
+                    return;
+                }
 
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = batchFile,
-                    UseShellExecute = true,  // quan trọng để mở cmd bình thường
+                    FileName = "cmd.exe",
+                    Arguments = $"/c \"{batchFile}\"",
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(batchFile),
+                    // Không dùng Verb "runas" để không yêu cầu admin
+
                 });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi chạy file batch: " + ex.Message);
+                MessageBox.Show("Lỗi khi chạy file batch: " + ex.Message + "\n" + ex.StackTrace);
             }
         }
+
     }
 }
