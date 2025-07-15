@@ -21,7 +21,9 @@ namespace Server.Source.Model
 {
     public class ModelServer
     {
-        private string certificate = Path.Combine(AppContext.BaseDirectory, "extra_files", "tools", "certificates", "server.pfx");
+        private static readonly string ExecutableDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+        private string certificate = Path.Combine(ExecutableDirectory, "extra_files", "tools", "certificates", "server.pfx");
         public string Certificate { get => certificate; set => certificate = value; }
 
         private string password = "qwerty";
@@ -30,10 +32,10 @@ namespace Server.Source.Model
         private int port = 2000;
         public int Port { get => port; set => port = value; }
 
-        private string www = Path.Combine(AppContext.BaseDirectory, "extra_files", "www", "ClientWeb");
+        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "ClientWeb");
         public string WWW { get => www; set => www = value; }
 
-        private string xampp = Path.Combine(AppContext.BaseDirectory, "extra_files", "xampp");
+        private string xampp = Path.Combine(ExecutableDirectory, "extra_files", "xampp");
         public string XAMPP { get => xampp; set => xampp = value; }
 
         private SslContext context;
