@@ -19,9 +19,17 @@ jobs:
       with:
         dotnet-version: 7.0.x
 
-    - name: Tải extra_files.zip từ Google Drive
+    - name: Cài Python & gdown
       run: |
-        curl -L -o extra_files.zip "https://drive.google.com/uc?export=download&id=1CerDovGc_6X68mJSZwawXiOTEfrY6VNJ"
+        python -m pip install --upgrade pip
+        pip install gdown
+
+    - name: Tải extra_files.zip từ Google Drive bằng gdown
+      run: |
+        gdown https://drive.google.com/uc?id=1CerDovGc_6X68mJSZwawXiOTEfrY6VNJ
+
+    - name: Kiểm tra file extra_files.zip
+      run: dir extra_files.zip
 
     - name: Giải nén extra_files.zip
       run: |
