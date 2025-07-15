@@ -6,6 +6,7 @@ using Server.Source.Presenter;
 using System.Diagnostics;
 using System.Windows.Forms;
 using static Server.Source.Model.ModelServer;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Server.Source.View
 {
@@ -170,6 +171,25 @@ namespace Server.Source.View
         private void labelWeb_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonXAMPP_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Tên file batch nằm cùng thư mục exe
+                string batchFile = Path.Combine(Application.StartupPath, "Run_xampp.bat");
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = batchFile,
+                    UseShellExecute = true,  // quan trọng để mở cmd bình thường
+                });
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Lỗi khi chạy file batch: " + ex.Message);
+            }
         }
     }
 }

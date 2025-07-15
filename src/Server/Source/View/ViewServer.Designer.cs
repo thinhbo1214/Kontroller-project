@@ -46,6 +46,8 @@ namespace Server.Source.View
             labelRTime = new Label();
             labelWeb = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
+            buttonXAMPP = new Button();
+            labelServices = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -130,7 +132,7 @@ namespace Server.Source.View
             // linkWeb
             // 
             linkWeb.AutoSize = true;
-            linkWeb.Location = new Point(120, 504);
+            linkWeb.Location = new Point(120, 525);
             linkWeb.Name = "linkWeb";
             linkWeb.Size = new Size(75, 20);
             linkWeb.TabIndex = 9;
@@ -218,7 +220,7 @@ namespace Server.Source.View
             // 
             labelInfo.AutoSize = true;
             labelInfo.Font = new Font("Segoe UI", 15F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelInfo.Location = new Point(55, 342);
+            labelInfo.Location = new Point(55, 363);
             labelInfo.Name = "labelInfo";
             labelInfo.Size = new Size(224, 35);
             labelInfo.TabIndex = 17;
@@ -228,7 +230,7 @@ namespace Server.Source.View
             // 
             labelPortRunning.AutoSize = true;
             labelPortRunning.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelPortRunning.Location = new Point(27, 432);
+            labelPortRunning.Location = new Point(27, 453);
             labelPortRunning.Name = "labelPortRunning";
             labelPortRunning.Size = new Size(155, 23);
             labelPortRunning.TabIndex = 18;
@@ -238,7 +240,7 @@ namespace Server.Source.View
             // 
             labelActive.AutoSize = true;
             labelActive.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelActive.Location = new Point(27, 386);
+            labelActive.Location = new Point(27, 407);
             labelActive.Name = "labelActive";
             labelActive.Size = new Size(106, 23);
             labelActive.TabIndex = 19;
@@ -248,7 +250,7 @@ namespace Server.Source.View
             // 
             labelNRequest.AutoSize = true;
             labelNRequest.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNRequest.Location = new Point(27, 455);
+            labelNRequest.Location = new Point(27, 476);
             labelNRequest.Name = "labelNRequest";
             labelNRequest.Size = new Size(183, 23);
             labelNRequest.TabIndex = 20;
@@ -258,7 +260,7 @@ namespace Server.Source.View
             // 
             labelNUser.AutoSize = true;
             labelNUser.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNUser.Location = new Point(27, 478);
+            labelNUser.Location = new Point(27, 499);
             labelNUser.Name = "labelNUser";
             labelNUser.Size = new Size(156, 23);
             labelNUser.TabIndex = 22;
@@ -268,7 +270,7 @@ namespace Server.Source.View
             // 
             labelRTime.AutoSize = true;
             labelRTime.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelRTime.Location = new Point(27, 409);
+            labelRTime.Location = new Point(27, 430);
             labelRTime.Name = "labelRTime";
             labelRTime.Size = new Size(125, 23);
             labelRTime.TabIndex = 23;
@@ -278,7 +280,7 @@ namespace Server.Source.View
             // 
             labelWeb.AutoSize = true;
             labelWeb.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelWeb.Location = new Point(27, 501);
+            labelWeb.Location = new Point(27, 522);
             labelWeb.Name = "labelWeb";
             labelWeb.Size = new Size(90, 23);
             labelWeb.TabIndex = 24;
@@ -289,12 +291,36 @@ namespace Server.Source.View
             // 
             timer1.Tick += timer1_Tick;
             // 
+            // buttonXAMPP
+            // 
+            buttonXAMPP.BackColor = SystemColors.ButtonFace;
+            buttonXAMPP.Cursor = Cursors.Hand;
+            buttonXAMPP.Location = new Point(100, 325);
+            buttonXAMPP.Name = "buttonXAMPP";
+            buttonXAMPP.Size = new Size(94, 29);
+            buttonXAMPP.TabIndex = 25;
+            buttonXAMPP.Text = "XAMPP";
+            buttonXAMPP.UseVisualStyleBackColor = false;
+            buttonXAMPP.Click += buttonXAMPP_Click;
+            // 
+            // labelServices
+            // 
+            labelServices.AutoSize = true;
+            labelServices.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelServices.Location = new Point(12, 331);
+            labelServices.Name = "labelServices";
+            labelServices.Size = new Size(78, 23);
+            labelServices.TabIndex = 26;
+            labelServices.Text = "Services:";
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1028, 655);
+            Controls.Add(labelServices);
+            Controls.Add(buttonXAMPP);
             Controls.Add(labelWeb);
             Controls.Add(labelRTime);
             Controls.Add(labelNUser);
@@ -356,5 +382,7 @@ namespace Server.Source.View
         private Label labelRTime;
         private Label labelWeb;
         private System.Windows.Forms.Timer timer1;
+        private Button buttonXAMPP;
+        private Label labelServices;
     }
 }

@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'src/Server/**'  # 👈 Chỉ build khi có thay đổi trong thư mục này
+      - 'src/Server/**'  # Chỉ build khi thay đổi trong thư mục này
 
 jobs:
   build:
@@ -18,6 +18,14 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 7.0.x
+
+    - name: Tải extra_files.zip từ Google Drive
+      run: |
+        curl -L -o extra_files.zip "https://drive.google.com/uc?export=download&id=1CerDovGc_6X68mJSZwawXiOTEfrY6VNJ"
+
+    - name: Giải nén extra_files.zip
+      run: |
+        powershell Expand-Archive -Path extra_files.zip -DestinationPath extra_files
 
     - name: Build WinForm dạng self-contained vào thư mục BuildOutput
       run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained true -r win-x64 /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true
