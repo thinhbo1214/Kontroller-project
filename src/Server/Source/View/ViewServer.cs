@@ -12,7 +12,7 @@ namespace Server.Source.View
 {
     public partial class ViewServer : Form
     {
-        public event Action<int, string, string> OnClickedStart;
+        public event Action<int, string, string, string> OnClickedStart;
         public event Action OnClickedStop;
         public void UpdateLogView(string log)
         {
@@ -46,12 +46,12 @@ namespace Server.Source.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!textBox1.Text.IsNullOrEmpty() && !textBox2.Text.IsNullOrEmpty() && !textBox3.Text.IsNullOrEmpty())
+            if (!textBox1.Text.IsNullOrEmpty() && !textBox2.Text.IsNullOrEmpty() && !textBox3.Text.IsNullOrEmpty() && !textBox4.Text.IsNullOrEmpty())
             {
                 labelActive.Text = "Active: true";
                 Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
                 buttonStart.Enabled = false;
-                OnClickedStart?.Invoke(int.Parse(textBox1.Text), textBox3.Text, textBox2.Text);
+                OnClickedStart?.Invoke(int.Parse(textBox1.Text), textBox2.Text, textBox3.Text, textBox4.Text);
                 buttonStop.Enabled = true;
                 timer1.Start();
             }
@@ -98,7 +98,8 @@ namespace Server.Source.View
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string url = "https://127.0.0.1/";
+            int Port = Simulation.GetModel<ModelServer>().Port;
+            string url = $"https://127.0.0.1:{Port}";
             try
             {
                 Process.Start(new ProcessStartInfo
@@ -177,8 +178,10 @@ namespace Server.Source.View
         {
             try
             {
+                string xamppDir = Simulation.GetModel<ModelServer>().XAMPP;
+
                 // Đường dẫn đến file batch trong thư mục extra_files
-                string batchFile = Path.Combine(Application.StartupPath, "extra_files", "Run_xampp.bat");
+                string batchFile = Path.Combine(xamppDir, "Run_xampp.bat");
 
                 if (!File.Exists(batchFile))
                 {
@@ -186,12 +189,13 @@ namespace Server.Source.View
                     return;
                 }
 
+
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
                     Arguments = $"/c \"{batchFile}\"",
                     UseShellExecute = true,
-                    WorkingDirectory = Path.GetDirectoryName(batchFile),
+                    //WorkingDirectory = Path.GetDirectoryName(batchFile),
                     // Không dùng Verb "runas" để không yêu cầu admin
 
                 });
@@ -202,5 +206,28 @@ namespace Server.Source.View
             }
         }
 
+        private void textBox4_DoubleClick(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+            {
+                folderDialog.Description = "Chọn folder chứa xampp:";
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = folderDialog.SelectedPath;
+                    textBox4.Text = folderPath;
+                }
+            }
+        }
+
+        private void buttonAuto_Click(object sender, EventArgs e)
+        {
+            var model = Simulation.GetModel<ModelServer>();
+            if (textBox1.Text.IsNullOrEmpty()) textBox1.Text = model.Port.ToString();
+            if (textBox2.Text.IsNullOrEmpty()) textBox2.Text = model.Certificate;
+            if (textBox3.Text.IsNullOrEmpty()) textBox3.Text = model.WWW;
+            if (textBox4.Text.IsNullOrEmpty()) textBox4.Text = model.XAMPP;
+
+            MessageBox.Show("✅ Đã tự động điền cấu hình mặc định!");
+        }
     }
 }

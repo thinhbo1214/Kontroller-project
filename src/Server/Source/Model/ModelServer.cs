@@ -21,17 +21,20 @@ namespace Server.Source.Model
 {
     public class ModelServer
     {
-        private string certificate = Path.Combine(AppContext.BaseDirectory, "tools", "certificates", "server.pfx");
+        private string certificate = Path.Combine(AppContext.BaseDirectory, "extra_files", "tools", "certificates", "server.pfx");
         public string Certificate { get => certificate; set => certificate = value; }
 
         private string password = "qwerty";
         public string Password {get => password; set => password = value;}
 
-        private int port = 443;
+        private int port = 2000;
         public int Port { get => port; set => port = value; }
 
-        private string www = Path.Combine(AppContext.BaseDirectory, "www", "ClientWeb");
+        private string www = Path.Combine(AppContext.BaseDirectory, "extra_files", "www", "ClientWeb");
         public string WWW { get => www; set => www = value; }
+
+        private string xampp = Path.Combine(AppContext.BaseDirectory, "extra_files", "xampp");
+        public string XAMPP { get => xampp; set => xampp = value; }
 
         private SslContext context;
         public SslContext Context { get => context; }
@@ -94,15 +97,17 @@ namespace Server.Source.Model
             Simulation.SetModel<ViewServer>(new ViewServer());
         }
 
-        public void CongfigureServer(int port = -1, string www = "", string certificate = "")
+        public void CongfigureServer(int port = -1, string certificate = "",string www = "", string xampp = "")
         {
-            Port = (port <= 0) ? Port : port; 
-            Certificate = (certificate.IsNullOrEmpty()) ? Certificate : certificate;
-            WWW = (www.IsNullOrEmpty()) ? WWW : www;
+            if (!certificate.IsNullOrEmpty()) Certificate = certificate;
+            if (!www.IsNullOrEmpty()) WWW = www;
+            if (!xampp.IsNullOrEmpty()) XAMPP = xampp;
+            if (port > 0) Port = port;
 
             context = new SslContext(SslProtocols.Tls13, new X509Certificate2(Certificate, Password));
             server = new ServerController(Context, IPAddress.Any, Port);
             server.AddStaticContent(WWW);
+
 
             // Kích hoạt sự kiện báo presenter hoặc view biết
             CongfiguredServer?.Invoke();

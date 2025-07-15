@@ -48,6 +48,9 @@ namespace Server.Source.View
             timer1 = new System.Windows.Forms.Timer(components);
             buttonXAMPP = new Button();
             labelServices = new Label();
+            textBox4 = new TextBox();
+            labelXampp = new Label();
+            buttonAuto = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -67,7 +70,7 @@ namespace Server.Source.View
             // 
             labelPort.AutoSize = true;
             labelPort.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelPort.Location = new Point(55, 163);
+            labelPort.Location = new Point(53, 133);
             labelPort.Name = "labelPort";
             labelPort.Size = new Size(54, 23);
             labelPort.TabIndex = 1;
@@ -77,7 +80,7 @@ namespace Server.Source.View
             // 
             labelCertificate.AutoSize = true;
             labelCertificate.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelCertificate.Location = new Point(9, 208);
+            labelCertificate.Location = new Point(7, 178);
             labelCertificate.Name = "labelCertificate";
             labelCertificate.Size = new Size(97, 23);
             labelCertificate.TabIndex = 2;
@@ -86,7 +89,7 @@ namespace Server.Source.View
             // textBox1
             // 
             textBox1.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(115, 156);
+            textBox1.Location = new Point(113, 126);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(179, 30);
             textBox1.TabIndex = 3;
@@ -94,7 +97,7 @@ namespace Server.Source.View
             // textBox2
             // 
             textBox2.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox2.Location = new Point(115, 201);
+            textBox2.Location = new Point(113, 171);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(179, 30);
             textBox2.TabIndex = 4;
@@ -104,7 +107,7 @@ namespace Server.Source.View
             // 
             labelWWW.AutoSize = true;
             labelWWW.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelWWW.Location = new Point(49, 251);
+            labelWWW.Location = new Point(47, 221);
             labelWWW.Name = "labelWWW";
             labelWWW.Size = new Size(57, 23);
             labelWWW.TabIndex = 5;
@@ -113,7 +116,7 @@ namespace Server.Source.View
             // textBox3
             // 
             textBox3.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox3.Location = new Point(115, 244);
+            textBox3.Location = new Point(113, 214);
             textBox3.Name = "textBox3";
             textBox3.Size = new Size(179, 30);
             textBox3.TabIndex = 6;
@@ -123,7 +126,7 @@ namespace Server.Source.View
             // 
             labelSetting.AutoSize = true;
             labelSetting.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelSetting.Location = new Point(49, 77);
+            labelSetting.Location = new Point(47, 65);
             labelSetting.Name = "labelSetting";
             labelSetting.Size = new Size(257, 46);
             labelSetting.TabIndex = 8;
@@ -313,12 +316,46 @@ namespace Server.Source.View
             labelServices.TabIndex = 26;
             labelServices.Text = "Services:";
             // 
+            // textBox4
+            // 
+            textBox4.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBox4.Location = new Point(113, 255);
+            textBox4.Name = "textBox4";
+            textBox4.Size = new Size(179, 30);
+            textBox4.TabIndex = 28;
+            textBox4.DoubleClick += textBox4_DoubleClick;
+            // 
+            // labelXampp
+            // 
+            labelXampp.AutoSize = true;
+            labelXampp.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelXampp.Location = new Point(32, 262);
+            labelXampp.Name = "labelXampp";
+            labelXampp.Size = new Size(75, 23);
+            labelXampp.TabIndex = 27;
+            labelXampp.Text = "XAMPP:";
+            // 
+            // buttonAuto
+            // 
+            buttonAuto.BackColor = SystemColors.ButtonFace;
+            buttonAuto.Cursor = Cursors.Hand;
+            buttonAuto.Location = new Point(200, 325);
+            buttonAuto.Name = "buttonAuto";
+            buttonAuto.Size = new Size(94, 29);
+            buttonAuto.TabIndex = 29;
+            buttonAuto.Text = "Auto";
+            buttonAuto.UseVisualStyleBackColor = false;
+            buttonAuto.Click += buttonAuto_Click;
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1028, 655);
+            Controls.Add(buttonAuto);
+            Controls.Add(textBox4);
+            Controls.Add(labelXampp);
             Controls.Add(labelServices);
             Controls.Add(buttonXAMPP);
             Controls.Add(labelWeb);
@@ -384,5 +421,8 @@ namespace Server.Source.View
         private System.Windows.Forms.Timer timer1;
         private Button buttonXAMPP;
         private Label labelServices;
+        private TextBox textBox4;
+        private Label labelXampp;
+        private Button buttonAuto;
     }
 }
