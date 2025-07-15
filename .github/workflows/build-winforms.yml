@@ -3,8 +3,8 @@ name: Build Server Winform Kontroller App
 on:
   push:
     branches: [ main ]
-    # paths:
-    #   - 'src/Server/**'  # Chỉ build khi thay đổi trong thư mục này
+    paths:
+      - 'src/Server/**'  # Chỉ build khi thay đổi trong thư mục này
 
 jobs:
   build:
@@ -36,8 +36,9 @@ jobs:
         powershell Expand-Archive -Path extra_files.zip -DestinationPath extra_files
 
     - name: Build WinForm dạng self-contained vào thư mục BuildOutput
-      run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained true -r win-x64 /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true
-
+      # run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained true -r win-x64 /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true
+      run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained true -r win-x64
+    
     - name: Thêm tài nguyên ngoài vào thư mục BuildOutput
       shell: powershell
       run: |
