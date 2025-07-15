@@ -1,0 +1,95 @@
+get:
+    tags:
+      - activity
+    summary: Get an activity by ID
+    operationId: GetActivityById
+    parameters:
+      - name: activityId
+        in: query
+        required: true
+        description: ID of the activity to fetch
+        schema:
+          type: string
+          example: 'act001'
+    responses:
+      200:
+        description: Activity found
+        content:
+          application/json:
+            schema:
+              $ref: './components/schemas/Activity.yml#/Activity'
+      400:
+        $ref: './components/responses/AllStatusCode.yml#/400'
+      404:
+        $ref: './components/responses/AllStatusCode.yml#/404'
+      500:
+        $ref: './components/responses/AllStatusCode.yml#/500'
+
+  post:
+    tags:
+      - activity
+    summary: Create a new activity
+    operationId: CreateActivity
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './components/schemas/Activity.yml#/Activity'
+    responses:
+      201:
+        description: Activity created
+      400:
+        $ref: './components/responses/AllStatusCode.yml#/400'
+      500:
+        $ref: './components/responses/AllStatusCode.yml#/500'
+
+  put:
+    tags:
+      - activity
+    summary: Update an existing activity
+    operationId: UpdateActivity
+    parameters:
+      - name: activityId
+        in: query
+        required: true
+        description: ID of the activity to update
+        schema:
+          type: string
+          example: 'act001'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './components/schemas/Activity.yml#/Activity'
+    responses:
+      200:
+        description: Activity updated
+      400:
+        $ref: './components/responses/AllStatusCode.yml#/400'
+      404:
+        $ref: './components/responses/AllStatusCode.yml#/404'
+      500:
+        $ref: './components/responses/AllStatusCode.yml#/500'
+
+  delete:
+    tags:
+      - activity
+    summary: Delete an activity
+    operationId: DeleteActivity
+    parameters:
+      - name: activityId
+        in: query
+        required: true
+        description: ID of the activity to delete
+        schema:
+          type: string
+          example: 'act001'
+    responses:
+      200:
+        description: Activity deleted
+      404:
+        $ref: './components/responses/AllStatusCode.yml#/404'
+      500:
+        $ref: './components/responses/AllStatusCode.yml#/500'

@@ -1,0 +1,180 @@
+100: # Mã trạng thái HTTP 100 - Tiếp tục
+  description: Continue
+101: # Mã trạng thái HTTP 101 - Chuyển đổi
+  description: Switching Protocols
+102: # Mã trạng thái HTTP 102 - Tiếp tục
+  description: Processing
+103: # Mã trạng thái HTTP 103 - Gợi ý sớm
+  description: Early Hints
+
+200: # Mã trạng thái HTTP 200 - Thành công
+  description: OK
+  content:
+    application/json:
+      schema:
+        $ref: './BaseResponse.yml#/BaseResponse'
+      example:
+        success: true
+        message: 'OK'
+
+201: # Mã trạng thái HTTP 201 - Đã tạo
+  description: Created
+  content:
+    application/json:
+      schema:
+        $ref: './BaseResponse.yml#/BaseResponse'
+      example:
+        success: true
+        message: 'Resource created successfully'
+
+202: # Mã trạng thái HTTP 202 - Đã chấp nhận
+  description: Accepted
+203: # Mã trạng thái HTTP 203 - Thông tin không chính thức
+  description: Non-Authoritative Information
+204: # Mã trạng thái HTTP 204 - Không có nội dung
+  description: No Content
+205: # Mã trạng thái HTTP 205 - Đặt lại nội dung
+  description: Reset Content
+206: # Mã trạng thái HTTP 206 - Nội dung một phần
+  description: Partial Content
+207: # Mã trạng thái HTTP 207 - Đa trạng thái
+  description: Multi-Status
+208: # Mã trạng thái HTTP 208 - Đã báo cáo
+  description: Already Reported
+226: # Mã trạng thái HTTP 226 - IM đã sử dụng
+  description: IM Used
+
+300: # Mã trạng thái HTTP 300 - Nhiều lựa chọn
+  description: Multiple Choices
+301: # Mã trạng thái HTTP 301 - Di chuyển vĩnh viễn
+  description: Moved Permanently
+302: # Mã trạng thái HTTP 302 - Đã tìm thấy
+  description: Found
+303: # Mã trạng thái HTTP 303 - Xem khác
+  description: See Other
+304: # Mã trạng thái HTTP 304 - Không thay đổi
+  description: Not Modified
+305: # Mã trạng thái HTTP 305 - Sử dụng proxy
+  description: Use Proxy
+306: # Mã trạng thái HTTP 306 - Đã chuyển đổi
+  description: Switch Proxy
+307: # Mã trạng thái HTTP 307 - Chuyển hướng tạm thời
+  description: Temporary Redirect
+308: # Mã trạng thái HTTP 308 - Chuyển hướng vĩnh viễn
+  description: Permanent Redirect
+
+400: # Mã trạng thái HTTP 400 - Yêu cầu không hợp lệ
+  description: Bad Request
+  content:
+    application/json:
+      schema:
+        $ref: './BaseResponse.yml#/BaseResponse'
+      example:
+        success: false
+        message: 'Invalid request'
+
+401: # Mã trạng thái HTTP 401 - Không được ủy quyền
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        $ref: './BaseResponse.yml#/BaseResponse'
+      example:
+        success: false
+        message: 'Authentication required'
+
+402: # Mã trạng thái HTTP 402 - Yêu cầu thanh toán
+  description: Payment Required
+403: # Mã trạng thái HTTP 403 - Không được phép
+  description: Forbidden
+404: # Mã trạng thái HTTP 404 - Không tìm thấy
+  description: Not Found
+  content:
+  application/json:
+    schema:
+      $ref: './BaseResponse.yml#/BaseResponse'
+    example:
+      success: false
+      message: 'Not Found'
+405: # Mã trạng thái HTTP 405 - Phương thức không được hỗ trợ
+  description: Method Not Allowed
+406: # Mã trạng thái HTTP 406 - Không thể chấp nhận
+  description: Not Acceptable
+407: # Mã trạng thái HTTP 407 - Yêu cầu proxy
+  description: Proxy Authentication Required
+408: # Mã trạng thái HTTP 408 - Hết thời gian yêu cầu
+  description: Request Timeout
+409: # Mã trạng thái HTTP 409 - Xung đột
+  description: Conflict
+410: # Mã trạng thái HTTP 410 - Đã hết hạn
+  description: Gone
+411: # Mã trạng thái HTTP 411 - Yêu cầu độ dài
+  description: Length Required
+412: # Mã trạng thái HTTP 412 - Tiền đề
+  description: Precondition Failed
+413: # Mã trạng thái HTTP 413 - Dung lượng quá lớn
+  description: Payload Too Large
+414: # Mã trạng thái HTTP 414 - URL quá dài
+  description: URI Too Long
+415: # Mã trạng thái HTTP 415 - Loại phương tiện không được hỗ trợ
+  description: Unsupported Media Type
+416: # Mã trạng thái HTTP 416 - Yêu cầu phạm vi không hợp lệ
+  description: Range Not Satisfiable
+417: # Mã trạng thái HTTP 417 - Không thể xử lý
+  description: Expectation Failed
+421: # Mã trạng thái HTTP 421 - Yêu cầu sai hướng
+  description: Misdirected Request
+422: # Mã trạng thái HTTP 422 - Không thể xử lý
+  description: Unprocessable Entity
+423: # Mã trạng thái HTTP 423 - Đã khóa
+  description: Locked
+424: # Mã trạng thái HTTP 424 - Phụ thuộc thất bại
+  description: Failed Dependency
+425: # Mã trạng thái HTTP 425 - Quá sớm
+  description: Too Early
+426: # Mã trạng thái HTTP 426 - Cần nâng cấp
+  description: Upgrade Required
+427: # Mã trạng thái HTTP 427 - Không được gán
+  description: Unassigned
+428: # Mã trạng thái HTTP 428 - Yêu cầu tiền đề
+  description: Precondition Required
+429: # Mã trạng thái HTTP 429 - Quá nhiều yêu cầu
+  description: Too Many Requests
+431: # Mã trạng thái HTTP 431 - Trường tiêu đề yêu cầu quá lớn
+  description: Request Header Fields Too Large
+451: # Mã trạng thái HTTP 451 - Không khả dụng vì lý do pháp lý
+  description: Unavailable For Legal Reasons
+
+500: # Mã trạng thái HTTP 500 - Lỗi máy chủ nội bộ
+  description: Internal Server Error
+  content:
+    application/json:
+      schema:
+        $ref: './BaseResponse.yml#/BaseResponse'
+      example:
+        success: false
+        message: 'Internal server error'
+
+501: # Mã trạng thái HTTP 501 - Không được triển khai
+  description: Not Implemented
+502: # Mã trạng thái HTTP 502 - Cổng xấu
+  description: Bad Gateway
+503: # Mã trạng thái HTTP 503 - Dịch vụ không khả dụng
+  description: Service Unavailable
+504: # Mã trạng thái HTTP 504 - Hết thời gian cổng
+  description: Gateway Timeout
+505: # Mã trạng thái HTTP 505 - Phiên bản HTTP không được hỗ trợ
+  description: HTTP Version Not Supported
+506: # Mã trạng thái HTTP 506 - Biến thể cũng đàm phán
+  description: Variant Also Negotiates
+507: # Mã trạng thái HTTP 507 - Lưu trữ không đủ
+  description: Insufficient Storage
+508: # Mã trạng thái HTTP 508 - Vòng lặp phát hiện
+  description: Loop Detected
+510: # Mã trạng thái HTTP 510 - Không mở rộng
+  description: Not Extended
+511: # Mã trạng thái HTTP 511 - Yêu cầu xác thực mạng
+  description: Network Authentication Required
+
+default: # Mã trạng thái HTTP mặc định - Không xác định
+  description: Unknown
