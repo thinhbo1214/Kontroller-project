@@ -3,8 +3,8 @@ name: Build Server Winform Kontroller App
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'src/Server/**'  # Chỉ build khi thay đổi trong thư mục này
+    # paths:
+    #   - 'src/Server/**'  # Chỉ build khi thay đổi trong thư mục này
 
 jobs:
   build:
