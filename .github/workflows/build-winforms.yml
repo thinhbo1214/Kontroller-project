@@ -47,11 +47,19 @@ jobs:
           }
         }
 
-    - name: Tạo file ZIP từ thư mục BuildOutput
-      run: Compress-Archive -Path ./BuildOutput/* -DestinationPath ./KontrollerApp.zip
+    # - name: Tạo file ZIP từ thư mục BuildOutput
+    #   run: Compress-Archive -Path ./BuildOutput/* -DestinationPath ./KontrollerApp.zip
 
-    - name: Upload artifact KontrollerApp.zip
+    # - name: Upload artifact KontrollerApp.zip
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: KontrollerApp
+    #     path: KontrollerApp.zip
+
+    - name: Upload thư mục BuildOutput (GitHub tự zip khi tải về)
       uses: actions/upload-artifact@v4
       with:
         name: KontrollerApp
-        path: KontrollerApp.zip
+        path: BuildOutput
+        if-no-files-found: error
+        retention-days: 7
