@@ -88,12 +88,12 @@ namespace Server.Source.Presenter
             });
         }
 
-        private void SetUp(int port = -1, string www = "", string certificate = "")
+        private void SetUp(int port = -1, string certificate = "", string www = "", string xampp = "")
         {
             Task.Run(() => {
                 try
                 {
-                    Simulation.GetModel<ModelServer>().CongfigureServer(port, www, certificate);
+                    Simulation.GetModel<ModelServer>().CongfigureServer(port, certificate, www, xampp);
                 }
                 catch (Exception ex)
                 {
