@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+      .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255,255,255,0.09);
+      }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 min-h-screen flex flex-col items-center justify-center p-4">
+    <!-- Header -->
+    <div class="absolute top-6 left-1/2 transform -translate-x-1/2 z-30 text-white text-2xl font-bold flex items-center gap-2">
+        <i data-lucide="gamepad-2" class="w-7 h-7"></i> Kontroller
+    </div>
+    <!-- Main Profile Card -->
+    <div class="glass-card rounded-2xl shadow-2xl max-w-xl w-full px-8 py-10 flex flex-col items-center text-center relative z-20">
+        <!-- Avatar -->
+        <img id="profileAvatar" src="https://i.pravatar.cc/150?img=14" class="w-28 h-28 rounded-full border-4 border-primary-600 mb-4 shadow-lg bg-gray-200 object-cover" alt="Avatar"/>
+        <!-- Username -->
+        <h1 id="displayName" class="text-3xl font-bold text-white mb-2">GameMaster2024</h1>
+        <div id="userTag" class="text-base text-blue-200 mb-3">@testuser</div>
+        <div id="emailBox" class="text-sm text-gray-300 mb-6">testuser@email.com</div>
+        <!-- Stats (fake) -->
+        <div class="flex gap-4 mb-6">
+            <div class="bg-white/10 rounded-xl px-4 py-2">
+                <span class="font-semibold text-white text-lg">1,234</span>
+                <div class="text-xs text-blue-200">Followers</div>
+            </div>
+            <div class="bg-white/10 rounded-xl px-4 py-2">
+                <span class="font-semibold text-white text-lg">567</span>
+                <div class="text-xs text-green-200">Following</div>
+            </div>
+            <div class="bg-white/10 rounded-xl px-4 py-2">
+                <span class="font-semibold text-white text-lg">89</span>
+                <div class="text-xs text-yellow-100">Games</div>
+            </div>
+        </div>
+        <!-- Action Buttons -->
+        <div class="flex gap-4">
+            <button onclick="logout()" class="btn-primary bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg text-white font-semibold shadow transition">Logout</button>
+            <!-- Bạn có thể thêm nút Edit Profile ở đây -->
+        </div>
+    </div>
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/40 text-xs">
+        © 2025 Kontroller. All rights reserved.
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      // Lấy user từ localStorage
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) {
+          window.location.href = "auth.html"; // hoặc login.html
+      } else {
+          document.getElementById('profileAvatar').src = user.avatar || "https://i.pravatar.cc/150?img=14";
+          document.getElementById('displayName').textContent = user.displayName || user.username;
+          document.getElementById('userTag').textContent = "@" + user.username;
+          document.getElementById('emailBox').textContent = user.email;
+      }
+
+      // Logout function
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "auth.html";
+      }
+    </script>
+</body>
+</html>
