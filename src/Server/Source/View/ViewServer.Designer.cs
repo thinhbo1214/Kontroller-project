@@ -225,9 +225,9 @@ namespace Server.Source.View
             labelInfo.Font = new Font("Segoe UI", 15F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             labelInfo.Location = new Point(55, 363);
             labelInfo.Name = "labelInfo";
-            labelInfo.Size = new Size(224, 35);
+            labelInfo.Size = new Size(234, 35);
             labelInfo.TabIndex = 17;
-            labelInfo.Text = "Server Infomation";
+            labelInfo.Text = "Server Information";
             // 
             // labelPortRunning
             // 

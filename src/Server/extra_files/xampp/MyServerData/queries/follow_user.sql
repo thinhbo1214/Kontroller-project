@@ -1,0 +1,1 @@
+INSERT INTO Follow (followerID, followedID, followDate) VALUES (?, ?, ?)
