@@ -4,5 +4,5 @@ obj
 ServerConsole
 Pull&Run
 build-winforms(version-0).yml
-xampp
 extra_files.zip
+xampp-windows-x64-8.2.12-0-VS16-installer.exe
