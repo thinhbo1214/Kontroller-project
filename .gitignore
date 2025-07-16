@@ -3,6 +3,6 @@ bin
 obj
 ServerConsole
 Pull&Run
-xampp
 build-winforms(version-0).yml
 extra_files.zip
+xampp-windows-installer.exe
