@@ -1,22 +1,16 @@
-﻿using Microsoft.IdentityModel.Abstractions;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Controller;
 using Server.Source.Core;
-using Server.Source.Event;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using Server.Source.Presenter;
 using Server.Source.View;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+
 using System.Net;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Timer = System.Windows.Forms.Timer;
+
 namespace Server.Source.Model
 {
     public class ModelServer
@@ -32,11 +26,8 @@ namespace Server.Source.Model
         private int port = 2000;
         public int Port { get => port; set => port = value; }
 
-        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "FE_NOREACT");
+        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "ClientWeb");
         public string WWW { get => www; set => www = value; }
-
-        private string xampp = Path.Combine(ExecutableDirectory, "extra_files", "xampp");
-        public string XAMPP { get => xampp; set => xampp = value; }
 
         private SslContext context;
         public SslContext Context { get => context; }
@@ -50,7 +41,7 @@ namespace Server.Source.Model
         /// Hàng đợi log an toàn đa luồng để lưu trữ log chờ ghi.
         /// </summary>
         private readonly BlockingCollection<string> _logQueue = new();
-        public event Action<string> OnAddedLog;
+        public event Action<LogSource,string> OnAddedLog;
 
         // Dữ liệu hiện
         public class ServerStatus
@@ -99,11 +90,10 @@ namespace Server.Source.Model
             Simulation.SetModel<ViewServer>(new ViewServer());
         }
 
-        public void CongfigureServer(int port = -1, string certificate = "",string www = "", string xampp = "")
+        public void CongfigureServer(int port = -1, string certificate = "",string www = "")
         {
             if (!certificate.IsNullOrEmpty()) Certificate = certificate;
             if (!www.IsNullOrEmpty()) WWW = www;
-            if (!xampp.IsNullOrEmpty()) XAMPP = xampp;
             if (port > 0) Port = port;
 
             context = new SslContext(SslProtocols.Tls13, new X509Certificate2(Certificate, Password));
@@ -115,10 +105,10 @@ namespace Server.Source.Model
             CongfiguredServer?.Invoke();
         }
 
-        public void Log(string logEntry)
+        public void Log(LogSource source, string logEntry)
         {
             _logQueue.Add(logEntry);
-            OnAddedLog?.Invoke(logEntry);
+            OnAddedLog?.Invoke(source, logEntry);
         }
 
         private void NotifyChanged()

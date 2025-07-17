@@ -3,7 +3,7 @@ using Server.Source.NetCoreServer;
 using System;
 using System.Text.Json;
 
-namespace Server.Source.Extra
+namespace Server.Source.Helper
 {
     public static class JsonHelper
     {
