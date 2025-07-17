@@ -1,9 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Core;
+using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.Model;
 using Server.Source.Presenter;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static Server.Source.Model.ModelServer;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
@@ -173,6 +175,56 @@ namespace Server.Source.View
             {
                 MessageBox.Show("Không thể mở link: " + ex.Message);
             }
+        }
+
+        private void buttonNetstat_Click(object sender, EventArgs e)
+        {
+            string output = CmdHelper.RunCommandWithOutput("netstat -ano");
+            var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Xóa cũ
+            tableNetstat.Controls.Clear();
+            tableNetstat.RowStyles.Clear();
+            tableNetstat.RowCount = 1;
+
+            // Header
+            string[] headers = { "Proto", "Local Address", "Foreign Address", "State", "PID" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                var label = new Label() { Text = headers[i], AutoSize = true, Font = new Font("Segoe UI", 9, FontStyle.Bold) };
+                tableNetstat.Controls.Add(label, i, 0);
+            }
+
+            // Dữ liệu
+            int row = 1;
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("  ") || line.StartsWith("Proto")) continue; // Bỏ dòng tiêu đề của netstat
+                var parts = Regex.Split(line.Trim(), @"\s+"); // tách theo nhiều khoảng trắng
+
+                if (parts.Length >= 5)
+                {
+                    tableNetstat.RowCount++;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var label = new Label() { Text = parts[i], AutoSize = true, Font = new Font("Consolas", 9) };
+                        tableNetstat.Controls.Add(label, i, row);
+                    }
+                    row++;
+                }
+            }
+        }
+
+        private void buttonCmd_Click(object sender, EventArgs e)
+        {
+            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            CmdHelper.RunCommand("start cmd", showWindow: true, workingDirectory: path);
+        }
+
+        private void buttonExplorer_Click(object sender, EventArgs e)
+        {
+            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            CmdHelper.RunCommand("explorer .", showWindow: true, workingDirectory: path);
         }
     }
 }

@@ -53,6 +53,13 @@ namespace Server.Source.View
             groupBox2 = new GroupBox();
             listLogSystem = new TextBox();
             linkGithub = new LinkLabel();
+            buttonNetstat = new Button();
+            buttonCmd = new Button();
+            buttonExplorer = new Button();
+            button1 = new Button();
+            button4 = new Button();
+            button5 = new Button();
+            tableNetstat = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -387,11 +394,11 @@ namespace Server.Source.View
             // 
             // listLogSystem
             // 
-            listLogSystem.Location = new Point(610, 22);
+            listLogSystem.Location = new Point(615, 22);
             listLogSystem.Multiline = true;
             listLogSystem.Name = "listLogSystem";
             listLogSystem.ScrollBars = ScrollBars.Both;
-            listLogSystem.Size = new Size(443, 219);
+            listLogSystem.Size = new Size(438, 219);
             listLogSystem.TabIndex = 44;
             // 
             // linkGithub
@@ -405,12 +412,112 @@ namespace Server.Source.View
             linkGithub.Text = "GitHub";
             linkGithub.LinkClicked += linkGithub_LinkClicked;
             // 
+            // buttonNetstat
+            // 
+            buttonNetstat.BackColor = SystemColors.ButtonFace;
+            buttonNetstat.Cursor = Cursors.Hand;
+            buttonNetstat.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonNetstat.Location = new Point(515, 31);
+            buttonNetstat.Name = "buttonNetstat";
+            buttonNetstat.Size = new Size(94, 29);
+            buttonNetstat.TabIndex = 46;
+            buttonNetstat.Text = "Netstat";
+            buttonNetstat.UseVisualStyleBackColor = false;
+            buttonNetstat.Click += buttonNetstat_Click;
+            // 
+            // buttonCmd
+            // 
+            buttonCmd.BackColor = SystemColors.ButtonFace;
+            buttonCmd.Cursor = Cursors.Hand;
+            buttonCmd.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonCmd.Location = new Point(515, 66);
+            buttonCmd.Name = "buttonCmd";
+            buttonCmd.Size = new Size(94, 29);
+            buttonCmd.TabIndex = 47;
+            buttonCmd.Text = "CMD";
+            buttonCmd.UseVisualStyleBackColor = false;
+            buttonCmd.Click += buttonCmd_Click;
+            // 
+            // buttonExplorer
+            // 
+            buttonExplorer.BackColor = SystemColors.ButtonFace;
+            buttonExplorer.Cursor = Cursors.Hand;
+            buttonExplorer.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonExplorer.Location = new Point(515, 101);
+            buttonExplorer.Name = "buttonExplorer";
+            buttonExplorer.Size = new Size(94, 29);
+            buttonExplorer.TabIndex = 48;
+            buttonExplorer.Text = "Explorer";
+            buttonExplorer.UseVisualStyleBackColor = false;
+            buttonExplorer.Click += buttonExplorer_Click;
+            // 
+            // button1
+            // 
+            button1.BackColor = SystemColors.ButtonFace;
+            button1.Cursor = Cursors.Hand;
+            button1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button1.Location = new Point(515, 136);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 49;
+            button1.Text = "???";
+            button1.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            button4.BackColor = SystemColors.ButtonFace;
+            button4.Cursor = Cursors.Hand;
+            button4.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button4.Location = new Point(515, 171);
+            button4.Name = "button4";
+            button4.Size = new Size(94, 29);
+            button4.TabIndex = 50;
+            button4.Text = "???";
+            button4.UseVisualStyleBackColor = false;
+            // 
+            // button5
+            // 
+            button5.BackColor = SystemColors.ButtonFace;
+            button5.Cursor = Cursors.Hand;
+            button5.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button5.Location = new Point(515, 206);
+            button5.Name = "button5";
+            button5.Size = new Size(94, 29);
+            button5.TabIndex = 51;
+            button5.Text = "???";
+            button5.UseVisualStyleBackColor = false;
+            // 
+            // tableNetstat
+            // 
+            tableNetstat.AutoScroll = true;
+            tableNetstat.ColumnCount = 5;
+            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableNetstat.Dock = DockStyle.Fill;
+            tableNetstat.Location = new Point(0, 0);
+            tableNetstat.Name = "tableNetstat";
+            tableNetstat.RowCount = 2;
+            tableNetstat.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableNetstat.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableNetstat.Size = new Size(1061, 573);
+            tableNetstat.TabIndex = 52;
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1061, 573);
+            Controls.Add(tableNetstat);
+            Controls.Add(button5);
+            Controls.Add(button4);
+            Controls.Add(button1);
+            Controls.Add(buttonExplorer);
+            Controls.Add(buttonCmd);
+            Controls.Add(buttonNetstat);
             Controls.Add(linkGithub);
             Controls.Add(listLogSystem);
             Controls.Add(groupBox2);
@@ -472,5 +579,12 @@ namespace Server.Source.View
         private GroupBox groupBox2;
         private TextBox listLogSystem;
         private LinkLabel linkGithub;
+        private Button buttonNetstat;
+        private Button buttonCmd;
+        private Button buttonExplorer;
+        private Button button1;
+        private Button button4;
+        private Button button5;
+        private TableLayoutPanel tableNetstat;
     }
 }
