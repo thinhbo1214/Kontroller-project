@@ -1,0 +1,1 @@
+INSERT INTO Block (blockerID, blockedID, blockedDate) VALUES (?, ?, ?)
