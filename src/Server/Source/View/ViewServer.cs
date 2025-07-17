@@ -99,7 +99,7 @@ namespace Server.Source.View
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             int Port = Simulation.GetModel<ModelServer>().Port;
-            string url = $"https://127.0.0.1:{Port}";
+            string url = $"https://localhost:{Port}";
             try
             {
                 Process.Start(new ProcessStartInfo
