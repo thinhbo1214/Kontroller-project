@@ -6,3 +6,4 @@ Pull&Run
 build-winforms(version-0).yml
 extra_files.zip
 xampp-windows-installer.exe
+node_modules/
