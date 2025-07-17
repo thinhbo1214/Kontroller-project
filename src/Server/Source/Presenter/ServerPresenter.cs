@@ -38,19 +38,19 @@ namespace Server.Source.Presenter
         }
         private static void Run()
         {
-            Simulation.GetModel<LogManager>().Log("⚙️ LogManager.Start()");
+            Simulation.GetModel<LogManager>().Log("⚙️ LogManager.Start()", LogLevel.INFO, LogSource.SYSTEM);
             Simulation.GetModel<LogManager>().Start();
 
-            Simulation.GetModel<LogManager>().Log("⚙️ SimulationManager.Start()");
+            Simulation.GetModel<LogManager>().Log("⚙️ SimulationManager.Start()", LogLevel.INFO, LogSource.SYSTEM);
             Simulation.GetModel<SimulationManager>().Start();
 
-            Simulation.GetModel<LogManager>().Log("⚙️ SessionManager.Start()");
+            Simulation.GetModel<LogManager>().Log("⚙️ SessionManager.Start()", LogLevel.INFO, LogSource.SYSTEM);
             Simulation.GetModel<SessionManager>().Start();
 
-            Simulation.GetModel<LogManager>().Log("🚀 Server.Start()");
+            Simulation.GetModel<LogManager>().Log("🚀 Server.Start()", LogLevel.INFO, LogSource.SYSTEM);
             Simulation.GetModel<ModelServer>().Server.Start();
 
-            Simulation.GetModel<LogManager>().Log("✅ Server started!");
+            Simulation.GetModel<LogManager>().Log("✅ Server started!", LogLevel.INFO, LogSource.SYSTEM);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Server.Source.Presenter
                     Simulation.GetModel<SessionManager>().Stop();
                     Simulation.GetModel<SimulationManager>().Stop();
                     Simulation.GetModel<ModelServer>().Server.Stop();
-                    Simulation.GetModel<LogManager>().Log("Server stopped.");
+                    Simulation.GetModel<LogManager>().Log("Server stopped.", LogLevel.INFO, LogSource.SYSTEM);
                 }
                 catch (Exception ex)
                 {
@@ -88,12 +88,12 @@ namespace Server.Source.Presenter
             });
         }
 
-        private void SetUp(int port = -1, string certificate = "", string www = "", string xampp = "")
+        private void SetUp()
         {
             Task.Run(() => {
                 try
                 {
-                    Simulation.GetModel<ModelServer>().CongfigureServer(port, certificate, www, xampp);
+                    Simulation.GetModel<ModelServer>().CongfigureServer();
                 }
                 catch (Exception ex)
                 {
@@ -102,12 +102,12 @@ namespace Server.Source.Presenter
             });
         }
 
-        private void Log(string newlog)
+        private void Log(LogSource source, string newlog)
         {
             Task.Run(() => {
                 try
                 {
-                    Simulation.GetModel<ModelServer>().Log(newlog);
+                    Simulation.GetModel<ModelServer>().Log(source, newlog);
                 }
                 catch (Exception ex)
                 {
@@ -116,12 +116,12 @@ namespace Server.Source.Presenter
             });
         }
 
-        private void UpdateLog(string log)
+        private void UpdateLog(LogSource source, string log)
         {
             Task.Run(() => {
                 try
                 {
-                    Simulation.GetModel<ViewServer>().UpdateLogView(log);
+                    Simulation.GetModel<ViewServer>().UpdateLogView(source, log);
                 }
                 catch (Exception ex)
                 {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Source.Extra
+namespace Server.Source.Helper
 {
     public static class CookieHelper
     {

@@ -16,7 +16,7 @@ namespace Server.Source.Manager
         /// <summary>
         /// Hàng đợi log an toàn đa luồng để lưu trữ log chờ ghi.
         /// </summary>
-        private readonly BlockingCollection<string> _logQueue = new();
+        private readonly BlockingCollection<(LogSource source, string message)> _logQueue = new();
 
         /// <summary>
         /// Bộ điều khiển tín hiệu hủy để dừng task ghi log một cách an toàn.
@@ -31,12 +31,13 @@ namespace Server.Source.Manager
         /// <summary>
         /// Sự kiện phát ra mỗi khi có log mới, để lớp View/UI có thể lắng nghe và hiển thị.
         /// </summary>
-        public event Action<string> OnLogPrinted;
+        public event Action<LogSource, string> OnLogPrinted;
 
         /// <summary>
         /// Đường dẫn file log hiện tại, theo ngày.
         /// </summary>
-        private string _logFilePath;
+        private string _logUserFilePath;
+        private string _logSystemFilePath;
 
         /// <summary>
         /// Định dạng log chung
@@ -52,10 +53,10 @@ namespace Server.Source.Manager
         /// </summary>
         /// <param name="message">Nội dung log</param>
         /// <param name="level">Mức độ log: INFO, WARN, ERROR, DEBUG</param>
-        public void Log(string message, LogLevel level = LogLevel.INFO)
+        public void Log(string message, LogLevel level = LogLevel.INFO, LogSource source = LogSource.USER)
         {
             var logEntry = FormatLog(message, level);
-            _logQueue.Add(logEntry);
+            _logQueue.Add((source, logEntry)); // Lưu cả source và message đã format
         }
 
         /// <summary>
@@ -63,8 +64,8 @@ namespace Server.Source.Manager
         /// </summary>
         /// <param name="ex"></param>
         /// <param name="level"></param>
-        public void Log(Exception ex, LogLevel level = LogLevel.ERROR_SYSTEM)
-            => Log(ex.ToString(), level);
+        public void Log(Exception ex, LogLevel level = LogLevel.ERROR, LogSource source = LogSource.SYSTEM)
+            => Log(ex.ToString(), level, source);
 
         /// <summary>
         /// Khởi chạy log trong nền (tự động).
@@ -83,7 +84,8 @@ namespace Server.Source.Manager
 
             // Tạo file log tên theo ngày, ví dụ: logs/log_2025-06-27.txt
             var date = DateTime.Now.ToString("yyyy-MM-dd");
-            _logFilePath = Path.Combine(logDir, $"log_{date}.txt");
+            _logUserFilePath = Path.Combine(logDir, "log_user", $"log_{date}.txt");
+            _logSystemFilePath = Path.Combine(logDir, "log_system", $"log_{date}.txt");
 
             // Khởi chạy task xử lý log chạy nền
             _logTask = Task.Run(() => Run(_cts.Token));
@@ -96,7 +98,7 @@ namespace Server.Source.Manager
         {
             Stop();
             Start();
-        }        
+        }
 
         /// <summary>
         /// Gửi tín hiệu dừng hệ thống log, đóng hàng đợi và đợi task nền hoàn tất.
@@ -104,6 +106,7 @@ namespace Server.Source.Manager
         public void Stop()
         {
             _cts.Cancel(); // Gửi tín hiệu yêu cầu dừng cho vòng lặp
+            Simulation.GetModel<LogManager>().Log("LogManager stopped.", LogLevel.INFO, LogSource.SYSTEM);
             _logQueue.CompleteAdding(); // Không cho thêm log mới
             try
             {
@@ -114,8 +117,6 @@ namespace Server.Source.Manager
                 // Bỏ qua ngoại lệ hợp lệ (ví dụ do Cancel)
                 ae.Handle(e => e is OperationCanceledException);
             }
-
-            Simulation.GetModel<LogManager>().Log("LogManager stopped.");
         }
 
         /// <summary>
@@ -125,6 +126,8 @@ namespace Server.Source.Manager
         private async Task Run(CancellationToken token)
         {
             var currentDate = DateTime.Now.Date;
+            StreamWriter writerU = null;
+            StreamWriter writerS = null;
             while (!token.IsCancellationRequested)
             {
                 try
@@ -137,22 +140,29 @@ namespace Server.Source.Manager
                     //}
 
                     // Mỗi lần có lỗi sẽ mở lại writer để tránh lỗi writer bị đóng hoặc bị khóa
-                    using var writer = new StreamWriter(_logFilePath, append: true)
-                    {
-                        AutoFlush = true
-                    };
+                    writerU = new StreamWriter(_logUserFilePath, true) { AutoFlush = true };
+                    writerS = new StreamWriter(_logSystemFilePath, true) { AutoFlush = true };
 
                     // Ghi log cho đến khi bị huỷ hoặc CompleteAdding()
-                    foreach (var log in _logQueue.GetConsumingEnumerable(token))
+                    foreach (var (source, log) in _logQueue.GetConsumingEnumerable(token))
                     {
                         // Nếu bị huỷ giữa chừng
                         if (token.IsCancellationRequested) break;
 
                         // Gửi log cho UI
-                        OnLogPrinted?.Invoke(log);
+                        OnLogPrinted?.Invoke(source, log);
 
                         // Ghi log ra file
-                        writer.WriteLine(log);
+                        if (source == LogSource.USER)
+                        {
+                            writerU.WriteLine(log);
+                        }
+                        else
+                        {
+                            writerS.WriteLine(log);
+                        }
+
+
                     }
 
                     // Nếu ra khỏi foreach do CompleteAdding(), thì kết thúc luôn
@@ -166,13 +176,18 @@ namespace Server.Source.Manager
                 catch (Exception ex)
                 {
                     // Ghi lỗi ra stderr và tiếp tục vòng while để thử lại
-                    Log(ex, LogLevel.ERROR_SYSTEM);
+                    Log(ex);
                     await Task.Delay(1000, token);
+                }
+                finally
+                {
+                    writerU?.Dispose();
+                    writerS?.Dispose();
                 }
             }
         }
-    }
 
+    }
     /// <summary>
     /// Các mức độ log được hỗ trợ bởi LogManager.
     /// </summary>
@@ -185,7 +200,11 @@ namespace Server.Source.Manager
         /// <summary>Lỗi nghiêm trọng cần xử lý</summary>
         ERROR,
         /// <summary>Thông tin chi tiết phục vụ debug</summary>
-        DEBUG,
-        ERROR_SYSTEM
+        DEBUG
+    }
+    public enum LogSource
+    {
+        USER,
+        SYSTEM
     }
 }
