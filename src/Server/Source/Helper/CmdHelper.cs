@@ -48,12 +48,6 @@ namespace Server.Source.Helper
                 Simulation.GetModel<LogManager>().Log(ex);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
         public static string RunCommandWithOutput(string command, bool runAsAdmin = false, string workingDirectory = null)
         {
             var psi = new ProcessStartInfo
@@ -80,6 +74,49 @@ namespace Server.Source.Helper
                     string output = process.StandardOutput.ReadToEnd();
                     string error = process.StandardError.ReadToEnd();
                     return output + error;
+                }
+            }
+            catch (Win32Exception ex)
+            {
+                return $"ERROR: {ex.Message}";
+            }
+        }
+        public static async Task<string> RunCommandWithOutputAsync(string command, bool runAsAdmin = false, string workingDirectory = null)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c {command}",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                Verb = runAsAdmin ? "runas" : null,
+            };
+
+            if (!string.IsNullOrEmpty(workingDirectory))
+            {
+                psi.WorkingDirectory = workingDirectory;
+            }
+
+            try
+            {
+                using (var process = new Process { StartInfo = psi })
+                {
+                    var outputBuilder = new StringBuilder();
+                    var errorBuilder = new StringBuilder();
+
+                    process.OutputDataReceived += (sender, args) => { if (args.Data != null) outputBuilder.AppendLine(args.Data); };
+                    process.ErrorDataReceived += (sender, args) => { if (args.Data != null) errorBuilder.AppendLine(args.Data); };
+
+                    process.Start();
+
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    await Task.Run(() => process.WaitForExit());
+
+                    return outputBuilder.ToString() + errorBuilder.ToString();
                 }
             }
             catch (Win32Exception ex)

@@ -59,7 +59,6 @@ namespace Server.Source.View
             button1 = new Button();
             button4 = new Button();
             button5 = new Button();
-            tableNetstat = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -487,31 +486,12 @@ namespace Server.Source.View
             button5.Text = "???";
             button5.UseVisualStyleBackColor = false;
             // 
-            // tableNetstat
-            // 
-            tableNetstat.AutoScroll = true;
-            tableNetstat.ColumnCount = 5;
-            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableNetstat.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableNetstat.Dock = DockStyle.Fill;
-            tableNetstat.Location = new Point(0, 0);
-            tableNetstat.Name = "tableNetstat";
-            tableNetstat.RowCount = 2;
-            tableNetstat.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableNetstat.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableNetstat.Size = new Size(1061, 573);
-            tableNetstat.TabIndex = 52;
-            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1061, 573);
-            Controls.Add(tableNetstat);
             Controls.Add(button5);
             Controls.Add(button4);
             Controls.Add(button1);
@@ -585,6 +565,5 @@ namespace Server.Source.View
         private Button button1;
         private Button button4;
         private Button button5;
-        private TableLayoutPanel tableNetstat;
     }
 }
