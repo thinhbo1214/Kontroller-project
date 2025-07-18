@@ -1,6 +1,6 @@
 ﻿using Server.Source.Controller;
 using Server.Source.Core;
-using Server.Source.Extra;
+using Server.Source.Helper;
 using Server.Source.NetCoreServer;
 using System;
 using System.Collections.Generic;
@@ -154,7 +154,7 @@ namespace Server.Source.Manager
             {
                 ae.Handle(e => e is OperationCanceledException);
             }
-            Simulation.GetModel<LogManager>().Log("SessionManager stopped.");
+            Simulation.GetModel<LogManager>().Log("SessionManager stopped.", LogLevel.INFO, LogSource.SYSTEM);
         }
 
         /// <summary>

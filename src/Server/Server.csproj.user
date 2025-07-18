@@ -4,6 +4,9 @@
     <_LastSelectedProfileId>D:\MySpace\Project\Kontroller-project\src\Server\Properties\PublishProfiles\registry.hub.docker.com_lucifer251.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="Source\View\NetstatForm .cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Source\View\ViewServer.cs">
       <SubType>Form</SubType>
     </Compile>

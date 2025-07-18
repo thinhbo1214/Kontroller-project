@@ -24,41 +24,52 @@ namespace Server.Source.View
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewServer));
             buttonStart = new Button();
             labelPort = new Label();
-            labelCertificate = new Label();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            labelWWW = new Label();
-            textBox3 = new TextBox();
-            labelSetting = new Label();
             linkWeb = new LinkLabel();
             pictureBox1 = new PictureBox();
             labelContact = new Label();
             linkFB = new LinkLabel();
             linkEmail = new LinkLabel();
-            listLog = new TextBox();
+            listLogUser = new TextBox();
             buttonStop = new Button();
             buttonClearLog = new Button();
-            labelInfo = new Label();
-            labelPortRunning = new Label();
             labelActive = new Label();
             labelNRequest = new Label();
             labelNUser = new Label();
             labelRTime = new Label();
-            labelWeb = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
-            buttonXAMPP = new Button();
-            labelServices = new Label();
-            textBox4 = new TextBox();
-            labelXampp = new Label();
-            buttonAuto = new Button();
+            labelModule = new Label();
+            buttonSQLStart = new Button();
+            labelSQL = new Label();
+            buttonSQLStop = new Button();
+            button2 = new Button();
+            labelAI = new Label();
+            button3 = new Button();
+            labelActions = new Label();
+            labelServer = new Label();
+            labelAppPort = new Label();
+            labelSQLPort = new Label();
+            labelAIPort = new Label();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            listLogSystem = new TextBox();
+            linkGithub = new LinkLabel();
+            buttonNetstat = new Button();
+            buttonCmd = new Button();
+            buttonExplorer = new Button();
+            button1 = new Button();
+            button4 = new Button();
+            button5 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // buttonStart
             // 
             buttonStart.BackColor = SystemColors.ButtonFace;
             buttonStart.Cursor = Cursors.Hand;
-            buttonStart.Location = new Point(100, 291);
+            buttonStart.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStart.Location = new Point(291, 78);
             buttonStart.Name = "buttonStart";
             buttonStart.Size = new Size(94, 29);
             buttonStart.TabIndex = 0;
@@ -70,72 +81,16 @@ namespace Server.Source.View
             // 
             labelPort.AutoSize = true;
             labelPort.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelPort.Location = new Point(53, 133);
+            labelPort.Location = new Point(161, 46);
             labelPort.Name = "labelPort";
-            labelPort.Size = new Size(54, 23);
+            labelPort.Size = new Size(44, 23);
             labelPort.TabIndex = 1;
-            labelPort.Text = "Port: ";
-            // 
-            // labelCertificate
-            // 
-            labelCertificate.AutoSize = true;
-            labelCertificate.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelCertificate.Location = new Point(7, 178);
-            labelCertificate.Name = "labelCertificate";
-            labelCertificate.Size = new Size(97, 23);
-            labelCertificate.TabIndex = 2;
-            labelCertificate.Text = "Certificate:";
-            // 
-            // textBox1
-            // 
-            textBox1.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(113, 126);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(179, 30);
-            textBox1.TabIndex = 3;
-            // 
-            // textBox2
-            // 
-            textBox2.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox2.Location = new Point(113, 171);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(179, 30);
-            textBox2.TabIndex = 4;
-            textBox2.DoubleClick += textBox2_DoubleClick;
-            // 
-            // labelWWW
-            // 
-            labelWWW.AutoSize = true;
-            labelWWW.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelWWW.Location = new Point(47, 221);
-            labelWWW.Name = "labelWWW";
-            labelWWW.Size = new Size(57, 23);
-            labelWWW.TabIndex = 5;
-            labelWWW.Text = "www:";
-            // 
-            // textBox3
-            // 
-            textBox3.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox3.Location = new Point(113, 214);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(179, 30);
-            textBox3.TabIndex = 6;
-            textBox3.DoubleClick += textBox3_DoubleClick;
-            // 
-            // labelSetting
-            // 
-            labelSetting.AutoSize = true;
-            labelSetting.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelSetting.Location = new Point(47, 65);
-            labelSetting.Name = "labelSetting";
-            labelSetting.Size = new Size(257, 46);
-            labelSetting.TabIndex = 8;
-            labelSetting.Text = "Server Settings";
+            labelPort.Text = "Port";
             // 
             // linkWeb
             // 
             linkWeb.AutoSize = true;
-            linkWeb.Location = new Point(120, 525);
+            linkWeb.Location = new Point(205, 479);
             linkWeb.Name = "linkWeb";
             linkWeb.Size = new Size(75, 20);
             linkWeb.TabIndex = 9;
@@ -147,7 +102,7 @@ namespace Server.Source.View
             // 
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(9, 561);
+            pictureBox1.Location = new Point(13, 479);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(87, 82);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -157,7 +112,7 @@ namespace Server.Source.View
             // labelContact
             // 
             labelContact.AutoSize = true;
-            labelContact.Location = new Point(102, 561);
+            labelContact.Location = new Point(114, 479);
             labelContact.Name = "labelContact";
             labelContact.Size = new Size(85, 20);
             labelContact.TabIndex = 11;
@@ -166,7 +121,7 @@ namespace Server.Source.View
             // linkFB
             // 
             linkFB.AutoSize = true;
-            linkFB.Location = new Point(106, 587);
+            linkFB.Location = new Point(118, 505);
             linkFB.Name = "linkFB";
             linkFB.Size = new Size(211, 20);
             linkFB.TabIndex = 12;
@@ -177,7 +132,7 @@ namespace Server.Source.View
             // linkEmail
             // 
             linkEmail.AutoSize = true;
-            linkEmail.Location = new Point(107, 615);
+            linkEmail.Location = new Point(119, 533);
             linkEmail.Name = "linkEmail";
             linkEmail.Size = new Size(185, 20);
             linkEmail.TabIndex = 13;
@@ -185,21 +140,22 @@ namespace Server.Source.View
             linkEmail.Text = "Email: Nguyễn Minh Thuận";
             linkEmail.LinkClicked += linkLabel2_LinkClicked;
             // 
-            // listLog
+            // listLogUser
             // 
-            listLog.Location = new Point(366, 35);
-            listLog.Multiline = true;
-            listLog.Name = "listLog";
-            listLog.ScrollBars = ScrollBars.Both;
-            listLog.Size = new Size(650, 572);
-            listLog.TabIndex = 14;
+            listLogUser.Location = new Point(359, 256);
+            listLogUser.Multiline = true;
+            listLogUser.Name = "listLogUser";
+            listLogUser.ScrollBars = ScrollBars.Both;
+            listLogUser.Size = new Size(694, 269);
+            listLogUser.TabIndex = 14;
             // 
             // buttonStop
             // 
             buttonStop.BackColor = SystemColors.ButtonFace;
             buttonStop.Cursor = Cursors.Hand;
             buttonStop.Enabled = false;
-            buttonStop.Location = new Point(200, 291);
+            buttonStop.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStop.Location = new Point(391, 80);
             buttonStop.Name = "buttonStop";
             buttonStop.Size = new Size(94, 29);
             buttonStop.TabIndex = 15;
@@ -211,7 +167,7 @@ namespace Server.Source.View
             // 
             buttonClearLog.BackColor = SystemColors.ButtonFace;
             buttonClearLog.Cursor = Cursors.Hand;
-            buttonClearLog.Location = new Point(922, 611);
+            buttonClearLog.Location = new Point(959, 531);
             buttonClearLog.Name = "buttonClearLog";
             buttonClearLog.Size = new Size(94, 29);
             buttonClearLog.TabIndex = 16;
@@ -219,31 +175,11 @@ namespace Server.Source.View
             buttonClearLog.UseVisualStyleBackColor = false;
             buttonClearLog.Click += buttonClearLog_Click;
             // 
-            // labelInfo
-            // 
-            labelInfo.AutoSize = true;
-            labelInfo.Font = new Font("Segoe UI", 15F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelInfo.Location = new Point(55, 363);
-            labelInfo.Name = "labelInfo";
-            labelInfo.Size = new Size(234, 35);
-            labelInfo.TabIndex = 17;
-            labelInfo.Text = "Server Information";
-            // 
-            // labelPortRunning
-            // 
-            labelPortRunning.AutoSize = true;
-            labelPortRunning.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelPortRunning.Location = new Point(27, 453);
-            labelPortRunning.Name = "labelPortRunning";
-            labelPortRunning.Size = new Size(155, 23);
-            labelPortRunning.TabIndex = 18;
-            labelPortRunning.Text = "Running Port: 443";
-            // 
             // labelActive
             // 
             labelActive.AutoSize = true;
             labelActive.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelActive.Location = new Point(27, 407);
+            labelActive.Location = new Point(14, 48);
             labelActive.Name = "labelActive";
             labelActive.Size = new Size(106, 23);
             labelActive.TabIndex = 19;
@@ -253,7 +189,7 @@ namespace Server.Source.View
             // 
             labelNRequest.AutoSize = true;
             labelNRequest.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNRequest.Location = new Point(27, 476);
+            labelNRequest.Location = new Point(13, 119);
             labelNRequest.Name = "labelNRequest";
             labelNRequest.Size = new Size(183, 23);
             labelNRequest.TabIndex = 20;
@@ -263,7 +199,7 @@ namespace Server.Source.View
             // 
             labelNUser.AutoSize = true;
             labelNUser.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNUser.Location = new Point(27, 499);
+            labelNUser.Location = new Point(13, 156);
             labelNUser.Name = "labelNUser";
             labelNUser.Size = new Size(156, 23);
             labelNUser.TabIndex = 22;
@@ -273,114 +209,306 @@ namespace Server.Source.View
             // 
             labelRTime.AutoSize = true;
             labelRTime.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelRTime.Location = new Point(27, 430);
+            labelRTime.Location = new Point(13, 82);
             labelRTime.Name = "labelRTime";
             labelRTime.Size = new Size(125, 23);
             labelRTime.TabIndex = 23;
             labelRTime.Text = "Running Time:";
             // 
-            // labelWeb
-            // 
-            labelWeb.AutoSize = true;
-            labelWeb.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelWeb.Location = new Point(27, 522);
-            labelWeb.Name = "labelWeb";
-            labelWeb.Size = new Size(90, 23);
-            labelWeb.TabIndex = 24;
-            labelWeb.Text = "Link Web:";
-            labelWeb.Click += labelWeb_Click;
-            // 
             // timer1
             // 
             timer1.Tick += timer1_Tick;
             // 
-            // buttonXAMPP
+            // labelModule
             // 
-            buttonXAMPP.BackColor = SystemColors.ButtonFace;
-            buttonXAMPP.Cursor = Cursors.Hand;
-            buttonXAMPP.Location = new Point(100, 325);
-            buttonXAMPP.Name = "buttonXAMPP";
-            buttonXAMPP.Size = new Size(94, 29);
-            buttonXAMPP.TabIndex = 25;
-            buttonXAMPP.Text = "XAMPP";
-            buttonXAMPP.UseVisualStyleBackColor = false;
-            buttonXAMPP.Click += buttonXAMPP_Click;
+            labelModule.AutoSize = true;
+            labelModule.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelModule.Location = new Point(14, 46);
+            labelModule.Name = "labelModule";
+            labelModule.Size = new Size(69, 23);
+            labelModule.TabIndex = 26;
+            labelModule.Text = "Module";
             // 
-            // labelServices
+            // buttonSQLStart
             // 
-            labelServices.AutoSize = true;
-            labelServices.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelServices.Location = new Point(12, 331);
-            labelServices.Name = "labelServices";
-            labelServices.Size = new Size(78, 23);
-            labelServices.TabIndex = 26;
-            labelServices.Text = "Services:";
+            buttonSQLStart.BackColor = SystemColors.ButtonFace;
+            buttonSQLStart.Cursor = Cursors.Hand;
+            buttonSQLStart.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonSQLStart.Location = new Point(291, 117);
+            buttonSQLStart.Name = "buttonSQLStart";
+            buttonSQLStart.Size = new Size(94, 29);
+            buttonSQLStart.TabIndex = 30;
+            buttonSQLStart.Text = "Start";
+            buttonSQLStart.UseVisualStyleBackColor = false;
+            buttonSQLStart.Click += buttonSQLStart_Click;
             // 
-            // textBox4
+            // labelSQL
             // 
-            textBox4.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox4.Location = new Point(113, 255);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(179, 30);
-            textBox4.TabIndex = 28;
-            textBox4.DoubleClick += textBox4_DoubleClick;
+            labelSQL.AutoSize = true;
+            labelSQL.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelSQL.Location = new Point(6, 117);
+            labelSQL.Name = "labelSQL";
+            labelSQL.Size = new Size(91, 23);
+            labelSQL.TabIndex = 31;
+            labelSQL.Text = "SQLServer";
             // 
-            // labelXampp
+            // buttonSQLStop
             // 
-            labelXampp.AutoSize = true;
-            labelXampp.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelXampp.Location = new Point(32, 262);
-            labelXampp.Name = "labelXampp";
-            labelXampp.Size = new Size(75, 23);
-            labelXampp.TabIndex = 27;
-            labelXampp.Text = "XAMPP:";
+            buttonSQLStop.BackColor = SystemColors.ButtonFace;
+            buttonSQLStop.Cursor = Cursors.Hand;
+            buttonSQLStop.Enabled = false;
+            buttonSQLStop.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonSQLStop.Location = new Point(391, 115);
+            buttonSQLStop.Name = "buttonSQLStop";
+            buttonSQLStop.Size = new Size(94, 29);
+            buttonSQLStop.TabIndex = 32;
+            buttonSQLStop.Text = "Stop";
+            buttonSQLStop.UseVisualStyleBackColor = false;
+            buttonSQLStop.Click += buttonSQLStop_Click;
             // 
-            // buttonAuto
+            // button2
             // 
-            buttonAuto.BackColor = SystemColors.ButtonFace;
-            buttonAuto.Cursor = Cursors.Hand;
-            buttonAuto.Location = new Point(200, 325);
-            buttonAuto.Name = "buttonAuto";
-            buttonAuto.Size = new Size(94, 29);
-            buttonAuto.TabIndex = 29;
-            buttonAuto.Text = "Auto";
-            buttonAuto.UseVisualStyleBackColor = false;
-            buttonAuto.Click += buttonAuto_Click;
+            button2.BackColor = SystemColors.ButtonFace;
+            button2.Cursor = Cursors.Hand;
+            button2.Enabled = false;
+            button2.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button2.Location = new Point(391, 150);
+            button2.Name = "button2";
+            button2.Size = new Size(94, 29);
+            button2.TabIndex = 35;
+            button2.Text = "Stop";
+            button2.UseVisualStyleBackColor = false;
+            // 
+            // labelAI
+            // 
+            labelAI.AutoSize = true;
+            labelAI.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelAI.Location = new Point(15, 152);
+            labelAI.Name = "labelAI";
+            labelAI.Size = new Size(77, 23);
+            labelAI.TabIndex = 34;
+            labelAI.Text = "AIServer";
+            // 
+            // button3
+            // 
+            button3.BackColor = SystemColors.ButtonFace;
+            button3.Cursor = Cursors.Hand;
+            button3.Enabled = false;
+            button3.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button3.Location = new Point(291, 152);
+            button3.Name = "button3";
+            button3.Size = new Size(94, 29);
+            button3.TabIndex = 33;
+            button3.Text = "Start";
+            button3.UseVisualStyleBackColor = false;
+            // 
+            // labelActions
+            // 
+            labelActions.AutoSize = true;
+            labelActions.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelActions.Location = new Point(299, 44);
+            labelActions.Name = "labelActions";
+            labelActions.Size = new Size(68, 23);
+            labelActions.TabIndex = 36;
+            labelActions.Text = "Actions";
+            // 
+            // labelServer
+            // 
+            labelServer.AutoSize = true;
+            labelServer.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelServer.Location = new Point(6, 80);
+            labelServer.Name = "labelServer";
+            labelServer.Size = new Size(92, 23);
+            labelServer.TabIndex = 37;
+            labelServer.Text = "AppServer";
+            // 
+            // labelAppPort
+            // 
+            labelAppPort.AutoSize = true;
+            labelAppPort.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelAppPort.Location = new Point(162, 80);
+            labelAppPort.Name = "labelAppPort";
+            labelAppPort.Size = new Size(44, 23);
+            labelAppPort.TabIndex = 38;
+            labelAppPort.Text = "Port";
+            // 
+            // labelSQLPort
+            // 
+            labelSQLPort.AutoSize = true;
+            labelSQLPort.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelSQLPort.Location = new Point(162, 119);
+            labelSQLPort.Name = "labelSQLPort";
+            labelSQLPort.Size = new Size(50, 23);
+            labelSQLPort.TabIndex = 39;
+            labelSQLPort.Text = "1433";
+            // 
+            // labelAIPort
+            // 
+            labelAIPort.AutoSize = true;
+            labelAIPort.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelAIPort.Location = new Point(162, 156);
+            labelAIPort.Name = "labelAIPort";
+            labelAIPort.Size = new Size(50, 23);
+            labelAIPort.TabIndex = 40;
+            labelAIPort.Text = "2025";
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(labelAIPort);
+            groupBox1.Controls.Add(labelSQLPort);
+            groupBox1.Controls.Add(labelAppPort);
+            groupBox1.Controls.Add(labelServer);
+            groupBox1.Controls.Add(labelActions);
+            groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(labelAI);
+            groupBox1.Controls.Add(button3);
+            groupBox1.Controls.Add(buttonSQLStop);
+            groupBox1.Controls.Add(labelSQL);
+            groupBox1.Controls.Add(buttonSQLStart);
+            groupBox1.Controls.Add(buttonStop);
+            groupBox1.Controls.Add(labelModule);
+            groupBox1.Controls.Add(buttonStart);
+            groupBox1.Controls.Add(labelPort);
+            groupBox1.Font = new Font("Segoe UI", 13.2000008F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            groupBox1.Location = new Point(13, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(496, 229);
+            groupBox1.TabIndex = 42;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Service";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(labelActive);
+            groupBox2.Controls.Add(labelRTime);
+            groupBox2.Controls.Add(labelNRequest);
+            groupBox2.Controls.Add(labelNUser);
+            groupBox2.Font = new Font("Segoe UI", 13.2000008F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            groupBox2.Location = new Point(13, 256);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(340, 195);
+            groupBox2.TabIndex = 43;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Server Information";
+            // 
+            // listLogSystem
+            // 
+            listLogSystem.Location = new Point(615, 22);
+            listLogSystem.Multiline = true;
+            listLogSystem.Name = "listLogSystem";
+            listLogSystem.ScrollBars = ScrollBars.Both;
+            listLogSystem.Size = new Size(438, 219);
+            listLogSystem.TabIndex = 44;
+            // 
+            // linkGithub
+            // 
+            linkGithub.AutoSize = true;
+            linkGithub.Location = new Point(286, 479);
+            linkGithub.Name = "linkGithub";
+            linkGithub.Size = new Size(56, 20);
+            linkGithub.TabIndex = 45;
+            linkGithub.TabStop = true;
+            linkGithub.Text = "GitHub";
+            linkGithub.LinkClicked += linkGithub_LinkClicked;
+            // 
+            // buttonNetstat
+            // 
+            buttonNetstat.BackColor = SystemColors.ButtonFace;
+            buttonNetstat.Cursor = Cursors.Hand;
+            buttonNetstat.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonNetstat.Location = new Point(515, 31);
+            buttonNetstat.Name = "buttonNetstat";
+            buttonNetstat.Size = new Size(94, 29);
+            buttonNetstat.TabIndex = 46;
+            buttonNetstat.Text = "Netstat";
+            buttonNetstat.UseVisualStyleBackColor = false;
+            buttonNetstat.Click += buttonNetstat_Click;
+            // 
+            // buttonCmd
+            // 
+            buttonCmd.BackColor = SystemColors.ButtonFace;
+            buttonCmd.Cursor = Cursors.Hand;
+            buttonCmd.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonCmd.Location = new Point(515, 66);
+            buttonCmd.Name = "buttonCmd";
+            buttonCmd.Size = new Size(94, 29);
+            buttonCmd.TabIndex = 47;
+            buttonCmd.Text = "CMD";
+            buttonCmd.UseVisualStyleBackColor = false;
+            buttonCmd.Click += buttonCmd_Click;
+            // 
+            // buttonExplorer
+            // 
+            buttonExplorer.BackColor = SystemColors.ButtonFace;
+            buttonExplorer.Cursor = Cursors.Hand;
+            buttonExplorer.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonExplorer.Location = new Point(515, 101);
+            buttonExplorer.Name = "buttonExplorer";
+            buttonExplorer.Size = new Size(94, 29);
+            buttonExplorer.TabIndex = 48;
+            buttonExplorer.Text = "Explorer";
+            buttonExplorer.UseVisualStyleBackColor = false;
+            buttonExplorer.Click += buttonExplorer_Click;
+            // 
+            // button1
+            // 
+            button1.BackColor = SystemColors.ButtonFace;
+            button1.Cursor = Cursors.Hand;
+            button1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button1.Location = new Point(515, 136);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 49;
+            button1.Text = "???";
+            button1.UseVisualStyleBackColor = false;
+            // 
+            // button4
+            // 
+            button4.BackColor = SystemColors.ButtonFace;
+            button4.Cursor = Cursors.Hand;
+            button4.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button4.Location = new Point(515, 171);
+            button4.Name = "button4";
+            button4.Size = new Size(94, 29);
+            button4.TabIndex = 50;
+            button4.Text = "???";
+            button4.UseVisualStyleBackColor = false;
+            // 
+            // button5
+            // 
+            button5.BackColor = SystemColors.ButtonFace;
+            button5.Cursor = Cursors.Hand;
+            button5.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            button5.Location = new Point(515, 206);
+            button5.Name = "button5";
+            button5.Size = new Size(94, 29);
+            button5.TabIndex = 51;
+            button5.Text = "???";
+            button5.UseVisualStyleBackColor = false;
             // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
-            ClientSize = new Size(1028, 655);
-            Controls.Add(buttonAuto);
-            Controls.Add(textBox4);
-            Controls.Add(labelXampp);
-            Controls.Add(labelServices);
-            Controls.Add(buttonXAMPP);
-            Controls.Add(labelWeb);
-            Controls.Add(labelRTime);
-            Controls.Add(labelNUser);
-            Controls.Add(labelNRequest);
-            Controls.Add(labelActive);
-            Controls.Add(labelPortRunning);
-            Controls.Add(labelInfo);
+            ClientSize = new Size(1061, 573);
+            Controls.Add(button5);
+            Controls.Add(button4);
+            Controls.Add(button1);
+            Controls.Add(buttonExplorer);
+            Controls.Add(buttonCmd);
+            Controls.Add(buttonNetstat);
+            Controls.Add(linkGithub);
+            Controls.Add(listLogSystem);
+            Controls.Add(groupBox2);
+            Controls.Add(groupBox1);
             Controls.Add(buttonClearLog);
-            Controls.Add(buttonStop);
-            Controls.Add(listLog);
+            Controls.Add(listLogUser);
             Controls.Add(linkEmail);
             Controls.Add(linkFB);
             Controls.Add(labelContact);
             Controls.Add(pictureBox1);
             Controls.Add(linkWeb);
-            Controls.Add(labelSetting);
-            Controls.Add(textBox3);
-            Controls.Add(labelWWW);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(labelCertificate);
-            Controls.Add(labelPort);
-            Controls.Add(buttonStart);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -389,6 +517,10 @@ namespace Server.Source.View
             Text = "Server";
             Load += ViewServer_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -397,32 +529,41 @@ namespace Server.Source.View
 
         private Button buttonStart;
         private Label labelPort;
-        private Label labelCertificate;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private Label labelWWW;
-        private TextBox textBox3;
-        private Label labelSetting;
         private LinkLabel linkWeb;
         private PictureBox pictureBox1;
         private Label labelContact;
         private LinkLabel linkFB;
         private LinkLabel linkEmail;
-        private TextBox listLog;
+        private TextBox listLogUser;
         private Button buttonStop;
         private Button buttonClearLog;
-        private Label labelInfo;
-        private Label labelPortRunning;
         private Label labelActive;
         private Label labelNRequest;
         private Label labelNUser;
         private Label labelRTime;
         private Label labelWeb;
         private System.Windows.Forms.Timer timer1;
-        private Button buttonXAMPP;
-        private Label labelServices;
-        private TextBox textBox4;
-        private Label labelXampp;
-        private Button buttonAuto;
+        private Label labelModule;
+        private Button buttonSQLStart;
+        private Label labelSQL;
+        private Button buttonSQLStop;
+        private Button button2;
+        private Label labelAI;
+        private Button button3;
+        private Label labelActions;
+        private Label labelServer;
+        private Label labelAppPort;
+        private Label labelSQLPort;
+        private Label labelAIPort;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private TextBox listLogSystem;
+        private LinkLabel linkGithub;
+        private Button buttonNetstat;
+        private Button buttonCmd;
+        private Button buttonExplorer;
+        private Button button1;
+        private Button button4;
+        private Button button5;
     }
 }

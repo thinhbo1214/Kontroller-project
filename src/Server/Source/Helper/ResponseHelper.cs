@@ -3,7 +3,7 @@ using Server.Source.Core;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 
-namespace Server.Source.Extra
+namespace Server.Source.Helper
 {
     public static class ResponseHelper
     {
@@ -12,19 +12,19 @@ namespace Server.Source.Extra
             switch (status)
             {
                 case 200:
-                    return MakeJsonResponse(response, new { success = true, message = "OK" }, status, token);
+                    return response.MakeJsonResponse(new { success = true, message = "OK" }, status, token);
                 case 201:
-                    return MakeJsonResponse(response, new { success = true, message = "Resource created successfully" }, status, token);
+                    return response.MakeJsonResponse(new { success = true, message = "Resource created successfully" }, status, token);
                 case 400:
-                    return MakeJsonResponse(response, new { success = false, message = "Invalid request" }, status, token);
+                    return response.MakeJsonResponse(new { success = false, message = "Invalid request" }, status, token);
                 case 401:
-                    return MakeJsonResponse(response, new { success = false, message = "Authentication required" }, status, token);
+                    return response.MakeJsonResponse(new { success = false, message = "Authentication required" }, status, token);
                 case 404:
-                    return MakeJsonResponse(response, new { success = false, message = "Not Found" }, status, token);
+                    return response.MakeJsonResponse(new { success = false, message = "Not Found" }, status, token);
                 case 500:
-                    return MakeJsonResponse(response, new { success = false, message = "Internal server error" }, status, token);
+                    return response.MakeJsonResponse(new { success = false, message = "Internal server error" }, status, token);
                 default:
-                    return MakeJsonResponse(response, null, status, token);
+                    return response.MakeJsonResponse(null, status, token);
             }
         }
         public static HttpResponse MakeJsonResponse(this HttpResponse response, object? data, int status = 200, string token = "")
@@ -51,7 +51,7 @@ namespace Server.Source.Extra
             Simulation.GetModel<SessionManager>().Store(newSessionId, userId);         // lưu phiên
 
             var token = TokenHelper.CreateToken(newSessionId, 60); // tạo token
-            response = ResponseHelper.MakeJsonResponse(response, 200, token);
+            response = response.MakeJsonResponse(200, token);
 
             return response;
         }

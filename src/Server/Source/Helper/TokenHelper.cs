@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Source.Extra
+namespace Server.Source.Helper
 {
     public static class TokenHelper
     {
@@ -40,7 +40,7 @@ namespace Server.Source.Extra
 
         public static void SetToken(HttpResponse response, string sessionId, int minutes = 60)
         {
-            response.SetHeader("X_Token_Authorization", $"{TokenHelper.CreateToken(sessionId, minutes)}");
+            response.SetHeader("X_Token_Authorization", $"{CreateToken(sessionId, minutes)}");
         }
 
         public static void RemoveToken(HttpResponse response)

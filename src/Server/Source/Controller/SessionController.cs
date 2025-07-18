@@ -45,12 +45,12 @@ namespace Server.Source.Controller
         }
         protected override void OnReceivedRequestError(HttpRequest request, string error)
         {
-            Simulation.GetModel<LogManager>().Log($"Request error: {error}", LogLevel.ERROR);
+            Simulation.GetModel<LogManager>().Log($"Request error: {error}", LogLevel.ERROR, LogSource.SYSTEM);
 
         }
         protected override void OnError(SocketError error)
         {
-            Simulation.GetModel<LogManager>().Log($"HTTPS session caught an error: {error}", LogLevel.ERROR);
+            Simulation.GetModel<LogManager>().Log($"HTTPS session caught an error: {error}", LogLevel.ERROR, LogSource.SYSTEM);
         }
     }
 }

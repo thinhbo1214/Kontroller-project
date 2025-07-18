@@ -20,7 +20,7 @@ namespace Server.Source.Controller
 
         protected override void OnError(SocketError error)
         {
-            Simulation.GetModel<LogManager>().Log($"HTTPS server caught an error: {error}", LogLevel.ERROR);
+            Simulation.GetModel<LogManager>().Log($"HTTPS server caught an error: {error}", LogLevel.ERROR, LogSource.SYSTEM);
         }
     }
 }

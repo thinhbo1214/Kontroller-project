@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using Server.Source.Helper;
 
 
 namespace Server.Source.Manager
@@ -25,7 +26,15 @@ namespace Server.Source.Manager
         private readonly Dictionary<string, DateTime> _fileLastWriteTime = new Dictionary<string, DateTime>();
 
         private SqlConnection? _connection;
+        public void StartSqlService(string serviceName = "MSSQLSERVER")
+        {
+            ServiceHelper.RunServiceCommand(serviceName, "start");
+        }
 
+        public void StopSqlService(string serviceName = "MSSQLSERVER")
+        {
+            ServiceHelper.RunServiceCommand(serviceName, "stop");
+        }
         public DatabaseManager(string basePath, string connectionString)
         {
             _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
