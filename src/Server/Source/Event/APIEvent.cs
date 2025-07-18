@@ -1,6 +1,6 @@
 ﻿using Server.Source.Core;
-using Server.Source.Extra;
 using Server.Source.Handler;
+using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using System;
@@ -34,7 +34,7 @@ namespace Server.Source.Event
                         catch (Exception ex)
                         {
                             session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 500));
-                            Simulation.GetModel<LogManager>().Log("Lỗi trong APIEvent: " + ex.ToString(), LogLevel.ERROR);
+                            Simulation.GetModel<LogManager>().Log("Lỗi trong APIEvent: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
                         }
                         finally
                         {

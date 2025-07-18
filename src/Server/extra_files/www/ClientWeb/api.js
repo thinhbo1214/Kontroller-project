@@ -19,7 +19,7 @@ class API {
       headers['X_Token_Authorization'] = token; // Gửi token nếu có
     }
  
-    options.headers = headers; // ⬅️ thêm dòng này để đảm bảo headers có token
+    options.headers = headers; // thêm dòng này để đảm bảo headers có token
 
     // fetch để gửi request và nhận response
     const res = await fetch(url, {

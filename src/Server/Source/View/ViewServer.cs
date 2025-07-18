@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Core;
+using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.Model;
 using Server.Source.Presenter;
@@ -12,17 +13,25 @@ namespace Server.Source.View
 {
     public partial class ViewServer : Form
     {
-        public event Action<int, string, string, string> OnClickedStart;
+        public event Action OnClickedStart;
         public event Action OnClickedStop;
-        public void UpdateLogView(string log)
+        public void UpdateLogView(LogSource source, string log)
         {
             if (InvokeRequired)
             {
                 // Đảm bảo gọi trên luồng UI không gây lỗi cross-thread
-                BeginInvoke(new Action(() => UpdateLogView(log)));
+                BeginInvoke(new Action(() => UpdateLogView(source, log)));
                 return;
             }
-            listLog.AppendText(log + Environment.NewLine);
+            if (source == LogSource.USER)
+            {
+                listLogUser.AppendText(log + Environment.NewLine);
+            }
+            else
+            {
+                listLogSystem.AppendText(log + Environment.NewLine);
+            }
+
         }
         public void UpdateStatus(ServerStatus status)
         {
@@ -33,7 +42,6 @@ namespace Server.Source.View
                 return;
             }
             labelRTime.Text = "Running Time: " + status.ElapsedTime.ToString();
-            labelPortRunning.Text = "Running Port: " + status.Port.ToString();
             labelNRequest.Text = "Number of Request: " + status.NumberRequest.ToString();
             labelNUser.Text = "Number of User: " + status.NumberUser.ToString();
 
@@ -46,19 +54,13 @@ namespace Server.Source.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!textBox1.Text.IsNullOrEmpty() && !textBox2.Text.IsNullOrEmpty() && !textBox3.Text.IsNullOrEmpty() && !textBox4.Text.IsNullOrEmpty())
-            {
-                labelActive.Text = "Active: true";
-                Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
-                buttonStart.Enabled = false;
-                OnClickedStart?.Invoke(int.Parse(textBox1.Text), textBox2.Text, textBox3.Text, textBox4.Text);
-                buttonStop.Enabled = true;
-                timer1.Start();
-            }
-            else
-            {
-                MessageBox.Show("Không để trống");
-            }
+            labelActive.Text = "Active: true";
+            labelAppPort.Text = Simulation.GetModel<ModelServer>().Port.ToString();
+            Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
+            buttonStart.Enabled = false;
+            OnClickedStart?.Invoke();
+            buttonStop.Enabled = true;
+            timer1.Start();
         }
         private void buttonStop_Click(object sender, EventArgs e)
         {
@@ -67,33 +69,6 @@ namespace Server.Source.View
             buttonStop.Enabled = false;
             buttonStart.Enabled = true;
             timer1.Stop();
-        }
-        private void textBox2_DoubleClick(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Title = "Chọn file chứng chỉ:";
-                openFileDialog.Filter = "Tất cả các file (*.*)|*.*"; // hoặc lọc theo đuôi ví dụ .cer, .crt, .pem
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string filePath = openFileDialog.FileName;
-                    textBox2.Text = filePath; // ghi vào textbox luôn
-                }
-            }
-        }
-
-        private void textBox3_DoubleClick(object sender, EventArgs e)
-        {
-            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
-            {
-                folderDialog.Description = "Chọn folder chứa file tĩnh web:";
-                if (folderDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string folderPath = folderDialog.SelectedPath;
-                    textBox3.Text = folderPath;
-                }
-            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -159,7 +134,7 @@ namespace Server.Source.View
 
         private void buttonClearLog_Click(object sender, EventArgs e)
         {
-            listLog.Clear();
+            listLogUser.Clear();
             MessageBox.Show("Đã xoá logs!!!");
         }
 
@@ -169,65 +144,54 @@ namespace Server.Source.View
 
         }
 
-        private void labelWeb_Click(object sender, EventArgs e)
-        {
 
+        private void buttonSQLStop_Click(object sender, EventArgs e)
+        {
+            Simulation.GetModel<DatabaseManager>().StopSqlService();
+            buttonSQLStop.Enabled = false;
+            buttonSQLStart.Enabled = true;
         }
 
-        private void buttonXAMPP_Click(object sender, EventArgs e)
+        private void buttonSQLStart_Click(object sender, EventArgs e)
         {
+            Simulation.GetModel<DatabaseManager>().StartSqlService();
+            buttonSQLStart.Enabled = false;
+            buttonSQLStop.Enabled = true;
+        }
+
+        private void linkGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string url = "https://github.com/thinhbo1214/Kontroller-project";
             try
             {
-                string xamppDir = Simulation.GetModel<ModelServer>().XAMPP;
-
-                // Đường dẫn đến file batch trong thư mục extra_files
-                string batchFile = Path.Combine(xamppDir, "Run_xampp.bat");
-
-                if (!File.Exists(batchFile))
-                {
-                    MessageBox.Show("File batch không tồn tại: " + batchFile);
-                    return;
-                }
-
-
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c \"{batchFile}\"",
-                    UseShellExecute = true,
-                    //WorkingDirectory = Path.GetDirectoryName(batchFile),
-                    // Không dùng Verb "runas" để không yêu cầu admin
-
+                    FileName = url,
+                    UseShellExecute = true // Bắt buộc phải có trong .NET Core/.NET 5+ để mở trình duyệt
                 });
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi chạy file batch: " + ex.Message + "\n" + ex.StackTrace);
+                MessageBox.Show("Không thể mở link: " + ex.Message);
             }
         }
 
-        private void textBox4_DoubleClick(object sender, EventArgs e)
+        private void buttonNetstat_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
-            {
-                folderDialog.Description = "Chọn folder chứa xampp:";
-                if (folderDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string folderPath = folderDialog.SelectedPath;
-                    textBox4.Text = folderPath;
-                }
-            }
+            var netstatForm = new NetstatForm();
+            netstatForm.Show();
         }
 
-        private void buttonAuto_Click(object sender, EventArgs e)
+        private void buttonCmd_Click(object sender, EventArgs e)
         {
-            var model = Simulation.GetModel<ModelServer>();
-            if (textBox1.Text.IsNullOrEmpty()) textBox1.Text = model.Port.ToString();
-            if (textBox2.Text.IsNullOrEmpty()) textBox2.Text = model.Certificate;
-            if (textBox3.Text.IsNullOrEmpty()) textBox3.Text = model.WWW;
-            if (textBox4.Text.IsNullOrEmpty()) textBox4.Text = model.XAMPP;
+            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            CmdHelper.RunCommand("start cmd", showWindow: true, workingDirectory: path);
+        }
 
-            MessageBox.Show("✅ Đã tự động điền cấu hình mặc định!");
+        private void buttonExplorer_Click(object sender, EventArgs e)
+        {
+            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            CmdHelper.RunCommand("explorer .", showWindow: true, workingDirectory: path);
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Server.Source.Manager
                 ae.Handle(e => e is OperationCanceledException);
             }
 
-            Simulation.GetModel<LogManager>().Log("SimulationManager stopped.");
+            Simulation.GetModel<LogManager>().Log("SimulationManager stopped.", LogLevel.INFO, LogSource.SYSTEM);
         }
 
         /// <summary>
