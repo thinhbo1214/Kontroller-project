@@ -80,12 +80,17 @@ namespace Server.Source.Manager
 
             // Tạo thư mục 'logs' nếu chưa tồn tại
             var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            var log_user = Path.Combine(logDir, "log_user");
+            var log_system = Path.Combine(logDir, "log_system");
             Directory.CreateDirectory(logDir);
+            Directory.CreateDirectory(log_user);
+            Directory.CreateDirectory(log_system);
+
 
             // Tạo file log tên theo ngày, ví dụ: logs/log_2025-06-27.txt
             var date = DateTime.Now.ToString("yyyy-MM-dd");
-            _logUserFilePath = Path.Combine(logDir, "log_user", $"log_{date}.txt");
-            _logSystemFilePath = Path.Combine(logDir, "log_system", $"log_{date}.txt");
+            _logUserFilePath = Path.Combine(log_user, $"log_{date}.txt");
+            _logSystemFilePath = Path.Combine(log_system, $"log_{date}.txt");
 
             // Khởi chạy task xử lý log chạy nền
             _logTask = Task.Run(() => Run(_cts.Token));
