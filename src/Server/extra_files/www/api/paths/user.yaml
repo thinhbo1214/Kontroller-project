@@ -4,7 +4,7 @@ get:
   summary: Get the user data # Mô tả ngắn gọn về chức năng của phương thức
   operationId: GetUserData  # Tên định danh duy nhất cho phương thức
   parameters: # Tham số đầu vào của phương thức
-    - name: useID # Tên tham số
+    - name: userId # Tên tham số
       in: query # Vị trí tham số (query, path, header, body)
       description: User ID (optional) # Mô tả tham số
       required: true # Có bắt buộc tham số này hay không
@@ -19,6 +19,15 @@ get:
         application/json: # Định dạng phản hồi là JSON
           schema: # Định nghĩa cấu trúc dữ liệu của phản hồi
             $ref: './components/schemas/User.yml#/User' # Tham chiếu đến định nghĩa User trong file User.yml
+            data: 
+            - name: username
+            - name: avatar
+            - name: diary
+            - name: playLaterList
+            - name: isLoggedIn
+            - name: followers
+            - name: following
+            - name: list 
     400:
       $ref: './components/responses/AllStatusCode.yml#/400'
     404:
@@ -69,6 +78,11 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/User.yml#/User'
+          data:
+          - name: email
+          - name: avatar
+          - name: playLaterList 
+          - name: following
 
   responses:
     200:
