@@ -22,7 +22,7 @@ namespace Server.Source.View
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewServer));
-            buttonStart = new Button();
+            buttonStartApp = new Button();
             labelPort = new Label();
             linkWeb = new LinkLabel();
             pictureBox1 = new PictureBox();
@@ -30,20 +30,20 @@ namespace Server.Source.View
             linkFB = new LinkLabel();
             linkEmail = new LinkLabel();
             listLogUser = new TextBox();
-            buttonStop = new Button();
-            buttonClearLog = new Button();
+            buttonStopApp = new Button();
+            buttonClearLogsU = new Button();
             labelActive = new Label();
             labelNRequest = new Label();
             labelNUser = new Label();
             labelRTime = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             labelModule = new Label();
-            buttonSQLStart = new Button();
+            buttonStartSQL = new Button();
             labelSQL = new Label();
-            buttonSQLStop = new Button();
-            button2 = new Button();
+            buttonStopSQL = new Button();
+            buttonStopAI = new Button();
             labelAI = new Label();
-            button3 = new Button();
+            buttonStartAI = new Button();
             labelActions = new Label();
             labelServer = new Label();
             labelAppPort = new Label();
@@ -59,23 +59,26 @@ namespace Server.Source.View
             button1 = new Button();
             button4 = new Button();
             button5 = new Button();
+            buttonAnalyzeLogsU = new Button();
+            buttonAnalyzeLogsS = new Button();
+            buttonClearLogsS = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
             // 
-            // buttonStart
+            // buttonStartApp
             // 
-            buttonStart.BackColor = SystemColors.ButtonFace;
-            buttonStart.Cursor = Cursors.Hand;
-            buttonStart.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonStart.Location = new Point(291, 78);
-            buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(94, 29);
-            buttonStart.TabIndex = 0;
-            buttonStart.Text = "Start";
-            buttonStart.UseVisualStyleBackColor = false;
-            buttonStart.Click += button1_Click;
+            buttonStartApp.BackColor = SystemColors.ButtonFace;
+            buttonStartApp.Cursor = Cursors.Hand;
+            buttonStartApp.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStartApp.Location = new Point(291, 78);
+            buttonStartApp.Name = "buttonStartApp";
+            buttonStartApp.Size = new Size(94, 29);
+            buttonStartApp.TabIndex = 0;
+            buttonStartApp.Text = "Start";
+            buttonStartApp.UseVisualStyleBackColor = false;
+            buttonStartApp.Click += button1_Click;
             // 
             // labelPort
             // 
@@ -149,31 +152,31 @@ namespace Server.Source.View
             listLogUser.Size = new Size(694, 269);
             listLogUser.TabIndex = 14;
             // 
-            // buttonStop
+            // buttonStopApp
             // 
-            buttonStop.BackColor = SystemColors.ButtonFace;
-            buttonStop.Cursor = Cursors.Hand;
-            buttonStop.Enabled = false;
-            buttonStop.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonStop.Location = new Point(391, 80);
-            buttonStop.Name = "buttonStop";
-            buttonStop.Size = new Size(94, 29);
-            buttonStop.TabIndex = 15;
-            buttonStop.Text = "Stop";
-            buttonStop.UseVisualStyleBackColor = false;
-            buttonStop.Click += buttonStop_Click;
+            buttonStopApp.BackColor = SystemColors.ButtonFace;
+            buttonStopApp.Cursor = Cursors.Hand;
+            buttonStopApp.Enabled = false;
+            buttonStopApp.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStopApp.Location = new Point(391, 80);
+            buttonStopApp.Name = "buttonStopApp";
+            buttonStopApp.Size = new Size(94, 29);
+            buttonStopApp.TabIndex = 15;
+            buttonStopApp.Text = "Stop";
+            buttonStopApp.UseVisualStyleBackColor = false;
+            buttonStopApp.Click += buttonStop_Click;
             // 
-            // buttonClearLog
+            // buttonClearLogsU
             // 
-            buttonClearLog.BackColor = SystemColors.ButtonFace;
-            buttonClearLog.Cursor = Cursors.Hand;
-            buttonClearLog.Location = new Point(959, 531);
-            buttonClearLog.Name = "buttonClearLog";
-            buttonClearLog.Size = new Size(94, 29);
-            buttonClearLog.TabIndex = 16;
-            buttonClearLog.Text = "Clear Logs";
-            buttonClearLog.UseVisualStyleBackColor = false;
-            buttonClearLog.Click += buttonClearLog_Click;
+            buttonClearLogsU.BackColor = SystemColors.ButtonFace;
+            buttonClearLogsU.Cursor = Cursors.Hand;
+            buttonClearLogsU.Location = new Point(959, 531);
+            buttonClearLogsU.Name = "buttonClearLogsU";
+            buttonClearLogsU.Size = new Size(94, 29);
+            buttonClearLogsU.TabIndex = 16;
+            buttonClearLogsU.Text = "Clear Logs";
+            buttonClearLogsU.UseVisualStyleBackColor = false;
+            buttonClearLogsU.Click += buttonClearLog_Click;
             // 
             // labelActive
             // 
@@ -229,18 +232,18 @@ namespace Server.Source.View
             labelModule.TabIndex = 26;
             labelModule.Text = "Module";
             // 
-            // buttonSQLStart
+            // buttonStartSQL
             // 
-            buttonSQLStart.BackColor = SystemColors.ButtonFace;
-            buttonSQLStart.Cursor = Cursors.Hand;
-            buttonSQLStart.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonSQLStart.Location = new Point(291, 117);
-            buttonSQLStart.Name = "buttonSQLStart";
-            buttonSQLStart.Size = new Size(94, 29);
-            buttonSQLStart.TabIndex = 30;
-            buttonSQLStart.Text = "Start";
-            buttonSQLStart.UseVisualStyleBackColor = false;
-            buttonSQLStart.Click += buttonSQLStart_Click;
+            buttonStartSQL.BackColor = SystemColors.ButtonFace;
+            buttonStartSQL.Cursor = Cursors.Hand;
+            buttonStartSQL.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStartSQL.Location = new Point(291, 117);
+            buttonStartSQL.Name = "buttonStartSQL";
+            buttonStartSQL.Size = new Size(94, 29);
+            buttonStartSQL.TabIndex = 30;
+            buttonStartSQL.Text = "Start";
+            buttonStartSQL.UseVisualStyleBackColor = false;
+            buttonStartSQL.Click += buttonSQLStart_Click;
             // 
             // labelSQL
             // 
@@ -252,32 +255,32 @@ namespace Server.Source.View
             labelSQL.TabIndex = 31;
             labelSQL.Text = "SQLServer";
             // 
-            // buttonSQLStop
+            // buttonStopSQL
             // 
-            buttonSQLStop.BackColor = SystemColors.ButtonFace;
-            buttonSQLStop.Cursor = Cursors.Hand;
-            buttonSQLStop.Enabled = false;
-            buttonSQLStop.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonSQLStop.Location = new Point(391, 115);
-            buttonSQLStop.Name = "buttonSQLStop";
-            buttonSQLStop.Size = new Size(94, 29);
-            buttonSQLStop.TabIndex = 32;
-            buttonSQLStop.Text = "Stop";
-            buttonSQLStop.UseVisualStyleBackColor = false;
-            buttonSQLStop.Click += buttonSQLStop_Click;
+            buttonStopSQL.BackColor = SystemColors.ButtonFace;
+            buttonStopSQL.Cursor = Cursors.Hand;
+            buttonStopSQL.Enabled = false;
+            buttonStopSQL.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStopSQL.Location = new Point(391, 115);
+            buttonStopSQL.Name = "buttonStopSQL";
+            buttonStopSQL.Size = new Size(94, 29);
+            buttonStopSQL.TabIndex = 32;
+            buttonStopSQL.Text = "Stop";
+            buttonStopSQL.UseVisualStyleBackColor = false;
+            buttonStopSQL.Click += buttonSQLStop_Click;
             // 
-            // button2
+            // buttonStopAI
             // 
-            button2.BackColor = SystemColors.ButtonFace;
-            button2.Cursor = Cursors.Hand;
-            button2.Enabled = false;
-            button2.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button2.Location = new Point(391, 150);
-            button2.Name = "button2";
-            button2.Size = new Size(94, 29);
-            button2.TabIndex = 35;
-            button2.Text = "Stop";
-            button2.UseVisualStyleBackColor = false;
+            buttonStopAI.BackColor = SystemColors.ButtonFace;
+            buttonStopAI.Cursor = Cursors.Hand;
+            buttonStopAI.Enabled = false;
+            buttonStopAI.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStopAI.Location = new Point(391, 150);
+            buttonStopAI.Name = "buttonStopAI";
+            buttonStopAI.Size = new Size(94, 29);
+            buttonStopAI.TabIndex = 35;
+            buttonStopAI.Text = "Stop";
+            buttonStopAI.UseVisualStyleBackColor = false;
             // 
             // labelAI
             // 
@@ -289,18 +292,18 @@ namespace Server.Source.View
             labelAI.TabIndex = 34;
             labelAI.Text = "AIServer";
             // 
-            // button3
+            // buttonStartAI
             // 
-            button3.BackColor = SystemColors.ButtonFace;
-            button3.Cursor = Cursors.Hand;
-            button3.Enabled = false;
-            button3.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button3.Location = new Point(291, 152);
-            button3.Name = "button3";
-            button3.Size = new Size(94, 29);
-            button3.TabIndex = 33;
-            button3.Text = "Start";
-            button3.UseVisualStyleBackColor = false;
+            buttonStartAI.BackColor = SystemColors.ButtonFace;
+            buttonStartAI.Cursor = Cursors.Hand;
+            buttonStartAI.Enabled = false;
+            buttonStartAI.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonStartAI.Location = new Point(291, 152);
+            buttonStartAI.Name = "buttonStartAI";
+            buttonStartAI.Size = new Size(94, 29);
+            buttonStartAI.TabIndex = 33;
+            buttonStartAI.Text = "Start";
+            buttonStartAI.UseVisualStyleBackColor = false;
             // 
             // labelActions
             // 
@@ -359,15 +362,15 @@ namespace Server.Source.View
             groupBox1.Controls.Add(labelAppPort);
             groupBox1.Controls.Add(labelServer);
             groupBox1.Controls.Add(labelActions);
-            groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(buttonStopAI);
             groupBox1.Controls.Add(labelAI);
-            groupBox1.Controls.Add(button3);
-            groupBox1.Controls.Add(buttonSQLStop);
+            groupBox1.Controls.Add(buttonStartAI);
+            groupBox1.Controls.Add(buttonStopSQL);
             groupBox1.Controls.Add(labelSQL);
-            groupBox1.Controls.Add(buttonSQLStart);
-            groupBox1.Controls.Add(buttonStop);
+            groupBox1.Controls.Add(buttonStartSQL);
+            groupBox1.Controls.Add(buttonStopApp);
             groupBox1.Controls.Add(labelModule);
-            groupBox1.Controls.Add(buttonStart);
+            groupBox1.Controls.Add(buttonStartApp);
             groupBox1.Controls.Add(labelPort);
             groupBox1.Font = new Font("Segoe UI", 13.2000008F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             groupBox1.Location = new Point(13, 12);
@@ -397,7 +400,7 @@ namespace Server.Source.View
             listLogSystem.Multiline = true;
             listLogSystem.Name = "listLogSystem";
             listLogSystem.ScrollBars = ScrollBars.Both;
-            listLogSystem.Size = new Size(438, 219);
+            listLogSystem.Size = new Size(438, 178);
             listLogSystem.TabIndex = 44;
             // 
             // linkGithub
@@ -486,12 +489,51 @@ namespace Server.Source.View
             button5.Text = "???";
             button5.UseVisualStyleBackColor = false;
             // 
+            // buttonAnalyzeLogsU
+            // 
+            buttonAnalyzeLogsU.BackColor = SystemColors.ButtonFace;
+            buttonAnalyzeLogsU.Cursor = Cursors.Hand;
+            buttonAnalyzeLogsU.Enabled = false;
+            buttonAnalyzeLogsU.Location = new Point(836, 531);
+            buttonAnalyzeLogsU.Name = "buttonAnalyzeLogsU";
+            buttonAnalyzeLogsU.Size = new Size(117, 29);
+            buttonAnalyzeLogsU.TabIndex = 52;
+            buttonAnalyzeLogsU.Text = "Analyze Logs";
+            buttonAnalyzeLogsU.UseVisualStyleBackColor = false;
+            // 
+            // buttonAnalyzeLogsS
+            // 
+            buttonAnalyzeLogsS.BackColor = SystemColors.ButtonFace;
+            buttonAnalyzeLogsS.Cursor = Cursors.Hand;
+            buttonAnalyzeLogsS.Enabled = false;
+            buttonAnalyzeLogsS.Location = new Point(836, 206);
+            buttonAnalyzeLogsS.Name = "buttonAnalyzeLogsS";
+            buttonAnalyzeLogsS.Size = new Size(117, 29);
+            buttonAnalyzeLogsS.TabIndex = 53;
+            buttonAnalyzeLogsS.Text = "Analyze Logs";
+            buttonAnalyzeLogsS.UseVisualStyleBackColor = false;
+            // 
+            // buttonClearLogsS
+            // 
+            buttonClearLogsS.BackColor = SystemColors.ButtonFace;
+            buttonClearLogsS.Cursor = Cursors.Hand;
+            buttonClearLogsS.Location = new Point(959, 206);
+            buttonClearLogsS.Name = "buttonClearLogsS";
+            buttonClearLogsS.Size = new Size(94, 29);
+            buttonClearLogsS.TabIndex = 54;
+            buttonClearLogsS.Text = "Clear Logs";
+            buttonClearLogsS.UseVisualStyleBackColor = false;
+            buttonClearLogsS.Click += buttonClearLogsS_Click;
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1061, 573);
+            Controls.Add(buttonClearLogsS);
+            Controls.Add(buttonAnalyzeLogsS);
+            Controls.Add(buttonAnalyzeLogsU);
             Controls.Add(button5);
             Controls.Add(button4);
             Controls.Add(button1);
@@ -502,7 +544,7 @@ namespace Server.Source.View
             Controls.Add(listLogSystem);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(buttonClearLog);
+            Controls.Add(buttonClearLogsU);
             Controls.Add(listLogUser);
             Controls.Add(linkEmail);
             Controls.Add(linkFB);
@@ -527,7 +569,7 @@ namespace Server.Source.View
 
         #endregion
 
-        private Button buttonStart;
+        private Button buttonStartApp;
         private Label labelPort;
         private LinkLabel linkWeb;
         private PictureBox pictureBox1;
@@ -535,8 +577,8 @@ namespace Server.Source.View
         private LinkLabel linkFB;
         private LinkLabel linkEmail;
         private TextBox listLogUser;
-        private Button buttonStop;
-        private Button buttonClearLog;
+        private Button buttonStopApp;
+        private Button buttonClearLogsU;
         private Label labelActive;
         private Label labelNRequest;
         private Label labelNUser;
@@ -544,12 +586,12 @@ namespace Server.Source.View
         private Label labelWeb;
         private System.Windows.Forms.Timer timer1;
         private Label labelModule;
-        private Button buttonSQLStart;
+        private Button buttonStartSQL;
         private Label labelSQL;
-        private Button buttonSQLStop;
-        private Button button2;
+        private Button buttonStopSQL;
+        private Button buttonStopAI;
         private Label labelAI;
-        private Button button3;
+        private Button buttonStartAI;
         private Label labelActions;
         private Label labelServer;
         private Label labelAppPort;
@@ -565,5 +607,8 @@ namespace Server.Source.View
         private Button button1;
         private Button button4;
         private Button button5;
+        private Button buttonAnalyzeLogsU;
+        private Button buttonAnalyzeLogsS;
+        private Button buttonClearLogsS;
     }
 }

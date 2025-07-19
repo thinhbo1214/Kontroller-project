@@ -57,17 +57,17 @@ namespace Server.Source.View
             labelActive.Text = "Active: true";
             labelAppPort.Text = Simulation.GetModel<ModelServer>().Port.ToString();
             Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
-            buttonStart.Enabled = false;
+            buttonStartApp.Enabled = false;
             OnClickedStart?.Invoke();
-            buttonStop.Enabled = true;
+            buttonStopApp.Enabled = true;
             timer1.Start();
         }
         private void buttonStop_Click(object sender, EventArgs e)
         {
             labelActive.Text = "Active: false";
             OnClickedStop?.Invoke();
-            buttonStop.Enabled = false;
-            buttonStart.Enabled = true;
+            buttonStopApp.Enabled = false;
+            buttonStartApp.Enabled = true;
             timer1.Stop();
         }
 
@@ -148,15 +148,15 @@ namespace Server.Source.View
         private void buttonSQLStop_Click(object sender, EventArgs e)
         {
             Simulation.GetModel<DatabaseManager>().StopSqlService();
-            buttonSQLStop.Enabled = false;
-            buttonSQLStart.Enabled = true;
+            buttonStopSQL.Enabled = false;
+            buttonStartSQL.Enabled = true;
         }
 
         private void buttonSQLStart_Click(object sender, EventArgs e)
         {
             Simulation.GetModel<DatabaseManager>().StartSqlService();
-            buttonSQLStart.Enabled = false;
-            buttonSQLStop.Enabled = true;
+            buttonStartSQL.Enabled = false;
+            buttonStopSQL.Enabled = true;
         }
 
         private void linkGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -192,6 +192,12 @@ namespace Server.Source.View
         {
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             CmdHelper.RunCommand("explorer .", showWindow: true, workingDirectory: path);
+        }
+
+        private void buttonClearLogsS_Click(object sender, EventArgs e)
+        {
+            listLogSystem.Clear();
+            MessageBox.Show("Đã xoá logs!!!");
         }
     }
 }
