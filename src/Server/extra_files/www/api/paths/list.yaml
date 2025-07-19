@@ -25,71 +25,71 @@ get:
         500:
           $ref: './components/responses/AllStatusCode.yml#/500'
 
-    post:
-      tags:
-        - list
-      summary: Create a new game list
-      operationId: CreateGameList
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: './components/schemas/List.yml#/List'
-      responses:
-        201:
-          description: List created
-        400:
-          $ref: './components/responses/AllStatusCode.yml#/400'
-        500:
-          $ref: './components/responses/AllStatusCode.yml#/500'
+post:
+  tags:
+    - list
+  summary: Create a new game list
+  operationId: CreateGameList
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/List.yml#/List'
+  responses:
+    201:
+      description: List created
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
 
-    put:
-      tags:
-        - list
-      summary: Update an existing game list
-      operationId: UpdateGameList
-      parameters:
-        - name: listId
-          in: query
-          required: true
-          description: ID of the list to update
-          schema:
-            type: string
-            example: 'list001'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: './components/schemas/List.yml#/List'
-      responses:
-        200:
-          description: List updated
-        400:
-          $ref: './components/responses/AllStatusCode.yml#/400'
-        404:
-          $ref: './components/responses/AllStatusCode.yml#/404'
-        500:
-          $ref: './components/responses/AllStatusCode.yml#/500'
+put:
+  tags:
+    - list
+  summary: Update an existing game list
+  operationId: UpdateGameList
+  parameters:
+    - name: listId
+      in: query
+      required: true
+      description: ID of the list to update
+      schema:
+        type: string
+        example: 'list001'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/List.yml#/List'
+  responses:
+    200:
+      description: List updated
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    404:
+      $ref: './components/responses/AllStatusCode.yml#/404'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
 
-    delete:
-      tags:
-        - list
-      summary: Delete a game list
-      operationId: DeleteGameList
-      parameters:
-        - name: listId
-          in: query
-          required: true
-          description: ID of the list to delete
-          schema:
-            type: string
-            example: 'list001'
-      responses:
-        200:
-          description: List deleted
-        404:
-          $ref: './components/responses/AllStatusCode.yml#/404'
-        500:
-          $ref: './components/responses/AllStatusCode.yml#/500'
+delete:
+  tags:
+    - list
+  summary: Delete a game list
+  operationId: DeleteGameList
+  parameters:
+    - name: listId
+      in: query
+      required: true
+      description: ID of the list to delete
+      schema:
+        type: string
+        example: 'list001'
+  responses:
+    200:
+      description: List deleted
+    404:
+      $ref: './components/responses/AllStatusCode.yml#/404'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
