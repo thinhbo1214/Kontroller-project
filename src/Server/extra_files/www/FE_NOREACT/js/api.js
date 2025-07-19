@@ -111,15 +111,10 @@ export class CacheAPI extends API {
 
   async GetCache(key) {
     const query = API.buildQuery({ key }); 
-    //const path = key ? '?key=' + encodeURIComponent(key) : '';
     const res = await this.GET(query);
-
-    if (res.ok) {
-      showResponse(typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2));
-    } else {
-      showResponse(`Error ${res.status}: ${res.data}`);
-    }
+    return res;
   }
+  
 
   async PostCache(key, value) {
     if (!key) return alert('Key is required');
@@ -130,7 +125,7 @@ export class CacheAPI extends API {
       body: value
     });
 
-    showResponse(res.ok ? 'Saved successfully' : `Error ${res.status}: ${res.data}`);
+    return res;
   }
 
     async PutCache(key, value) {
@@ -141,8 +136,7 @@ export class CacheAPI extends API {
       headers: { 'Content-Type': 'text/plain' },
       body: value
     });
-
-    showResponse(res.ok ? 'Saved successfully' : `Error ${res.status}: ${res.data}`);
+    return res;
   }
 
   async DeleteCache(key) {
@@ -150,8 +144,47 @@ export class CacheAPI extends API {
 
     const query = API.buildQuery({ key }); 
     const res = await this.DELETE(query);
-
-    showResponse(res.ok ? `Deleted: ${res.data}` : `Error ${res.status}: ${res.data}`);
+    return res;
   }
 }
+
+// API để tương tác với user
+export class UserAPI extends API {
+  static baseUrl = '/api/user';
+
+  async GetUser(userId) {
+    const query = API.buildQuery({ userId }); 
+    const res = await this.GET(query);
+    return res;
+  }
+  
+  async PostUser(username, password) {
+    var payload ={username, password};
+
+    const res = await this.POST("", {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  async PutUser(email = '',avatar = '',playLaterList = {},following = {}) {
+    var payload= {email,avatar,playLaterList,following}
+    
+    const res = await this.PUT('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+  });
+  return res;
+  }
+
+  async DeleteUser() {
+    const query = API.buildQuery({ }); 
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
+
+
 
