@@ -1,45 +1,52 @@
 get:
   tags:
-  - Cache
-  summary: Get the cache value
-  operationId: GetCacheValue
-  parameters:
-  - name: key
-    in: query
-    description: Cache key (optional)
-    required: false
-    schema:
-      type: string
-      example: 'test'
-  responses:
-    200:
-      description: Success
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CacheItems'
-        text/plain:
-          schema:
-            type: string
-    404:
-      description: Cache key not found
-      content: {}
-    500:
-      description: Internal server error
-      content: {}
+    - Cache   # Thẻ mô tả chức năng của phương thức
+  summary: Get the cache value # Mô tả ngắn gọn về chức năng của phương thức
+  operationId: GetCacheValue  # Tên định danh duy nhất cho phương thức
+  parameters: # Tham số đầu vào của phương thức
+    - name: key # Tên tham số
+      in: query # Vị trí tham số (query, path, header, body)
+      description: Cache key (optional) # Mô tả tham số
+      required: false # Có bắt buộc tham số này hay không
+      schema: # Định dạng dữ liệu của tham số
+        type: string # Loại dữ liệu (string, integer, number, boolean, array, object)
+        example: 'test' # Ví dụ giá trị của tham số
+  responses: # Các phản hồi của phương thức
+    200: # Mã trạng thái HTTP 200 - Thành công
+      description: Success # Mô tả phản hồi
+      content: # Nội dung phản hồi
+        application/json: # Định dạng phản hồi là JSON
+          schema: # Định nghĩa cấu trúc dữ liệu của phản hồi
+            type: object  # Loại dữ liệu là object
+            properties: # Các thuộc tính của object
+              key: # Tên thuộc tính
+                type: string # Loại dữ liệu của thuộc tính
+                example: 'test' # Ví dụ giá trị của thuộc tính
+              value:  # Tên thuộc tính
+                type: string # Loại dữ liệu của thuộc tính
+                example: 'value123' # Ví dụ giá trị của thuộc tính
+        text/plain: # Định dạng phản hồi là văn bản
+          schema: # Định nghĩa cấu trúc dữ liệu của phản hồi
+            type: string # Loại dữ liệu là string
+            example: '{"key":"test","value":"value123"}' # Ví dụ giá trị của phản hồi
+    404: # Mã trạng thái HTTP 404 - Không tìm thấy
+      description: Cache key not found # Mô tả phản hồi
+    500: # Mã trạng thái HTTP 500 - Lỗi máy chủ nội bộ
+      description: Internal server error # Mô tả phản hồi
+
 post:
   tags:
-  - Cache
+    - Cache
   summary: Create the cache value
   operationId: CreateCacheValue
   parameters:
-  - name: key
-    in: query
-    description: Cache key
-    required: true
-    schema:
-      type: string
-      example: 'test'
+    - name: key
+      in: query
+      description: Cache key
+      required: true
+      schema:
+        type: string
+        example: 'test'
   requestBody:
     description: Cache value to create
     required: true
@@ -47,89 +54,99 @@ post:
       text/plain:
         schema:
           type: string
-          example: 'value'
+          example: 'value123'
   responses:
     200:
-      description: Success
-      content: {}
+      description: Created successfully
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'OK'
     500:
       description: Internal server error
-      content: {}
+
 put:
   tags:
-  - Cache
+    - Cache
   summary: Modify the cache value
   operationId: ModifyCacheValue
   parameters:
-  - name: key
-    in: query
-    description: Cache key
-    required: true
-    schema:
-      type: string
-      example: 'test'
+    - name: key
+      in: query
+      description: Cache key
+      required: true
+      schema:
+        type: string
+        example: 'test'
   requestBody:
-    description: Cache value to modify
+    description: New cache value
     required: true
     content:
       text/plain:
         schema:
           type: string
-          example: 'modified'
+          example: 'modifiedValue'
   responses:
     200:
-      description: Success
-      content: {}
-    500:
-      description: Internal server error
-      content: {}
-delete:
-  tags:
-  - Cache
-  summary: Delete the cache value
-  operationId: DeleteCacheValue
-  parameters:
-  - name: key
-    in: query
-    description: Cache key
-    required: true
-    schema:
-      type: string
-      example: 'test'
-  responses:
-    200:
-      description: Success
+      description: Modified successfully
       content:
         text/plain:
           schema:
             type: string
-    404:
-      description: Cache key not found
-      content: {}
+            example: 'OK'
     500:
       description: Internal server error
-      content: {}
+
+delete:
+  tags:
+    - Cache
+  summary: Delete the cache value
+  operationId: DeleteCacheValue
+  parameters:
+    - name: key
+      in: query
+      description: Cache key
+      required: true
+      schema:
+        type: string
+        example: 'test'
+  responses:
+    200:
+      description: Deleted successfully
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'Deleted'
+    404:
+      description: Cache key not found
+    500:
+      description: Internal server error
+
 head:
   tags:
-  - Cache
+    - Cache
   summary: Get the cache headers
   operationId: GetCacheHeaders
   responses:
     200:
-      description: Success
-      content: {}
+      description: Returns cache metadata headers
     500:
       description: Internal server error
-      content: {}
+
 options:
   tags:
-  - Cache
+    - Cache
   summary: Get the cache options
   operationId: GetCacheOptions
   responses:
     200:
-      description: Success
-      content: {}
+      description: List supported methods
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'GET, POST, PUT, DELETE, HEAD, OPTIONS'
     500:
       description: Internal server error
-      content: {}
