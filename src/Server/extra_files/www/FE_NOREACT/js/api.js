@@ -86,6 +86,8 @@ export class LoginAPI extends API{
 
   // const username = document.getElementById('loginUsername').value.trim();
   // const password = document.getElementById('loginPassword').value;
+
+  // kiểm tra tài khoản mật khẩu trả về okay 
     async PostLogin(username, password) {
       if (!username || !password) {
         alert('Username and password are required!');
