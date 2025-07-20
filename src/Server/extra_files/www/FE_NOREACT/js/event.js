@@ -1,13 +1,17 @@
 import { LoginAPI, CacheAPI } from './api.js';
 
 const loginApi = new LoginAPI();
-const cacheApi = new CacheAPI();
 
 
 // button-auth LOGIN
-document.getElementById('button-auth').addEventListener('click', () => {
-  const username = document.getElementById('loginUsername').value.trim();
+document.getElementById('button-auth').addEventListener('click', async () => {
+  const username = document.getElementById('loginUsername').value;
   const password = document.getElementById('loginPassword').value;
-  loginApi.PostLogin(username, password);
-  
+  const res = await loginApi.PostLogin(username, password);
+  if (res.ok){
+    window.location.href = 'profile.html';
+  }
+  else{
+    alert(res.data.message || 'Login failed');
+  }
 });
