@@ -5,6 +5,7 @@ on:
     branches: [ main ]  # Kích hoạt workflow khi có push lên nhánh main
     paths:
       - 'src/Server/**'  # Chỉ kích hoạt khi có thay đổi trong thư mục src/Server
+      - '.github/workflows/**'
 
 jobs:
   build:
