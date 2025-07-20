@@ -26,7 +26,7 @@ namespace Server.Source.Model
         private int port = 2000;
         public int Port { get => port; set => port = value; }
 
-        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "ClientWeb");
+        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "FE_NOREACT");
         public string WWW { get => www; set => www = value; }
 
         private SslContext context;
