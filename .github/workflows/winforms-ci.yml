@@ -49,6 +49,15 @@ jobs:
           }
         }
 
+    - name: Ghi đè bằng file từ repo nếu có ./src/Server/extra_files  # Ưu tiên nội dung trong repo
+      shell: powershell
+      run: |
+        if (Test-Path "./src/Server/extra_files") {
+          Get-ChildItem ./src/Server/extra_files | ForEach-Object {
+            Copy-Item $_.FullName -Destination ./BuildOutput/ -Recurse -Force
+          }
+        }
+
     # - name: Tạo file ZIP từ thư mục BuildOutput  # (Tùy chọn) Nếu muốn nén lại thành 1 file zip
     #   run: Compress-Archive -Path ./BuildOutput/* -DestinationPath ./KontrollerApp.zip
 
