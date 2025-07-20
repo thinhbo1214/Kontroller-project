@@ -185,19 +185,52 @@ namespace Server.Source.View
         private void buttonCmd_Click(object sender, EventArgs e)
         {
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            CmdHelper.RunCommand("start cmd", showWindow: true, workingDirectory: path);
+            CmdHelper.RunCommand("start cmd", workingDirectory: path);
         }
 
         private void buttonExplorer_Click(object sender, EventArgs e)
         {
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            CmdHelper.RunCommand("explorer .", showWindow: true, workingDirectory: path);
+            CmdHelper.RunCommand("explorer .", workingDirectory: path);
         }
 
         private void buttonClearLogsS_Click(object sender, EventArgs e)
         {
             listLogSystem.Clear();
             MessageBox.Show("Đã xoá logs!!!");
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            string url = "https://hcmus.edu.vn/";
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true // Bắt buộc phải có trong .NET Core/.NET 5+ để mở trình duyệt
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể mở link: " + ex.Message);
+            }
+        }
+
+
+        private void buttonServices_Click(object sender, EventArgs e)
+        {
+            CmdHelper.RunCommand("services.msc");
+        }
+
+        private void buttonConfig_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonHelp_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
