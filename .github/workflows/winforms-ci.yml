@@ -25,16 +25,16 @@ jobs:
         python -m pip install --upgrade pip  # Cập nhật pip
         pip install gdown  # Cài gdown để tải file từ Google Drive
 
-    - name: Tải extra_files.zip từ Google Drive bằng gdown  # Dùng gdown tải file zip từ Google Drive
-      run: |
-        gdown https://drive.google.com/uc?id=1m068G_SadSpKjDyL0vslfcx8GWsfVk6c  # Link file zip bạn đã upload lên Drive
+    # - name: Tải extra_files.zip từ Google Drive bằng gdown  # Dùng gdown tải file zip từ Google Drive
+    #   run: |
+    #     gdown https://drive.google.com/uc?id=1m068G_SadSpKjDyL0vslfcx8GWsfVk6c  # Link file zip bạn đã upload lên Drive
 
-    - name: Kiểm tra file extra_files.zip  # In ra tên file zip để đảm bảo tải thành công
-      run: dir extra_files.zip  # Dùng lệnh dir để liệt kê file
+    # - name: Kiểm tra file extra_files.zip  # In ra tên file zip để đảm bảo tải thành công
+    #   run: dir extra_files.zip  # Dùng lệnh dir để liệt kê file
 
-    - name: Giải nén extra_files.zip  # Giải nén file zip vào thư mục extra_files
-      run: |
-        powershell Expand-Archive -Path extra_files.zip -DestinationPath extra_files  # Dùng PowerShell để giải nén
+    # - name: Giải nén extra_files.zip  # Giải nén file zip vào thư mục extra_files
+    #   run: |
+    #     powershell Expand-Archive -Path extra_files.zip -DestinationPath extra_files  # Dùng PowerShell để giải nén
 
     - name: Build WinForm dạng self-contained vào thư mục BuildOutput  # Biên dịch WinForm thành file thực thi
       run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained false -r win-x64
