@@ -69,7 +69,6 @@ namespace Server.Source.View
                         parts[0].Groups[5].Value  // PID
                     );
                     rowCount++;
-                    Simulation.GetModel<LogManager>().Log($"Added row: {string.Join(", ", parts[0].Groups.Cast<Group>().Skip(1).Select(g => g.Value))}");
                 }
             }
 
