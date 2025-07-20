@@ -51,12 +51,13 @@ jobs:
         }
 
     - name: Ghi đè bằng file từ repo nếu có ./src/Server/extra_files  # Ưu tiên nội dung trong repo
-      shell: powershell
+      shell: pwsh  # Dùng PowerShell Core cho tương thích tốt hơn
       run: |
-        if (Test-Path "./src/Server/extra_files") {
-          Get-ChildItem ./src/Server/extra_files | ForEach-Object {
-            Copy-Item $_.FullName -Destination ./BuildOutput/ -Recurse -Force
-          }
+        if (Test-Path "${{ github.workspace }}/src/Server/extra_files") {
+          Write-Host "📁 Found extra_files trong repo. Đang copy ghi đè lên BuildOutput..."
+          Copy-Item -Path "${{ github.workspace }}/src/Server/extra_files/*" -Destination "${{ github.workspace }}/BuildOutput/" -Recurse -Force
+        } else {
+          Write-Host "❌ Không tìm thấy extra_files trong repo!"
         }
 
     # - name: Tạo file ZIP từ thư mục BuildOutput  # (Tùy chọn) Nếu muốn nén lại thành 1 file zip
