@@ -56,9 +56,9 @@ namespace Server.Source.View
             buttonNetstat = new Button();
             buttonCmd = new Button();
             buttonExplorer = new Button();
-            button1 = new Button();
-            button4 = new Button();
-            button5 = new Button();
+            buttonConfig = new Button();
+            buttonServices = new Button();
+            buttonHelp = new Button();
             buttonAnalyzeLogsU = new Button();
             buttonAnalyzeLogsS = new Button();
             buttonClearLogsS = new Button();
@@ -111,6 +111,7 @@ namespace Server.Source.View
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 10;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // labelContact
             // 
@@ -419,7 +420,7 @@ namespace Server.Source.View
             buttonNetstat.BackColor = SystemColors.ButtonFace;
             buttonNetstat.Cursor = Cursors.Hand;
             buttonNetstat.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonNetstat.Location = new Point(515, 31);
+            buttonNetstat.Location = new Point(515, 57);
             buttonNetstat.Name = "buttonNetstat";
             buttonNetstat.Size = new Size(94, 29);
             buttonNetstat.TabIndex = 46;
@@ -432,7 +433,7 @@ namespace Server.Source.View
             buttonCmd.BackColor = SystemColors.ButtonFace;
             buttonCmd.Cursor = Cursors.Hand;
             buttonCmd.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonCmd.Location = new Point(515, 66);
+            buttonCmd.Location = new Point(515, 92);
             buttonCmd.Name = "buttonCmd";
             buttonCmd.Size = new Size(94, 29);
             buttonCmd.TabIndex = 47;
@@ -445,7 +446,7 @@ namespace Server.Source.View
             buttonExplorer.BackColor = SystemColors.ButtonFace;
             buttonExplorer.Cursor = Cursors.Hand;
             buttonExplorer.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonExplorer.Location = new Point(515, 101);
+            buttonExplorer.Location = new Point(515, 127);
             buttonExplorer.Name = "buttonExplorer";
             buttonExplorer.Size = new Size(94, 29);
             buttonExplorer.TabIndex = 48;
@@ -453,41 +454,44 @@ namespace Server.Source.View
             buttonExplorer.UseVisualStyleBackColor = false;
             buttonExplorer.Click += buttonExplorer_Click;
             // 
-            // button1
+            // buttonConfig
             // 
-            button1.BackColor = SystemColors.ButtonFace;
-            button1.Cursor = Cursors.Hand;
-            button1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button1.Location = new Point(515, 136);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 49;
-            button1.Text = "???";
-            button1.UseVisualStyleBackColor = false;
+            buttonConfig.BackColor = SystemColors.ButtonFace;
+            buttonConfig.Cursor = Cursors.Hand;
+            buttonConfig.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonConfig.Location = new Point(515, 22);
+            buttonConfig.Name = "buttonConfig";
+            buttonConfig.Size = new Size(94, 29);
+            buttonConfig.TabIndex = 49;
+            buttonConfig.Text = "Config";
+            buttonConfig.UseVisualStyleBackColor = false;
+            buttonConfig.Click += buttonConfig_Click;
             // 
-            // button4
+            // buttonServices
             // 
-            button4.BackColor = SystemColors.ButtonFace;
-            button4.Cursor = Cursors.Hand;
-            button4.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button4.Location = new Point(515, 171);
-            button4.Name = "button4";
-            button4.Size = new Size(94, 29);
-            button4.TabIndex = 50;
-            button4.Text = "???";
-            button4.UseVisualStyleBackColor = false;
+            buttonServices.BackColor = SystemColors.ButtonFace;
+            buttonServices.Cursor = Cursors.Hand;
+            buttonServices.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonServices.Location = new Point(515, 162);
+            buttonServices.Name = "buttonServices";
+            buttonServices.Size = new Size(94, 29);
+            buttonServices.TabIndex = 50;
+            buttonServices.Text = "Services";
+            buttonServices.UseVisualStyleBackColor = false;
+            buttonServices.Click += buttonServices_Click;
             // 
-            // button5
+            // buttonHelp
             // 
-            button5.BackColor = SystemColors.ButtonFace;
-            button5.Cursor = Cursors.Hand;
-            button5.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button5.Location = new Point(515, 206);
-            button5.Name = "button5";
-            button5.Size = new Size(94, 29);
-            button5.TabIndex = 51;
-            button5.Text = "???";
-            button5.UseVisualStyleBackColor = false;
+            buttonHelp.BackColor = SystemColors.ButtonFace;
+            buttonHelp.Cursor = Cursors.Hand;
+            buttonHelp.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonHelp.Location = new Point(515, 197);
+            buttonHelp.Name = "buttonHelp";
+            buttonHelp.Size = new Size(94, 29);
+            buttonHelp.TabIndex = 51;
+            buttonHelp.Text = "Help";
+            buttonHelp.UseVisualStyleBackColor = false;
+            buttonHelp.Click += buttonHelp_Click;
             // 
             // buttonAnalyzeLogsU
             // 
@@ -534,9 +538,9 @@ namespace Server.Source.View
             Controls.Add(buttonClearLogsS);
             Controls.Add(buttonAnalyzeLogsS);
             Controls.Add(buttonAnalyzeLogsU);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(button1);
+            Controls.Add(buttonHelp);
+            Controls.Add(buttonServices);
+            Controls.Add(buttonConfig);
             Controls.Add(buttonExplorer);
             Controls.Add(buttonCmd);
             Controls.Add(buttonNetstat);
@@ -604,9 +608,9 @@ namespace Server.Source.View
         private Button buttonNetstat;
         private Button buttonCmd;
         private Button buttonExplorer;
-        private Button button1;
-        private Button button4;
-        private Button button5;
+        private Button buttonConfig;
+        private Button buttonServices;
+        private Button buttonHelp;
         private Button buttonAnalyzeLogsU;
         private Button buttonAnalyzeLogsS;
         private Button buttonClearLogsS;
