@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Controller;
 using Server.Source.Core;
+using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using Server.Source.Presenter;
@@ -8,6 +9,7 @@ using Server.Source.View;
 using System.Collections.Concurrent;
 
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -23,6 +25,9 @@ namespace Server.Source.Model
         private string password = "qwerty";
         public string Password {get => password; set => password = value;}
 
+        private string ip = "192.168.1.5";
+        public string IP { get => ip; set => ip = value; }
+
         private int port = 2000;
         public int Port { get => port; set => port = value; }
 
@@ -36,6 +41,8 @@ namespace Server.Source.Model
         public ServerController Server { get => server; }
 
         public event Action CongfiguredServer;
+
+        public bool IsAutoConfig { get; set; } = true;
 
         /// <summary>
         /// Hàng đợi log an toàn đa luồng để lưu trữ log chờ ghi.

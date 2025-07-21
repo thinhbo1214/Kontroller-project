@@ -225,7 +225,8 @@ namespace Server.Source.View
 
         private void buttonConfig_Click(object sender, EventArgs e)
         {
-
+            var configForm = new ConfigForm();
+            configForm.ShowDialog();
         }
 
         private void buttonHelp_Click(object sender, EventArgs e)
