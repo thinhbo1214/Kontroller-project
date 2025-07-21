@@ -50,6 +50,8 @@ namespace Server.Source.View
             labelAIPort = new Label();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
+            labelMemoryUsage = new Label();
+            labelCpuUsage = new Label();
             listLogSystem = new TextBox();
             linkGithub = new LinkLabel();
             buttonNetstat = new Button();
@@ -61,8 +63,8 @@ namespace Server.Source.View
             buttonAnalyzeLogsU = new Button();
             buttonAnalyzeLogsS = new Button();
             buttonClearLogsS = new Button();
-            labelCpuUsage = new Label();
-            labelMemoryUsage = new Label();
+            buttonOpenLogsS = new Button();
+            buttonOpenLogsU = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -209,7 +211,6 @@ namespace Server.Source.View
             labelRTime.Size = new Size(125, 23);
             labelRTime.TabIndex = 23;
             labelRTime.Text = "Running Time:";
-            labelRTime.Click += labelRTime_Click;
             // 
             // labelModule
             // 
@@ -384,6 +385,26 @@ namespace Server.Source.View
             groupBox2.TabStop = false;
             groupBox2.Text = "Server Information";
             // 
+            // labelMemoryUsage
+            // 
+            labelMemoryUsage.AutoSize = true;
+            labelMemoryUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelMemoryUsage.Location = new Point(6, 187);
+            labelMemoryUsage.Name = "labelMemoryUsage";
+            labelMemoryUsage.Size = new Size(148, 23);
+            labelMemoryUsage.TabIndex = 25;
+            labelMemoryUsage.Text = "Memory Usage: 0";
+            // 
+            // labelCpuUsage
+            // 
+            labelCpuUsage.AutoSize = true;
+            labelCpuUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelCpuUsage.Location = new Point(6, 150);
+            labelCpuUsage.Name = "labelCpuUsage";
+            labelCpuUsage.Size = new Size(117, 23);
+            labelCpuUsage.TabIndex = 24;
+            labelCpuUsage.Text = "CPU Usage: 0";
+            // 
             // listLogSystem
             // 
             listLogSystem.Location = new Point(615, 22);
@@ -487,7 +508,7 @@ namespace Server.Source.View
             buttonAnalyzeLogsU.BackColor = SystemColors.ButtonFace;
             buttonAnalyzeLogsU.Cursor = Cursors.Hand;
             buttonAnalyzeLogsU.Enabled = false;
-            buttonAnalyzeLogsU.Location = new Point(836, 531);
+            buttonAnalyzeLogsU.Location = new Point(736, 531);
             buttonAnalyzeLogsU.Name = "buttonAnalyzeLogsU";
             buttonAnalyzeLogsU.Size = new Size(117, 29);
             buttonAnalyzeLogsU.TabIndex = 52;
@@ -499,7 +520,7 @@ namespace Server.Source.View
             buttonAnalyzeLogsS.BackColor = SystemColors.ButtonFace;
             buttonAnalyzeLogsS.Cursor = Cursors.Hand;
             buttonAnalyzeLogsS.Enabled = false;
-            buttonAnalyzeLogsS.Location = new Point(836, 206);
+            buttonAnalyzeLogsS.Location = new Point(736, 206);
             buttonAnalyzeLogsS.Name = "buttonAnalyzeLogsS";
             buttonAnalyzeLogsS.Size = new Size(117, 29);
             buttonAnalyzeLogsS.TabIndex = 53;
@@ -518,25 +539,29 @@ namespace Server.Source.View
             buttonClearLogsS.UseVisualStyleBackColor = false;
             buttonClearLogsS.Click += buttonClearLogsS_Click;
             // 
-            // labelCpuUsage
+            // buttonOpenLogsS
             // 
-            labelCpuUsage.AutoSize = true;
-            labelCpuUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelCpuUsage.Location = new Point(6, 150);
-            labelCpuUsage.Name = "labelCpuUsage";
-            labelCpuUsage.Size = new Size(117, 23);
-            labelCpuUsage.TabIndex = 24;
-            labelCpuUsage.Text = "CPU Usage: 0";
+            buttonOpenLogsS.BackColor = SystemColors.ButtonFace;
+            buttonOpenLogsS.Cursor = Cursors.Hand;
+            buttonOpenLogsS.Location = new Point(859, 206);
+            buttonOpenLogsS.Name = "buttonOpenLogsS";
+            buttonOpenLogsS.Size = new Size(94, 29);
+            buttonOpenLogsS.TabIndex = 55;
+            buttonOpenLogsS.Text = "Open Logs";
+            buttonOpenLogsS.UseVisualStyleBackColor = false;
+            buttonOpenLogsS.Click += buttonOpenLogsS_Click;
             // 
-            // labelMemoryUsage
+            // buttonOpenLogsU
             // 
-            labelMemoryUsage.AutoSize = true;
-            labelMemoryUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelMemoryUsage.Location = new Point(6, 187);
-            labelMemoryUsage.Name = "labelMemoryUsage";
-            labelMemoryUsage.Size = new Size(148, 23);
-            labelMemoryUsage.TabIndex = 25;
-            labelMemoryUsage.Text = "Memory Usage: 0";
+            buttonOpenLogsU.BackColor = SystemColors.ButtonFace;
+            buttonOpenLogsU.Cursor = Cursors.Hand;
+            buttonOpenLogsU.Location = new Point(859, 531);
+            buttonOpenLogsU.Name = "buttonOpenLogsU";
+            buttonOpenLogsU.Size = new Size(94, 29);
+            buttonOpenLogsU.TabIndex = 56;
+            buttonOpenLogsU.Text = "Open Logs";
+            buttonOpenLogsU.UseVisualStyleBackColor = false;
+            buttonOpenLogsU.Click += buttonOpenLogsU_Click;
             // 
             // ViewServer
             // 
@@ -544,6 +569,8 @@ namespace Server.Source.View
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1061, 573);
+            Controls.Add(buttonOpenLogsU);
+            Controls.Add(buttonOpenLogsS);
             Controls.Add(buttonClearLogsS);
             Controls.Add(buttonAnalyzeLogsS);
             Controls.Add(buttonAnalyzeLogsU);
@@ -624,5 +651,7 @@ namespace Server.Source.View
         private Button buttonClearLogsS;
         private Label labelCpuUsage;
         private Label labelMemoryUsage;
+        private Button buttonOpenLogsS;
+        private Button buttonOpenLogsU;
     }
 }
