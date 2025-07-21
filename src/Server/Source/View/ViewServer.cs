@@ -5,6 +5,7 @@ using Server.Source.Manager;
 using Server.Source.Model;
 using Server.Source.Presenter;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using static Server.Source.Model.ModelServer;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
@@ -227,9 +228,20 @@ namespace Server.Source.View
 
         }
 
-        private void labelRTime_Click(object sender, EventArgs e)
-        {
 
+        private void buttonOpenLogsS_Click(object sender, EventArgs e)
+        {
+            var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            var log_system = Path.Combine(logDir, "log_system");
+            CmdHelper.RunCommand("explorer .", workingDirectory: log_system);
+
+        }
+
+        private void buttonOpenLogsU_Click(object sender, EventArgs e)
+        {
+            var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            var log_user = Path.Combine(logDir, "log_user");
+            CmdHelper.RunCommand("explorer .", workingDirectory: log_user);
         }
     }
 }

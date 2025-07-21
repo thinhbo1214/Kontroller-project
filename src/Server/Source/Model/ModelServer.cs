@@ -19,7 +19,8 @@ namespace Server.Source.Model
     {
         private static readonly PerformanceCounter CpuCounter = new("Processor", "% Processor Time", "_Total");
 
-        private static readonly string ExecutableDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        //private static readonly string ExecutableDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private static readonly string ExecutableDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
         private string certificate = Path.Combine(ExecutableDirectory, "extra_files", "tools", "certificates", "server.pfx");
         public string Certificate { get => certificate; set => certificate = value; }
