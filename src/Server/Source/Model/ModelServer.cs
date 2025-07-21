@@ -7,9 +7,9 @@ using Server.Source.NetCoreServer;
 using Server.Source.Presenter;
 using Server.Source.View;
 using System.Collections.Concurrent;
-
+using System.Diagnostics; // Cho PerformanceCounter và Process
+using System.Threading;   // Cho Thread.Sleep
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -17,6 +17,8 @@ namespace Server.Source.Model
 {
     public class ModelServer
     {
+        private static readonly PerformanceCounter CpuCounter = new("Processor", "% Processor Time", "_Total");
+
         private static readonly string ExecutableDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
         private string certificate = Path.Combine(ExecutableDirectory, "extra_files", "tools", "certificates", "server.pfx");
@@ -45,6 +47,16 @@ namespace Server.Source.Model
         public bool IsAutoConfig { get; set; } = true;
 
         /// <summary>
+        /// Bộ điều khiển tín hiệu hủy để dừng task một cách an toàn.
+        /// </summary>
+        private CancellationTokenSource _cts = new();
+
+        /// <summary>
+        /// Task xử lý nền.
+        /// </summary>
+        private Task? _cleanerTask;
+
+        /// <summary>
         /// Hàng đợi log an toàn đa luồng để lưu trữ log chờ ghi.
         /// </summary>
         private readonly BlockingCollection<string> _logQueue = new();
@@ -56,7 +68,38 @@ namespace Server.Source.Model
             public TimeSpan ElapsedTime { get; set; }
             public int NumberRequest { get; set; }
             public int NumberUser { get; set; }
-            public int Port { get; set; }
+
+            private float cpuUsage;
+            public float CpuUsage { get => cpuUsage; set => cpuUsage = (value >= 100) ? 0 : value; }
+            public string MemoryUsage { get; set; }
+
+            public static async Task<ServerStatus> CollectAsync(TimeSpan elapsed, int requests, int users)
+            {
+                float cpu = await GetCpuUsageAsync();
+                string memory = GetMemoryUsage();
+
+                return new ServerStatus
+                {
+                    ElapsedTime = elapsed,
+                    NumberRequest = requests,
+                    NumberUser = users,
+                    CpuUsage = cpu,
+                    MemoryUsage = memory
+                };
+            }
+            private static async Task<float> GetCpuUsageAsync()
+            {
+                CpuCounter.NextValue(); // discard first
+                await Task.Delay(500);  // wait
+                return CpuCounter.NextValue();
+            }
+
+            private static string GetMemoryUsage()
+            {
+                var proc = Process.GetCurrentProcess();
+                long memoryBytes = proc.WorkingSet64;
+                return (memoryBytes / (1024.0 * 1024)).ToString("0.0") + " MB";
+            }
 
         }
         public event Action<ServerStatus> OnChangedData;
@@ -118,17 +161,75 @@ namespace Server.Source.Model
             OnAddedLog?.Invoke(source, logEntry);
         }
 
-        private void NotifyChanged()
+        private async void NotifyChanged()
         {
             NumberUser = Simulation.GetModel<SessionManager>().NumberSession;
 
-            OnChangedData?.Invoke(new ServerStatus
-            {
-                ElapsedTime = ElapsedTime,
-                NumberRequest = NumberRequest,
-                NumberUser = NumberUser,
-                Port = Port,
-            });
+            var status = await ServerStatus.CollectAsync(
+                ElapsedTime,
+                NumberRequest,
+                NumberUser
+            );
+
+            OnChangedData?.Invoke(status);
+
         }
+        /// <summary>
+        /// Bắt đầu task nền dọn session hết hạn.
+        /// </summary>
+        public void Start()
+        {
+            if (_cleanerTask != null && !_cleanerTask.IsCompleted)
+                return;
+
+            if (_cts.IsCancellationRequested)
+                _cts = new CancellationTokenSource();
+
+            _cleanerTask = Task.Run(() => Run(_cts.Token));
+        }
+
+        /// <summary>
+        /// Dừng task dọn session.
+        /// </summary>
+        public void Stop()
+        {
+            _cts.Cancel();
+
+            try
+            {
+                _cleanerTask?.Wait();
+            }
+            catch (AggregateException ae)
+            {
+                ae.Handle(e => e is OperationCanceledException);
+            }
+            Simulation.GetModel<LogManager>().Log("ModelServer stopped.", LogLevel.INFO, LogSource.SYSTEM);
+        }
+
+        /// <summary>
+        /// Vòng lặp chạy nền
+        /// </summary>
+        private async Task Run(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    Simulation.GetModel<ModelServer>().ElapsedTime += TimeSpan.FromMilliseconds(1000);
+                    NotifyChanged();
+                    await Task.Delay(1_000, token); // chạy mỗi 1s
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Simulation.GetModel<LogManager>()?.Log(ex); // nếu cần log lỗi
+                    await Task.Delay(1000, token);
+                }
+            }
+        }
+
     }
 }

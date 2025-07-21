@@ -32,7 +32,6 @@ namespace Server.Source.View
             listLogUser = new TextBox();
             buttonStopApp = new Button();
             buttonClearLogsU = new Button();
-            labelActive = new Label();
             labelNRequest = new Label();
             labelNUser = new Label();
             labelRTime = new Label();
@@ -62,6 +61,8 @@ namespace Server.Source.View
             buttonAnalyzeLogsU = new Button();
             buttonAnalyzeLogsS = new Button();
             buttonClearLogsS = new Button();
+            labelCpuUsage = new Label();
+            labelMemoryUsage = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -179,21 +180,11 @@ namespace Server.Source.View
             buttonClearLogsU.UseVisualStyleBackColor = false;
             buttonClearLogsU.Click += buttonClearLog_Click;
             // 
-            // labelActive
-            // 
-            labelActive.AutoSize = true;
-            labelActive.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelActive.Location = new Point(14, 48);
-            labelActive.Name = "labelActive";
-            labelActive.Size = new Size(106, 23);
-            labelActive.TabIndex = 19;
-            labelActive.Text = "Active: false";
-            // 
             // labelNRequest
             // 
             labelNRequest.AutoSize = true;
             labelNRequest.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNRequest.Location = new Point(13, 119);
+            labelNRequest.Location = new Point(6, 81);
             labelNRequest.Name = "labelNRequest";
             labelNRequest.Size = new Size(183, 23);
             labelNRequest.TabIndex = 20;
@@ -203,7 +194,7 @@ namespace Server.Source.View
             // 
             labelNUser.AutoSize = true;
             labelNUser.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNUser.Location = new Point(13, 156);
+            labelNUser.Location = new Point(6, 118);
             labelNUser.Name = "labelNUser";
             labelNUser.Size = new Size(156, 23);
             labelNUser.TabIndex = 22;
@@ -213,15 +204,12 @@ namespace Server.Source.View
             // 
             labelRTime.AutoSize = true;
             labelRTime.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelRTime.Location = new Point(13, 82);
+            labelRTime.Location = new Point(6, 44);
             labelRTime.Name = "labelRTime";
             labelRTime.Size = new Size(125, 23);
             labelRTime.TabIndex = 23;
             labelRTime.Text = "Running Time:";
-            // 
-            // timer1
-            // 
-            timer1.Tick += timer1_Tick;
+            labelRTime.Click += labelRTime_Click;
             // 
             // labelModule
             // 
@@ -383,14 +371,15 @@ namespace Server.Source.View
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(labelActive);
+            groupBox2.Controls.Add(labelMemoryUsage);
+            groupBox2.Controls.Add(labelCpuUsage);
             groupBox2.Controls.Add(labelRTime);
             groupBox2.Controls.Add(labelNRequest);
             groupBox2.Controls.Add(labelNUser);
             groupBox2.Font = new Font("Segoe UI", 13.2000008F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            groupBox2.Location = new Point(13, 256);
+            groupBox2.Location = new Point(12, 247);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(340, 195);
+            groupBox2.Size = new Size(340, 217);
             groupBox2.TabIndex = 43;
             groupBox2.TabStop = false;
             groupBox2.Text = "Server Information";
@@ -529,6 +518,26 @@ namespace Server.Source.View
             buttonClearLogsS.UseVisualStyleBackColor = false;
             buttonClearLogsS.Click += buttonClearLogsS_Click;
             // 
+            // labelCpuUsage
+            // 
+            labelCpuUsage.AutoSize = true;
+            labelCpuUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelCpuUsage.Location = new Point(6, 150);
+            labelCpuUsage.Name = "labelCpuUsage";
+            labelCpuUsage.Size = new Size(117, 23);
+            labelCpuUsage.TabIndex = 24;
+            labelCpuUsage.Text = "CPU Usage: 0";
+            // 
+            // labelMemoryUsage
+            // 
+            labelMemoryUsage.AutoSize = true;
+            labelMemoryUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelMemoryUsage.Location = new Point(6, 187);
+            labelMemoryUsage.Name = "labelMemoryUsage";
+            labelMemoryUsage.Size = new Size(148, 23);
+            labelMemoryUsage.TabIndex = 25;
+            labelMemoryUsage.Text = "Memory Usage: 0";
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -583,7 +592,6 @@ namespace Server.Source.View
         private TextBox listLogUser;
         private Button buttonStopApp;
         private Button buttonClearLogsU;
-        private Label labelActive;
         private Label labelNRequest;
         private Label labelNUser;
         private Label labelRTime;
@@ -614,5 +622,7 @@ namespace Server.Source.View
         private Button buttonAnalyzeLogsU;
         private Button buttonAnalyzeLogsS;
         private Button buttonClearLogsS;
+        private Label labelCpuUsage;
+        private Label labelMemoryUsage;
     }
 }
