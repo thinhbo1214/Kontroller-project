@@ -44,6 +44,8 @@ namespace Server.Source.View
             labelRTime.Text = "Running Time: " + status.ElapsedTime.ToString();
             labelNRequest.Text = "Number of Request: " + status.NumberRequest.ToString();
             labelNUser.Text = "Number of User: " + status.NumberUser.ToString();
+            labelCpuUsage.Text = "CPU Usage: " + status.CpuUsage.ToString("0.0") + " %";
+            labelMemoryUsage.Text = "Memory Usage: " + status.MemoryUsage;
 
         }
 
@@ -54,7 +56,6 @@ namespace Server.Source.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            labelActive.Text = "Active: true";
             labelAppPort.Text = Simulation.GetModel<ModelServer>().Port.ToString();
             Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
             buttonStartApp.Enabled = false;
@@ -64,7 +65,6 @@ namespace Server.Source.View
         }
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            labelActive.Text = "Active: false";
             OnClickedStop?.Invoke();
             buttonStopApp.Enabled = false;
             buttonStartApp.Enabled = true;
@@ -137,13 +137,6 @@ namespace Server.Source.View
             listLogUser.Clear();
             MessageBox.Show("Đã xoá logs!!!");
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            Simulation.GetModel<ModelServer>().ElapsedTime += TimeSpan.FromMilliseconds(100);
-
-        }
-
 
         private void buttonSQLStop_Click(object sender, EventArgs e)
         {
@@ -230,6 +223,11 @@ namespace Server.Source.View
         }
 
         private void buttonHelp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelRTime_Click(object sender, EventArgs e)
         {
 
         }
