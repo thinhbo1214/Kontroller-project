@@ -18,6 +18,14 @@ get:
         application/json:
           schema:
             $ref: './components/schemas/Review.yml#/Review'
+            data:
+             - name: reviewId
+             - name: content
+             - name: author
+             - name: rating
+             - name: comments
+             - name: dateCreated
+             - name: reactions
     400:
       $ref: './components/responses/AllStatusCode.yml#/400'
     404:
@@ -36,6 +44,10 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/Review.yml#/Review'
+          data:
+          - name: content
+          - name: author
+          - name: rating
   responses:
     201:
       description: Created
@@ -55,6 +67,9 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/Review.yml#/Review'
+          data:
+          - name: content
+          - name: rating
   responses:
     200:
       description: Updated
