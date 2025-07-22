@@ -32,7 +32,6 @@ namespace Server.Source.View
             listLogUser = new TextBox();
             buttonStopApp = new Button();
             buttonClearLogsU = new Button();
-            labelActive = new Label();
             labelNRequest = new Label();
             labelNUser = new Label();
             labelRTime = new Label();
@@ -51,17 +50,21 @@ namespace Server.Source.View
             labelAIPort = new Label();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
+            labelMemoryUsage = new Label();
+            labelCpuUsage = new Label();
             listLogSystem = new TextBox();
             linkGithub = new LinkLabel();
             buttonNetstat = new Button();
             buttonCmd = new Button();
             buttonExplorer = new Button();
-            button1 = new Button();
-            button4 = new Button();
-            button5 = new Button();
+            buttonConfig = new Button();
+            buttonServices = new Button();
+            buttonHelp = new Button();
             buttonAnalyzeLogsU = new Button();
             buttonAnalyzeLogsS = new Button();
             buttonClearLogsS = new Button();
+            buttonOpenLogsS = new Button();
+            buttonOpenLogsU = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -111,6 +114,7 @@ namespace Server.Source.View
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 10;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // labelContact
             // 
@@ -178,21 +182,11 @@ namespace Server.Source.View
             buttonClearLogsU.UseVisualStyleBackColor = false;
             buttonClearLogsU.Click += buttonClearLog_Click;
             // 
-            // labelActive
-            // 
-            labelActive.AutoSize = true;
-            labelActive.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelActive.Location = new Point(14, 48);
-            labelActive.Name = "labelActive";
-            labelActive.Size = new Size(106, 23);
-            labelActive.TabIndex = 19;
-            labelActive.Text = "Active: false";
-            // 
             // labelNRequest
             // 
             labelNRequest.AutoSize = true;
             labelNRequest.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNRequest.Location = new Point(13, 119);
+            labelNRequest.Location = new Point(6, 81);
             labelNRequest.Name = "labelNRequest";
             labelNRequest.Size = new Size(183, 23);
             labelNRequest.TabIndex = 20;
@@ -202,7 +196,7 @@ namespace Server.Source.View
             // 
             labelNUser.AutoSize = true;
             labelNUser.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelNUser.Location = new Point(13, 156);
+            labelNUser.Location = new Point(6, 118);
             labelNUser.Name = "labelNUser";
             labelNUser.Size = new Size(156, 23);
             labelNUser.TabIndex = 22;
@@ -212,15 +206,11 @@ namespace Server.Source.View
             // 
             labelRTime.AutoSize = true;
             labelRTime.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            labelRTime.Location = new Point(13, 82);
+            labelRTime.Location = new Point(6, 44);
             labelRTime.Name = "labelRTime";
             labelRTime.Size = new Size(125, 23);
             labelRTime.TabIndex = 23;
             labelRTime.Text = "Running Time:";
-            // 
-            // timer1
-            // 
-            timer1.Tick += timer1_Tick;
             // 
             // labelModule
             // 
@@ -382,17 +372,38 @@ namespace Server.Source.View
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(labelActive);
+            groupBox2.Controls.Add(labelMemoryUsage);
+            groupBox2.Controls.Add(labelCpuUsage);
             groupBox2.Controls.Add(labelRTime);
             groupBox2.Controls.Add(labelNRequest);
             groupBox2.Controls.Add(labelNUser);
             groupBox2.Font = new Font("Segoe UI", 13.2000008F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            groupBox2.Location = new Point(13, 256);
+            groupBox2.Location = new Point(12, 247);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(340, 195);
+            groupBox2.Size = new Size(340, 217);
             groupBox2.TabIndex = 43;
             groupBox2.TabStop = false;
             groupBox2.Text = "Server Information";
+            // 
+            // labelMemoryUsage
+            // 
+            labelMemoryUsage.AutoSize = true;
+            labelMemoryUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelMemoryUsage.Location = new Point(6, 187);
+            labelMemoryUsage.Name = "labelMemoryUsage";
+            labelMemoryUsage.Size = new Size(148, 23);
+            labelMemoryUsage.TabIndex = 25;
+            labelMemoryUsage.Text = "Memory Usage: 0";
+            // 
+            // labelCpuUsage
+            // 
+            labelCpuUsage.AutoSize = true;
+            labelCpuUsage.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            labelCpuUsage.Location = new Point(6, 150);
+            labelCpuUsage.Name = "labelCpuUsage";
+            labelCpuUsage.Size = new Size(117, 23);
+            labelCpuUsage.TabIndex = 24;
+            labelCpuUsage.Text = "CPU Usage: 0";
             // 
             // listLogSystem
             // 
@@ -419,7 +430,7 @@ namespace Server.Source.View
             buttonNetstat.BackColor = SystemColors.ButtonFace;
             buttonNetstat.Cursor = Cursors.Hand;
             buttonNetstat.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonNetstat.Location = new Point(515, 31);
+            buttonNetstat.Location = new Point(515, 57);
             buttonNetstat.Name = "buttonNetstat";
             buttonNetstat.Size = new Size(94, 29);
             buttonNetstat.TabIndex = 46;
@@ -432,7 +443,7 @@ namespace Server.Source.View
             buttonCmd.BackColor = SystemColors.ButtonFace;
             buttonCmd.Cursor = Cursors.Hand;
             buttonCmd.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonCmd.Location = new Point(515, 66);
+            buttonCmd.Location = new Point(515, 92);
             buttonCmd.Name = "buttonCmd";
             buttonCmd.Size = new Size(94, 29);
             buttonCmd.TabIndex = 47;
@@ -445,7 +456,7 @@ namespace Server.Source.View
             buttonExplorer.BackColor = SystemColors.ButtonFace;
             buttonExplorer.Cursor = Cursors.Hand;
             buttonExplorer.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            buttonExplorer.Location = new Point(515, 101);
+            buttonExplorer.Location = new Point(515, 127);
             buttonExplorer.Name = "buttonExplorer";
             buttonExplorer.Size = new Size(94, 29);
             buttonExplorer.TabIndex = 48;
@@ -453,48 +464,51 @@ namespace Server.Source.View
             buttonExplorer.UseVisualStyleBackColor = false;
             buttonExplorer.Click += buttonExplorer_Click;
             // 
-            // button1
+            // buttonConfig
             // 
-            button1.BackColor = SystemColors.ButtonFace;
-            button1.Cursor = Cursors.Hand;
-            button1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button1.Location = new Point(515, 136);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 49;
-            button1.Text = "???";
-            button1.UseVisualStyleBackColor = false;
+            buttonConfig.BackColor = SystemColors.ButtonFace;
+            buttonConfig.Cursor = Cursors.Hand;
+            buttonConfig.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonConfig.Location = new Point(515, 22);
+            buttonConfig.Name = "buttonConfig";
+            buttonConfig.Size = new Size(94, 29);
+            buttonConfig.TabIndex = 49;
+            buttonConfig.Text = "Config";
+            buttonConfig.UseVisualStyleBackColor = false;
+            buttonConfig.Click += buttonConfig_Click;
             // 
-            // button4
+            // buttonServices
             // 
-            button4.BackColor = SystemColors.ButtonFace;
-            button4.Cursor = Cursors.Hand;
-            button4.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button4.Location = new Point(515, 171);
-            button4.Name = "button4";
-            button4.Size = new Size(94, 29);
-            button4.TabIndex = 50;
-            button4.Text = "???";
-            button4.UseVisualStyleBackColor = false;
+            buttonServices.BackColor = SystemColors.ButtonFace;
+            buttonServices.Cursor = Cursors.Hand;
+            buttonServices.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonServices.Location = new Point(515, 162);
+            buttonServices.Name = "buttonServices";
+            buttonServices.Size = new Size(94, 29);
+            buttonServices.TabIndex = 50;
+            buttonServices.Text = "Services";
+            buttonServices.UseVisualStyleBackColor = false;
+            buttonServices.Click += buttonServices_Click;
             // 
-            // button5
+            // buttonHelp
             // 
-            button5.BackColor = SystemColors.ButtonFace;
-            button5.Cursor = Cursors.Hand;
-            button5.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
-            button5.Location = new Point(515, 206);
-            button5.Name = "button5";
-            button5.Size = new Size(94, 29);
-            button5.TabIndex = 51;
-            button5.Text = "???";
-            button5.UseVisualStyleBackColor = false;
+            buttonHelp.BackColor = SystemColors.ButtonFace;
+            buttonHelp.Cursor = Cursors.Hand;
+            buttonHelp.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Italic);
+            buttonHelp.Location = new Point(515, 197);
+            buttonHelp.Name = "buttonHelp";
+            buttonHelp.Size = new Size(94, 29);
+            buttonHelp.TabIndex = 51;
+            buttonHelp.Text = "Help";
+            buttonHelp.UseVisualStyleBackColor = false;
+            buttonHelp.Click += buttonHelp_Click;
             // 
             // buttonAnalyzeLogsU
             // 
             buttonAnalyzeLogsU.BackColor = SystemColors.ButtonFace;
             buttonAnalyzeLogsU.Cursor = Cursors.Hand;
             buttonAnalyzeLogsU.Enabled = false;
-            buttonAnalyzeLogsU.Location = new Point(836, 531);
+            buttonAnalyzeLogsU.Location = new Point(736, 531);
             buttonAnalyzeLogsU.Name = "buttonAnalyzeLogsU";
             buttonAnalyzeLogsU.Size = new Size(117, 29);
             buttonAnalyzeLogsU.TabIndex = 52;
@@ -506,7 +520,7 @@ namespace Server.Source.View
             buttonAnalyzeLogsS.BackColor = SystemColors.ButtonFace;
             buttonAnalyzeLogsS.Cursor = Cursors.Hand;
             buttonAnalyzeLogsS.Enabled = false;
-            buttonAnalyzeLogsS.Location = new Point(836, 206);
+            buttonAnalyzeLogsS.Location = new Point(736, 206);
             buttonAnalyzeLogsS.Name = "buttonAnalyzeLogsS";
             buttonAnalyzeLogsS.Size = new Size(117, 29);
             buttonAnalyzeLogsS.TabIndex = 53;
@@ -525,18 +539,44 @@ namespace Server.Source.View
             buttonClearLogsS.UseVisualStyleBackColor = false;
             buttonClearLogsS.Click += buttonClearLogsS_Click;
             // 
+            // buttonOpenLogsS
+            // 
+            buttonOpenLogsS.BackColor = SystemColors.ButtonFace;
+            buttonOpenLogsS.Cursor = Cursors.Hand;
+            buttonOpenLogsS.Location = new Point(859, 206);
+            buttonOpenLogsS.Name = "buttonOpenLogsS";
+            buttonOpenLogsS.Size = new Size(94, 29);
+            buttonOpenLogsS.TabIndex = 55;
+            buttonOpenLogsS.Text = "Open Logs";
+            buttonOpenLogsS.UseVisualStyleBackColor = false;
+            buttonOpenLogsS.Click += buttonOpenLogsS_Click;
+            // 
+            // buttonOpenLogsU
+            // 
+            buttonOpenLogsU.BackColor = SystemColors.ButtonFace;
+            buttonOpenLogsU.Cursor = Cursors.Hand;
+            buttonOpenLogsU.Location = new Point(859, 531);
+            buttonOpenLogsU.Name = "buttonOpenLogsU";
+            buttonOpenLogsU.Size = new Size(94, 29);
+            buttonOpenLogsU.TabIndex = 56;
+            buttonOpenLogsU.Text = "Open Logs";
+            buttonOpenLogsU.UseVisualStyleBackColor = false;
+            buttonOpenLogsU.Click += buttonOpenLogsU_Click;
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
             ClientSize = new Size(1061, 573);
+            Controls.Add(buttonOpenLogsU);
+            Controls.Add(buttonOpenLogsS);
             Controls.Add(buttonClearLogsS);
             Controls.Add(buttonAnalyzeLogsS);
             Controls.Add(buttonAnalyzeLogsU);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(button1);
+            Controls.Add(buttonHelp);
+            Controls.Add(buttonServices);
+            Controls.Add(buttonConfig);
             Controls.Add(buttonExplorer);
             Controls.Add(buttonCmd);
             Controls.Add(buttonNetstat);
@@ -579,7 +619,6 @@ namespace Server.Source.View
         private TextBox listLogUser;
         private Button buttonStopApp;
         private Button buttonClearLogsU;
-        private Label labelActive;
         private Label labelNRequest;
         private Label labelNUser;
         private Label labelRTime;
@@ -604,11 +643,15 @@ namespace Server.Source.View
         private Button buttonNetstat;
         private Button buttonCmd;
         private Button buttonExplorer;
-        private Button button1;
-        private Button button4;
-        private Button button5;
+        private Button buttonConfig;
+        private Button buttonServices;
+        private Button buttonHelp;
         private Button buttonAnalyzeLogsU;
         private Button buttonAnalyzeLogsS;
         private Button buttonClearLogsS;
+        private Label labelCpuUsage;
+        private Label labelMemoryUsage;
+        private Button buttonOpenLogsS;
+        private Button buttonOpenLogsU;
     }
 }

@@ -5,6 +5,7 @@ using Server.Source.Manager;
 using Server.Source.Model;
 using Server.Source.Presenter;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using static Server.Source.Model.ModelServer;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
@@ -44,6 +45,8 @@ namespace Server.Source.View
             labelRTime.Text = "Running Time: " + status.ElapsedTime.ToString();
             labelNRequest.Text = "Number of Request: " + status.NumberRequest.ToString();
             labelNUser.Text = "Number of User: " + status.NumberUser.ToString();
+            labelCpuUsage.Text = "CPU Usage: " + status.CpuUsage.ToString("0.0") + " %";
+            labelMemoryUsage.Text = "Memory Usage: " + status.MemoryUsage;
 
         }
 
@@ -54,7 +57,6 @@ namespace Server.Source.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            labelActive.Text = "Active: true";
             labelAppPort.Text = Simulation.GetModel<ModelServer>().Port.ToString();
             Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
             buttonStartApp.Enabled = false;
@@ -64,7 +66,6 @@ namespace Server.Source.View
         }
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            labelActive.Text = "Active: false";
             OnClickedStop?.Invoke();
             buttonStopApp.Enabled = false;
             buttonStartApp.Enabled = true;
@@ -138,13 +139,6 @@ namespace Server.Source.View
             MessageBox.Show("Đã xoá logs!!!");
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            Simulation.GetModel<ModelServer>().ElapsedTime += TimeSpan.FromMilliseconds(100);
-
-        }
-
-
         private void buttonSQLStop_Click(object sender, EventArgs e)
         {
             Simulation.GetModel<DatabaseManager>().StopSqlService();
@@ -185,19 +179,69 @@ namespace Server.Source.View
         private void buttonCmd_Click(object sender, EventArgs e)
         {
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            CmdHelper.RunCommand("start cmd", showWindow: true, workingDirectory: path);
+            CmdHelper.RunCommand("start cmd", workingDirectory: path);
         }
 
         private void buttonExplorer_Click(object sender, EventArgs e)
         {
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            CmdHelper.RunCommand("explorer .", showWindow: true, workingDirectory: path);
+            CmdHelper.RunCommand("explorer .", workingDirectory: path);
         }
 
         private void buttonClearLogsS_Click(object sender, EventArgs e)
         {
             listLogSystem.Clear();
             MessageBox.Show("Đã xoá logs!!!");
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            string url = "https://hcmus.edu.vn/";
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true // Bắt buộc phải có trong .NET Core/.NET 5+ để mở trình duyệt
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể mở link: " + ex.Message);
+            }
+        }
+
+
+        private void buttonServices_Click(object sender, EventArgs e)
+        {
+            CmdHelper.RunCommand("services.msc");
+        }
+
+        private void buttonConfig_Click(object sender, EventArgs e)
+        {
+            var configForm = new ConfigForm();
+            configForm.ShowDialog();
+        }
+
+        private void buttonHelp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void buttonOpenLogsS_Click(object sender, EventArgs e)
+        {
+            var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            var log_system = Path.Combine(logDir, "log_system");
+            CmdHelper.RunCommand("explorer .", workingDirectory: log_system);
+
+        }
+
+        private void buttonOpenLogsU_Click(object sender, EventArgs e)
+        {
+            var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            var log_user = Path.Combine(logDir, "log_user");
+            CmdHelper.RunCommand("explorer .", workingDirectory: log_user);
         }
     }
 }

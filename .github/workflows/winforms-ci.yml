@@ -1,66 +1,70 @@
-name: Build Server Winform Kontroller App
+name: Build Server Winform Kontroller App  # Tên của workflow hiển thị trên GitHub Actions
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # Kích hoạt workflow khi có push lên nhánh main
     paths:
-      - 'src/Server/**'  # Chỉ build khi thay đổi trong thư mục này
+      - 'src/Server/**'  # Chỉ kích hoạt khi có thay đổi trong thư mục src/Server
+      - '.github/workflows/**'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Sử dụng môi trường Windows mới nhất trên GitHub
 
     steps:
-    - name: Lấy mã nguồn
-      uses: actions/checkout@v3
+    - name: Lấy mã nguồn  # Bước checkout mã nguồn từ repo
+      uses: actions/checkout@v3  # Sử dụng action checkout phiên bản 3
 
-    - name: Cài .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 7.0.x
-
-    - name: Cài Python & gdown
-      run: |
-        python -m pip install --upgrade pip
-        pip install gdown
-
-    - name: Tải extra_files.zip từ Google Drive bằng gdown
-      run: |
-        gdown https://drive.google.com/uc?id=1m068G_SadSpKjDyL0vslfcx8GWsfVk6c
-
-    - name: Kiểm tra file extra_files.zip
-      run: dir extra_files.zip
-
-    - name: Giải nén extra_files.zip
-      run: |
-        powershell Expand-Archive -Path extra_files.zip -DestinationPath extra_files
-
-    - name: Build WinForm dạng self-contained vào thư mục BuildOutput
-      # run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained true -r win-x64 /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true
-      run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained true -r win-x64
-    
-    - name: Thêm tài nguyên ngoài vào thư mục BuildOutput
-      shell: powershell
-      run: |
-        if (Test-Path "./extra_files") {
-          Get-ChildItem ./extra_files | ForEach-Object {
-            Copy-Item $_.FullName -Destination ./BuildOutput/ -Recurse -Force
-          }
-        }
-
-    # - name: Tạo file ZIP từ thư mục BuildOutput
-    #   run: Compress-Archive -Path ./BuildOutput/* -DestinationPath ./KontrollerApp.zip
-
-    # - name: Upload artifact KontrollerApp.zip
-    #   uses: actions/upload-artifact@v4
+    # - name: Cài .NET SDK
+    #   uses: actions/setup-dotnet@v4
     #   with:
-    #     name: KontrollerApp
-    #     path: KontrollerApp.zip
+    #     dotnet-version: 7.0.x  # Cài SDK .NET nếu cần, hiện tại project bạn có thể đã có sẵn
 
-    - name: Upload thư mục BuildOutput (GitHub tự zip khi tải về)
+    - name: Build WinForm dạng self-contained vào thư mục BuildOutput  # Biên dịch WinForm thành file thực thi
+      run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained false -r win-x64
+      # --self-contained false: yêu cầu máy đích có .NET Runtime, nhẹ hơn
+      # --self-contained true: build kèm luôn .NET Runtime, file to hơn nhưng chạy mọi máy
+
+    # - name: Cài Python & gdown  # Cài Python và thư viện gdown để tải file từ Google Drive
+    #   run: |
+    #     python -m pip install --upgrade pip  # Cập nhật pip
+    #     pip install gdown  # Cài gdown để tải file từ Google Drive
+
+    # - name: Tải extra_files.zip từ Google Drive bằng gdown  # Dùng gdown tải file zip từ Google Drive
+    #   run: |
+    #     gdown https://drive.google.com/uc?id=1m068G_SadSpKjDyL0vslfcx8GWsfVk6c  # Link file zip bạn đã upload lên Drive
+
+    # - name: Kiểm tra file extra_files.zip  # In ra tên file zip để đảm bảo tải thành công
+    #   run: dir extra_files.zip  # Dùng lệnh dir để liệt kê file
+
+    # - name: Giải nén extra_files.zip  # Giải nén file zip vào thư mục extra_files
+    #   run: |
+    #     powershell Expand-Archive -Path extra_files.zip -DestinationPath extra_files  # Dùng PowerShell để giải nén
+
+    # - name: Thêm tài nguyên ngoài vào thư mục BuildOutput  # Copy các file từ extra_files vào thư mục BuildOutput
+    #   shell: powershell  # Sử dụng PowerShell làm shell thực thi
+    #   run: |
+    #     if (Test-Path "./extra_files") {  # Nếu tồn tại thư mục extra_files
+    #       Get-ChildItem ./extra_files | ForEach-Object {
+    #         Copy-Item $_.FullName -Destination ./BuildOutput/ -Recurse -Force  # Copy tất cả vào BuildOutput
+    #       }
+    #     }
+
+    - name: Ghi đè extra_files từ repo vào BuildOutput
+      shell: pwsh
+      run: |
+        $source = "${{ github.workspace }}/src/Server/extra_files"
+        $destination = "${{ github.workspace }}/BuildOutput/extra_files"
+        if (Test-Path $destination) {
+          Remove-Item $destination -Recurse -Force
+        }
+        Copy-Item $source $destination -Recurse
+        Write-Host "Đã sao chép và ghi đè extra_files từ repo vào BuildOutput."
+
+    - name: Upload thư mục BuildOutput (GitHub tự zip khi tải về)  # Upload nguyên thư mục BuildOutput lên GitHub
       uses: actions/upload-artifact@v4
       with:
-        name: KontrollerApp
-        path: BuildOutput
-        if-no-files-found: error
-        retention-days: 7
+        name: KontrollerApp  # Tên artifact hiển thị
+        path: BuildOutput  # Đường dẫn đến thư mục chứa file đã build
+        if-no-files-found: error  # Báo lỗi nếu không có file nào
+        retention-days: 7  # Artifact sẽ được lưu 7 ngày trên GitHub

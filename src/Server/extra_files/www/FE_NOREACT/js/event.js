@@ -1,13 +1,7 @@
-import { LoginAPI, CacheAPI } from './api.js';
+import { Handle } from './handle.js';
 
-const loginApi = new LoginAPI();
-const cacheApi = new CacheAPI();
-
-
-// button-auth LOGIN
 document.getElementById('button-auth').addEventListener('click', () => {
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  loginApi.PostLogin(username, password);
-  
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    Handle.Login(username, password);
 });

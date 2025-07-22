@@ -109,7 +109,9 @@
             Controls.Add(dataGridViewNetstat);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
+            MinimizeBox = false;
             Name = "NetstatForm";
+            ShowIcon = false;
             Text = "NetstatForm";
             ((System.ComponentModel.ISupportInitialize)dataGridViewNetstat).EndInit();
             ResumeLayout(false);
