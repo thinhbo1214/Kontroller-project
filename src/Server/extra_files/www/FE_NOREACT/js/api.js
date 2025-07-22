@@ -97,11 +97,8 @@ export class LoginAPI extends API{
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
       });
-      if (res.ok) {
-        showResponse('Login thành công');
-      } else {
-        showResponse(`Login thất bại: ${res.status} ${res.data}`);
-      }
+
+      return res;
   }
 }
 

@@ -112,7 +112,6 @@
                     <div class="flex items-center justify-between">
                         <button
                             type="button"
-                            id = "button-auth"
                             class="text-blue-400 hover:text-blue-300 text-sm font-medium"
                             onclick="showForgotPassword()"
                         >
@@ -120,7 +119,7 @@
                         </button>
                     </div>
                     <button
-                        onclick="handleLogin()"
+                        id = "button-auth"
                         class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                     >
                         Login
@@ -212,5 +211,6 @@
             }
         });
     </script>
+    <script type="module" src="./js/event.js"></script>
 </body>
 </html>
