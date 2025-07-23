@@ -3,220 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lists - Kontroller</title>
+    <title>Kontroller - Games</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .star-rating {
+            color: #fbbf24;
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-    <!-- Header with Avatar and Navigation -->
-    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3">
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header with Navigation -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <!-- User Info -->
                 <div class="flex items-center space-x-4">
-                    <img src="https://via.placeholder.com/40x40" alt="Avatar" class="w-10 h-10 rounded-full">
-                    <span class="font-semibold text-lg">Username</span>
+                    <img src="https://via.placeholder.com/50x50/667eea/ffffff?text=U" alt="Avatar" class="w-12 h-12 rounded-full">
+                    <h1 class="text-xl font-bold text-gray-800">Username</h1>
                 </div>
                 
-                <!-- Main Navigation -->
-                <nav class="flex space-x-6">
-                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
-                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
-                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
-                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
-                    <a href="lists.html" class="px-4 py-2 rounded-lg bg-blue-600 text-white">Lists</a>
-                    <a href="watchlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Watchlist</a>
-                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                <nav class="flex space-x-8">
+                    <a href="profile.html" class="text-gray-600 hover:text-blue-600 font-medium">Profile</a>
+                    <a href="activity.html" class="text-gray-600 hover:text-blue-600 font-medium">Activity</a>
+                    <a href="reviews.html" class="text-gray-600 hover:text-blue-600 font-medium">Reviews</a>
+                    <a href="games.html" class="text-blue-600 font-medium">Games</a>
+                    <a href="lists.html" class="text-gray-600 hover:text-blue-600 font-medium">Lists</a>
+                    <a href="watchlist.html" class="text-gray-600 hover:text-blue-600 font-medium">Watchlist</a>
+                    <a href="likes.html" class="text-gray-600 hover:text-blue-600 font-medium">Likes</a>
                 </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <input type="text" placeholder="Search for games" class="py-2 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <a href="friends.html" class="text-gray-600 hover:text-blue-600 font-medium">Friends and People</a>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 py-8">
-        <!-- Page Title and Create Button -->
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="text-3xl font-bold">Lists</h1>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                <i class="fas fa-plus mr-2"></i>Create New List
-            </button>
-        </div>
-
-        <!-- Sort Filter -->
-        <div class="bg-gray-800 rounded-lg p-6 mb-8">
-            <div class="flex items-center space-x-4">
-                <label class="text-sm text-gray-400">Sort by:</label>
-                <select class="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="date_created">Date Created</option>
-                    <option value="date_updated">Date Updated</option>
-                    <option value="alphabetical">Alphabetical</option>
-                    <option value="game_count">Number of Games</option>
-                </select>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Filter Bar -->
+        <div class="mb-8 bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Genre:</label>
+                    <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>All Genres</option>
+                        <option>Action</option>
+                        <option>Adventure</option>
+                        <option>RPG</option>
+                        <option>Strategy</option>
+                        <option>Simulation</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Service:</label>
+                    <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>All Platforms</option>
+                        <option>Steam</option>
+                        <option>PlayStation</option>
+                        <option>Xbox</option>
+                        <option>Nintendo Switch</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option>Date Published</option>
+                        <option>Average Rating</option>
+                        <option>My Rating</option>
+                        <option>Title</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <!-- Lists Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- List Card Example 1 -->
-            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors cursor-pointer group">
-                <!-- Game Posters Preview -->
-                <div class="flex mb-4 space-x-2">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 1" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 2" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 3" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 4" class="w-12 h-16 rounded shadow-lg">
-                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center text-xs text-gray-400">
-                        +6
+        <!-- Games Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <!-- Game Item -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="location.href='game-detail.html'">
+                <img src="https://via.placeholder.com/200x300/4f46e5/ffffff?text=Game+1" alt="Game 1" class="w-full h-48 object-cover">
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <!-- Star Rating -->
+                        <div class="flex items-center star-rating">
+                            <span class="text-sm">★★★★☆</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <!-- Heart (Liked) -->
+                            <span class="text-red-500 text-lg">♥</span>
+                            <!-- Review Icon -->
+                            <span class="text-gray-600 text-sm">💬</span>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- List Info -->
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">TOP 10 GAMES OF ALL TIME</h3>
-                    <p class="text-gray-400 text-sm mb-3">This is my personal take, not objective. These games have shaped my gaming experience over the years.</p>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <i class="fas fa-calendar mr-2"></i>
-                        <span>Created: July 15, 2025</span>
-                    </div>
-                </div>
-                
-                <!-- List Stats -->
-                <div class="flex items-center justify-between text-sm text-gray-400">
-                    <div class="flex items-center space-x-4">
-                        <span><i class="fas fa-gamepad mr-1"></i>10 games</span>
-                        <span><i class="fas fa-heart mr-1"></i>24 likes</span>
-                    </div>
-                    <button class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
                 </div>
             </div>
 
-            <!-- List Card Example 2 -->
-            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors cursor-pointer group">
-                <!-- Game Posters Preview -->
-                <div class="flex mb-4 space-x-2">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 1" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 2" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 3" class="w-12 h-16 rounded shadow-lg">
-                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center text-xs text-gray-400">
-                        +12
+            <!-- Game Item 2 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="location.href='game-detail.html'">
+                <img src="https://via.placeholder.com/200x300/dc2626/ffffff?text=Game+2" alt="Game 2" class="w-full h-48 object-cover">
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center star-rating">
+                            <span class="text-sm">★★★★★</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-red-500 text-lg">♥</span>
+                            <span class="text-gray-600 text-sm">💬</span>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- List Info -->
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">BEST INDIE GAMES 2024</h3>
-                    <p class="text-gray-400 text-sm mb-3">Amazing indie games that deserve more recognition. Support independent developers!</p>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <i class="fas fa-calendar mr-2"></i>
-                        <span>Created: June 28, 2025</span>
-                    </div>
-                </div>
-                
-                <!-- List Stats -->
-                <div class="flex items-center justify-between text-sm text-gray-400">
-                    <div class="flex items-center space-x-4">
-                        <span><i class="fas fa-gamepad mr-1"></i>15 games</span>
-                        <span><i class="fas fa-heart mr-1"></i>18 likes</span>
-                    </div>
-                    <button class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
                 </div>
             </div>
 
-            <!-- List Card Example 3 -->
-            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors cursor-pointer group">
-                <!-- Game Posters Preview -->
-                <div class="flex mb-4 space-x-2">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 1" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 2" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 3" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 4" class="w-12 h-16 rounded shadow-lg">
-                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center text-xs text-gray-400">
-                        +3
+            <!-- Game Item 3 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="location.href='game-detail.html'">
+                <img src="https://via.placeholder.com/200x300/059669/ffffff?text=Game+3" alt="Game 3" class="w-full h-48 object-cover">
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center star-rating">
+                            <span class="text-sm">★★★☆☆</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-gray-400 text-lg">♡</span>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- List Info -->
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">HORROR GAMES TO PLAY THIS HALLOWEEN</h3>
-                    <p class="text-gray-400 text-sm mb-3">Spine-chilling games perfect for the spooky season. Play with the lights off!</p>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <i class="fas fa-calendar mr-2"></i>
-                        <span>Created: October 15, 2024</span>
-                    </div>
-                </div>
-                
-                <!-- List Stats -->
-                <div class="flex items-center justify-between text-sm text-gray-400">
-                    <div class="flex items-center space-x-4">
-                        <span><i class="fas fa-gamepad mr-1"></i>7 games</span>
-                        <span><i class="fas fa-heart mr-1"></i>35 likes</span>
-                    </div>
-                    <button class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
                 </div>
             </div>
 
-            <!-- List Card Example 4 -->
-            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors cursor-pointer group">
-                <!-- Game Posters Preview -->
-                <div class="flex mb-4 space-x-2">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 1" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 2" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 3" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 4" class="w-12 h-16 rounded shadow-lg">
-                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center text-xs text-gray-400">
-                        +8
+            <!-- Game Item 4 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="location.href='game-detail.html'">
+                <img src="https://via.placeholder.com/200x300/7c3aed/ffffff?text=Game+4" alt="Game 4" class="w-full h-48 object-cover">
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center star-rating">
+                            <span class="text-sm">★★★★☆</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-red-500 text-lg">♥</span>
+                            <span class="text-gray-600 text-sm">💬</span>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- List Info -->
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">COZY GAMES FOR RELAXATION</h3>
-                    <p class="text-gray-400 text-sm mb-3">Perfect games to unwind after a long day. No stress, just vibes.</p>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <i class="fas fa-calendar mr-2"></i>
-                        <span>Created: May 20, 2025</span>
-                    </div>
-                </div>
-                
-                <!-- List Stats -->
-                <div class="flex items-center justify-between text-sm text-gray-400">
-                    <div class="flex items-center space-x-4">
-                        <span><i class="fas fa-gamepad mr-1"></i>12 games</span>
-                        <span><i class="fas fa-heart mr-1"></i>42 likes</span>
-                    </div>
-                    <button class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
                 </div>
             </div>
 
-            <!-- List Card Example 5 -->
-            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors cursor-pointer group">
-                <!-- Game Posters Preview -->
-                <div class="flex mb-4 space-x-2">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 1" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 2" class="w-12 h-16 rounded shadow-lg">
-                    <img src="https://via.placeholder.com/60x80" alt="Game 3" class="w-12 h-16 rounded shadow-lg">
-                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center text-xs text-gray-400">
-                        +22
+            <!-- Game Item 5 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="location.href='game-detail.html'">
+                <img src="https://via.placeholder.com/200x300/ea580c/ffffff?text=Game+5" alt="Game 5" class="w-full h-48 object-cover">
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center star-rating">
+                            <span class="text-sm">★★★★★</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-red-500 text-lg">♥</span>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- List Info -->
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">NINTENDO SWITCH EXCLUSIVES</h3>
-                    <p class="text-gray-400 text-sm mb-3">Must-play games that make the Nintendo Switch special. Console exclusives at their finest.</p>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <i class="fas fa-calendar mr-2"></i>
-                        <span>Created: April 10, 2025</span>
+            </div>
+
+            <!-- Game Item 6 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onclick="location.href='game-detail.html'">
+                <img src="https://via.placeholder.com/200x300/0891b2/ffffff?text=Game+6" alt="Game 6" class="w-full h-48 object-cover">
+                <div class="p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center star-rating">
+                            <span class="text-sm">★★☆☆☆</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-gray-400 text-lg">♡</span>
+                            <span class="text-gray-600 text-sm">💬</span>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- List Stats -->
-                <div class="flex items-center
+            </div>
+        </div>
+    </main>
+</body>
+</html>
