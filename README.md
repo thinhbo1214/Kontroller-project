@@ -12,3 +12,5 @@
 
 - **Link docker**: https://hub.docker.com/repositories/lucifer251
 
+- **Link Instagantt**: https://app.instagantt.com/r/#projects/rTtM3emC16dOLAPfQ1nw/rTtM3emC16dOLAPfQ1nw
+
