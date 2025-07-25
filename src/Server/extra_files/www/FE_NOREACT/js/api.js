@@ -161,7 +161,7 @@ export class UserAPI extends API {
     const res = await this.POST('', {
       headers: { 'Content-Type': 'application/json' },
       body: payload
-const);
+    });
 
     return res;
   }
@@ -194,6 +194,43 @@ export class ReviewAPI extends API {
   
   async PostReview(content,author,rating) {
     const payload ={content, author, rating};
+
+    const res = await this.POST('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  async PutReview(reviewId,content, rating = null) {
+    const payload= {}
+    
+    const res = await this.PUT(`?reviewId = ${reviewId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+  });
+  return res;
+  }
+
+  async DeleteReview(reviewId) {
+    const query = API.buildQuery({reviewId }); 
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
+// API để tương tác với game
+export class GameAPI extends API {
+  static baseUrl = '/api/game';
+
+  async GetGame(gameId ='') {
+    const query = API.buildQuery({gameId}); 
+    const res = await this.GET(query);
+    return res;
+  }
+  
+  async PostGame(title='',des) {
+    const payload ={};
 
     const res = await this.POST('', {
       headers: { 'Content-Type': 'application/json' },
