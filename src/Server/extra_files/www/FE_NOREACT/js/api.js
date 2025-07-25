@@ -229,7 +229,7 @@ export class GameAPI extends API {
     return res;
   }
   
-  async PostGame(title='',des) {
+  async PostGame(title =' ',descti) {
     const payload ={};
 
     const res = await this.POST('', {
