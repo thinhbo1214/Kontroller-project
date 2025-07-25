@@ -27,13 +27,13 @@ namespace Server.Source.Manager
 
         private class SessionEntry
         {
-            public int UserId;
+            public string UserId;
             public DateTime ExpireAt;
 
             public bool IsExpired => DateTime.UtcNow > ExpireAt;
         }
 
-        public void Store(string sessionId, int userId, TimeSpan? ttl = null)
+        public void Store(string sessionId, string userId, TimeSpan? ttl = null)
         {
             ttl ??= TimeSpan.FromHours(1);
             using (new WriteLock(_lock))
@@ -46,7 +46,7 @@ namespace Server.Source.Manager
             }
         }
 
-        public int? GetUserId(string sessionId)
+        public string? GetUserId(string sessionId)
         {
             using (new ReadLock(_lock))
             {
@@ -79,16 +79,16 @@ namespace Server.Source.Manager
             Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
             return false;
         }
-        public bool Authorization(HttpRequest request, out int userId, HttpsSession session = null)
+        public bool Authorization(HttpRequest request, out string userId, HttpsSession session = null)
         {
-            userId = -1;
+            userId = "";
             string token = TokenHelper.GetToken(request);
             if (TokenHelper.TryParseToken(token, out var sessionId))
             {
-                int? id = GetUserId(sessionId);
+                string? id = GetUserId(sessionId);
                 if (id != null)
                 {
-                    userId = id.Value;
+                    userId = id;
                     return true;
                 }
                 else if(session != null)
