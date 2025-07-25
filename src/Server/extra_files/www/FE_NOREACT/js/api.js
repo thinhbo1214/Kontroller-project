@@ -229,29 +229,30 @@ export class GameAPI extends API {
     return res;
   }
   
-  async PostGame(title =' ',descti) {
-    const payload ={};
+ async PostGame(title = '', description = '', genre = '', poster = '', backdrop = '', details = [], services = []) {
+  const payload = { title, description, genre, poster, backdrop, details, services };
 
-    const res = await this.POST('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
+  const res = await this.POST('', {
+    headers: { 'Content-Type': 'application/json' },
+    body: payload
+  });
 
-    return res;
-  }
+  return res;
+}
 
-  async PutReview(reviewId,content, rating = null) {
-    const payload= {}
+
+  async PutGame(gameId,title = '', description = '', genre = '', poster = '', backdrop = '', details = [], services = []) {
+    const payload= { title, description, genre, poster, backdrop, details, services };
     
-    const res = await this.PUT(`?reviewId = ${reviewId}`, {
+    const res = await this.PUT(`?gameId = ${gameId}`, {
       headers: { 'Content-Type': 'application/json' },
       body: payload
   });
   return res;
   }
 
-  async DeleteReview(reviewId) {
-    const query = API.buildQuery({reviewId }); 
+  async DeleteGame(gameId) {
+    const query = API.buildQuery({gameId}); 
     const res = await this.DELETE(query);
     return res;
   }
