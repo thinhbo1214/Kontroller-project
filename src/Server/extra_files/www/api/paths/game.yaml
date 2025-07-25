@@ -19,7 +19,6 @@ get:
           schema:
             $ref: './components/schemas/Game.yml#/Game'
             data:
-            - name: gameId
             - name: title
             - name: description
             - name: genre
