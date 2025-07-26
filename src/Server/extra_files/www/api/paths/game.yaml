@@ -18,6 +18,16 @@ get:
         application/json:
           schema:
             $ref: './components/schemas/Game.yml#/Game'
+            data:
+            - name: title
+            - name: description
+            - name: genre
+            - name: review
+            - name: avgRating
+            - name: poster
+            - name: backdrop
+            - name: details
+            - name: services
     400:
       $ref: './components/responses/AllStatusCode.yml#/400'
     404:
@@ -37,6 +47,14 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/Game.yml#/Game'
+          data: 
+          - name: title
+          - name: description
+          - name: genre
+          - name: poster
+          - name: backdrop
+          - name: details
+          - name: services
   responses:
     200:
       $ref: './components/responses/AllStatusCode.yml#/200'
@@ -59,6 +77,14 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/Game.yml#/Game'
+          data:
+           - name: title
+           - name: description
+           - name: genre
+           - name: poster
+           - name: backdrop
+           - name: details
+           - name: services
   responses:
     200:
       $ref: './components/responses/AllStatusCode.yml#/200'
