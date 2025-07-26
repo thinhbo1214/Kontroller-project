@@ -1,4 +1,5 @@
-﻿using Server.Source.Core;
+﻿using Microsoft.IdentityModel.Tokens;
+using Server.Source.Core;
 using Server.Source.Data;
 using Server.Source.Extra;
 using Server.Source.Helper;
@@ -10,13 +11,13 @@ namespace Server.Source.Handler
     internal class APIUserHandler : HandlerBase
     {
         public override string Type => "/api/user";
-        public int CheckAccount(string username = "", string password = "")
+        public string CheckAccount(string username = "", string password = "")
         {
             if (username != "admin")
             {
-                return 123;
+                return "123";
             }
-            return -1;
+            return "";
         }
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
@@ -39,7 +40,7 @@ namespace Server.Source.Handler
             string? oldToken = TokenHelper.GetToken(request); // lấy token từ request
             var sessionManager = Simulation.GetModel<SessionManager>();
 
-            if (sessionManager.Authorization(request, out int id, session))
+            if (sessionManager.Authorization(request, out string id, session))
             {
                 var response = ResponseHelper.MakeJsonResponse(session.Response, 200); // tạo response
                 session.SendResponseAsync(response); // gửi response
@@ -57,8 +58,8 @@ namespace Server.Source.Handler
             }
 
             // Đăng ký thành công:
-            int userId = CheckAccount(loginReq.username, loginReq.password);
-            if (userId > 0)
+            string userId = CheckAccount(loginReq.username, loginReq.password);
+            if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);
 

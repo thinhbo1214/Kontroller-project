@@ -45,7 +45,7 @@ namespace Server.Source.Helper
             return response;
         }
 
-        public static HttpResponse NewUserSession(int userId, HttpResponse response)
+        public static HttpResponse NewUserSession(string userId, HttpResponse response)
         {
             string newSessionId = Guid.NewGuid().ToString(); // sessionId mới
             Simulation.GetModel<SessionManager>().Store(newSessionId, userId);         // lưu phiên
