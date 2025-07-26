@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Source.Data
+﻿namespace Server.Source.Data
 {
     /// <summary>
     /// A user activity that records a specific action performed by the user in the system.

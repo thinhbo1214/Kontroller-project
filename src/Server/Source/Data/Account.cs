@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Source.Data
+﻿namespace Server.Source.Data
 {
     /// <summary>
     /// Account credentials used for authentication (e.g., login form).

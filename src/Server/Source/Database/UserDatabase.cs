@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Server.Source.Data;
 
 namespace Server.Source.Database
 {
-    public static class UserDatabase
+    public class UserDatabase: BaseDatabase<User>
     {
+        private static UserDatabase _instance;
+        private UserDatabase() { }
 
+        public static UserDatabase Instance => _instance ??= new UserDatabase();
+
+        protected override string TableName => "user";
     }
 }

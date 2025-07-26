@@ -1,9 +1,7 @@
 ﻿using Server.Source.Core;
-using Server.Source.Presenter;
-using Server.Source.Manager;
-using Server.Source.View;
-using Server;
 using Server.Source.Model;
+using Server.Source.Presenter;
+using Server.Source.View;
 
 namespace Server.Source.MainApp
 {
