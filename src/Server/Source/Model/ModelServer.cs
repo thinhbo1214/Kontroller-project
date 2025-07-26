@@ -1,14 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Controller;
 using Server.Source.Core;
-using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using Server.Source.Presenter;
 using Server.Source.View;
 using System.Collections.Concurrent;
 using System.Diagnostics; // Cho PerformanceCounter và Process
-using System.Threading;   // Cho Thread.Sleep
 using System.Net;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;

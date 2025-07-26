@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Source.Helper
+﻿namespace Server.Source.Helper
 {
     public static class DecodeHelper
     {

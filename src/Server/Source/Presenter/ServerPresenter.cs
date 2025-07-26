@@ -1,17 +1,7 @@
-﻿using Microsoft.VisualBasic.Logging;
-using Server.Source.Controller;
-using Server.Source.Core;
+﻿using Server.Source.Core;
 using Server.Source.Manager;
 using Server.Source.Model;
-using Server.Source.NetCoreServer;
 using Server.Source.View;
-using System;
-using System.IO;
-using System.Net;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System.Threading.Tasks;
 using static Server.Source.Model.ModelServer;
 
 namespace Server.Source.Presenter

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Source.Data
+﻿namespace Server.Source.Data
 {
     /// <summary>
     /// Represents a user in the system, including personal information and game-related data.

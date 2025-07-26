@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Server.Source.Core
+﻿namespace Server.Source.Core
 {
     public static partial class Simulation
     {

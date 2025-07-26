@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Source.Data
+﻿namespace Server.Source.Data
 {
     /// <summary>
     /// A rating given by a user to a game, typically on a scale from 1 to 10.
