@@ -1,0 +1,1 @@
+SELECT * FROM games ORDER BY avg_rating DESC;

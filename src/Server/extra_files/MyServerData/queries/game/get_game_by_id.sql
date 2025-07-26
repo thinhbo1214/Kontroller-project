@@ -1,3 +1,1 @@
-SELECT * 
-FROM Game 
-WHERE gameID = ?
+SELECT * FROM games WHERE game_id = @GameId;

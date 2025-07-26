@@ -1,0 +1,115 @@
+Rate:
+  description: Contains all SQL queries related to the Rate entity (user quick rating for games).
+  queries:
+
+  ####### Query rate #######
+    - name: GetAllRatesByUser
+      description: Retrieve all rating entries by a specific user.
+      path: rates/get_all_by_user
+      access: [user, admin]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: DataTable
+        returnsMany: true
+        columns:
+          - name: rate_id
+            type: string
+          - name: game_id
+            type: string
+          - name: rating
+            type: number
+            format: decimal
+          - name: created_at
+            type: datetime
+
+    - name: GetRateByUserAndGame
+      description: Retrieve a user's rating for a specific game.
+      path: rates/get_by_user_and_game
+      access: [user, admin]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@GameId"
+          type: string
+          required: true
+      result:
+        type: DataTable
+        returnsMany: false
+        columns:
+          - name: rate_id
+            type: string
+          - name: rating
+            type: number
+            format: decimal
+
+  ####### Non-query rate #######
+    - name: InsertRate
+      description: Insert a new quick rating.
+      path: rates/insert_rate
+      access: [user]
+      parameters:
+        - name: "@RateId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@GameId"
+          type: string
+          required: true
+        - name: "@Rating"
+          type: number
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+    - name: UpdateRate
+      description: Update the rating value.
+      path: rates/update_rate
+      access: [user]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@GameId"
+          type: string
+          required: true
+        - name: "@Rating"
+          type: number
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+    - name: DeleteRate
+      description: Delete a user's rating for a game.
+      path: rates/delete_rate
+      access: [user]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@GameId"
+          type: string
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+  ####### Scalar #######
+    - name: GetAverageRatingByGame
+      description: Calculate average rating for a specific game.
+      path: rates/average_rating_by_game
+      access: [admin, user, guest]
+      parameters:
+        - name: "@GameId"
+          type: string
+          required: true
+      result:
+        type: scalar
+        datatype: decimal

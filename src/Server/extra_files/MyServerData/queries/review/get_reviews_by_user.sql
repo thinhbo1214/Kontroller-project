@@ -1,1 +1,4 @@
-SELECT * FROM Review WHERE userID = ?;
+SELECT *
+FROM reviews
+WHERE user_id = @UserId
+ORDER BY date_created DESC;
