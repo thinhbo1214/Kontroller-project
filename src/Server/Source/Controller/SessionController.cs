@@ -28,7 +28,7 @@ namespace Server.Source.Controller
         {
             Simulation.GetModel<ModelServer>().UpdateNumberRequest();
 
-            if (Simulation.GetModel<SessionManager>().Authorization(request, out int userId, this))
+            if (Simulation.GetModel<SessionManager>().Authorization(request, out string userId, this))
             {
                 Simulation.GetModel<LogManager>().Log($"[UserID: {userId} ] Request {request.Method} {request.Url}");
             }

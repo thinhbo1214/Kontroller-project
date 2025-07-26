@@ -4,6 +4,7 @@ using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 using Server.Source.Data;
 using Server.Source.Helper;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Server.Source.Handler
@@ -12,20 +13,20 @@ namespace Server.Source.Handler
     {
         public override string Type => "/api/login";
         
-        public int CheckAccount(string username = "", string password = "")
+        public string CheckAccount(string username = "", string password = "")
         {
             if (username == "admin" && password == "admin")
             {
-                return 123;
+                return "123";
             }
-            return -1;
+            return "";
         }
         public override void Handle(HttpRequest request, HttpsSession session)
         {
             string? oldToken = TokenHelper.GetToken(request); // lấy token từ request
             var sessionManager = Simulation.GetModel<SessionManager>();
 
-            if (sessionManager.Authorization(request, out int id, session))
+            if (sessionManager.Authorization(request, out string id, session))
             {
                 var response = ResponseHelper.MakeJsonResponse(session.Response, 200); // tạo response
                 session.SendResponseAsync(response); // gửi response
@@ -42,8 +43,8 @@ namespace Server.Source.Handler
             }
 
             // Đăng nhập thành công:
-            int userId = CheckAccount(loginReq.username, loginReq.password);
-            if (userId > 0)
+            string userId = CheckAccount(loginReq.username, loginReq.password);
+            if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);
 
