@@ -1,0 +1,1 @@
+INSERT INTO games (game_id, title, description, genre) VALUES (@GameId, @Title, @Description, @Genre);

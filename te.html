@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook HTML App</title>
+    <meta property="og:title" content="My Facebook App">
+    <meta property="og:description" content="A simple Facebook integration app">
+    <meta property="og:type" content="website">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #1877f2;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .login-section {
+            margin: 30px 0;
+        }
+
+        .fb-login-btn {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 10px;
+            min-width: 200px;
+        }
+
+        .fb-login-btn:hover {
+            background: #166fe5;
+        }
+
+        .fb-login-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .user-info {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            float: left;
+            margin-right: 15px;
+        }
+
+        .user-details {
+            overflow: hidden;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-btn {
+            background: #42b883;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .feature-btn:hover {
+            background: #369870;
+        }
+
+        .feature-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1877f2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">f</div>
+        <h1>Facebook App</h1>
+        <p class="subtitle">Connect with Facebook and explore features</p>
+
+        <div class="login-section">
+            <button id="loginBtn" class="fb-login-btn">
+                Login with Facebook
+            </button>
+            <button id="logoutBtn" class="fb-login-btn" style="display: none;">
+                Logout
+            </button>
+        </div>
+
+        <div id="userInfo" class="user-info">
+            <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+            <div class="user-details">
+                <div id="userName" class="user-name"></div>
+                <div id="userEmail" class="user-email"></div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+
+        <div id="features" class="features" style="display: none;">
+            <button id="getProfileBtn" class="feature-btn">Get Profile</button>
+            <button id="getFriendsBtn" class="feature-btn">Get Friends</button>
+            <button id="shareBtn" class="feature-btn">Share Post</button>
+            <button id="getPhotosBtn" class="feature-btn">Get Photos</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div class="footer">
+            <p>© 2025 Facebook HTML App. Built with Facebook SDK.</p>
+        </div>
+    </div>
+
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" 
+            src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+    <script>
+        // Facebook App Configuration
+        const FB_APP_ID = 'YOUR_APP_ID_HERE'; // Replace with your actual App ID
+        
+        // Initialize Facebook SDK
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: FB_APP_ID,
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+
+            // Check login status on page load
+            checkLoginStatus();
+        };
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const features = document.getElementById('features');
+        const status = document.getElementById('status');
+
+        // Event Listeners
+        loginBtn.addEventListener('click', loginWithFacebook);
+        logoutBtn.addEventListener('click', logoutFromFacebook);
+        document.getElementById('getProfileBtn').addEventListener('click', getUserProfile);
+        document.getElementById('getFriendsBtn').addEventListener('click', getUserFriends);
+        document.getElementById('shareBtn').addEventListener('click', sharePost);
+        document.getElementById('getPhotosBtn').addEventListener('click', getUserPhotos);
+
+        // Check if user is logged in
+        function checkLoginStatus() {
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    handleLoginSuccess(response);
+                } else {
+                    handleLogout();
+                }
+            });
+        }
+
+        // Login with Facebook
+        function loginWithFacebook() {
+            showLoading(loginBtn);
+            
+            FB.login(function(response) {
+                hideLoading(loginBtn, 'Login with Facebook');
+                
+                if (response.authResponse) {
+                    handleLoginSuccess(response);
+                    showStatus('Successfully logged in!', 'success');
+                } else {
+                    showStatus('Login cancelled or failed.', 'error');
+                }
+            }, {
+                scope: 'email,public_profile,user_friends,user_photos'
+            });
+        }
+
+        // Handle successful login
+        function handleLoginSuccess(response) {
+            loginBtn.style.display = 'none';
+            logoutBtn.style.display = 'inline-block';
+            features.style.display = 'grid';
+
+            // Get user info
+            FB.api('/me', {fields: 'name,email,picture'}, function(userResponse) {
+                displayUserInfo(userResponse);
+            });
+        }
+
+        // Display user information
+        function displayUserInfo(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email || 'Email not available';
+            document.getElementById('userAvatar').src = user.picture.data.url;
+            userInfo.style.display = 'block';
+        }
+
+        // Logout from Facebook
+        function logoutFromFacebook() {
+            FB.logout(function(response) {
+                handleLogout();
+                showStatus('Successfully logged out!', 'success');
+            });
+        }
+
+        // Handle logout
+        function handleLogout() {
+            loginBtn.style.display = 'inline-block';
+            logoutBtn.style.display = 'none';
+            userInfo.style.display = 'none';
+            features.style.display = 'none';
+        }
+
+        // Get user profile
+        function getUserProfile() {
+            const btn = document.getElementById('getProfileBtn');
+            showLoading(btn);
+
+            FB.api('/me', {fields: 'name,email,birthday,location,work'}, function(response) {
+                hideLoading(btn, 'Get Profile');
+                
+                if (response.error) {
+                    showStatus('Error getting profile: ' + response.error.message, 'error');
+                } else {
+                    showStatus(`Profile: ${response.name} - ${response.email || 'No email'}`, 'success');
+                }
+            });
+        }
+
+        // Get user friends
+        function getUserFriends() {
+            const btn = document.getElementById('getFriendsBtn');
+            showLoading(btn);
+
+            FB.api('/me/friends', function(response) {
+                hideLoading(btn, 'Get Friends');
+                
+                if (response.error) {
+                    showStatus('Error getting friends: ' + response.error.message, 'error');
+                } else {
+                    showStatus(`You have ${response.data.length} friends using this app`, 'success');
+                }
+            });
+        }
+
+        // Share a post
+        function sharePost() {
+            const btn = document.getElementById('shareBtn');
+            showLoading(btn);
+
+            FB.ui({
+                method: 'share',
+                href: window.location.href,
+            }, function(response) {
+                hideLoading(btn, 'Share Post');
+                
+                if (response && !response.error_message) {
+                    showStatus('Post shared successfully!', 'success');
+                } else {
+                    showStatus('Share cancelled or failed.', 'error');
+                }
+            });
+        }
+
+        // Get user photos
+        function getUserPhotos() {
+            const btn = document.getElementById('getPhotosBtn');
+            showLoading(btn);
+
+            FB.api('/me/photos', {fields: 'source,created_time'}, function(response) {
+                hideLoading(btn, 'Get Photos');
+                
+                if (response.error) {
+                    showStatus('Error getting photos: ' + response.error.message, 'error');
+                } else {
+                    showStatus(`Found ${response.data.length} photos`, 'success');
+                }
+            });
+        }
+
+        // Utility functions
+        function showLoading(button) {
+            button.innerHTML = '<span class="loading"></span>Loading...';
+            button.disabled = true;
+        }
+
+        function hideLoading(button, text) {
+            button.innerHTML = text;
+            button.disabled = false;
+        }
+
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle SDK loading errors
+        window.addEventListener('error', function(e) {
+            if (e.message.includes('facebook')) {
+                showStatus('Error loading Facebook SDK. Please check your connection.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

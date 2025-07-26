@@ -1,3 +1,1 @@
-SELECT * 
-FROM Game 
-WHERE title LIKE ?
+SELECT * FROM games WHERE title LIKE '%' + @Title + '%';

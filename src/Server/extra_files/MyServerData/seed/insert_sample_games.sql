@@ -1,4 +1,4 @@
-INSERT INTO Game (gameID, title, description, genre)
-    VALUES (1, 'Cyber Odyssey', 'Sci-fi open world RPG.', 'RPG'),
-           (2, 'Mystic Farm', 'Relaxing farming simulator.', 'Simulation'),
-           (3, 'SpeedRush', 'High-octane futuristic racing game.', 'Racing');
+INSERT INTO games (game_id, title, description, genre, poster, backdrop, details, services, avg_rating, created_at, updated_at)
+VALUES 
+('g001', 'The Legend of Sample', 'Epic RPG', 'RPG', 'poster1.jpg', 'backdrop1.jpg', NULL, NULL, 8.5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('g002', 'Speed Car Run', 'Racing game', 'Racing', 'poster2.jpg', 'backdrop2.jpg', NULL, NULL, 7.9, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
