@@ -1,0 +1,132 @@
+Reaction:
+  description: Contains all SQL queries related to user reactions (like/dislike) on reviews and comments.
+  queries:
+
+  ####### Query reaction #######
+    - name: GetAllReactionsByUser
+      description: Retrieve all reactions made by a specific user.
+      path: reactions/get_all_by_user
+      access: [user, admin]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+      result:
+        type: DataTable
+        returnsMany: true
+        columns:
+          - name: reaction_id
+            type: string
+          - name: target_id
+            type: string
+          - name: target_type
+            type: string
+          - name: reaction_type
+            type: string
+          - name: created_at
+            type: datetime
+
+    - name: GetReactionOnTarget
+      description: Get all reactions for a specific review or comment.
+      path: reactions/get_on_target
+      access: [user, admin, guest]
+      parameters:
+        - name: "@TargetId"
+          type: string
+          required: true
+        - name: "@TargetType"
+          type: string
+          required: true
+      result:
+        type: DataTable
+        returnsMany: true
+        columns:
+          - name: user_id
+            type: string
+          - name: reaction_type
+            type: string
+          - name: created_at
+            type: datetime
+
+  ####### Non-query reaction #######
+    - name: InsertReaction
+      description: Add a new like or dislike for a comment or review.
+      path: reactions/insert_reaction
+      access: [user]
+      parameters:
+        - name: "@ReactionId"
+          type: string
+          required: true
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@TargetId"
+          type: string
+          required: true
+        - name: "@TargetType"
+          type: string
+          required: true
+        - name: "@ReactionType"
+          type: string
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+    - name: UpdateReaction
+      description: Update an existing reaction (e.g., switch from like to dislike).
+      path: reactions/update_reaction
+      access: [user]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@TargetId"
+          type: string
+          required: true
+        - name: "@TargetType"
+          type: string
+          required: true
+        - name: "@ReactionType"
+          type: string
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+    - name: DeleteReaction
+      description: Remove a user's reaction from a target.
+      path: reactions/delete_reaction
+      access: [user]
+      parameters:
+        - name: "@UserId"
+          type: string
+          required: true
+        - name: "@TargetId"
+          type: string
+          required: true
+        - name: "@TargetType"
+          type: string
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+  ####### Scalar #######
+    - name: CountReactions
+      description: Count the number of likes or dislikes for a given review or comment.
+      path: reactions/count_reactions
+      access: [admin, user, guest]
+      parameters:
+        - name: "@TargetId"
+          type: string
+          required: true
+        - name: "@TargetType"
+          type: string
+          required: true
+        - name: "@ReactionType"
+          type: string
+          required: true
+      result:
+        type: scalar
+        datatype: int

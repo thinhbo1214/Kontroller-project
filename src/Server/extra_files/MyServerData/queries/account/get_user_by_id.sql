@@ -1,3 +1,1 @@
-SELECT * 
-FROM Account 
-WHERE userID = ?
+SELECT * FROM users WHERE user_id = @UserId;
