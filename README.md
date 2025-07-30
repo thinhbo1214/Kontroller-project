@@ -1,6 +1,6 @@
 # 🚀 Dự Án Kontroller
 
-Chào mừng bạn đến với **Kontroller** – một dự án được phát triển bởi đội ngũ đam mê công nghệ, với mục tiêu xây dựng một nền tảng đánh giá game hiện đại.
+Chào mừng bạn đến với **Kontroller** – một dự án được phát triển bởi đội ngũ đam mê công nghệ, với mục tiêu xây dựng một nền tảng đánh giá game hiện đại. <br>
 Dự án không chỉ là một website đơn thuần mà còn là minh chứng cho quy trình phát triển phần mềm bài bản, hướng đến việc khám phá các giải pháp hiệu quả, tiện lợi và tối ưu hóa trải nghiệm người dùng trong suốt quá trình xây dựng và sử dụng sản phẩm.
 
 <p align="center">
@@ -15,11 +15,11 @@ Dự án Kontroller được xây dựng bởi các thành viên sau. Vui lòng 
 
 | Tên Thành Viên | Vai Trò | Liên Kết GitHub | Liên Hệ |
 |----------------|---------|-----------------|---------|
-| Nguyễn Minh Thuận | Backend Dev | https://github.com/thuangf45 | [kingnemacc@gmail.com] |
-| [Dương Đức Thịnh] | Backend Dev | https://github.com/thinhbo1214 | None |
-| Nguyễn Gia Nghi | Project Manager | https://github.com/Nghi-creator | None |
-| Nguyễn Thành Đạt | Database Dev | https://github.com/ntdat28305 | None |
-| Hoàng Ngọc Tùng | Frontend Dev | https://github.com/Tung-creator | None |
+| Nguyễn Minh Thuận | Backend Dev | [GitHub](https://github.com/thuangf45)  | [Email](mailto:kingnemacc@gmail.com) |
+| Dương Đức Thịnh | Backend Dev | [GitHub](https://github.com/thinhbo1214) | None |
+| Nguyễn Gia Nghi | Project Manager | [GitHub](https://github.com/Nghi-creator) | None |
+| Nguyễn Thành Đạt | Database Dev | [GitHub](https://github.com/ntdat28305)  | None |
+| Hoàng Ngọc Tùng | Frontend Dev | [GitHub](https://github.com/Tung-creator) | None |
 
 <!-- > 💡 **Hướng dẫn**: Thay thế `[Tên]`, `[Vai trò]`, `[Link GitHub]`, `[Email/Social]` bằng thông tin cụ thể của từng thành viên. -->
 
