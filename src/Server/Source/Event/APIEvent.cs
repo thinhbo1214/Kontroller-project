@@ -24,7 +24,6 @@ namespace Server.Source.Event
                         try
                         {
                             Simulation.GetModel<APIHandler>().Handle(request, session);
-
                         }
                         catch (Exception ex)
                         {

@@ -21,14 +21,13 @@ namespace Server.Source.Handler
         }
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
-            var useID = DecodeHelper.GetParamWithURL("useID", request.Url);
+            var useId = DecodeHelper.GetParamWithURL("useId", request.Url);
 
-            if (string.IsNullOrEmpty(useID))
+            if (string.IsNullOrEmpty(useId))
             {
                 session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 400));
                 return;
             }
-
 
             session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 404));
 
@@ -37,9 +36,9 @@ namespace Server.Source.Handler
 
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
-            string? oldToken = TokenHelper.GetToken(request); // lấy token từ request
             var sessionManager = Simulation.GetModel<SessionManager>();
 
+            //Nếu đã đăng nhập và phiên còn hạn
             if (sessionManager.Authorization(request, out string id, session))
             {
                 var response = ResponseHelper.MakeJsonResponse(session.Response, 200); // tạo response
@@ -48,8 +47,8 @@ namespace Server.Source.Handler
             }
 
             var value = request.Body;
-
             var loginReq = JsonHelper.Deserialize<Account>(value);
+            // Gưi dữ liệu ko đủ
             if (loginReq == null)
             {
                 var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);

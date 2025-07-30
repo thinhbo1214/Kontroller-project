@@ -89,29 +89,4 @@ namespace Server.Source.Helper
 
 
 }
-/*
- Cách dùng:
-1/🔍 Truy vấn dữ liệu
-var dbManager = new DatabaseManager();
-dbManager.OpenConnection();
-
-var dataTable = dbManager.ExecuteQuery("users/get_all_users");
-var userList = DatabaseHelper.MapToList<User>(dataTable); // Convert về List<User>
-
-dbManager.CloseConnection();
-
-
-2/💾 Insert/Update với object thay vì Dictionary
-
-var dbManager = new DatabaseManager();
-dbManager.OpenConnection();
-
-var user = new User { UserName = "Minh Thuan", Age = 22 };
-var param = DatabaseHelper.ToDictionary(user);
-
-dbManager.ExecuteNonQuery("users/insert_user", param);
-
-dbManager.CloseConnection();
- 
- */
 
