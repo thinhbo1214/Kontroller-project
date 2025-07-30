@@ -1,6 +1,7 @@
 # 🚀 Dự Án Kontroller
 
-Chào mừng bạn đến với **Kontroller** - một dự án dự án được phát triển bởi đội ngũ đam mê công nghệ, với mục tiêu mang lại sự hiệu quả, tiện lợi và tối ưu hóa quy trình làm việc cho người dùng.
+Chào mừng bạn đến với **Kontroller** – một dự án được phát triển bởi đội ngũ đam mê công nghệ, với mục tiêu xây dựng một nền tảng đánh giá game hiện đại.
+Dự án không chỉ là một website đơn thuần mà còn là minh chứng cho quy trình phát triển phần mềm bài bản, hướng đến việc khám phá các giải pháp hiệu quả, tiện lợi và tối ưu hóa trải nghiệm người dùng trong suốt quá trình xây dựng và sử dụng sản phẩm.
 
 <p align="center">
   <img src="https://drive.google.com/uc?export=view&id=1vqINurv3bx5mZOfC4zsQyHoIwM0SC_nj" alt="Kontroller Logo" width="400"/>
