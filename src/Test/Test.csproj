@@ -5,7 +5,7 @@
     <TargetFramework>net9.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsTestProject>true</IsTestProject> <!-- 👈 thêm dòng này -->
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
