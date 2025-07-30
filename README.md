@@ -3,7 +3,7 @@
 Chào mừng bạn đến với **Kontroller** - một dự án dự án được phát triển bởi đội ngũ đam mê công nghệ, với mục tiêu mang lại sự hiệu quả, tiện lợi và tối ưu hóa quy trình làm việc cho người dùng.
 
 <p align="center">
-  <img src="https://drive.google.com/file/d/1C7eUo__xyGABKupoMUyJEHUJDjXAs3Q7/view?usp=sharing" alt="Kontroller Logo" width="400"/>
+  <img src="https://drive.google.com/uc?export=view&id=1C7eUo__xyGABKupoMUyJEHUJDjXAs3Q7" alt="Kontroller Logo" width="400"/>
 </p>
 
 ---
