@@ -322,20 +322,4 @@ BEGIN
 END;
 GO
 
--- 17. Function to check correct account
-CREATE OR ALTER FUNCTION UF_IsCorrectAccount (
-    @Username VARCHAR(100),
-    @Password VARCHAR(100)
-)
-RETURNS BIT
-AS
-BEGIN
-    IF DBO.UF_UsernameExists(@Username) = 0
-    BEGIN
-        RETURN 0; -- Return 0 if Username does not exist
-    END;
-
-
-    RETURN @Match; -- Return 1 if password matches, otherwise return 0
-END;
 
