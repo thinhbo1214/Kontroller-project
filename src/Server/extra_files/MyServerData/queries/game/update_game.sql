@@ -1,1 +1,0 @@
-UPDATE games SET title = @Title, description = @Description, genre = @Genre WHERE game_id = @GameId;
