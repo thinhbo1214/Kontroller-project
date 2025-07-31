@@ -10,11 +10,14 @@ BEGIN
     IF DBO.UF_IsUserInputValid(@Username, @Password, @Email) = 0
     BEGIN
         RAISERROR('User input is not valid', 16, 1);
+        SELECT 0 AS UserCreated;
         RETURN;
     END;
 
     INSERT INTO Users (username, password_hash, email)
     VALUES (@username, HASHBYTES('SHA2_256', @password), @email);
+
+    SELECT DBO.UF_UsernameExists(@Username) AS UserCreated;
 END;
 GO
 
@@ -217,4 +220,49 @@ BEGIN
     SELECT DBO.UF_IsUserLoggedIn(@UserId) AS IsLoggedIn;
 END;
 GO
+
+-- 16. Procedure to check if a user exists
+CREATE OR ALTER PROCEDURE UP_CheckUserExists
+@UserId UNIQUEIDENTIFIER
+AS
+BEGIN
+    IF DBO.UF_UserIdExists(@UserId) = 0
+    BEGIN
+        RAISERROR('UserId does not exist', 16, 1);
+        RETURN;
+    END;
+
+    SELECT 1 AS UserExists;
+END;
+GO
+
+-- 17. Procedure to check login account
+CREATE OR ALTER PROCEDURE UP_CheckLoginAccount
+@Username VARCHAR(100),
+@Password VARCHAR(100)
+AS
+BEGIN
+    DECLARE @IsValid BIT = 1;
+    DECLARE @UserId UNIQUEIDENTIFIER;
+    DECLARE @Match BIT = 0;
+
+    IF DBO.UF_IsUsernameLegal(@Username) = 0 OR
+       DBO.UF_IsPasswordLegal(@Password) = 0
+        SET @IsValid = 0;
+
+    IF @IsValid = 1 AND DBO.UF_UsernameExists(@Username) = 0
+        SET @IsValid = 0;
+
+    IF @IsValid = 1
+        SELECT @UserId = userId FROM [Users] WHERE username = @Username;
+
+    IF @IsValid = 1 AND DBO.UF_UserIdExists(@UserId) = 0
+        SET @IsValid = 0;
+
+    IF @IsValid = 1
+        SET @Match = DBO.UF_IsPasswordMatch(@UserId, @Password);
+
+    SELECT @Match AS IsCorrectAccount;
+END;
+
 
