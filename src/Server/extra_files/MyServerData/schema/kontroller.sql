@@ -1,184 +1,291 @@
-CREATE DATABASE KontrollerDB;
+﻿CREATE DATABASE KontrollerDB;
 GO
 
 USE KontrollerDB;
 GO
 
 -- Users table
-CREATE TABLE users (
-    user_id VARCHAR(50) PRIMARY KEY,
-    username VARCHAR(100) NOT NULL UNIQUE,
-    email VARCHAR(255),
-    password_hash VARCHAR(255) NOT NULL,
-    avatar VARCHAR(500),
-    is_logged_in BIT DEFAULT 0,
-    created_at DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE()
+CREATE TABLE User (
+    userId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARBINARY(128) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    avatar VARCHAR(255),
+    isLoggedIn BIT DEFAULT 0,
+    PRIMARY KEY (userId)
 );
+
 GO
 
 -- Games table
-CREATE TABLE games (
-    game_id VARCHAR(50) PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    genre VARCHAR(100),
-    poster VARCHAR(500),
-    backdrop VARCHAR(500),
-    details NVARCHAR(MAX),
-    services NVARCHAR(MAX),
-    avg_rating DECIMAL(3,2) DEFAULT 0.00,
-    created_at DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE()
+CREATE TABLE Game (
+    gameId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    title VARCHAR(100) NOT NULL,
+    descriptions NVARCHAR(MAX) NOT NULL,
+    genre VARCHAR(100) NOT NULL,
+    avgRating DECIMAL(4,2) DEFAULT 0.00,
+    poster VARCHAR(255),
+    backdrop VARCHAR(255),
+    details NVARCHAR(MAX) NOT NULL,
+    PRIMARY KEY (gameId)
 );
 GO
 
+CREATE TABLE Game_Service (
+    gameId UNIQUEIDENTIFIER NOT NULL,
+    serviceName VARCHAR(30) NOT NULL,
+    PRIMARY KEY (gameId, serviceName),
+    FOREIGN KEY (gameId) REFERENCES Game(gameId)
+);
+GO 
+
 -- Reviews table
-CREATE TABLE reviews (
-    review_id VARCHAR(50) PRIMARY KEY,
-    game_id VARCHAR(50) NOT NULL,
-    user_id VARCHAR(50) NOT NULL,
-    content TEXT NOT NULL,
-    rating DECIMAL(2,1) CHECK (rating >= 0 AND rating <= 10),
-    date_created DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE(),
-    CONSTRAINT FK_Review_Game FOREIGN KEY (game_id) REFERENCES games(game_id),
-    CONSTRAINT FK_Review_User FOREIGN KEY (user_id) REFERENCES users(user_id),
-    CONSTRAINT UQ_Review_User_Game UNIQUE (user_id, game_id)
+CREATE TABLE Review (
+    reviewId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    content NVARCHAR(MAX) NOT NULL,
+    rating DECIMAL(4,2) NOT NULL,
+    dateCreated DATETIME DEFAULT GETDATE(),
+    PRIMARY KEY (reviewId)
 );
 GO
 
 -- Comments table
-CREATE TABLE comments (
-    comment_id VARCHAR(50) PRIMARY KEY,
-    review_id VARCHAR(50) NOT NULL,
-    user_id VARCHAR(50) NOT NULL,
-    content TEXT NOT NULL,
-    parent_comment_id VARCHAR(50) NULL,
+CREATE TABLE Comment (
+    commentId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    content NVARCHAR(MAX) NOT NULL,
     created_at DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (review_id) REFERENCES reviews(review_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (parent_comment_id) REFERENCES comments(comment_id)
+    PRIMARY KEY (commentId)
 );
 GO
 
 -- Rates table
-CREATE TABLE rates (
-    rate_id VARCHAR(50) PRIMARY KEY,
-    game_id VARCHAR(50) NOT NULL,
-    user_id VARCHAR(50) NOT NULL,
-    rating DECIMAL(2,1) CHECK (rating >= 0 AND rating <= 10),
-    created_at DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (game_id) REFERENCES games(game_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    CONSTRAINT UQ_Rate_User_Game UNIQUE (user_id, game_id)
+CREATE TABLE Rate (
+    rateId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    rateValue INT NOT NULL,
+    PRIMARY KEY (rateId)
 );
 GO
 
 -- Lists table
-CREATE TABLE lists (
-    list_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    is_public BIT DEFAULT 1,
+CREATE TABLE List (
+    listId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    _name VARCHAR(100) NOT NULL,
+    descriptions NVARCHAR(MAX),
     created_at DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    PRIMARY KEY (listId)
 );
 GO
 
 -- List Items
-CREATE TABLE list_items (
-    list_item_id VARCHAR(50) PRIMARY KEY,
-    list_id VARCHAR(50) NOT NULL,
-    game_id VARCHAR(50) NOT NULL,
-    added_at DATETIME DEFAULT GETDATE(),
-    notes TEXT,
-    FOREIGN KEY (list_id) REFERENCES lists(list_id),
-    FOREIGN KEY (game_id) REFERENCES games(game_id),
-    CONSTRAINT UQ_List_Game UNIQUE (list_id, game_id)
+CREATE TABLE List_item (
+    listItemId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    title VARCHAR(100) NOT NULL,
+    PRIMARY KEY (listItemId)
 );
 GO
 
--- Play Later List
-CREATE TABLE play_later_list (
-    play_later_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    game_id VARCHAR(50) NOT NULL,
-    added_at DATETIME DEFAULT GETDATE(),
-    priority INT DEFAULT 0,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (game_id) REFERENCES games(game_id),
-    CONSTRAINT UQ_PlayLater_User_Game UNIQUE (user_id, game_id)
-);
-GO
 
--- Activities table (activity_type and target_type as VARCHARs)
-CREATE TABLE activities (
-    activity_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    activity_type VARCHAR(50) NOT NULL, -- review, rate, comment, etc.
-    target_id VARCHAR(50),
-    target_type VARCHAR(50),           -- game, comment, review, etc.
-    content TEXT,
-    created_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+-- Activity table (activity_type and target_type as VARCHARs)
+CREATE TABLE Activity (
+    activityId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    content NVARCHAR(MAX) NOT NULL,
+    dateDo DATETIME DEFAULT GETDATE(),
+    PRIMARY KEY (activityId)
 );
 GO
 
 -- Diaries table
-CREATE TABLE diaries (
-    diary_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    game_id VARCHAR(50),
-    is_public BIT DEFAULT 0,
-    created_at DATETIME DEFAULT GETDATE(),
-    updated_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (game_id) REFERENCES games(game_id)
-);
-GO
-
--- User Follow Table
-CREATE TABLE user_follows (
-    follow_id VARCHAR(50) PRIMARY KEY,
-    follower_id VARCHAR(50) NOT NULL,
-    following_id VARCHAR(50) NOT NULL,
-    created_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (follower_id) REFERENCES users(user_id),
-    FOREIGN KEY (following_id) REFERENCES users(user_id),
-    CONSTRAINT UQ_Follow UNIQUE (follower_id, following_id),
-    CHECK (follower_id != following_id)
-);
-GO
-
--- User Block Table
-CREATE TABLE user_blocks (
-    block_id VARCHAR(50) PRIMARY KEY,
-    blocker_id VARCHAR(50) NOT NULL,
-    blocked_id VARCHAR(50) NOT NULL,
-    created_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (blocker_id) REFERENCES users(user_id),
-    FOREIGN KEY (blocked_id) REFERENCES users(user_id),
-    CONSTRAINT UQ_Block UNIQUE (blocker_id, blocked_id),
-    CHECK (blocker_id != blocked_id)
+CREATE TABLE Diary (
+    diaryId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    dateLogged DATETIME DEFAULT GETDATE(),
+    PRIMARY KEY (diaryId)
 );
 GO
 
 -- Reactions table
-CREATE TABLE reactions (
-    reaction_id VARCHAR(50) PRIMARY KEY,
-    user_id VARCHAR(50) NOT NULL,
-    target_id VARCHAR(50) NOT NULL,
-    target_type VARCHAR(50) NOT NULL,
-    reaction_type VARCHAR(50) NOT NULL,
-    created_at DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    CONSTRAINT UQ_Reaction UNIQUE (user_id, target_id, target_type)
+CREATE TABLE Reaction (
+    reactionId UNIQUEIDENTIFIER DEFAULT NEWID(),
+    reactionType INT NOT NULL,
+    dateDo DATETIME DEFAULT GETDATE(),
+    PRIMARY KEY (reactionId)
 );
 GO
+
+-- extra tables for relationships
+CREATE TABLE User_Diary (
+    userId UNIQUEIDENTIFIER NOT NULL,
+    diaryId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (userId, diaryId),
+    FOREIGN KEY (userId) REFERENCES User(userId),
+    FOREIGN KEY (diaryId) REFERENCES Diary(diaryId)
+);
+GO
+
+CREATE TABLE User_List (
+    userId UNIQUEIDENTIFIER NOT NULL,
+    listId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (userId, listId),
+    FOREIGN KEY (userId) REFERENCES User(userId),
+    FOREIGN KEY (listId) REFERENCES List(listId)
+);
+GO
+
+CREATE TABLE User_User (
+    userFollower UNIQUEIDENTIFIER NOT NULL,
+    userFollowing UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (userFollower, userFollowing),
+    FOREIGN KEY (userFollower) REFERENCES User(userId),
+    FOREIGN KEY (userFollowing) REFERENCES User(userId)
+);
+GO
+
+CREATE TABLE User_Activity (
+    userId UNIQUEIDENTIFIER NOT NULL,
+    activityId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (userId, activityId),
+    FOREIGN KEY (userId) REFERENCES User(userId),
+    FOREIGN KEY (activityId) REFERENCES Activity(activityId)
+);
+GO
+
+CREATE TABLE Review_User (
+    author UNIQUEIDENTIFIER NOT NULL,
+    reviewId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (author, reviewId),
+    FOREIGN KEY (author) REFERENCES User(userId),
+    FOREIGN KEY (reviewId) REFERENCES Review(reviewId)
+);
+GO
+
+CREATE TABLE Review_Rate (
+    rateId UNIQUEIDENTIFIER NOT NULL,
+    reviewId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (rateId, reviewId),
+    FOREIGN KEY (rateId) REFERENCES Rate(rateId),
+    FOREIGN KEY (reviewId) REFERENCES Review(reviewId)
+);
+GO
+
+CREATE TABLE Review_Reaction (
+    reactionId UNIQUEIDENTIFIER NOT NULL,
+    reviewId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (reactionId, reviewId),
+    FOREIGN KEY (reactionId) REFERENCES Reaction(reactionId),
+    FOREIGN KEY (reviewId) REFERENCES Review(reviewId)
+);
+GO
+
+CREATE TABLE Reaction_User (
+    reactionId UNIQUEIDENTIFIER NOT NULL,
+    author UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (reactionId, author),
+    FOREIGN KEY (reactionId) REFERENCES Reaction(reactionId),
+    FOREIGN KEY (author) REFERENCES User(userId)
+);
+GO
+
+CREATE TABLE Rate_User (
+    rateId UNIQUEIDENTIFIER NOT NULL,
+    rater UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (rateId, rater),
+    FOREIGN KEY (rateId) REFERENCES Rate(rateId),
+    FOREIGN KEY (rater) REFERENCES User(userId)
+);
+GO
+
+CREATE TABLE Rate_Game (
+    rateId UNIQUEIDENTIFIER NOT NULL,
+    targetGame UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (rateId, targetGame),
+    FOREIGN KEY (rateId) REFERENCES Rate(rateId),
+    FOREIGN KEY (targetGame) REFERENCES Game(gameId)
+);
+GO
+
+CREATE TABLE List_ListItem (
+    listId UNIQUEIDENTIFIER NOT NULL,
+    listItemId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (listId, listItemId),
+    FOREIGN KEY (listId) REFERENCES List(listId),
+    FOREIGN KEY (listItemId) REFERENCES List_item(listItemId)
+);
+GO
+
+CREATE TABLE ListItem_Game (
+    listItemId UNIQUEIDENTIFIER NOT NULL,
+    targetGame UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (listItemId, targetGame),
+    FOREIGN KEY (listItemId) REFERENCES List_item(listItemId),
+    FOREIGN KEY (targetGame) REFERENCES Game(gameId)
+);
+GO 
+
+CREATE TABLE Comment_User (
+    commentId UNIQUEIDENTIFIER NOT NULL,
+    author UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (commentId, author),
+    FOREIGN KEY (commentId) REFERENCES Comment(commentId),
+    FOREIGN KEY (author) REFERENCES User(userId)
+);
+GO 
+
+CREATE TABLE Comment_Reaction (
+    commentId UNIQUEIDENTIFIER  NOT NULL,
+    reactionId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (commentId, reactionId),
+    FOREIGN KEY (commentId) REFERENCES Comment(commentId),
+    FOREIGN KEY (reactionId) REFERENCES Reaction(reactionId)
+);
+GO 
+
+ALTER TABLE User
+ADD CONSTRAINT C_USER_EMAIL
+CHECK (email LIKE '%_@__%.__%');
+
+ALTER TABLE User
+ADD CONSTRAINT C_USER_USERNAME
+CHECK (username NOT LIKE '%[^a-zA-Z0-9._-]%');
+
+ALTER TABLE Game
+ADD CONSTRAINT C_GAME_TITLE
+CHECK (title NOT LIKE '%[^a-zA-Z0-9._-]%');
+
+ALTER TABLE Game
+ADD CONSTRAINT C_GAME_GENRE
+CHECK (genre NOT LIKE '%[^a-zA-Z0-9._-]%');
+
+ALTER TABLE Game_Service
+ADD CONSTRAINT C_GAME_SERVICE_NAME
+CHECK (serviceName NOT LIKE '%[^a-zA-Z0-9._-]%');
+
+ALTER TABLE Review
+ADD CONSTRAINT C_REVIEW_RATING
+CHECK (rating BETWEEN 1 AND 10);
+
+ALTER TABLE Rate
+ADD CONSTRAINT C_RATE_VALUE
+CHECK (rateValue BETWEEN 1 AND 10);
+
+ALTER TABLE Reaction
+ADD CONSTRAINT C_REACTION_TYPE
+CHECK (reactionType IN (0, 1, 2, 3)); -- 0: Like, 1: Dislike, 2: Love, 3: Angry
+
+ALTER TABLE List
+ADD CONSTRAINT C_LIST_NAME
+CHECK (LEN(_name) > 0 AND LEN(_name) <= 100);
+
+ALTER TABLE List_item
+ADD CONSTRAINT C_LIST_ITEM_TITLE
+CHECK (title NOT LIKE '%[^a-zA-Z0-9._-]%');
+
+ALTER TABLE Activity
+ADD CONSTRAINT C_ACTIVITY_CONTENT
+CHECK (LEN(content) > 0 AND LEN(content) <= 1000);
+
+ALTER TABLE Diary
+ADD CONSTRAINT C_DIARY_DATE
+CHECK (dateLogged <= GETDATE());
+
+
+
+

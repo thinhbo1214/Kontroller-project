@@ -23,7 +23,6 @@ namespace Server.Source.Handler
         }
         public override void Handle(HttpRequest request, HttpsSession session)
         {
-            string? oldToken = TokenHelper.GetToken(request); // lấy token từ request
             var sessionManager = Simulation.GetModel<SessionManager>();
 
             if (sessionManager.Authorization(request, out string id, session))

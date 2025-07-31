@@ -7,12 +7,12 @@ List:
       description: Unique identifier for the list.
       example: '001'
 
-    name:
+    title:
       type: string
       description: The name or title of the list created by the user.
       example: 'My Favorite Games'
 
-    description:
+    descriptions:
       type: string
       description: A short explanation of what the list contains or why it was created.
       example: 'A collection of my favorite games.'
