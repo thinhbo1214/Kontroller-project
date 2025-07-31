@@ -1,1 +1,0 @@
-INSERT INTO users (user_id, username, email, password_hash) VALUES (@UserId, @Username, @Email, @PasswordHash);
