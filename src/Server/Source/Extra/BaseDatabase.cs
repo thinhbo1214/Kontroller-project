@@ -35,7 +35,7 @@ namespace Server.Source.Database
             db.OpenConnection();
 
             var param = DatabaseHelper.ToDictionary(model);
-            var sqlPath = $"{TableName}/save_{TableName.ToLower()}";
+            var sqlPath = $"{TableName}/set_{TableName.ToLower()}";
             db.ExecuteNonQuery(sqlPath, param);
 
             db.CloseConnection();
