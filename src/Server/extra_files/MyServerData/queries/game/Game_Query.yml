@@ -1,0 +1,132 @@
+Game:
+  description: Contains all SQL queries related to the Game entity.
+  queries:
+
+  ####### Query game #######
+    - name: GetAllGames
+      description: Retrieve all games.
+      path: games/get_all_games
+      access: [admin, user, guest]
+      parameters: []
+      result:
+        type: DataTable
+        returnsMany: true
+        columns:
+          - name: game_id
+            type: string
+          - name: title
+            type: string
+          - name: description
+            type: string
+          - name: genre
+            type: string
+          - name: poster
+            type: string
+          - name: backdrop
+            type: string
+          - name: avg_rating
+            type: number
+            format: decimal
+
+    - name: GetGameById
+      description: Retrieve a specific game by its ID.
+      path: games/get_game_by_id
+      access: [admin, user]
+      parameters:
+        - name: "@GameId"
+          type: string
+          required: true
+      result:
+        type: DataTable
+        returnsMany: false
+        columns:
+          - name: game_id
+            type: string
+          - name: title
+            type: string
+          - name: description
+            type: string
+          - name: genre
+            type: string
+          - name: poster
+            type: string
+          - name: backdrop
+            type: string
+          - name: avg_rating
+            type: number
+
+  ####### Non-query game #######
+    - name: InsertGame
+      description: Insert a new game.
+      path: games/insert_game
+      access: [admin]
+      parameters:
+        - name: "@GameId"
+          type: string
+          required: true
+        - name: "@Title"
+          type: string
+          required: true
+        - name: "@Description"
+          type: string
+        - name: "@Genre"
+          type: string
+        - name: "@Poster"
+          type: string
+        - name: "@Backdrop"
+          type: string
+        - name: "@Details"
+          type: json
+        - name: "@Services"
+          type: json
+      result:
+        type: affected_rows
+        datatype: int
+
+    - name: UpdateGame
+      description: Update information about a game.
+      path: games/update_game
+      access: [admin]
+      parameters:
+        - name: "@GameId"
+          type: string
+          required: true
+        - name: "@Title"
+          type: string
+        - name: "@Description"
+          type: string
+        - name: "@Genre"
+          type: string
+        - name: "@Poster"
+          type: string
+        - name: "@Backdrop"
+          type: string
+        - name: "@Details"
+          type: json
+        - name: "@Services"
+          type: json
+      result:
+        type: affected_rows
+        datatype: int
+
+    - name: DeleteGame
+      description: Delete a game by ID.
+      path: games/delete_game
+      access: [admin]
+      parameters:
+        - name: "@GameId"
+          type: string
+          required: true
+      result:
+        type: affected_rows
+        datatype: int
+
+  ####### Scalar query #######
+    - name: CountGames
+      description: Count total number of games.
+      path: games/count_games
+      access: [admin]
+      parameters: []
+      result:
+        type: scalar
+        datatype: int
