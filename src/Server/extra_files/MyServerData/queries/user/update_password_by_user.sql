@@ -1,1 +1,0 @@
-UPDATE users SET password_hash = @NewPassword WHERE username = @Username AND password_hash = @OldPassword;

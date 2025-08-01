@@ -9,15 +9,23 @@ AS
 BEGIN
     IF DBO.UF_IsUserInputValid(@Username, @Password, @Email) = 0
     BEGIN
-        RAISERROR('User input is not valid', 16, 1);
         SELECT 0 AS UserCreated;
         RETURN;
     END;
 
-    INSERT INTO Users (username, password_hash, email)
-    VALUES (@username, HASHBYTES('SHA2_256', @password), @email);
+    DECLARE @UserId UNIQUEIDENTIFIER = NEWID();
 
-    SELECT DBO.UF_UsernameExists(@Username) AS UserCreated;
+    INSERT INTO Users (userId, username, password_hash, email)
+    VALUES (@UserId, @Username, HASHBYTES('SHA2_256', @Password), @Email);
+
+    IF DBO.UF_UserIdExists(@UserId) = 0
+    BEGIN
+        SELECT NULL AS UserId;
+        RETURN;
+    END;
+
+    SELECT @UserId AS UserId;
+
 END;
 GO
 
@@ -29,11 +37,14 @@ AS
 BEGIN
     IF DBO.UF_IsUsernameUsable(@NewUsername) = 0
     BEGIN
-        RAISERROR('Username is not usable', 16, 1);
+        sELECT 0 AS UsernameUpdated;
         RETURN;
     END;
 
     UPDATE Users SET username = @NewUsername WHERE UserId = @UserId;
+
+    DECLARE @RowsAffected INT = @@ROWCOUNT;
+    sELECT @RowsAffected AS UsernameUpdated;
 END;
 GO
 
@@ -45,11 +56,14 @@ AS
 BEGIN
     IF DBO.UF_IsEmailUsable(@NewEmail) = 0
     BEGIN
-        RAISERROR('Email is not usable', 16, 1);
+        SELECT 0 AS EmailUpdated;
         RETURN;
     END;
 
     UPDATE Users SET email = @NewEmail WHERE UserId = @UserId;
+
+    DECLARE @rowsAffected INT = @@ROWCOUNT;
+    SELECT  @rowsAffected AS EmailUpdated;
 END;
 GO
 
@@ -61,11 +75,14 @@ AS
 BEGIN
     IF DBO.UF_IsAvatarLegal(@NewAvatar) = 0
     BEGIN
-        RAISERROR('Avatar is not legal', 16, 1);
+        SELECT 0 AS AvatarUpdated;
         RETURN;
     END;
 
     UPDATE Users SET avatar = @NewAvatar WHERE UserId = @UserId;
+
+    DECLARE @RowsAffected INT = @@ROWCOUNT;
+    sELECT @RowsAffected AS AvatarUpdated;
 END;
 GO
 
@@ -77,11 +94,14 @@ AS
 BEGIN
     IF @IsLoggedIn IS NULL
     BEGIN
-        RAISERROR('IsLoggedIn cannot be NULL', 16, 1);
+        SELECT 0 AS LoginStatusUpdated;
         RETURN;
     END;
 
     UPDATE Users SET isLoggedIn = @IsLoggedIn WHERE UserId = @UserId;
+
+    DECLARE @RowsAffected INT = @@ROWCOUNT;
+    sELECT @RowsAffected AS LoginStatusUpdated;
 END;
 GO
 
@@ -93,10 +113,13 @@ AS
 BEGIN
     IF DBO.UF_IsPasswordLegal(@NewPassword) = 0
     BEGIN
-        RAISERROR('Password is not legal', 16, 1);
+        SELECT 0 AS PasswordUpdated;
         RETURN;
     END;
     UPDATE Users SET password_hash = HASHBYTES('SHA2_256', @NewPassword) WHERE UserId = @UserId;
+
+    DECLARE @RowsAffected INT = @@ROWCOUNT;
+    SELECT @RowsAffected AS PasswordUpdated;
 END;
 GO
 
@@ -112,7 +135,6 @@ AS
 BEGIN
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
-        RAISERROR('UserId does not exist', 16, 1);
         RETURN;
     END;
 
@@ -126,6 +148,9 @@ BEGIN
 
     EXEC DBO.UP_UpdateUserLoginStatus @UserId, @IsUserLoggedIn;
 
+    DECLARE @RowsAffected INT = @@ROWCOUNT;
+    SELECT @RowsAffected AS UserDetailsUpdated;
+
 END;
 GO
 
@@ -138,11 +163,14 @@ BEGIN
 
     IF DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
     BEGIN
-        RAISERROR('Password does not match', 16, 1);
+        SELECT 0 AS UserDeleted;
         RETURN;
     END;
 
     DELETE FROM Users WHERE UserId = @UserId;
+    
+    DECLARE @RowsAffected INT = @@ROWCOUNT;
+    SELECT @RowsAffected AS UserDeleted;
 END;
 GO
 
@@ -153,7 +181,6 @@ AS
 BEGIN
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
-        RAISERROR('UserId does not exist', 16, 1);
         RETURN;
     END;
 
@@ -168,8 +195,7 @@ AS
 BEGIN
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
-    RAISERROR('UserId does not exist', 16, 1);
-    RETURN;
+        RETURN;
     END;
     SELECT * FROM UF_GetUserDetails(@UserId);
 END;
@@ -228,7 +254,6 @@ AS
 BEGIN
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
-        RAISERROR('UserId does not exist', 16, 1);
         RETURN;
     END;
 
@@ -242,27 +267,38 @@ CREATE OR ALTER PROCEDURE UP_CheckLoginAccount
 @Password VARCHAR(100)
 AS
 BEGIN
-    DECLARE @IsValid BIT = 1;
     DECLARE @UserId UNIQUEIDENTIFIER;
-    DECLARE @Match BIT = 0;
 
-    IF DBO.UF_IsUsernameLegal(@Username) = 0 OR
-       DBO.UF_IsPasswordLegal(@Password) = 0
-        SET @IsValid = 0;
+    IF DBO.UF_IsUsernameLegal(@Username) = 0 
+        OR DBO.UF_IsPasswordLegal(@Password) = 0
+        OR DBO.UF_UsernameExists(@Username) = 0
+    BEGIN
+        SELECT NULL AS UserId;
+        RETURN;
+    END;
 
-    IF @IsValid = 1 AND DBO.UF_UsernameExists(@Username) = 0
-        SET @IsValid = 0;
+    SELECT @UserId = userId FROM [Users] WHERE username = @Username;
 
-    IF @IsValid = 1
-        SELECT @UserId = userId FROM [Users] WHERE username = @Username;
+    IF DBO.UF_UserIdExists(@UserId) = 0 
+        OR DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
+    BEGIN
+        SELECT NULL AS UserId;
+        RETURN;
+    END;
 
-    IF @IsValid = 1 AND DBO.UF_UserIdExists(@UserId) = 0
-        SET @IsValid = 0;
-
-    IF @IsValid = 1
-        SET @Match = DBO.UF_IsPasswordMatch(@UserId, @Password);
-
-    SELECT @Match AS IsCorrectAccount;
+    SELECT @UserId AS UserId;
 END;
+GO
+
+
+
+
+
+
+
+
+
+
+
 
 

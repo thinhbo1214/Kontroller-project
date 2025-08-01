@@ -1,1 +1,1 @@
-DELETE FROM users WHERE user_id = @UserId;
+SELECT DBO.UP_DeleteUser @UserId, @Password;

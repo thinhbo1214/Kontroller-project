@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE user_id = @UserId;
+SELECT DBO.UP_GetUserDetails @UserId;

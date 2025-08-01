@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Server.Source.Core;
 using Server.Source.Helper;
 using System.Data;
 
@@ -37,8 +38,8 @@ namespace Server.Source.Manager
         }
         public DatabaseManager()
         {
-            _basePath = Path.Combine(AppContext.BaseDirectory, "MyServerData");
-            _connectionString = "Server=localhost;Database=MyDatabase;Integrated Security=True;";
+            _basePath = Path.Combine(AppContext.BaseDirectory, "extra_files", "MyServerData", "queries");
+            _connectionString = "Server=localhost;Database=KontrollerDB;Integrated Security=True;TrustServerCertificate=True;";
         }
         /// <summary>
         /// Lấy câu lệnh SQL từ cache hoặc đọc file, hỗ trợ thư mục con (ví dụ "users/get_user_by_id")

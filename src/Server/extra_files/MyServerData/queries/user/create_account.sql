@@ -1,0 +1,1 @@
+SELECT DBO.UP_CreateUser @Username, @Password, @Email;

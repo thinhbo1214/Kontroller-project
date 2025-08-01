@@ -1,24 +1,18 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Core;
 using Server.Source.Data;
+using Server.Source.Database;
 using Server.Source.Extra;
 using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
+using System.Reflection;
 
 namespace Server.Source.Handler
 {
     internal class APIUserHandler : HandlerBase
     {
         public override string Type => "/api/user";
-        public string CheckAccount(string username = "", string password = "")
-        {
-            if (username != "admin")
-            {
-                return "123";
-            }
-            return "";
-        }
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var useId = DecodeHelper.GetParamWithURL("useId", request.Url);
@@ -47,9 +41,9 @@ namespace Server.Source.Handler
             }
 
             var value = request.Body;
-            var loginReq = JsonHelper.Deserialize<Account>(value);
+            var account = JsonHelper.Deserialize<Account>(value);
             // Gưi dữ liệu ko đủ
-            if (loginReq == null)
+            if (account == null)
             {
                 var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
                 session.SendResponseAsync(errorResponse);
@@ -57,7 +51,7 @@ namespace Server.Source.Handler
             }
 
             // Đăng ký thành công:
-            string userId = CheckAccount(loginReq.username, loginReq.password);
+            string userId = AccountDatabase.Instance.CreateAccount(account);
             if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);

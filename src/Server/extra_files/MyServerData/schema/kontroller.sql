@@ -20,9 +20,9 @@ GO
 -- Games table
 CREATE TABLE Games (
     gameId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    title VARCHAR(100) NOT NULL,
+    title NVARCHAR(100) NOT NULL,
     descriptions NVARCHAR(MAX) NOT NULL,
-    genre VARCHAR(100) NOT NULL,
+    genre NVARCHAR(100) NOT NULL,
     avgRating DECIMAL(4,2) DEFAULT 0.00,
     poster VARCHAR(255),
     backdrop VARCHAR(255),
@@ -33,7 +33,7 @@ GO
 
 CREATE TABLE Game_Service (
     gameId UNIQUEIDENTIFIER NOT NULL,
-    serviceName VARCHAR(30) NOT NULL,
+    serviceName NVARCHAR(30) NOT NULL,
     PRIMARY KEY (gameId, serviceName),
     FOREIGN KEY (gameId) REFERENCES Games(gameId)
 );
@@ -43,7 +43,7 @@ GO
 CREATE TABLE Reviews (
     reviewId UNIQUEIDENTIFIER DEFAULT NEWID(),
     content NVARCHAR(MAX) NOT NULL,
-    rating DECIMAL(4,2) NOT NULL,
+    rating DECIMAL(4,2),
     dateCreated DATETIME DEFAULT GETDATE(),
     PRIMARY KEY (reviewId)
 );
@@ -69,7 +69,7 @@ GO
 -- Lists table
 CREATE TABLE Lists (
     listId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    _name VARCHAR(100) NOT NULL,
+    _name NVARCHAR(100) NOT NULL,
     descriptions NVARCHAR(MAX),
     created_at DATETIME DEFAULT GETDATE(),
     PRIMARY KEY (listId)
@@ -79,7 +79,7 @@ GO
 -- List Items
 CREATE TABLE List_items (
     listItemId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    title VARCHAR(100) NOT NULL,
+    title NVARCHAR(100) NOT NULL,
     PRIMARY KEY (listItemId)
 );
 GO
@@ -294,7 +294,6 @@ CHECK (LEN(content) > 0 AND LEN(content) <= 1000);
 ALTER TABLE Diaries
 ADD CONSTRAINT C_DIARY_DATE
 CHECK (dateLogged <= GETDATE());
-
 
 
 
