@@ -247,6 +247,15 @@ CREATE TABLE Comment_Reaction (
 );
 GO 
 
+CREATE TABLE Comment_Review (
+    commentId UNIQUEIDENTIFIER NOT NULL,
+    reviewId UNIQUEIDENTIFIER NOT NULL,
+    PRIMARY KEY (commentId, reviewId),
+    FOREIGN KEY (commentId) REFERENCES Comments(commentId),
+    FOREIGN KEY (reviewId) REFERENCES Reviews(reviewId)
+);
+
+
 ALTER TABLE Users
 ADD CONSTRAINT C_USER_EMAIL
 CHECK (email LIKE '%_@__%.__%');
