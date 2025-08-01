@@ -1,5 +1,4 @@
 -- #User table functions
-
 -- 1. Function to check if userId exists
 CREATE OR ALTER FUNCTION UF_UserIdExists (
     @UserId UNIQUEIDENTIFIER
@@ -197,19 +196,7 @@ CREATE OR ALTER FUNCTION UF_IsAvatarLegal (
 RETURNS BIT
 AS
 BEGIN
-    IF @Avatar IS NULL
-    BEGIN
-        RETURN 0; -- Return 0 if Avatar is NULL
-    END;
-    DECLARE @IsLegal BIT;
-
-    SELECT @IsLegal = CASE 
-        WHEN LEN(@Avatar) > 255 THEN 0
-        WHEN @Avatar NOT LIKE '%[^a-zA-Z0-9._-]%' THEN 1
-        ELSE 0
-    END;
-
-    RETURN @IsLegal;
+    RETURN DBO.F_IsUrlLegal(@Avatar);
 END;
 GO
 
