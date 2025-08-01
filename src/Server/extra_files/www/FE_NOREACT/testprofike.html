@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Profile Display - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kontroller-blue': '#3b82f6',
+                        'kontroller-dark': '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-white">
+    
+    <!-- Test Controls - Floating -->
+    <div class="fixed top-4 left-4 z-50 bg-black/80 backdrop-blur-lg p-4 rounded-lg space-y-2">
+        <h3 class="text-sm font-bold text-green-400">🧪 TEST CONTROLS</h3>
+        <div class="flex flex-col gap-1">
+            <button id="testUser1" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-xs">
+                User 1 (Complete)
+            </button>
+            <button id="testUser2" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs">
+                User 2 (Minimal)
+            </button>
+            <button id="testUser3" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-xs">
+                User 3 (High Level)
+            </button>
+            <button id="testEmpty" class="bg-orange-600 hover:bg-orange-700 px-3 py-1 rounded text-xs">
+                Empty Data
+            </button>
+            <button id="clearLog" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-xs">
+                Clear Log
+            </button>
+        </div>
+        <div id="testStatus" class="text-xs text-gray-400">Ready...</div>
+    </div>
+
+    <!-- Console Log - Floating -->
+    <div class="fixed bottom-4 left-4 z-50 bg-black/90 backdrop-blur-lg p-3 rounded-lg w-80 max-h-32 overflow-y-auto">
+        <div class="text-xs font-mono">
+            <div class="text-green-400 mb-1">📝 Console Log:</div>
+            <div id="testLog" class="text-gray-300 text-xs leading-tight">
+                Ready for testing...
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-slate-800 border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Left Side - Avatar and User Info -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <img data-profile="avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 hidden" alt="Avatar">
+                        <div data-profile="avatar-placeholder" class="w-12 h-12 rounded-full border-2 border-blue-500 bg-blue-500 flex items-center justify-center text-lg font-bold">
+                            U
+                        </div>
+                    </div>
+                    <div>
+                        <h1 data-profile="username" class="text-lg font-semibold text-white">Loading...</h1>
+                        <p class="text-sm text-gray-400">Kontroller</p>
+                    </div>
+                </div>
+                
+                <!-- Center - Navigation Links -->
+                <div class="flex items-center space-x-8">
+                    <a href="profile.html" class="text-white font-medium border-b-2 border-white pb-1">Profile</a>
+                    <a href="activity.html" class="text-blue-400 hover:text-white transition-colors">Activity</a>
+                    <a href="reviews.html" class="text-gray-400 hover:text-white transition-colors">Reviews</a>
+                    <a href="games.html" class="text-gray-400 hover:text-white transition-colors">Games</a>
+                    <a href="lists.html" class="text-gray-400 hover:text-white transition-colors">Lists</a>
+                    <a href="diary.html" class="text-gray-400 hover:text-white transition-colors">Diary</a>
+                    <a href="likes.html" class="text-gray-400 hover:text-white transition-colors">Likes</a>
+                </div>
+                
+                <!-- Right Side - Search and User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search games..." class="bg-slate-700 text-white placeholder-gray-400 px-4 py-2 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Stats Section -->
+    <section class="bg-slate-900 border-b border-slate-700">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <!-- External Links -->
+                <div class="flex space-x-4">
+                    <a href="#" class="text-blue-400 hover:text-blue-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-purple-400 hover:text-purple-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M16.942 6.247c-.684-.684-1.792-.684-2.476 0L12 8.713 9.534 6.247c-.684-.684-1.792-.684-2.476 0-.684.684-.684 1.792 0 2.476L9.524 11.19c.684.684 1.792.684 2.476 0l2.466-2.467c.684-.684.684-1.792 0-2.476z"/>
+                        </svg>
+                    </a>
+                </div>
+                
+                <!-- Stats - Với data attributes -->
+                <div class="flex space-x-8 text-center">
+                    <div>
+                        <div data-profile="followers" class="text-xl font-bold text-blue-400">0</div>
+                        <div class="text-sm text-gray-400">Followers</div>
+                    </div>
+                    <div>
+                        <div data-profile="following" class="text-xl font-bold text-blue-400">0</div>
+                        <div class="text-sm text-gray-400">Following</div>
+                    </div>
+                    <div>
+                        <div data-profile="gamesLogged" class="text-xl font-bold text-blue-400">0</div>
+                        <div class="text-sm text-gray-400">Games Logged</div>
+                    </div>
+                    <div>
+                        <div data-profile="listsMade" class="text-xl font-bold text-blue-400">0</div>
+                        <div class="text-sm text-gray-400">Lists Made</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- 5 Favorite Games -->
+                <section>
+                    <h2 class="text-xl font-bold mb-4">Favorite Games</h2>
+                    <div id="favoriteGames" class="flex space-x-4 overflow-x-auto pb-2">
+                        <!-- Games will be populated here -->
+                        <div class="flex-shrink-0">
+                            <img src="https://via.placeholder.com/150x200/3b82f6/ffffff?text=No+Games" alt="No games" class="w-24 h-32 rounded-lg shadow-lg">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5 Most Recently Logged Games -->
+                <section>
+                    <h2 class="text-xl font-bold mb-4">Recently Logged</h2>
+                    <div id="recentGames" class="flex space-x-4 overflow-x-auto pb-2">
+                        <!-- Recent games will be populated here -->
+                        <div class="flex-shrink-0">
+                            <img src="https://via.placeholder.com/150x200/6b7280/ffffff?text=No+Recent" alt="No recent" class="w-24 h-32 rounded-lg shadow-lg">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reviews Section -->
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Most Liked Reviews -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-kontroller-blue">Most Liked Reviews</h3>
+                        <div id="likedReviews" class="space-y-3">
+                            <div class="text-gray-400 text-sm">No reviews yet</div>
+                        </div>
+                    </div>
+
+                    <!-- Most Recent Reviews -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-kontroller-blue">Recent Reviews</h3>
+                        <div id="recentReviews" class="space-y-3">
+                            <div class="text-gray-400 text-sm">No recent reviews</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- Bio -->
+                <section class="bg-gray-800 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Bio</h3>
+                    <p data-profile="bio" class="text-gray-300 leading-relaxed">
+                        Loading bio...
+                    </p>
+                </section>
+
+                <!-- User Details -->
+                <section class="bg-gray-800 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Details</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Email:</span>
+                            <span data-profile="email" class="text-white">Loading...</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Joined:</span>
+                            <span data-profile="joinDate" class="text-white">Loading...</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Last Login:</span>
+                            <span data-profile="lastLogin" class="text-white">Loading...</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Level:</span>
+                            <span data-profile="level" class="text-blue-400 font-bold">1</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Total Score:</span>
+                            <span data-profile="totalScore" class="text-blue-400 font-bold">0</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Currently Playing -->
+                <section class="bg-gray-800 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Currently Playing</h3>
+                    <div id="currentlyPlaying" class="space-y-3">
+                        <div class="text-gray-400 text-sm">No games currently playing</div>
+                    </div>
+                </section>
+
+                <!-- Most Popular Lists -->
+                <section class="bg-gray-800 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4 text-kontroller-blue">Popular Lists</h3>
+                    <div id="popularLists" class="space-y-3">
+                        <div class="text-gray-400 text-sm">No lists created</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        // Test data với đầy đủ thông tin cho profile layout
+        const testUsers = {
+            user1: {
+                id: 123,
+                username: "gamerpro2024",
+                email: "gamer@example.com",
+                fullName: "John Gaming Doe", 
+                bio: "Passionate gamer who loves exploring new worlds and experiencing epic stories. RPGs and action-adventure games are my favorite genres. Always looking for the next great gaming experience!",
+                avatar: "https://via.placeholder.com/100/4F46E5/FFFFFF?text=JP",
+                joinDate: "2024-01-15T08:30:00Z",
+                lastLogin: "2025-08-01T10:15:00Z",
+                stats: {
+                    gamesPlayed: 89,
+                    totalScore: 15420,
+                    level: 8,
+                    followers: 245,
+                    following: 180,
+                    gamesLogged: 89,
+                    listsMade: 12
+                },
+                favoriteGames: [
+                    { title: "Elden Ring", image: "https://via.placeholder.com/150x200/1f2937/ffffff?text=Elden+Ring" },
+                    { title: "God of War", image: "https://via.placeholder.com/150x200/dc2626/ffffff?text=God+of+War" },
+                    { title: "Cyberpunk 2077", image: "https://via.placeholder.com/150x200/facc15/000000?text=Cyberpunk" },
+                    { title: "Zelda BOTW", image: "https://via.placeholder.com/150x200/10b981/ffffff?text=Zelda" },
+                    { title: "The Witcher 3", image: "https://via.placeholder.com/150x200/8b5cf6/ffffff?text=Witcher+3" }
+                ],
+                recentGames: [
+                    { title: "Spider-Man 2", image: "https://via.placeholder.com/150x200/ef4444/ffffff?text=Spider+Man" },
+                    { title: "Baldur's Gate 3", image: "https://via.placeholder.com/150x200/f59e0b/000000?text=BG3" },
+                    { title: "Alan Wake 2", image: "https://via.placeholder.com/150x200/6366f1/ffffff?text=Alan+Wake" },
+                    { title: "Starfield", image: "https://via.placeholder.com/150x200/0ea5e9/ffffff?text=Starfield" },
+                    { title: "Forza Horizon", image: "https://via.placeholder.com/150x200/84cc16/ffffff?text=Forza" }
+                ]
+            },
+
+            user2: {
+                id: 456,
+                username: "newbie_gamer",
+                email: "new@player.com",
+                bio: "Just started my gaming journey! Any recommendations?",
+                avatar: null,
+                joinDate: "2025-07-25T09:15:00Z",
+                lastLogin: "2025-08-01T08:00:00Z",
+                stats: {
+                    gamesPlayed: 3,
+                    totalScore: 420,
+                    level: 1,
+                    followers: 5,
+                    following: 15,
+                    gamesLogged: 3,
+                    listsMade: 1
+                },
+                favoriteGames: [
+                    { title: "Minecraft", image: "https://via.placeholder.com/150x200/10b981/ffffff?text=Minecraft" }
+                ],
+                recentGames: [
+                    { title: "Stardew Valley", image: "https://via.placeholder.com/150x200/84cc16/ffffff?text=Stardew" },
+                    { title: "Among Us", image: "https://via.placeholder.com/150x200/ef4444/ffffff?text=Among+Us" }
+                ]
+            },
+
+            user3: {
+                id: 789,
+                username: "speedrunner_pro",
+                email: "speed@test.com",
+                fullName: "Jane Speed Smith",
+                bio: "World record holder in multiple indie games. Speedrunning is life! 🏃‍♀️💨 Currently working on new PB in Celeste any%.",
+                avatar: "https://via.placeholder.com/100/EF4444/FFFFFF?text=JS",
+                joinDate: "2023-06-20T14:22:00Z",
+                lastLogin: "2025-07-31T22:45:00Z",
+                stats: {
+                    gamesPlayed: 456,
+                    totalScore: 89750,
+                    level: 23,
+                    followers: 1250,
+                    following: 89,
+                    gamesLogged: 456,
+                    listsMade: 25
+                },
+                favoriteGames: [
+                    { title: "Celeste", image: "https://via.placeholder.com/150x200/8b5cf6/ffffff?text=Celeste" },
+                    { title: "Hollow Knight", image: "https://via.placeholder.com/150x200/1f2937/ffffff?text=Hollow" },
+                    { title: "Super Meat Boy", image: "https://via.placeholder.com/150x200/dc2626/ffffff?text=Meat+Boy" },
+                    { title: "A Hat in Time", image: "https://via.placeholder.com/150x200/f59e0b/000000?text=Hat+Time" },
+                    { title: "Ori", image: "https://via.placeholder.com/150x200/10b981/ffffff?text=Ori" }
+                ],
+                recentGames: [
+                    { title: "Pizza Tower", image: "https://via.placeholder.com/150x200/f97316/ffffff?text=Pizza" },
+                    { title: "Cuphead", image: "https://via.placeholder.com/150x200/facc15/000000?text=Cuphead" },
+                    { title: "Katana Zero", image: "https://via.placeholder.com/150x200/6366f1/ffffff?text=Katana" }
+                ]
+            }
+        };
+
+        // Enhanced UI với functions cho profile layout
+        class ProfileUI {
+            displayProfile(userData) {
+                if (!userData) {
+                    this.log('❌ No user data provided');
+                    return;
+                }
+
+                this.log(`🎨 Displaying profile for: ${userData.username}`);
+
+                try {
+                    this.updateBasicInfo(userData);
+                    this.updateStats(userData);
+                    this.updateGames(userData);
+                    this.updateDates(userData);
+                    this.log('✅ Profile display completed');
+                } catch (error) {
+                    this.log(`❌ Error: ${error.message}`);
+                }
+            }
+
+            updateBasicInfo(userData) {
+                // Avatar
+                const avatarImg = document.querySelector('[data-profile="avatar"]');
+                const avatarPlaceholder = document.querySelector('[data-profile="avatar-placeholder"]');
+                
+                if (userData.avatar) {
+                    avatarImg.src = userData.avatar;
+                    avatarImg.classList.remove('hidden');
+                    avatarPlaceholder.classList.add('hidden');
+                } else {
+                    avatarImg.classList.add('hidden');
+                    avatarPlaceholder.classList.remove('hidden');
+                    avatarPlaceholder.textContent = userData.username ? userData.username[0].toUpperCase() : 'U';
+                }
+
+                // Basic fields
+                this.setData('username', userData.username || 'Unknown User');
+                this.setData('email', userData.email || 'No email');
+                this.setData('bio', userData.bio || 'No bio available');
+                this.setData('level', userData.stats?.level || 1);
+                this.setData('totalScore', this.formatNumber(userData.stats?.totalScore || 0));
+            }
+
+            updateStats(userData) {
+                const stats = userData.stats || {};
+                this.setData('followers', this.formatNumber(stats.followers || 0));
+                this.setData('following', this.formatNumber(stats.following || 0));
+                this.setData('gamesLogged', this.formatNumber(stats.gamesLogged || 0));
+                this.setData('listsMade', this.formatNumber(stats.listsMade || 0));
+            }
+
+            updateGames(userData) {
+                // Favorite Games
+                const favoriteContainer = document.getElementById('favoriteGames');
+                if (userData.favoriteGames && userData.favoriteGames.length > 0) {
+                    favoriteContainer.innerHTML = userData.favoriteGames.map(game => `
+                        <div class="flex-shrink-0">
+                            <img src="${game.image}" alt="${game.title}" class="w-24 h-32 rounded-lg shadow-lg" title="${game.title}">
+                        </div>
+                    `).join('');
+                }
+
+                // Recent Games
+                const recentContainer = document.getElementById('recentGames');
+                if (userData.recentGames && userData.recentGames.length > 0) {
+                    recentContainer.innerHTML = userData.recentGames.map(game => `
+                        <div class="flex-shrink-0">
+                            <img src="${game.image}" alt="${game.title}" class="w-24 h-32 rounded-lg shadow-lg" title="${game.title}">
+                        </div>
+                    `).join('');
+                }
+            }
+
+            updateDates(userData) {
+                this.setData('joinDate', this.formatDate(userData.joinDate));
+                this.setData('lastLogin', this.formatDate(userData.lastLogin));
+            }
+
+            setData(selector, value) {
+                const elements = document.querySelectorAll(`[data-profile="${selector}"]`);
+                elements.forEach(el => el.textContent = value);
+            }
+
+            formatDate(dateString) {
+                if (!dateString) return 'Unknown';
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+
+            formatNumber(num) {
+                return num ? num.toLocaleString() : '0';
+            }
+
+            log(message) {
+                const logEl = document.getElementById('testLog');
+                const time = new Date().toLocaleTimeString();
+                logEl.innerHTML += `\n[${time}] ${message}`;
+                logEl.scrollTop = logEl.scrollHeight;
+            }
+
+            updateStatus(status) {
+                document.getElementById('testStatus').textContent = status;
+            }
+        }
+
+        const profileUI = new ProfileUI();
+
+        // Event listeners
+        document.getElementById('testUser1').addEventListener('click', () => {
+            profileUI.updateStatus('Testing User 1...');
+            profileUI.displayProfile(testUsers.user1);
+        });
+
+        document.getElementById('testUser2').addEventListener('click', () => {
+            profileUI.updateStatus('Testing User 2...');
+            profileUI.displayProfile(testUsers.user2);
+        });
+
+        document.getElementById('testUser3').addEventListener('click', () => {
+            profileUI.updateStatus('Testing User 3...');
+            profileUI.displayProfile(testUsers.user3);
+        });
+
+        document.getElementById('testEmpty').addEventListener('click', () => {
+            profileUI.updateStatus('Testing Empty...');
+            profileUI.displayProfile({});
+        });
+
+        document.getElementById('clearLog').addEventListener('click', () => {
+            document.getElementById('testLog').innerHTML = 'Log cleared...';
+            profileUI.updateStatus('Ready...');
+        });
+
+        // Auto test
+        setTimeout(() => {
+            profileUI.log('🚀 Auto-testing with User 1...');
+            profileUI.displayProfile(testUsers.user1);
+            profileUI.updateStatus('User 1 loaded');
+        }, 1000);
+
+        // Make available globally
+        window.profileUI = profileUI;
+        window.testUsers = testUsers;
+
+        profileUI.log('✅ Test environment ready!');
+    </script>
+</body>
+</html>
