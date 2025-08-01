@@ -44,7 +44,7 @@ BEGIN
     END;
 
     DECLARE @Content NVARCHAR(MAX);
-    SELECT @Content = Content FROM [Review] WHERE ReviewId = @ReviewId;
+    SELECT @Content = Content FROM [Reviews] WHERE ReviewId = @ReviewId;
     RETURN @Content;
 END;
 GO
@@ -62,7 +62,7 @@ BEGIN
     END;
 
     DECLARE @Rating DECIMAL(4,2);
-    SELECT @Rating = Rating FROM [Review] WHERE ReviewId = @ReviewId;
+    SELECT @Rating = Rating FROM [Reviews] WHERE ReviewId = @ReviewId;
     RETURN @Rating;
 END;
 GO
@@ -80,7 +80,7 @@ BEGIN
     END;
 
     DECLARE @DateCreated DATETIME;
-    SELECT @DateCreated = DateCreated FROM [Review] WHERE ReviewId = @ReviewId;
+    SELECT @DateCreated = DateCreated FROM [Reviews] WHERE ReviewId = @ReviewId;
     RETURN @DateCreated;
 END;
 GO
@@ -104,6 +104,22 @@ BEGIN
     END;
 
     RETURN @IsLegal;  
+END;
+GO
+
+-- 7. Function to check rating legality
+CREATE OR ALTER FUNCTION RF_IsRatingLegality (
+    @Rating DECIMAL(4,2)
+)
+RETURNS BIT
+AS
+BEGIN
+    IF @Rating IS NULL OR @Rating < 0 OR @Rating > 10
+    BEGIN
+        RETURN 0; -- Return 0 if rating is invalid
+    END;
+
+    RETURN 1;
 END;
 GO
 

@@ -43,7 +43,7 @@ GO
 CREATE TABLE Reviews (
     reviewId UNIQUEIDENTIFIER DEFAULT NEWID(),
     content NVARCHAR(MAX) NOT NULL,
-    rating DECIMAL(4,2),
+    rating DECIMAL(4,2) NOT NULL DEFAULT 0,
     dateCreated DATETIME DEFAULT GETDATE(),
     PRIMARY KEY (reviewId)
 );
