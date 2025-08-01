@@ -12,7 +12,7 @@ BEGIN
 
     DECLARE @ReviewId UNIQUEIDENTIFIER = NEWID();
 
-    INSERT INTO Reviews (reviewId, content)
+    INSERT INTO [Reviews] (reviewId, content)
     VALUES (@ReviewId,@Content);
 
     IF DBO.RF_ReviewExists(@ReviewId) = 0
@@ -50,7 +50,7 @@ CREATE OR ALTER PROCEDURE RP_UpdateReviewRating
 @Rating DECIMAL(4,2)
 AS
 BEGIN
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_IsRatingLegality(@Rating) = 0
     BEGIN
         SELECT 0 AS RatingUpdated;
         RETURN;
@@ -137,6 +137,8 @@ BEGIN
     SELECT DBO.RF_GetDateCreated(@ReviewId) AS Date;
 END;
 GO
+
+
 
 
 
