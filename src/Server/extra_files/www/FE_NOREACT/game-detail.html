@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elden Ring - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .rating-curve {
+            background: linear-gradient(90deg, #10b981 80%, #fbbf24 15%, #ef4444 5%);
+            height: 8px;
+            border-radius: 4px;
+        }
+        .backdrop-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+        }
+        .action-popup {
+            display: none;
+        }
+        .action-popup.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Main Toolbar -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <!-- Top Bar with Avatar, Username and Search -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Left side: Avatar and Username -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-300">
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side: Search and Friends button -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-medium">
+                        <i class="fas fa-users mr-2"></i>Friends and People
+                    </button>
+                    
+                </div>
+            </div>
+                
+                <!-- Main Navigation -->
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Game Detail Content -->
+    <main class="relative">
+        <!-- Backdrop Image -->
+        <div class="relative h-96 bg-cover bg-center" 
+             style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=400&fit=crop')">
+            <div class="backdrop-overlay absolute inset-0"></div>
+            
+            <!-- Game Card -->
+            <div class="absolute bottom-6 left-6 flex items-end space-x-6 z-10">
+                <!-- Poster -->
+                <div class="flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop" 
+                         alt="Elden Ring" class="w-48 h-72 rounded-lg shadow-2xl">
+                </div>
+                
+                <!-- Game Info -->
+                <div class="pb-4">
+                    <h1 class="text-4xl font-bold mb-2">Elden Ring</h1>
+                    <div class="flex items-center space-x-6 mb-4">
+                        <!-- Rating -->
+                        <div class="flex items-center space-x-3">
+                            <span class="text-3xl font-bold text-green-400">4.7</span>
+                            <div class="flex flex-col">
+                                <div class="rating-curve w-32"></div>
+                                <span class="text-sm text-gray-300 mt-1">Based on 15,234 reviews</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Button -->
+                        <div class="relative">
+                            <button id="actionBtn" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
+                                Action
+                            </button>
+                            
+                            <!-- Action Popup -->
+                            <div id="actionPopup" class="action-popup absolute top-full mt-2 left-0 bg-gray-800 rounded-lg shadow-xl border border-gray-700 min-w-48 z-20">
+                                <div class="p-2">
+                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <span>Rate & Log</span>
+                                    </button>
+                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                        <i class="fas fa-heart text-red-400"></i>
+                                        <span>Like</span>
+                                    </button>
+                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                        <i class="fas fa-edit text-blue-400"></i>
+                                        <span>Write Review</span>
+                                    </button>
+                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                        <i class="fas fa-plus text-green-400"></i>
+                                        <span>Add to List</span>
+                                    </button>
+                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                        <i class="fas fa-bookmark text-purple-400"></i>
+                                        <span>Add to Watchlist</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="bg-gray-800 border-b border-gray-700">
+            <div class="max-w-7xl mx-auto px-6">
+                <nav class="flex space-x-8">
+                    <button class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium" data-tab="reviews">
+                        Reviews
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="details">
+                        Details
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="genres">
+                        Genres
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="services">
+                        Services
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <!-- Reviews Tab -->
+            <div id="reviews" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Reviews</h2>
+                <div class="space-y-6">
+                    <!-- Review Item -->
+                    <div class="bg-gray-800 rounded-lg p-6">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                                 alt="Reviewer" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <h3 class="font-semibold">John Doe</h3>
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-400">March 15, 2024</span>
+                                </div>
+                                <p class="text-gray-300 mb-3">
+                                    Elden Ring is a masterpiece that combines the best elements of Dark Souls with an expansive open world. 
+                                    The game's intricate world-building and challenging gameplay create an unforgettable experience.
+                                </p>
+                                <div class="flex items-center space-x-4">
+                                    <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
+                                        <i class="fas fa-heart"></i>
+                                        <span>24</span>
+                                    </button>
+                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">RPG</span>
+                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">Open World</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- More Review Items -->
+                    <div class="bg-gray-800 rounded-lg p-6">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
+                                 alt="Reviewer" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <h3 class="font-semibold">Sarah Wilson</h3>
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-400">March 10, 2024</span>
+                                </div>
+                                <p class="text-gray-300 mb-3">
+                                    Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming at times. 
+                                    Still, it's a game that rewards patience and skill.
+                                </p>
+                                <div class="flex items-center space-x-4">
+                                    <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
+                                        <i class="fas fa-heart"></i>
+                                        <span>12</span>
+                                    </button>
+                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">Challenging</span>
+                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">Beautiful</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Tab -->
+            <div id="details" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6">Details</h2>
+                <div class="bg-gray-800 rounded-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-400 mb-2">Studio</h3>
+                            <p class="text-white">FromSoftware</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-400 mb-2">Publisher</h3>
+                            <p class="text-white">Bandai Namco Entertainment</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-400 mb-2">Release Date</h3>
+                            <p class="text-white">February 25, 2022</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-400 mb-2">Country</h3>
+                            <p class="text-white">Japan</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h3 class="font-semibold text-gray-400 mb-2">Languages</h3>
+                            <p class="text-white">English, Japanese, Korean, Chinese, French, Italian, German, Spanish, Portuguese, Russian</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h3 class="font-semibold text-gray-400 mb-2">Description</h3>
+                            <p class="text-white">Elden Ring is an action RPG which takes place in the Lands Between, sometime after the Shattering of the titular Elden Ring. Players must explore and fight their way through the vast open-world to unite all the shards, restore the Elden Ring, and become the Elden Lord.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genres Tab -->
+            <div id="genres" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6">Genres</h2>
+                <div class="bg-gray-800 rounded-lg p-6">
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Action RPG</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Open World</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Dark Fantasy</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Souls-like</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Third-Person</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Challenging</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Tab -->
+            <div id="services" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6">Available On</h2>
+                <div class="bg-gray-800 rounded-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
+                            <i class="fab fa-steam text-2xl text-blue-400"></i>
+                            <div>
+                                <h3 class="font-semibold">Steam</h3>
+                                <p class="text-sm text-gray-400">PC</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
+                            <i class="fab fa-playstation text-2xl text-blue-600"></i>
+                            <div>
+                                <h3 class="font-semibold">PlayStation</h3>
+                                <p class="text-sm text-gray-400">PS4, PS5</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
+                            <i class="fab fa-xbox text-2xl text-green-500"></i>
+                            <div>
+                                <h3 class="font-semibold">Xbox</h3>
+                                <p class="text-sm text-gray-400">Xbox One, Series X/S</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Action button popup
+        const actionBtn = document.getElementById('actionBtn');
+        const actionPopup = document.getElementById('actionPopup');
+
+        actionBtn.addEventListener('click', () => {
+            actionPopup.classList.toggle('show');
+        });
+
+        // Close popup when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!actionBtn.contains(e.target) && !actionPopup.contains(e.target)) {
+                actionPopup.classList.remove('show');
+            }
+        });
+
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                
+                // Remove active class from all buttons
+                tabBtns.forEach(b => {
+                    b.classList.remove('active', 'border-blue-500', 'text-blue-400');
+                    b.classList.add('border-transparent', 'text-gray-300');
+                });
+                
+                // Add active class to clicked button
+                btn.classList.add('active', 'border-blue-500', 'text-blue-400');
+                btn.classList.remove('border-transparent', 'text-gray-300');
+                
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Show target tab content
+                document.getElementById(targetTab).classList.remove('hidden');
+            });
+        });
+    </script>
+    <script type="module" src="./js/event.js"></script>
+</body>
+</html>

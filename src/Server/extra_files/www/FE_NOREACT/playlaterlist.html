@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayLaterList - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .rating-curve {
+            background: linear-gradient(90deg, #10b981 80%, #fbbf24 15%, #ef4444 5%);
+            height: 8px;
+            border-radius: 4px;
+        }
+        .backdrop-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+        }
+        .action-popup {
+            display: none;
+        }
+        .action-popup.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header with Avatar, Username and Main Toolbar -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <!-- Top Bar with Avatar, Username and Search -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Left side: Avatar and Username -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-300">
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side: Search and Friends button -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <a href="friends.html" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium flex items-center">
+                        <i class="fas fa-users mr-2"></i>Friends and People
+                    </a>
+                </div>
+            </div>
+                
+                <!-- Main Navigation with Title -->
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">PlayLaterList</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+     <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Page Title -->
+        <h1 class="text-3xl font-bold mb-8">Play Later List</h1>
+
+        <!-- Filter Bar -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-8">
+            <div class="flex flex-wrap gap-4 items-center">
+                <!-- Genre Filter -->
+                <div class="flex flex-col">
+                    <label class="text-sm text-gray-400 mb-1">Genre</label>
+                    <select class="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Genres</option>
+                        <option value="action">Action</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="rpg">RPG</option>
+                        <option value="strategy">Strategy</option>
+                        <option value="simulation">Simulation</option>
+                        <option value="sports">Sports</option>
+                        <option value="puzzle">Puzzle</option>
+                        <option value="horror">Horror</option>
+                    </select>
+                </div>
+
+                <!-- Platform/Service Filter -->
+                <div class="flex flex-col">
+                    <label class="text-sm text-gray-400 mb-1">Platform/Service</label>
+                    <select class="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Platforms</option>
+                        <option value="steam">Steam</option>
+                        <option value="nintendo">Nintendo Switch</option>
+                        <option value="playstation">PlayStation</option>
+                        <option value="xbox">Xbox</option>
+                        <option value="epic">Epic Games</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                </div>
+
+                <!-- Sort By Filter -->
+                <div class="flex flex-col">
+                    <label class="text-sm text-gray-400 mb-1">Sort by</label>
+                    <select class="bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="date_logged">Date Logged</option>
+                        <option value="date_published">Date Published</option>
+                        <option value="rating_avg">Average Rating</option>
+                        <option value="rating_user">Your Rating</option>
+                        <option value="title">Title</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    <!-- Game List -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div class="game-card bg-gray-800 rounded-lg p-4 text-center">
+                <img src="https://via.placeholder.com/150x200" alt="Game Poster" class="w-full h-48 object-cover rounded-lg">
+                <p class="mt-2 text-lg font-medium">Shadow Realm</p>
+            </div>
+            <div class="game-card bg-gray-800 rounded-lg p-4 text-center">
+                <img src="https://via.placeholder.com/150x200" alt="Game Poster" class="w-full h-48 object-cover rounded-lg">
+                <p class="mt-2 text-lg font-medium">Mystic Quest</p>
+            </div>
+            <div class="game-card bg-gray-800 rounded-lg p-4 text-center">
+                <img src="https://via.placeholder.com/150x200" alt="Game Poster" class="w-full h-48 object-cover rounded-lg">
+                <p class="mt-2 text-lg font-medium">Neon Horizon</p>
+            </div>
+            <div class="game-card bg-gray-800 rounded-lg p-4 text-center">
+                <img src="https://via.placeholder.com/150x200" alt="Game Poster" class="w-full h-48 object-cover rounded-lg">
+                <p class="mt-2 text-lg font-medium">Crystal Wars</p>
+            </div>
+            <div class="game-card bg-gray-800 rounded-lg p-4 text-center">
+                <img src="https://via.placeholder.com/150x200" alt="Game Poster" class="w-full h-48 object-cover rounded-lg">
+                <p class="mt-2 text-lg font-medium">Phantom Odyssey</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-12">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                Load More Games
+            </button>
+        </div>
+
+    <script>
+        // Navigation link functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default anchor behavior
+                    const href = this.getAttribute('href');
+                    if (href) {
+                        window.location.href = href; // Redirect to the linked page
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="module" src="./js/event.js"></script>
+</body>
+</html>
