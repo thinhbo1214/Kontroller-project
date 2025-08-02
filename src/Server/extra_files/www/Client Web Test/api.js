@@ -86,8 +86,6 @@ export class LoginAPI extends API{
 
   // const username = document.getElementById('loginUsername').value.trim();
   // const password = document.getElementById('loginPassword').value;
-
-  // kiểm tra tài khoản mật khẩu trả về okay 
     async PostLogin(username, password) {
       if (!username || !password) {
         alert('Username and password are required!');
@@ -97,8 +95,11 @@ export class LoginAPI extends API{
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
       });
-
-      return res;
+      if (res.ok) {
+        showResponse('Login thành công');
+      } else {
+        showResponse(`Login thất bại: ${res.status} ${res.data}`);
+      }
   }
 }
 
@@ -108,10 +109,15 @@ export class CacheAPI extends API {
 
   async GetCache(key) {
     const query = API.buildQuery({ key }); 
+    //const path = key ? '?key=' + encodeURIComponent(key) : '';
     const res = await this.GET(query);
-    return res;
+
+    if (res.ok) {
+      showResponse(typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2));
+    } else {
+      showResponse(`Error ${res.status}: ${res.data}`);
+    }
   }
-  
 
   async PostCache(key, value) {
     if (!key) return alert('Key is required');
@@ -122,7 +128,7 @@ export class CacheAPI extends API {
       body: value
     });
 
-    return res;
+    showResponse(res.ok ? 'Saved successfully' : `Error ${res.status}: ${res.data}`);
   }
 
     async PutCache(key, value) {
@@ -133,7 +139,8 @@ export class CacheAPI extends API {
       headers: { 'Content-Type': 'text/plain' },
       body: value
     });
-    return res;
+
+    showResponse(res.ok ? 'Saved successfully' : `Error ${res.status}: ${res.data}`);
   }
 
   async DeleteCache(key) {
@@ -141,122 +148,8 @@ export class CacheAPI extends API {
 
     const query = API.buildQuery({ key }); 
     const res = await this.DELETE(query);
-    return res;
+
+    showResponse(res.ok ? `Deleted: ${res.data}` : `Error ${res.status}: ${res.data}`);
   }
 }
-
-// API để tương tác với user
-export class UserAPI extends API {
-  static baseUrl = '/api/user';
-
-  async GetUser(userId) {
-    const query = API.buildQuery({ userId }); 
-    const res = await this.GET(query);
-    return res;
-  }
-  
-  async PostUser(username, password) {
-    var payload ={username, password};
-
-    const res = await this.POST('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-
-    return res;
-  }
-
-  async PutUser(email = '',avatar = '',playLaterList = {},following = {}) {
-    var payload= {email,avatar,playLaterList,following}
-    
-    const res = await this.PUT('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-  });
-  return res;
-  }
-
-  async DeleteUser() {
-    const query = API.buildQuery({ }); 
-    const res = await this.DELETE(query);
-    return res;
-  }
-}
-// API để tương tác với review
-export class ReviewAPI extends API {
-  static baseUrl = '/api/review';
-
-  async GetReview(reviewId) {
-    const query = API.buildQuery({ reviewId }); 
-    const res = await this.GET(query);
-    return res;
-  }
-  
-  async PostReview(content,author,rating) {
-    const payload ={content, author, rating};
-
-    const res = await this.POST('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-
-    return res;
-  }
-
-  async PutReview(reviewId,content, rating = null) {
-    const payload= {}
-    
-    const res = await this.PUT(`?reviewId = ${reviewId}`, {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-  });
-  return res;
-  }
-
-  async DeleteReview(reviewId) {
-    const query = API.buildQuery({reviewId }); 
-    const res = await this.DELETE(query);
-    return res;
-  }
-}
-// API để tương tác với game
-export class GameAPI extends API {
-  static baseUrl = '/api/game';
-
-  async GetGame(gameId ='') {
-    const query = API.buildQuery({gameId}); 
-    const res = await this.GET(query);
-    return res;
-  }
-  
- async PostGame(title = '', description = '', genre = '', poster = '', backdrop = '', details = [], services = []) {
-  const payload = { title, description, genre, poster, backdrop, details, services };
-
-  const res = await this.POST('', {
-    headers: { 'Content-Type': 'application/json' },
-    body: payload
-  });
-
-  return res;
-}
-
-
-  async PutGame(gameId,title = '', description = '', genre = '', poster = '', backdrop = '', details = [], services = []) {
-    const payload= { title, description, genre, poster, backdrop, details, services };
-    
-    const res = await this.PUT(`?gameId = ${gameId}`, {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-  });
-  return res;
-  }
-
-  async DeleteGame(gameId) {
-    const query = API.buildQuery({gameId}); 
-    const res = await this.DELETE(query);
-    return res;
-  }
-}
-
-
 

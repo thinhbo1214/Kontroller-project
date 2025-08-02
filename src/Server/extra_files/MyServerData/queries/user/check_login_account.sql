@@ -1,1 +1,1 @@
-EXEC DBO.UP_CheckLoginAccount @Username, @Password;
+EXEC DBO.UP_CheckLoginAccount @Username, @Password; -- Check if the account exists and return UsedId if success

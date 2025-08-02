@@ -7,4 +7,4 @@ build-winforms(version-0).yml
 extra_files.zip
 node_modules/
 .DS_Store
-
+src/Server/MyServerData
