@@ -1,6 +1,6 @@
-DECLARE @Username varchar(100) = 'admin1'
-DECLARE @Password varchar(100) = 'Admin1@123'
-DECLARE @Email varchar(100) = 'admin1@gmail.com'
+-- DECLARE @Username varchar(100) = 'admin1'
+-- DECLARE @Password varchar(100) = 'Admin1@123'
+-- DECLARE @Email varchar(100) = 'admin1@gmail.com'
 
 BEGIN TRY
     BEGIN TRANSACTION;

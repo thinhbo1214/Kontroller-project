@@ -12,7 +12,7 @@ namespace Server.Source.Database
 
         public static AccountDatabase Instance => _instance ??= new AccountDatabase();
 
-        protected override string TableName => "user";
+        protected override string TableName => "account";
 
         public virtual string CreateAccount(object data)
         {
