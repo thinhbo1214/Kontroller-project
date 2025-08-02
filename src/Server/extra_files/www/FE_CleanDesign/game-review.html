@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elden Ring Review - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Main Toolbar -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <!-- Top Bar with Avatar, Username and Search -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Left side: Avatar and Username -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-300">
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side: Search and Friends button -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-medium">
+                        <i class="fas fa-users mr-2"></i>Friends and People
+                    </button>
+                    
+                </div>
+            </div>
+                
+                <!-- Main Navigation -->
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Review Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        <!-- Back Button -->
+        <button onclick="window.history.back()" class="flex items-center space-x-2 text-gray-400 hover:text-white mb-6">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+
+        <!-- Review Card -->
+        <div class="bg-gray-800 rounded-lg p-8 shadow-xl">
+            <div class="flex flex-col lg:flex-row lg:space-x-8">
+                <!-- Left Side - Game Poster -->
+                <div class="flex-shrink-0 mb-6 lg:mb-0">
+                    <a href="game-detail.html" class="block hover:opacity-80 transition-opacity">
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop" 
+                             alt="Elden Ring" class="w-48 h-72 rounded-lg shadow-lg mx-auto lg:mx-0">
+                    </a>
+                </div>
+
+                <!-- Right Side - Review Content -->
+                <div class="flex-1">
+                    <!-- Header -->
+                    <div class="mb-6">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" 
+                                 alt="John Doe" class="w-12 h-12 rounded-full">
+                            <div>
+                                <h2 class="font-semibold text-lg">John Doe</h2>
+                                <p class="text-gray-400 text-sm">March 15, 2024</p>
+                            </div>
+                        </div>
+
+                        <!-- Game Title and Rating -->
+                        <div class="mb-4">
+                            <h1 class="text-3xl font-bold mb-2">Elden Ring</h1>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex text-yellow-400 text-xl">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-lg font-semibold">5/5</span>
+                                </div>
+                                <span class="text-gray-400">•</span>
+                                <span class="text-gray-400">2022</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Text -->
+                    <div class="mb-6">
+                        <div class="prose prose-lg text-gray-300 max-w-none">
+                            <p class="mb-4">
+                                Elden Ring is nothing short of a masterpiece that represents the pinnacle of FromSoftware's creative vision. 
+                                This open-world souls-like experience manages to retain everything that made the Dark Souls series beloved while 
+                                expanding the formula in ways that feel both natural and revolutionary.
+                            </p>
+                            
+                            <p class="mb-4">
+                                The world design is simply breathtaking. The Lands Between feels like a living, breathing world filled with 
+                                secrets, mysteries, and stories told through environmental storytelling. Every corner of this massive world 
+                                has been crafted with incredible attention to detail, from the towering spires of Stormveil Castle to the 
+                                ethereal beauty of the Eternal City of Nokron.
+                            </p>
+                            
+                            <p class="mb-4">
+                                Combat remains challenging and rewarding, with a diverse array of weapons, spells, and abilities that allow 
+                                for numerous playstyles. The addition of the horse, Torrent, fundamentally changes how you approach exploration 
+                                and even some boss battles, adding a new layer of mobility and strategy.
+                            </p>
+                            
+                            <p class="mb-4">
+                                What truly sets Elden Ring apart is how it respects the player's time and curiosity. Unlike previous FromSoftware 
+                                titles, if you're stuck on a particular boss or area, you can simply explore elsewhere and return stronger. 
+                                This design philosophy makes the game more accessible without compromising its challenging nature.
+                            </p>
+                            
+                            <p>
+                                Elden Ring is a game that will be remembered for years to come. It's a testament to what happens when 
+                                visionary game design meets masterful world-building. This is essential gaming.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-400 mb-3">TAGS</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Masterpiece</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Open World</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Challenging</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Beautiful</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Atmospheric</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RPG</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-700">
+                        <!-- Like Button -->
+                        <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                            <i class="fas fa-heart text-lg"></i>
+                            <span class="font-semibold">87 likes</span>
+                        </button>
+
+                        <!-- Share Options -->
+                        <div class="flex items-center space-x-4">
+                            <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                                <i class="fas fa-share text-lg"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-yellow-400 transition-colors">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="mt-8 bg-gray-800 rounded-lg p-6">
+            <h3 class="text-xl font-bold mb-6">Comments</h3>
+            
+            <!-- Comment Form -->
+            <div class="mb-6">
+                <div class="flex items-start space-x-4">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                         alt="Your Avatar" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <textarea placeholder="Write a comment..." 
+                                  class="w-full bg-gray-700 text-white rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                  rows="3"></textarea>
+                        <div class="flex justify-end mt-2">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                Post Comment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments List -->
+            <div class="space-y-4">
+                <!-- Comment Item -->
+                <div class="flex items-start space-x-4">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
+                         alt="Sarah Wilson" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <div class="bg-gray-700 rounded-lg p-4">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-semibold text-sm">Sarah Wilson</h4>
+                                <span class="text-gray-400 text-xs">2 days ago</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                Absolutely agree with your review! The world design is incredible and I love how they managed to keep the challenging nature while making it more accessible.
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>5</span>
+                            </button>
+                            <button class="text-gray-400 hover:text-white text-sm">Reply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comment Item -->
+                <div class="flex items-start space-x-4">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face" 
+                         alt="Mike Chen" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <div class="bg-gray-700 rounded-lg p-4">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-semibold text-sm">Mike Chen</h4>
+                                <span class="text-gray-400 text-xs">1 day ago</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                Great review! I'm still working my way through it but so far it's been an amazing experience. The boss fights are epic!
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>3</span>
+                            </button>
+                            <button class="text-gray-400 hover:text-white text-sm">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="module" src="./js/event.js"></script>
+</body>
+</html>
