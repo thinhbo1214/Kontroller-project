@@ -7,6 +7,7 @@ AS
 BEGIN
     IF DBO.GSF_IsGameServiceUsable(@GameId, @ServiceName) = 0
     BEGIN
+        RAISERROR ('Failed to add game to service.', 16, 1);
         SELECT 0 AS GameServiceAdded;
         RETURN;
     END;
@@ -14,8 +15,12 @@ BEGIN
     INSERT INTO [Game_Service] (gameId, serviceName)
     VALUES (@GameId, @ServiceName);
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS GameServiceAdded;
+    IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 0
+    BEGIN
+        RAISERROR ('Failed to add game to service.', 16, 1);
+        SELECT 0 AS GameServiceAdded;
+        RETURN;
+    END;
 END;
 GO
 
@@ -27,6 +32,7 @@ AS
 BEGIN
     IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 0
     BEGIN
+        RAISERROR ('Failed to remove game from service.', 16, 1);
         SELECT 0 AS GameServiceRemoved;
         RETURN;
     END;
@@ -76,6 +82,7 @@ BEGIN
        DBO.DF_DiaryIdExists(@DiaryId) = 0 OR 
        DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
     BEGIN
+        RAISERROR ('Failed to add user diary.', 16, 1);
         SELECT 0 AS UserDiaryAdded;
         RETURN;
     END
@@ -85,6 +92,7 @@ BEGIN
 
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 0
     BEGIN
+        RAISERROR ('Failed to add user diary.', 16, 1);
         SELECT 0 AS UserDiaryAdded;
         RETURN;
     END;
@@ -100,6 +108,7 @@ AS
 BEGIN
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 0
     BEGIN
+        RAISERROR ('Failed to delete user diary.', 16, 1);
         SELECT 0 AS UserDiaryDeleted;
         RETURN;
     END
@@ -156,6 +165,7 @@ BEGIN
        DBO.LF_ListIdExists(@ListId) = 0 OR 
        DBO.ULF_UserListExists(@UserId, @ListId) = 1
     BEGIN
+        RAISERROR ('Failed to add user list.', 16, 1);
         SELECT 0 AS UserListAdded;
         RETURN;
     END;
@@ -165,6 +175,7 @@ BEGIN
 
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 0
     BEGIN
+        RAISERROR ('Failed to add user list.', 16, 1);
         SELECT 0 AS UserListAdded;
         RETURN;
     END;
@@ -180,6 +191,7 @@ AS
 BEGIN
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 0
     BEGIN
+        RAISERROR ('Failed to delete user list.', 16, 1);
         SELECT 0 AS UserListDeleted;
         RETURN;
     END;
@@ -237,6 +249,7 @@ BEGIN
        DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1 OR
        @UserFollower = @UserFollowing
     BEGIN
+        RAISERROR ('Failed to add follow relationship.', 16, 1);
         SELECT 0 AS UserFollowAdded;
         RETURN;
     END;
@@ -244,10 +257,12 @@ BEGIN
     INSERT INTO User_User (userFollower, userFollowing)
     VALUES (@UserFollower, @UserFollowing);
 
-    IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1
-        SELECT 1 AS UserFollowAdded;
-    ELSE
+    IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 0
+    BEGIN
+        RAISERROR ('Failed to add follow relationship.', 16, 1);
         SELECT 0 AS UserFollowAdded;
+    END;
+
 END;
 GO
 
@@ -259,6 +274,7 @@ AS
 BEGIN
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 0
     BEGIN
+        RAISERROR ('Failed to remove follow relationship.', 16, 1);
         SELECT 0 AS UserFollowRemoved;
         RETURN;
     END;
@@ -266,10 +282,11 @@ BEGIN
     DELETE FROM User_User
     WHERE userFollower = @UserFollower AND userFollowing = @UserFollowing;
 
-    IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 0
-        SELECT 1 AS UserFollowRemoved;
-    ELSE
+    IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1
+    BEGIN
+        RAISERROR ('Failed to remove follow relationship.', 16, 1);
         SELECT 0 AS UserFollowRemoved;
+    END;
 END;
 GO
 
@@ -317,6 +334,7 @@ BEGIN
        DBO.AF_ActivityIdExists(@ActivityId) = 0 OR
        DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
     BEGIN
+        RAISERROR ('Failed to create user activity.', 16, 1);
         SELECT 0 AS UserActivityCreated;
         RETURN;
     END;
@@ -326,11 +344,11 @@ BEGIN
 
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 0
     BEGIN
+        RAISERROR ('Failed to create user activity.', 16, 1);
         SELECT 0 AS UserActivityCreated;
         RETURN;
     END;
 
-    SELECT 1 AS UserActivityCreated;
 END;
 GO
 
@@ -341,6 +359,7 @@ AS
 BEGIN
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 0
     BEGIN
+        RAISERROR ('Failed to delete user activity.', 16, 1);
         SELECT 0 AS UserActivityDeleted;
         RETURN;
     END;
@@ -400,6 +419,7 @@ BEGIN
        DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
        DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
     BEGIN
+        RAISERROR ('Failed to create review user.', 16, 1);
         SELECT 0 AS ReviewUserCreated;
         RETURN;
     END;
@@ -409,6 +429,7 @@ BEGIN
 
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to create review user.', 16, 1);
         SELECT 0 AS ReviewUserCreated;
         RETURN;
     END;
@@ -424,6 +445,7 @@ AS
 BEGIN
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to delete review user.', 16, 1);
         SELECT 0 AS ReviewUserDeleted;
         RETURN;
     END;
@@ -490,6 +512,7 @@ BEGIN
        DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
        DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
     BEGIN
+        RAISERROR ('Failed to add review rate.', 16, 1);
         SELECT 0 AS ReviewRateAdded;
         RETURN;
     END;
@@ -499,6 +522,7 @@ BEGIN
 
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to add review rate.', 16, 1);
         SELECT 0 AS ReviewRateAdded;
         RETURN;
     END;
@@ -514,6 +538,7 @@ AS
 BEGIN
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to delete review rate.', 16, 1);
         SELECT 0 AS ReviewRateDeleted;
         RETURN;
     END;
@@ -570,6 +595,7 @@ BEGIN
        DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
        DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
     BEGIN
+        RAISERROR ('Failed to create review reaction.', 16, 1);
         SELECT 0 AS ReviewReactionCreated;
         RETURN;
     END;
@@ -579,6 +605,7 @@ BEGIN
 
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to create review reaction.', 16, 1);
         SELECT 0 AS ReviewReactionCreated;
         RETURN;
     END;
@@ -594,6 +621,7 @@ AS
 BEGIN
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to delete review reaction.', 16, 1);
         SELECT 0 AS ReviewReactionDeleted;
         RETURN;
     END;
@@ -653,6 +681,7 @@ BEGIN
        DBO.LF_ReviewIdExists(@ReviewId) = 0 OR 
        DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
     BEGIN
+        RAISERROR ('Failed to add game review.', 16, 1);
         SELECT 0 AS GameReviewAdded;
         RETURN;
     END;
@@ -662,6 +691,7 @@ BEGIN
 
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to add game review.', 16, 1);
         SELECT 0 AS GameReviewAdded;
         RETURN;
     END;
@@ -677,6 +707,7 @@ AS
 BEGIN
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to delete game review.', 16, 1);
         SELECT 0 AS GameReviewDeleted;
         RETURN;
     END;
@@ -733,6 +764,7 @@ BEGIN
        DBO.RF_ReactionIdExists(@ReactionId) = 0 OR 
        DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
     BEGIN
+        RAISERROR ('Failed to add reaction user.', 16, 1);
         SELECT 0 AS ReactionUserAdded;
         RETURN;
     END;
@@ -742,6 +774,7 @@ BEGIN
 
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 0
     BEGIN
+        RAISERROR ('Failed to add reaction user.', 16, 1);
         SELECT 0 AS ReactionUserAdded;
         RETURN;
     END;
@@ -757,6 +790,7 @@ AS
 BEGIN
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 0
     BEGIN
+        RAISERROR ('Failed to delete reaction user.', 16, 1);
         SELECT 0 AS ReactionUserDeleted;
         RETURN;
     END;
@@ -813,6 +847,7 @@ BEGIN
        DBO.RF_RateIdExists(@RateId) = 0 OR 
        DBO.RUF_RateUserExists(@RateId, @Rater) = 1
     BEGIN
+        RAISERROR ('Failed to add RateUser', 16, 1);
         SELECT 0 AS RateUserAdded;
         RETURN;
     END;
@@ -837,6 +872,7 @@ AS
 BEGIN
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 0
     BEGIN
+        RAISERROR ('Failed to delete RateUser', 16, 1);
         SELECT 0 AS RateUserDeleted;
         RETURN;
     END;
@@ -893,6 +929,7 @@ BEGIN
        DBO.GF_GameIdExists(@TargetGame) = 0 OR 
        DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
     BEGIN
+        RAISERROR ('Failed to add rate game.', 16, 1);
         SELECT 0 AS RateGameAdded;
         RETURN;
     END;
@@ -902,6 +939,7 @@ BEGIN
 
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 0
     BEGIN
+        RAISERROR ('Failed to add rate game.', 16, 1);
         SELECT 0 AS RateGameAdded;
         RETURN;
     END;
@@ -917,6 +955,7 @@ AS
 BEGIN
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 0
     BEGIN
+        RAISERROR ('Failed to delete rate game.', 16, 1);
         SELECT 0 AS RateGameDeleted;
         RETURN;
     END;
@@ -973,6 +1012,7 @@ BEGIN
        DBO.LIF_ListItemIdExists(@ListItemId) = 0 OR 
        DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
     BEGIN
+        RAISERROR('Failed to add list item.', 16, 1);
         SELECT 0 AS ListListItemAdded;
         RETURN;
     END;
@@ -982,6 +1022,7 @@ BEGIN
 
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
     BEGIN
+        RAISERROR('Failed to add list item.', 16, 1);
         SELECT 0 AS ListListItemAdded;
         RETURN;
     END;
@@ -997,6 +1038,7 @@ AS
 BEGIN
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
     BEGIN
+        RAISERROR('Failed to delete list item.', 16, 1);
         SELECT 0 AS ListListItemDeleted;
         RETURN;
     END;
@@ -1053,6 +1095,7 @@ BEGIN
        DBO.GF_GameIdExists(@TargetGame) = 0 OR 
        DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
     BEGIN
+        RAISERROR ('Failed to add ListItemGame.', 16, 1);
         SELECT 0 AS ListItemGameAdded;
         RETURN;
     END;
@@ -1062,6 +1105,7 @@ BEGIN
 
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
     BEGIN
+        RAISERROR ('Failed to add ListItemGame.', 16, 1);
         SELECT 0 AS ListItemGameAdded;
         RETURN;
     END;
@@ -1077,6 +1121,7 @@ AS
 BEGIN
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
     BEGIN
+        RAISERROR ('Failed to delete ListItemGame.', 16, 1);
         SELECT 0 AS ListItemGameDeleted;
         RETURN;
     END;
@@ -1133,6 +1178,7 @@ BEGIN
        DBO.UF_UserIdExists(@Author) = 0 OR 
        DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
     BEGIN
+        RAISERROR ('Failed to add CommentUser.', 16, 1);
         SELECT 0 AS CommentUserAdded;
         RETURN;
     END;
@@ -1142,6 +1188,7 @@ BEGIN
 
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 0
     BEGIN
+        RAISERROR ('Failed to add CommentUser.', 16, 1);
         SELECT 0 AS CommentUserAdded;
         RETURN;
     END;
@@ -1157,6 +1204,7 @@ AS
 BEGIN
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 0
     BEGIN
+        RAISERROR ('Failed to delete CommentUser.', 16, 1);
         SELECT 0 AS CommentUserDeleted;
         RETURN;
     END;
@@ -1213,6 +1261,7 @@ BEGIN
        DBO.RF_ReactionIdExists(@ReactionId) = 0 OR 
        DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
     BEGIN
+        RAISERROR ('Failed to add comment reaction.', 16, 1);
         SELECT 0 AS CommentReactionAdded;
         RETURN;
     END;
@@ -1222,6 +1271,7 @@ BEGIN
 
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 0
     BEGIN
+        RAISERROR ('Failed to add comment reaction.', 16, 1);
         SELECT 0 AS CommentReactionAdded;
         RETURN;
     END;
@@ -1237,6 +1287,7 @@ AS
 BEGIN
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 0
     BEGIN
+        RAISERROR ('Failed to delete comment reaction.', 16, 1);
         SELECT 0 AS CommentReactionDeleted;
         RETURN;
     END;
@@ -1293,6 +1344,7 @@ BEGIN
        DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
        DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
     BEGIN
+        RAISERROR ('Failed to add comment review.', 16, 1);
         SELECT 0 AS CommentReviewAdded;
         RETURN;
     END;
@@ -1302,6 +1354,7 @@ BEGIN
 
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to add comment review.', 16, 1);
         SELECT 0 AS CommentReviewAdded;
         RETURN;
     END;
@@ -1317,6 +1370,7 @@ AS
 BEGIN
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to delete comment review.', 16, 1);
         SELECT 0 AS CommentReviewDeleted;
         RETURN;
     END;
