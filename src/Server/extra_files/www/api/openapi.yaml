@@ -1,0 +1,37 @@
+openapi: 3.0.3
+
+info:
+  version: 1.0
+  title: HTTP Server API
+  description: HTTP Server API
+  contact:
+    name: Lucifer
+    url: https://github.com/thinhbo1214/Kontroller-project
+    email: kingnemacc@gmail.com
+
+servers:
+  - url: /api
+    description: API
+
+tags:
+  - name: Cache
+    description: Cache methods
+  - name: User
+    description: User methods
+
+paths:
+  /cache:
+    $ref: ./paths/cache.yaml
+  /user:
+    $ref: ./paths/user.yaml
+
+components:
+  schemas:
+    CacheItem:
+      $ref: ./components/schemas/CacheItem.yaml
+    CacheItems:
+      $ref: ./components/schemas/CacheItems.yaml
+    User:
+      $ref: ./components/schemas/User.yaml
+    UserList:
+      $ref: ./components/schemas/UserList.yaml
