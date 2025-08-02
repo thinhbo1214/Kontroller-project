@@ -1,3 +1,58 @@
+﻿-- #Procedure helper
+CREATE OR ALTER PROCEDURE SP_GenerateStrongPassword
+    @Length INT = 12,
+    @Password VARCHAR(100) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @Length < 8 OR @Length > 50
+    BEGIN
+        SET @Password = NULL;
+        RETURN;
+    END
+
+    DECLARE @UpperChars VARCHAR(26) = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    DECLARE @LowerChars VARCHAR(26) = 'abcdefghijklmnopqrstuvwxyz';
+    DECLARE @Digits VARCHAR(10)     = '0123456789';
+    DECLARE @SpecialChars VARCHAR(20) = '!@#$%^&*()_+{}:<>?';
+
+    DECLARE @AllChars VARCHAR(100) = @UpperChars + @LowerChars + @Digits + @SpecialChars;
+
+    DECLARE @Result VARCHAR(100) = '';
+
+    -- Bắt buộc có ít nhất 1 của mỗi loại
+    SET @Result = 
+        SUBSTRING(@UpperChars, CAST(RAND(CHECKSUM(NEWID())) * LEN(@UpperChars) + 1 AS INT), 1) +
+        SUBSTRING(@LowerChars, CAST(RAND(CHECKSUM(NEWID())) * LEN(@LowerChars) + 1 AS INT), 1) +
+        SUBSTRING(@Digits,     CAST(RAND(CHECKSUM(NEWID())) * LEN(@Digits)     + 1 AS INT), 1) +
+        SUBSTRING(@SpecialChars, CAST(RAND(CHECKSUM(NEWID())) * LEN(@SpecialChars) + 1 AS INT), 1);
+
+    -- Sinh thêm các ký tự còn lại
+    DECLARE @i INT = LEN(@Result) + 1;
+    WHILE @i <= @Length
+    BEGIN
+        SET @Result = @Result + SUBSTRING(@AllChars, CAST(RAND(CHECKSUM(NEWID())) * LEN(@AllChars) + 1 AS INT), 1);
+        SET @i = @i + 1;
+    END
+
+    -- Trộn chuỗi
+    DECLARE @Shuffled VARCHAR(100) = '';
+    DECLARE @len INT = LEN(@Result);
+    DECLARE @pos INT;
+
+    WHILE LEN(@Result) > 0
+    BEGIN
+        SET @pos = CAST(RAND(CHECKSUM(NEWID())) * LEN(@Result) + 1 AS INT);
+        SET @Shuffled = @Shuffled + SUBSTRING(@Result, @pos, 1);
+        SET @Result = STUFF(@Result, @pos, 1, '');
+    END
+
+    SET @Password = @Shuffled;
+END
+GO
+
+
 -- #User table procedures
 -- 1. Procedure to create a new user
 CREATE OR ALTER PROCEDURE UP_CreateUser
@@ -301,6 +356,90 @@ BEGIN
     END;
 
     SELECT @UserId AS UserId;
+END;
+GO
+
+-- 18. Procedure to update password if forget password
+CREATE OR ALTER PROCEDURE UP_ForgetPassword
+@Email VARCHAR(100)
+AS
+BEGIN
+    DECLARE @UserId UNIQUEIDENTIFIER;
+    DECLARE @NewPassword VARCHAR(100);
+
+    -- Check if email exists and get UserId
+    SELECT @UserId = userId FROM Users WHERE email = @Email;
+
+    IF @UserId IS NULL
+    BEGIN
+        RAISERROR('Failed to reset password.', 16, 1);
+        SELECT NULL AS NewPassword;
+        RETURN;
+    END
+
+    -- Generate random 8-character password
+    EXEC SP_GenerateStrongPassword @Length = 12, @Password = @NewPassword OUTPUT;
+
+    -- Update password
+    UPDATE Users SET password_hash = HASHBYTES('SHA2_256', @NewPassword)
+    WHERE userId = @UserId;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('Failed to reset password.', 16, 1);
+        SELECT NULL AS NewPassword;
+        RETURN;
+    END
+
+    -- Return new password
+    SELECT @NewPassword AS NewPassword;
+
+END;
+GO
+
+-- 19. Procedure to change password by old password
+CREATE OR ALTER PROCEDURE UP_ChangePassword
+@UserId UNIQUEIDENTIFIER,
+@OldPassword VARCHAR(100),
+@NewPassword VARCHAR(100)
+AS
+BEGIN
+    -- Check user exists
+    IF DBO.UF_UserIdExists(@UserId) = 0
+    BEGIN
+        RAISERROR('Failed to change password.', 16, 1);
+        SELECT 0 AS PasswordChanged;
+        RETURN;
+    END
+
+    -- Check old password match
+    IF DBO.UF_IsPasswordMatch(@UserId, @OldPassword) = 0
+    BEGIN
+        RAISERROR('Failed to change password.', 16, 1);
+        SELECT 0 AS PasswordChanged;
+        RETURN;
+    END
+
+    -- Check new password legality
+    IF DBO.UF_IsPasswordLegal(@NewPassword) = 0
+    BEGIN
+        RAISERROR('New password is not legal.', 16, 1);
+        SELECT 0 AS PasswordChanged;
+        RETURN;
+    END
+
+    -- Update password
+    UPDATE Users SET password_hash = HASHBYTES('SHA2_256', @NewPassword)
+    WHERE userId = @UserId;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        RAISERROR('Failed to change password.', 16, 1);
+        SELECT 0 AS PasswordChanged;
+        RETURN;
+    END
+    
+    SELECT 1 AS PasswordChanged;
 END;
 GO
 
@@ -853,7 +992,7 @@ BEGIN
     INSERT INTO Rates (rateId, rateValue)
     VALUES (@RateId, @RateValue);
 
-    IF DBO.RF_RateExists(@RateId) = 0
+    IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
         RAISERROR ('Failed to create rate.', 16, 1);
         SELECT NULL AS RateId;
@@ -889,7 +1028,7 @@ CREATE OR ALTER PROCEDURE RP_DeleteRate
 @RateId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.RF_RateExists(@RateId) = 0
+    IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
         RAISERROR ('Failed to delete rate.', 16, 1);
         SELECT 0 AS RateDeleted;
@@ -898,7 +1037,7 @@ BEGIN
 
     DELETE FROM Rates WHERE rateId = @RateId;
 
-    IF DBO.RF_RateExists(@RateId) = 1
+    IF DBO.RF_RateIdExists(@RateId) = 1
     BEGIN
         RAISERROR ('Failed to delete rate.', 16, 1);
         SELECT 0 AS RateDeleted;
@@ -948,7 +1087,7 @@ BEGIN
     INSERT INTO Lists (listId, _name, descriptions)
     VALUES (@ListId, @Name, @Descriptions);
 
-    IF DBO.LF_ListExists(@ListId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         RAISERROR ('Failed to create list.', 16, 1);
         SELECT NULL AS ListId;
@@ -1006,7 +1145,7 @@ CREATE OR ALTER PROCEDURE LP_UpdateListDetails
 @Descriptions NVARCHAR(MAX)
 AS
 BEGIN
-    IF DBO.LF_ListExists(@ListId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         RAISERROR ('Failed to update list details.', 16, 1);
         SELECT 0 AS DetailsUpdated;
@@ -1026,7 +1165,7 @@ CREATE OR ALTER PROCEDURE LP_DeleteList
 @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.LF_ListExists(@ListId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         RAISERROR ('Failed to delete list.', 16, 1);
         SELECT 0 AS ListDeleted;
@@ -1035,7 +1174,7 @@ BEGIN
 
     DELETE FROM Lists WHERE listId = @ListId;
 
-    IF DBO.LF_ListExists(@ListId) = 1
+    IF DBO.LF_ListIdExists(@ListId) = 1
     BEGIN
         RAISERROR ('Failed to delete list.', 16, 1);
         SELECT 0 AS ListDeleted;

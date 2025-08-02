@@ -1,1 +1,0 @@
-SELECT DBO.UP_GetUserDetails @UserId;
