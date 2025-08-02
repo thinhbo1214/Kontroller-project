@@ -38,36 +38,48 @@
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
-    <!-- Main Toolbar -->
-    <header class="bg-gray-800 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Left side - Avatar and Username -->
-                <div class="flex items-center space-x-4">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
-                         alt="Avatar" class="w-10 h-10 rounded-full">
-                    <span class="font-semibold text-lg">Username</span>
-                </div>
-
-                <!-- Navigation -->
-                <nav class="flex space-x-8">
-                    <a href="profile.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                    <a href="activity.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Activity</a>
-                    <a href="reviews.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Reviews</a>
-                    <a href="games.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Games</a>
-                    <a href="lists.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Lists</a>
-                    <a href="watchlist.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Watchlist</a>
-                    <a href="likes.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Likes</a>
-                </nav>
-
-                <!-- Right side - Search -->
-                <div class="flex items-center">
-                    <div class="relative">
-                        <input type="text" placeholder="Search games..." 
-                               class="bg-gray-700 text-white px-4 py-2 rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    <!-- Header with Avatar, Username and Main Toolbar -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <!-- Top Bar with Avatar, Username and Search -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Left side: Avatar and Username -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-300">
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Right side: Search and Friends button -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-medium">
+                        <i class="fas fa-users mr-2"></i>Friends and People
+                    </button>
+                    
+                </div>
+            </div>
+                
+                <!-- Main Navigation -->
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+                    
+                </nav>
             </div>
         </div>
     </header>
