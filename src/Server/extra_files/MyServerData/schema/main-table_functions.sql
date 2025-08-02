@@ -37,13 +37,9 @@ BEGIN
         RETURN 0; -- Return 0 if UserId is NULL
     END;
 
-    DECLARE @Exists BIT;
-
-    SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM [Users]
-    WHERE userId = @UserId;
-
-    RETURN @Exists;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Users WHERE userId = @UserId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -348,12 +344,9 @@ BEGIN
         RETURN 0; -- Return 0 if GameId is NULL
     END;
 
-    IF EXISTS (SELECT 1 FROM [Games] WHERE GameId = @GameId)
-    BEGIN
-        RETURN 1; -- Return 1 if GameId exists
-    END;
-
-    RETURN 0; -- Return 0 if GameId does not exist
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Games WHERE gameId = @GameId
+                ) THEN 1 ELSE 0 END);
 
 END;
 GO
@@ -660,7 +653,7 @@ GO
 
 -- #Review table function
 -- 1. Function to check if review exists
-CREATE OR ALTER FUNCTION RF_ReviewExists (
+CREATE OR ALTER FUNCTION RF_ReviewIdExists (
     @ReviewId UNIQUEIDENTIFIER
 )
 RETURNS BIT
@@ -671,12 +664,9 @@ BEGIN
         RETURN 0; -- Return 0 if ReviewId is NULL
     END;
 
-    IF NOT EXISTS (SELECT 1 FROM [Reviews] WHERE ReviewId = @ReviewId)
-    BEGIN
-        RETURN 0; -- Return 0 if ReviewId does not exist
-    END;
-
-    RETURN 1;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Reviews WHERE reviewId = @ReviewId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -698,7 +688,7 @@ CREATE OR ALTER FUNCTION RF_GetContent (
 RETURNS NVARCHAR(MAX)
 AS
 BEGIN
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         RETURN NULL; -- Return NULL if ReviewId does not exist
     END;
@@ -716,7 +706,7 @@ CREATE OR ALTER FUNCTION RF_GetRating (
 RETURNS DECIMAL(4,2)
 AS
 BEGIN
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         RETURN NULL; -- Return NULL if ReviewId does not exist
     END;
@@ -734,7 +724,7 @@ CREATE OR ALTER FUNCTION RF_GetDateCreated (
 RETURNS DATETIME
 AS
 BEGIN
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         RETURN NULL; -- Return NULL if ReviewId does not exist
     END;
@@ -795,10 +785,9 @@ BEGIN
     IF @CommentId IS NULL
         RETURN 0;
 
-    IF NOT EXISTS (SELECT 1 FROM Comments WHERE commentId = @CommentId)
-        RETURN 0;
-
-    RETURN 1;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Comments WHERE commentId = @CommentId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -853,7 +842,9 @@ RETURNS BIT
 AS
 BEGIN
     IF @Content IS NULL OR @Content = ''
+    BEGIN
         RETURN 0;
+    END;
 
     DECLARE @IsLegal BIT;
     SELECT @IsLegal = CASE 
@@ -868,7 +859,7 @@ GO
 -- #Rate table functions
 
 -- 1. Function to check if rate exists
-CREATE OR ALTER FUNCTION RF_RateExists (
+CREATE OR ALTER FUNCTION RF_RateIdExists (
     @RateId UNIQUEIDENTIFIER
 )
 RETURNS BIT
@@ -877,10 +868,9 @@ BEGIN
     IF @RateId IS NULL
         RETURN 0;
 
-    IF NOT EXISTS (SELECT 1 FROM Rates WHERE rateId = @RateId)
-        RETURN 0;
-
-    RETURN 1;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Rates WHERE rateId = @RateId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -902,7 +892,7 @@ CREATE OR ALTER FUNCTION RF_GetValue (
 RETURNS INT
 AS
 BEGIN
-    IF DBO.RF_RateExists(@RateId) = 0
+    IF DBO.RF_RateIdExists(@RateId) = 0
         RETURN NULL;
 
     DECLARE @Value INT;
@@ -928,7 +918,7 @@ GO
 -- #List table functions
 
 -- 1. Function to check if list exists
-CREATE OR ALTER FUNCTION LF_ListExists (
+CREATE OR ALTER FUNCTION LF_ListIdExists (
     @ListId UNIQUEIDENTIFIER
 )
 RETURNS BIT
@@ -937,10 +927,9 @@ BEGIN
     IF @ListId IS NULL
         RETURN 0;
 
-    IF NOT EXISTS (SELECT 1 FROM Lists WHERE listId = @ListId)
-        RETURN 0;
-
-    RETURN 1;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Lists WHERE listId = @ListId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -962,7 +951,7 @@ CREATE OR ALTER FUNCTION LF_GetName (
 RETURNS NVARCHAR(100)
 AS
 BEGIN
-    IF DBO.LF_ListExists(@ListId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
         RETURN NULL;
 
     DECLARE @_Name NVARCHAR(100);
@@ -978,7 +967,7 @@ CREATE OR ALTER FUNCTION LF_GetDescriptions (
 RETURNS NVARCHAR(MAX)
 AS
 BEGIN
-    IF DBO.LF_ListExists(@ListId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
         RETURN NULL;
 
     DECLARE @Descriptions NVARCHAR(MAX);
@@ -994,7 +983,7 @@ CREATE OR ALTER FUNCTION LF_GetCreatedAt (
 RETURNS DATETIME
 AS
 BEGIN
-    IF DBO.LF_ListExists(@ListId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
         RETURN NULL;
 
     DECLARE @CreatedAt DATETIME;
@@ -1025,7 +1014,9 @@ RETURNS BIT
 AS
 BEGIN
     IF @Description IS NULL OR @Description = ''
-    RETURN 0;
+    BEGIN
+        RETURN 0;
+    END;
 
     DECLARE @IsLegal BIT;
     SELECT @IsLegal = CASE 
@@ -1111,12 +1102,9 @@ AS
 BEGIN
     IF @ActivityId IS NULL RETURN 0;
 
-    DECLARE @Exists BIT;
-    SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM Activities
-    WHERE activityId = @ActivityId;
-
-    RETURN @Exists;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Activities WHERE activityId = @ActivityId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -1198,11 +1186,9 @@ BEGIN
     IF @DiaryId IS NULL
         RETURN 0;
 
-    RETURN (
-        SELECT CASE WHEN EXISTS (
-            SELECT 1 FROM Diaries WHERE diaryId = @DiaryId
-        ) THEN 1 ELSE 0 END
-    );
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Diaries WHERE diaryId = @DiaryId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -1241,12 +1227,9 @@ AS
 BEGIN
     IF @ReactionId IS NULL RETURN 0;
 
-    DECLARE @Exists BIT;
-    SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM Reactions
-    WHERE reactionId = @ReactionId;
-
-    RETURN @Exists;
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM Reactions WHERE reactionId = @ReactionId
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -1312,5 +1295,3 @@ BEGIN
     RETURN @DateDo;
 END;
 GO
-
-

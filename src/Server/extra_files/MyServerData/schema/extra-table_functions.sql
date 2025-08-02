@@ -147,14 +147,13 @@ CREATE OR ALTER FUNCTION DBO.UUF_UserUserExists (
 RETURNS BIT
 AS
 BEGIN
-    IF @UserFollower IS NULL OR @UserFollowing IS NULL OR @UserFollower = @UserFollowing
-        RETURN 0;
+    IF DBO.UF_UserIdExists(@UserFollower) = 0 OR DBO.UF_UserIdExists(@UserFollowing) = 0
+            RETURN 0;
 
-    RETURN (
-        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-        FROM User_User
-        WHERE userFollower = @UserFollower AND userFollowing = @UserFollowing
-    );
+    RETURN (SELECT CASE WHEN EXISTS (
+                    SELECT 1 FROM User_User
+                    WHERE userFollower = @UserFollower AND userFollowing = @UserFollowing
+                ) THEN 1 ELSE 0 END);
 END;
 GO
 
@@ -430,7 +429,7 @@ CREATE OR ALTER FUNCTION CRF_CommentReviewExists (
 RETURNS BIT
 AS
 BEGIN
-    IF DBO.CF_CommentExists(@CommentId) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
+    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
         RETURN 0;
 
     RETURN (

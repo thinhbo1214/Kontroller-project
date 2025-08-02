@@ -39,8 +39,14 @@ BEGIN
 
     DELETE FROM [Game_Service] WHERE gameId = @GameId AND serviceName = @ServiceName;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS GameServiceRemoved;
+    IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 1
+    BEGIN
+        RAISERROR ('Failed to remove game from service.', 16, 1);
+        SELECT 0 AS GameServiceRemoved;
+        RETURN;
+    END;
+
+    SELECT 1 AS GameServiceRemoved;
 END;
 GO
 
@@ -78,9 +84,7 @@ CREATE OR ALTER PROCEDURE UDP_AddUserDiary
 @DiaryId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserId) = 0 OR 
-       DBO.DF_DiaryIdExists(@DiaryId) = 0 OR 
-       DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
+    IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
     BEGIN
         RAISERROR ('Failed to add user diary.', 16, 1);
         SELECT 0 AS UserDiaryAdded;
@@ -115,8 +119,14 @@ BEGIN
 
     DELETE FROM User_Diary WHERE userId = @UserId AND diaryId = @DiaryId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS UserDiaryDeleted;
+    IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete user diary.', 16, 1);
+        SELECT 0 AS UserDiaryDeleted;
+        RETURN;
+    END
+
+    SELECT 1 AS UserDiaryDeleted;
 END;
 GO
 
@@ -161,9 +171,7 @@ CREATE OR ALTER PROCEDURE ULP_AddUserList
 @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserId) = 0 OR 
-       DBO.LF_ListIdExists(@ListId) = 0 OR 
-       DBO.ULF_UserListExists(@UserId, @ListId) = 1
+    IF DBO.ULF_UserListExists(@UserId, @ListId) = 1
     BEGIN
         RAISERROR ('Failed to add user list.', 16, 1);
         SELECT 0 AS UserListAdded;
@@ -198,8 +206,14 @@ BEGIN
 
     DELETE FROM User_List WHERE userId = @UserId AND listId = @ListId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS UserListDeleted;
+    IF DBO.ULF_UserListExists(@UserId, @ListId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete user list.', 16, 1);
+        SELECT 0 AS UserListDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS UserListDeleted;
 END;
 GO
 
@@ -244,9 +258,7 @@ CREATE OR ALTER PROCEDURE UUP_AddUserFollow
     @UserFollowing UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserFollower) = 0 OR 
-       DBO.UF_UserIdExists(@UserFollowing) = 0 OR
-       DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1 OR
+    IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1 OR
        @UserFollower = @UserFollowing
     BEGIN
         RAISERROR ('Failed to add follow relationship.', 16, 1);
@@ -263,6 +275,7 @@ BEGIN
         SELECT 0 AS UserFollowAdded;
     END;
 
+    SELECT 1 AS UserFollowAdded;
 END;
 GO
 
@@ -287,6 +300,7 @@ BEGIN
         RAISERROR ('Failed to remove follow relationship.', 16, 1);
         SELECT 0 AS UserFollowRemoved;
     END;
+    SELECT 1 AS UserFollowRemoved;
 END;
 GO
 
@@ -330,9 +344,7 @@ CREATE OR ALTER PROCEDURE UAP_CreateUserActivity
 @ActivityId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserId) = 0 OR 
-       DBO.AF_ActivityIdExists(@ActivityId) = 0 OR
-       DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
+    IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
     BEGIN
         RAISERROR ('Failed to create user activity.', 16, 1);
         SELECT 0 AS UserActivityCreated;
@@ -348,7 +360,8 @@ BEGIN
         SELECT 0 AS UserActivityCreated;
         RETURN;
     END;
-
+            
+    SELECT 1 AS UserActivityCreated;
 END;
 GO
 
@@ -367,8 +380,13 @@ BEGIN
     DELETE FROM User_Activity
     WHERE userId = @UserId AND activityId = @ActivityId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS UserActivityDeleted;
+    IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete user activity.', 16, 1);
+        SELECT 0 AS UserActivityDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS UserActivityDeleted;
 END;
 GO
 
@@ -415,9 +433,7 @@ CREATE OR ALTER PROCEDURE RUP_CreateReviewUser
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@Author) = 0 OR 
-       DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
-       DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
+    IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
     BEGIN
         RAISERROR ('Failed to create review user.', 16, 1);
         SELECT 0 AS ReviewUserCreated;
@@ -453,8 +469,13 @@ BEGIN
     DELETE FROM Review_User
     WHERE author = @Author AND reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReviewUserDeleted;
+    IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete review user.', 16, 1);
+        SELECT 0 AS ReviewUserDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS ReviewUserDeleted;
 END;
 GO
 
@@ -508,9 +529,7 @@ CREATE OR ALTER PROCEDURE RRP_AddReviewRate
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.RF_RateIdExists(@RateId) = 0 OR 
-       DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
-       DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
+    IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
     BEGIN
         RAISERROR ('Failed to add review rate.', 16, 1);
         SELECT 0 AS ReviewRateAdded;
@@ -545,8 +564,13 @@ BEGIN
 
     DELETE FROM Review_Rate WHERE rateId = @RateId AND reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReviewRateDeleted;
+    IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete review rate.', 16, 1);
+        SELECT 0 AS ReviewRateDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS ReviewRateDeleted;
 END;
 GO
 
@@ -591,9 +615,7 @@ CREATE OR ALTER PROCEDURE RRP_CreateReviewReaction
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.RF_ReactionIdExists(@ReactionId) = 0 OR 
-       DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
-       DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
+    IF  DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
     BEGIN
         RAISERROR ('Failed to create review reaction.', 16, 1);
         SELECT 0 AS ReviewReactionCreated;
@@ -629,8 +651,14 @@ BEGIN
     DELETE FROM Review_Reaction
     WHERE reactionId = @ReactionId AND reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReviewReactionDeleted;
+    IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete review reaction.', 16, 1);
+        SELECT 0 AS ReviewReactionDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS ReviewReactionDeleted;
 END;
 GO
 
@@ -677,9 +705,7 @@ CREATE OR ALTER PROCEDURE GRP_AddGameReview
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.GF_GameIdExists(@GameId) = 0 OR 
-       DBO.LF_ReviewIdExists(@ReviewId) = 0 OR 
-       DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
+    IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
     BEGIN
         RAISERROR ('Failed to add game review.', 16, 1);
         SELECT 0 AS GameReviewAdded;
@@ -714,8 +740,13 @@ BEGIN
 
     DELETE FROM Game_Review WHERE gameId = @GameId AND reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS GameReviewDeleted;
+    IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete game review.', 16, 1);
+        SELECT 0 AS GameReviewDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS GameReviewDeleted;
 END;
 GO
 
@@ -760,9 +791,7 @@ CREATE OR ALTER PROCEDURE RUP_AddReactionUser
 @Author UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@Author) = 0 OR 
-       DBO.RF_ReactionIdExists(@ReactionId) = 0 OR 
-       DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
+    IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
     BEGIN
         RAISERROR ('Failed to add reaction user.', 16, 1);
         SELECT 0 AS ReactionUserAdded;
@@ -797,8 +826,13 @@ BEGIN
 
     DELETE FROM Reaction_User WHERE reactionId = @ReactionId AND author = @Author;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReactionUserDeleted;
+    IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
+    BEGIN
+        RAISERROR ('Failed to delete reaction user.', 16, 1);
+        SELECT 0 AS ReactionUserDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS ReactionUserDeleted;
 END;
 GO
 
@@ -843,9 +877,7 @@ CREATE OR ALTER PROCEDURE RUP_AddRateUser
 @Rater UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@Rater) = 0 OR 
-       DBO.RF_RateIdExists(@RateId) = 0 OR 
-       DBO.RUF_RateUserExists(@RateId, @Rater) = 1
+    IF DBO.RUF_RateUserExists(@RateId, @Rater) = 1
     BEGIN
         RAISERROR ('Failed to add RateUser', 16, 1);
         SELECT 0 AS RateUserAdded;
@@ -857,6 +889,7 @@ BEGIN
 
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 0
     BEGIN
+        RAISERROR ('Failed to add RateUser', 16, 1);
         SELECT 0 AS RateUserAdded;
         RETURN;
     END;
@@ -879,8 +912,14 @@ BEGIN
 
     DELETE FROM Rate_User WHERE rateId = @RateId AND rater = @Rater;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS RateUserDeleted;
+    IF DBO.RUF_RateUserExists(@RateId, @Rater) = 1
+    BEGIN
+        RAISERROR ('Failed to delete RateUser', 16, 1);
+        SELECT 0 AS RateUserDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS RateUserDeleted;
 END;
 GO
 
@@ -925,9 +964,7 @@ CREATE OR ALTER PROCEDURE RGP_AddRateGame
 @TargetGame UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.RF_RateIdExists(@RateId) = 0 OR 
-       DBO.GF_GameIdExists(@TargetGame) = 0 OR 
-       DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
+    IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
     BEGIN
         RAISERROR ('Failed to add rate game.', 16, 1);
         SELECT 0 AS RateGameAdded;
@@ -962,8 +999,13 @@ BEGIN
 
     DELETE FROM Rate_Game WHERE rateId = @RateId AND targetGame = @TargetGame;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS RateGameDeleted;
+    IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
+    BEGIN
+        RAISERROR ('Failed to delete rate game.', 16, 1);
+        SELECT 0 AS RateGameDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS RateGameDeleted;
 END;
 GO
 
@@ -1008,9 +1050,7 @@ CREATE OR ALTER PROCEDURE LLP_AddListListItem
 @ListItemId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.LF_ListIdExists(@ListId) = 0 OR 
-       DBO.LIF_ListItemIdExists(@ListItemId) = 0 OR 
-       DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
+    IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
     BEGIN
         RAISERROR('Failed to add list item.', 16, 1);
         SELECT 0 AS ListListItemAdded;
@@ -1045,8 +1085,13 @@ BEGIN
 
     DELETE FROM List_ListItem WHERE listId = @ListId AND listItemId = @ListItemId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ListListItemDeleted;
+    IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
+    BEGIN
+        RAISERROR('Failed to delete list item.', 16, 1);
+        SELECT 0 AS ListListItemDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS ListListItemDeleted;
 END;
 GO
 
@@ -1091,9 +1136,7 @@ CREATE OR ALTER PROCEDURE LIGP_AddListItemGame
 @TargetGame UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0 OR 
-       DBO.GF_GameIdExists(@TargetGame) = 0 OR 
-       DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
+    IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
     BEGIN
         RAISERROR ('Failed to add ListItemGame.', 16, 1);
         SELECT 0 AS ListItemGameAdded;
@@ -1128,8 +1171,13 @@ BEGIN
 
     DELETE FROM ListItem_Game WHERE listItemId = @ListItemId AND targetGame = @TargetGame;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ListItemGameDeleted;
+    IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
+    BEGIN
+        RAISERROR ('Failed to delete ListItemGame.', 16, 1);
+        SELECT 0 AS ListItemGameDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS ListItemGameDeleted;
 END;
 GO
 
@@ -1174,9 +1222,7 @@ CREATE OR ALTER PROCEDURE CUP_AddCommentUser
 @Author UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR 
-       DBO.UF_UserIdExists(@Author) = 0 OR 
-       DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
+    IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
     BEGIN
         RAISERROR ('Failed to add CommentUser.', 16, 1);
         SELECT 0 AS CommentUserAdded;
@@ -1211,8 +1257,13 @@ BEGIN
 
     DELETE FROM Comment_User WHERE commentId = @CommentId AND author = @Author;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS CommentUserDeleted;
+    IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
+    BEGIN
+        RAISERROR ('Failed to delete CommentUser.', 16, 1);
+        SELECT 0 AS CommentUserDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS CommentUserDeleted;
 END;
 GO
 
@@ -1257,9 +1308,7 @@ CREATE OR ALTER PROCEDURE CRP_AddCommentReaction
 @ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR 
-       DBO.RF_ReactionIdExists(@ReactionId) = 0 OR 
-       DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
+    IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
     BEGIN
         RAISERROR ('Failed to add comment reaction.', 16, 1);
         SELECT 0 AS CommentReactionAdded;
@@ -1294,8 +1343,13 @@ BEGIN
 
     DELETE FROM Comment_Reaction WHERE commentId = @CommentId AND reactionId = @ReactionId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS CommentReactionDeleted;
+    IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete comment reaction.', 16, 1);
+        SELECT 0 AS CommentReactionDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS CommentReactionDeleted;
 END;
 GO
 
@@ -1340,9 +1394,7 @@ CREATE OR ALTER PROCEDURE CRP_AddCommentReview
     @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR 
-       DBO.RF_ReviewIdExists(@ReviewId) = 0 OR 
-       DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
+    IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
     BEGIN
         RAISERROR ('Failed to add comment review.', 16, 1);
         SELECT 0 AS CommentReviewAdded;
@@ -1377,8 +1429,13 @@ BEGIN
 
     DELETE FROM Comment_Review WHERE commentId = @CommentId AND reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS CommentReviewDeleted;
+    IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete comment review.', 16, 1);
+        SELECT 0 AS CommentReviewDeleted;
+        RETURN;
+    END;
+    SELECT 1 AS CommentReviewDeleted;
 END;
 GO
 
@@ -1416,4 +1473,5 @@ BEGIN
     SELECT commentId FROM Comment_Review WHERE reviewId = @ReviewId;
 END;
 GO
+
 
