@@ -1,6 +1,8 @@
-﻿using Server.Source.Data;
+﻿using Server.Source.Core;
+using Server.Source.Data;
 using Server.Source.Database;
 using Server.Source.Interface;
+using Server.Source.Manager;
 using System.Data;
 using System.Reflection;
 
@@ -27,20 +29,13 @@ namespace Server.Source.Helper
             T result = default;
             if (databaseMap.TryGetValue(typeof(T), out var database))
             {
-                var data = database.Open(id);
+                var data = database.Get(id);
                 if (data is T typedData)
                 {
                     result = typedData;
                 }
             }
             return result;
-        }
-        public static void SetData<T>(T data)
-        {
-            if (databaseMap.TryGetValue(typeof(T), out var database))
-            {
-                database.Save(data);
-            }
         }
 
         public static void DeleteData<T>(string id)
@@ -60,6 +55,53 @@ namespace Server.Source.Helper
                 dict[prop.Name.StartsWith("@") ? prop.Name : "@" + prop.Name] = prop.GetValue(obj) ?? DBNull.Value;
             }
             return dict;
+        }
+
+        //public static Dictionary<string, object> ToDictionary(object obj)
+        //{
+        //    var dict = new Dictionary<string, object>();
+        //    var type = obj.GetType();
+
+        //    foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        //    {
+        //        dict[prop.Name.StartsWith("@") ? prop.Name : "@" + prop.Name] = prop.GetValue(obj) ?? DBNull.Value;
+        //    }
+
+        //    return dict;
+        //}
+
+
+        /*Cách dùng VD: 
+         var parameters = ToParameterDictionary(
+            ("Username", "admin"),
+            ("Password", "123456"),
+            ("Email", DBNull.Value)
+        );
+         */
+        public static Dictionary<string, object> ToParameterDictionary(params (string name, object value)[] parameters)
+        {
+            var dict = new Dictionary<string, object>();
+            foreach (var (name, value) in parameters)
+            {
+                dict[name.StartsWith("@") ? name : "@" + name] = value ?? DBNull.Value;
+            }
+            return dict;
+        }
+
+
+        /* Cách dùng VD:
+         var parameters = ToParameterDictionary(new Dictionary<string, object>
+        {
+            ["Username"] = "admin",
+            ["Password"] = "123456"
+        });
+         */
+        public static Dictionary<string, object> ToParameterDictionary(Dictionary<string, object> input)
+        {
+            return input.ToDictionary(
+                kvp => kvp.Key.StartsWith("@") ? kvp.Key : "@" + kvp.Key,
+                kvp => kvp.Value ?? DBNull.Value
+            );
         }
 
         // Convert DataTable => List<T>
@@ -85,6 +127,31 @@ namespace Server.Source.Helper
 
             return list;
         }
+
+        public static T? GetScalarValue<T>(object? value, T? defaultValue = default)
+        {
+            try
+            {
+                if (value == null || value == DBNull.Value) return defaultValue;
+
+                if (typeof(T) == typeof(string))
+                    return (T)(object)value.ToString();
+
+                return (T)Convert.ChangeType(value, typeof(T));
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+
+        public static T? MapToSingle<T>(DataTable dt) where T : new()
+        {
+            return MapToList<T>(dt).FirstOrDefault();
+        }
+
+
     }
 
 

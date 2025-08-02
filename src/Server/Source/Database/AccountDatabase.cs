@@ -1,7 +1,9 @@
-﻿using Server.Source.Core;
+﻿using Newtonsoft.Json.Linq;
+using Server.Source.Core;
 using Server.Source.Data;
 using Server.Source.Helper;
 using Server.Source.Manager;
+using System.Reflection;
 
 namespace Server.Source.Database
 {
@@ -14,39 +16,66 @@ namespace Server.Source.Database
 
         protected override string TableName => "account";
 
-        public virtual string CreateAccount(object data)
+        protected class ParamsChangePassword
         {
-            if (data is not Account model)
-                return null;
+            public string UserId { get; set; }
+            public string OldPassword { get; set; }
+            public string NewPassword { get; set; }
+        }
 
-            var db = Simulation.GetModel<DatabaseManager>();
-            db.OpenConnection();
+        protected class ParamsChangeUsername
+        {
+            public string UserId { get; set; }
+            public string Username { get; set; }
+        }
+        protected class ParamsForgetPassword
+        {
+            public string UserId { get; set; }
+            public string Email { get; set; }
+        }
 
-            var param = DatabaseHelper.ToDictionary(model);
+
+        public virtual string CreateAccount(Account model)
+        {
             var sqlPath = $"{TableName}/create_account";
-            string usedId = db.ExecuteScalar(sqlPath, param).ToString();
+            var result = ExecuteScalar<Account>(sqlPath, model);
 
-            db.CloseConnection();
-
-            return usedId;
+            return DatabaseHelper.GetScalarValue<string>(result);
         }
 
         public virtual string CheckLoginAccount(object data)
         {
-            if (data is not Account model)
-                return null;
-
-            var db = Simulation.GetModel<DatabaseManager>();
-            db.OpenConnection();
-
-            var param = DatabaseHelper.ToDictionary(model);
             var sqlPath = $"{TableName}/check_login_account";
-            string usedId = db.ExecuteScalar(sqlPath, param).ToString();
+            var result = ExecuteScalar<Account>(sqlPath, data);
 
-
-            db.CloseConnection();
-
-            return usedId;
+            return DatabaseHelper.GetScalarValue<string>(result);
         }
+        public virtual int ChangeUsername(object data)
+        {
+            var sqlPath = $"{TableName}/change_username";
+            var result = ExecuteScalar<ParamsChangeUsername>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<int>(result);
+        }
+        public virtual int ChangePassword(object data)
+        {
+            var sqlPath = $"{TableName}/change_password";
+            var result = ExecuteScalar<ParamsChangePassword>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<int>(result);
+        }
+
+        public virtual int ForgetPassword(object data)
+        {
+            var sqlPath = $"{TableName}/forget_password";
+            var result = ExecuteScalar<ParamsForgetPassword>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<int>(result);
+        }
+
+
+
+
+
     }
 }

@@ -24,12 +24,12 @@ namespace Server.Source.Data
         /// 
         /// </summary>
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public Account()
         {
             Username = "";
             Password = "";
-            Email = "";
+            Email = null;
         }
     }
 }

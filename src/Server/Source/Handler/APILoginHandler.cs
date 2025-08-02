@@ -36,6 +36,8 @@ namespace Server.Source.Handler
 
             // Đăng nhập thành công:
             string userId = AccountDatabase.Instance.CheckLoginAccount(account);
+            Simulation.GetModel<LogManager>().Log(userId);
+
             if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);

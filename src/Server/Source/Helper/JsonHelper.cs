@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Server.Source.Helper
 {
@@ -9,7 +10,13 @@ namespace Server.Source.Helper
         /// </summary>
         public static string Serialize(object obj)
         {
-            return JsonSerializer.Serialize(obj);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            return JsonSerializer.Serialize(obj, options);
         }
 
         /// <summary>
@@ -20,7 +27,13 @@ namespace Server.Source.Helper
         {
             try
             {
-                return JsonSerializer.Deserialize<T>(json);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    AllowTrailingCommas = true, // Cho phép dấu phẩy thừa
+                    ReadCommentHandling = JsonCommentHandling.Skip // Bỏ qua comment trong JSON
+                };
+                return JsonSerializer.Deserialize<T>(json, options);
             }
             catch (JsonException)
             {
