@@ -303,6 +303,3 @@ CHECK (LEN(content) > 0 AND LEN(content) <= 1000);
 ALTER TABLE Diaries
 ADD CONSTRAINT C_DIARY_DATE
 CHECK (dateLogged <= GETDATE());
-
-
-

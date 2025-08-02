@@ -8,7 +8,8 @@ AS
 BEGIN
     IF DBO.UF_IsUserInputValid(@Username, @Password, @Email) = 0
     BEGIN
-        SELECT 0 AS UserCreated;
+        RAISERROR('Failed to create user', 16, 1);
+        SELECT NULL AS UserId;
         RETURN;
     END;
 
@@ -19,6 +20,7 @@ BEGIN
 
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
+        RAISERROR('Failed to create user', 16, 1);
         SELECT NULL AS UserId;
         RETURN;
     END;
@@ -36,14 +38,15 @@ AS
 BEGIN
     IF DBO.UF_IsUsernameUsable(@NewUsername) = 0
     BEGIN
-        sELECT 0 AS UsernameUpdated;
+        RAISERROR('Failed to update username', 16, 1);
+        SELECT 0 AS UsernameUpdated;
         RETURN;
     END;
 
     UPDATE Users SET username = @NewUsername WHERE UserId = @UserId;
 
     DECLARE @RowsAffected INT = @@ROWCOUNT;
-    sELECT @RowsAffected AS UsernameUpdated;
+    SELECT @RowsAffected AS UsernameUpdated;
 END;
 GO
 
@@ -55,6 +58,7 @@ AS
 BEGIN
     IF DBO.UF_IsEmailUsable(@NewEmail) = 0
     BEGIN
+        RAISERROR('Failed to update email', 16, 1);
         SELECT 0 AS EmailUpdated;
         RETURN;
     END;
@@ -74,6 +78,7 @@ AS
 BEGIN
     IF DBO.UF_IsAvatarLegal(@NewAvatar) = 0
     BEGIN
+        RAISERROR('Failed to update avatar.', 16, 1);
         SELECT 0 AS AvatarUpdated;
         RETURN;
     END;
@@ -81,7 +86,7 @@ BEGIN
     UPDATE Users SET avatar = @NewAvatar WHERE UserId = @UserId;
 
     DECLARE @RowsAffected INT = @@ROWCOUNT;
-    sELECT @RowsAffected AS AvatarUpdated;
+    SELECT @RowsAffected AS AvatarUpdated;
 END;
 GO
 
@@ -93,6 +98,7 @@ AS
 BEGIN
     IF @IsLoggedIn IS NULL
     BEGIN
+        RAISERROR('Failed to update login status', 16, 1);
         SELECT 0 AS LoginStatusUpdated;
         RETURN;
     END;
@@ -100,7 +106,7 @@ BEGIN
     UPDATE Users SET isLoggedIn = @IsLoggedIn WHERE UserId = @UserId;
 
     DECLARE @RowsAffected INT = @@ROWCOUNT;
-    sELECT @RowsAffected AS LoginStatusUpdated;
+    SELECT @RowsAffected AS LoginStatusUpdated;
 END;
 GO
 
@@ -112,6 +118,7 @@ AS
 BEGIN
     IF DBO.UF_IsPasswordLegal(@NewPassword) = 0
     BEGIN
+        RAISERROR('Failed to update password.', 16, 1);
         SELECT 0 AS PasswordUpdated;
         RETURN;
     END;
@@ -162,14 +169,21 @@ BEGIN
 
     IF DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
     BEGIN
+        RAISERROR('Failed to delete user', 16, 1);
         SELECT 0 AS UserDeleted;
         RETURN;
     END;
 
     DELETE FROM Users WHERE UserId = @UserId;
     
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS UserDeleted;
+    IF DBO.UF_UserIdExists(@UserId) = 1
+    BEGIN
+        RAISERROR('Failed to delete user', 16, 1);
+        SELECT 0 AS UserDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS UserDeleted;
 END;
 GO
 
@@ -272,15 +286,16 @@ BEGIN
         OR DBO.UF_IsPasswordLegal(@Password) = 0
         OR DBO.UF_UsernameExists(@Username) = 0
     BEGIN
+        RAISERROR ('Failed to check login account.', 16, 1);
         SELECT NULL AS UserId;
         RETURN;
     END;
 
     SELECT @UserId = userId FROM [Users] WHERE username = @Username;
 
-    IF DBO.UF_UserIdExists(@UserId) = 0 
-        OR DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
+    IF DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
     BEGIN
+        RAISERROR ('Failed to check login account.', 16, 1);
         SELECT NULL AS UserId;
         RETURN;
     END;
@@ -303,6 +318,7 @@ BEGIN
         OR DBO.GF_IsGameDescriptionLegal(@Description) = 0
         OR DBO.GF_IsGameDetailsLegal(@Details) = 0
     BEGIN
+        RAISERROR('Failed to create game', 16, 1);
         SELECT NULL AS GameId;
         RETURN;
     END;
@@ -314,6 +330,7 @@ BEGIN
 
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
+        RAISERROR('Failed to create game', 16, 1);
         SELECT NULL AS GameId;
         RETURN;
     END;
@@ -330,6 +347,7 @@ AS
 BEGIN
     IF DBO.GF_IsGameTitleLegal(@NewTitle) = 0
     BEGIN
+        RAISERROR('Failed to update game title', 16, 1);
         SELECT 0 AS TitleUpdated;
         RETURN;
     END;
@@ -349,6 +367,7 @@ AS
 BEGIN
     IF DBO.GF_IsGameGenreLegal(@NewGenre) = 0
     BEGIN
+        RAISERROR('Failed to update game genre', 16, 1);
         SELECT 0 AS GenreUpdated;
         RETURN;
     END;
@@ -368,6 +387,7 @@ AS
 BEGIN
     IF DBO.GF_IsGameDescriptionLegal(@NewDescription) = 0
     BEGIN
+        RAISERROR('Failed to update description', 16, 1);
         SELECT 0 AS DescriptionUpdated;
         RETURN;
     END;
@@ -387,6 +407,7 @@ AS
 BEGIN
     IF DBO.GF_IsGameDetailsLegal(@NewDetails) = 0
     BEGIN
+        RAISERROR('Failed to update game details', 16, 1);
         SELECT 0 AS DetailsUpdated;
         RETURN;
     END;
@@ -406,6 +427,7 @@ AS
 BEGIN
     IF DBO.GF_IsGamePosterLegal(@NewPoster) = 0
     BEGIN
+        RAISERROR('Failed to update poster', 16, 1);
         SELECT 0 AS PosterUpdated;
         RETURN;
     END;
@@ -425,6 +447,7 @@ AS
 BEGIN
     IF DBO.GF_IsGameBackdropLegal(@NewBackdrop) = 0
     BEGIN
+        RAISERROR('Failed to update backdrop', 16, 1);
         SELECT 0 AS BackdropUpdated;
         RETURN;
     END;
@@ -476,14 +499,21 @@ AS
 BEGIN
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
+        RAISERROR('Failed to delete game', 16, 1);
         SELECT 0 AS GameDeleted;
         RETURN;
     END;
 
     DELETE FROM [Games] WHERE gameId = @GameId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS GameDeleted;
+    IF DBO.GF_GameIdExists(@GameId) = 1
+    BEGIN
+        RAISERROR('Failed to delete game', 16, 1);
+        SELECT 0 AS GameDeleted;
+        RETURN;
+    END;
+                  
+    SELECT 1 AS GameDeleted;
 END;
 GO
 
@@ -558,6 +588,7 @@ AS
 BEGIN
     IF DBO.RF_IsContentLegality(@Content) = 0
     BEGIN
+        RAISERROR ('Failed to create review.', 16, 1);
         SELECT NULL AS ReviewId;
         RETURN;
     END;
@@ -567,8 +598,9 @@ BEGIN
     INSERT INTO [Reviews] (reviewId, content)
     VALUES (@ReviewId,@Content);
 
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to create review.', 16, 1);
         SELECT NULL AS ReviewId;
         RETURN;
     END;
@@ -585,6 +617,7 @@ AS
 BEGIN
     IF DBO.RF_IsContentLegality(@Content) = 0
     BEGIN
+        RAISERROR ('Failed to update review content.', 16, 1);
         SELECT 0 AS ContentUpdated;
         RETURN;
     END;
@@ -604,6 +637,7 @@ AS
 BEGIN
     IF DBO.RF_IsRatingLegality(@Rating) = 0
     BEGIN
+        RAISERROR ('Failed to update review rating', 16, 1);
         SELECT 0 AS RatingUpdated;
         RETURN;
     END;
@@ -622,8 +656,9 @@ CREATE OR ALTER PROCEDURE RP_UpdateReviewDetails
 @Rating DECIMAL(4,2)
 AS
 BEGIN
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
+        RAISERROR ('Failed to update review details.', 16, 1);
         SELECT 0 AS DetailsUpdated;
         RETURN;
     END;
@@ -641,16 +676,23 @@ CREATE OR ALTER PROCEDURE RP_DeleteReview
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.RF_ReviewExists(@ReviewId) = 0
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
+        RAISERROR('Failed to delete review', 16, 1);
         SELECT 0 AS ReviewDeleted;
         RETURN;
     END;
 
     DELETE [Reviews] WHERE reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReviewDeleted;
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 1
+    BEGIN
+        RAISERROR('Failed to delete review', 16, 1);
+        SELECT 0 AS ReviewDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS ReviewDeleted;
 END;
 GO
 
@@ -699,6 +741,7 @@ AS
 BEGIN
     IF DBO.CF_IsContentLegality(@Content) = 0
     BEGIN
+        RAISERROR ('Failed to create comment.', 16, 1);
         SELECT NULL AS CommentId;
         RETURN;
     END;
@@ -708,8 +751,9 @@ BEGIN
     INSERT INTO Comments (commentId, content)
     VALUES (@CommentId, @Content);
 
-    IF DBO.CF_CommentExists(@CommentId) = 0
+    IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
+        RAISERROR ('Failed to create comment.', 16, 1);
         SELECT NULL AS CommentId;
         RETURN;
     END;
@@ -726,6 +770,7 @@ AS
 BEGIN
     IF DBO.CF_IsContentLegality(@Content) = 0
     BEGIN
+        RAISERROR ('Failed to update comment.', 16, 1);
         SELECT 0 AS ContentUpdated;
         RETURN;
     END;
@@ -742,16 +787,23 @@ CREATE OR ALTER PROCEDURE CP_DeleteComment
 @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.CF_CommentExists(@CommentId) = 0
+    IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
+        RAISERROR ('Failed to delete comment.', 16, 1);
         SELECT 0 AS CommentDeleted;
         RETURN;
     END;
 
     DELETE FROM Comments WHERE commentId = @CommentId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS CommentDeleted;
+    IF DBO.CF_CommentIdExists(@CommentId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete comment.', 16, 1);
+        SELECT 0 AS CommentDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS CommentDeleted;
 END;
 GO
 
@@ -791,6 +843,7 @@ AS
 BEGIN
     IF DBO.RF_IsRateLegal(@RateValue) = 0
     BEGIN
+        RAISERROR ('Failed to create rate.', 16, 1);
         SELECT NULL AS RateId;
         RETURN;
     END;
@@ -802,6 +855,7 @@ BEGIN
 
     IF DBO.RF_RateExists(@RateId) = 0
     BEGIN
+        RAISERROR ('Failed to create rate.', 16, 1);
         SELECT NULL AS RateId;
         RETURN;
     END;
@@ -818,6 +872,7 @@ AS
 BEGIN
     IF DBO.RF_IsRateLegal(@RateValue) = 0
     BEGIN
+        RAISERROR ('Failed to update rate.', 16, 1);
         SELECT 0 AS RateUpdated;
         RETURN;
     END;
@@ -836,14 +891,21 @@ AS
 BEGIN
     IF DBO.RF_RateExists(@RateId) = 0
     BEGIN
+        RAISERROR ('Failed to delete rate.', 16, 1);
         SELECT 0 AS RateDeleted;
         RETURN;
     END;
 
     DELETE FROM Rates WHERE rateId = @RateId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS RateDeleted;
+    IF DBO.RF_RateExists(@RateId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete rate.', 16, 1);
+        SELECT 0 AS RateDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS RateDeleted;
 END;
 GO
 
@@ -876,6 +938,7 @@ BEGIN
     IF DBO.LF_IsNameLegal(@Name) = 0 OR
         DBO.LF_IsDescriptionLegal(@Descriptions) = 0
     BEGIN
+        RAISERROR ('Failed to create list.', 16, 1);
         SELECT NULL AS ListId;
         RETURN;
     END;
@@ -887,6 +950,7 @@ BEGIN
 
     IF DBO.LF_ListExists(@ListId) = 0
     BEGIN
+        RAISERROR ('Failed to create list.', 16, 1);
         SELECT NULL AS ListId;
         RETURN;
     END;
@@ -903,6 +967,7 @@ AS
 BEGIN
     IF DBO.LF_IsNameLegal(@Name) = 0
     BEGIN
+        RAISERROR ('Failed to update list name.', 16, 1);
         SELECT 0 AS NameUpdated;
         RETURN;
     END;
@@ -922,6 +987,7 @@ AS
 BEGIN
     IF DBO.LF_IsDescriptionLegal(@Descriptions) = 0
     BEGIN
+        RAISERROR ('Failed to update list descriptions.', 16, 1);
         SELECT 0 AS DescriptionsUpdated;
         RETURN;
     END;
@@ -942,6 +1008,7 @@ AS
 BEGIN
     IF DBO.LF_ListExists(@ListId) = 0
     BEGIN
+        RAISERROR ('Failed to update list details.', 16, 1);
         SELECT 0 AS DetailsUpdated;
         RETURN;
     END;
@@ -961,14 +1028,21 @@ AS
 BEGIN
     IF DBO.LF_ListExists(@ListId) = 0
     BEGIN
+        RAISERROR ('Failed to delete list.', 16, 1);
         SELECT 0 AS ListDeleted;
         RETURN;
     END;
 
     DELETE FROM Lists WHERE listId = @ListId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ListDeleted;
+    IF DBO.LF_ListExists(@ListId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete list.', 16, 1);
+        SELECT 0 AS ListDeleted;
+        RETURN;
+    END;
+
+    SELECT 1 AS ListDeleted;
 END;
 GO
 
@@ -1015,6 +1089,7 @@ AS
 BEGIN
     IF DBO.LIF_IsTitleLegal(@Title) = 0
     BEGIN
+        RAISERROR ('Failed to create list item.', 16, 1);
         SELECT NULL AS ListItemId;
         RETURN;
     END
@@ -1026,6 +1101,7 @@ BEGIN
 
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
+        RAISERROR ('Failed to create list item.', 16, 1);
         SELECT NULL AS ListItemId;
         RETURN;
     END
@@ -1043,6 +1119,7 @@ BEGIN
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0 OR
        DBO.LIF_IsTitleLegal(@Title) = 0
     BEGIN
+        RAISERROR ('Failed to update list item.', 16, 1);
         SELECT 0 AS TitleUpdated;
         RETURN;
     END
@@ -1062,6 +1139,7 @@ AS
 BEGIN
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
+        RAISERROR ('Failed to update list item.', 16, 1);
         SELECT 0 AS ListItemUpdated;
         RETURN;
     END
@@ -1080,14 +1158,21 @@ AS
 BEGIN
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
+        RAISERROR ('Failed to delete list item.', 16, 1);
         SELECT 0 AS ListItemDeleted;
         RETURN;
     END
 
     DELETE FROM List_items WHERE listItemId = @ListItemId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ListItemDeleted;
+    IF DBO.LIF_ListItemIdExists(@ListItemId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete list item.', 16, 1);
+        SELECT 0 AS ListItemDeleted;
+        RETURN;
+    END
+
+    SELECT 1 AS ListItemDeleted;
 END;
 GO
 
@@ -1116,6 +1201,7 @@ AS
 BEGIN
     IF DBO.AF_IsContentLegal(@Content) = 0
     BEGIN
+        RAISERROR ('Failed to create activity.', 16, 1);
         SELECT NULL AS ActivityId;
         RETURN;
     END
@@ -1127,6 +1213,7 @@ BEGIN
 
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
+        RAISERROR ('Failed to create activity.', 16, 1);
         SELECT NULL AS ActivityId;
         RETURN;
     END
@@ -1144,6 +1231,7 @@ BEGIN
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0 OR
        DBO.AF_IsContentLegal(@Content) = 0
     BEGIN
+        RAISERROR ('Failed to update content.', 16, 1);
         SELECT 0 AS ContentUpdated;
         RETURN;
     END
@@ -1164,6 +1252,7 @@ AS
 BEGIN
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
+        RAISERROR ('Failed to update activity.', 16, 1);
         SELECT 0 AS ActivityUpdated;
         RETURN;
     END
@@ -1181,6 +1270,7 @@ AS
 BEGIN
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
+        RAISERROR ('Failed to delete activity.', 16, 1);
         SELECT 0 AS ActivityDeleted;
         RETURN;
     END
@@ -1188,7 +1278,14 @@ BEGIN
     DELETE FROM Activities
     WHERE activityId = @ActivityId;
 
-    SELECT @@ROWCOUNT AS ActivityDeleted;
+    IF DBO.AF_ActivityIdExists(@ActivityId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete activity.', 16, 1);
+        SELECT 0 AS ActivityDeleted;
+        RETURN;
+    END
+
+    SELECT 1 AS ActivityDeleted;
 END;
 GO
 
@@ -1230,6 +1327,7 @@ BEGIN
 
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
+        RAISERROR ('Failed to create diary entry.', 16, 1);
         SELECT NULL AS DiaryId;
         RETURN;
     END
@@ -1246,6 +1344,7 @@ AS
 BEGIN
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0 OR @DateLogged IS NULL
     BEGIN
+        RAISERROR ('Failed to update date logged.', 16, 1);
         SELECT 0 AS DateLoggedUpdated;
         RETURN;
     END
@@ -1265,6 +1364,7 @@ AS
 BEGIN
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
+        RAISERROR ('Failed to update diary entry.', 16, 1);
         SELECT 0 AS DiaryUpdated;
         RETURN;
     END
@@ -1283,14 +1383,21 @@ AS
 BEGIN
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
+        RAISERROR ('Failed to delete diary entry.', 16, 1);
         SELECT 0 AS DiaryDeleted;
         RETURN;
     END
 
     DELETE FROM Diaries WHERE diaryId = @DiaryId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DiaryDeleted;
+    IF DBO.DF_DiaryIdExists(@DiaryId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete diary entry.', 16, 1);
+        SELECT 0 AS DiaryDeleted;
+        RETURN;
+    END
+
+    SELECT 1 AS DiaryDeleted;
 END;
 GO
 
@@ -1319,6 +1426,7 @@ AS
 BEGIN
     IF DBO.RF_IsReactionTypeLegal(@ReactionType) = 0
     BEGIN
+        RAISERROR ('Failed to create reaction.', 16, 1);
         SELECT NULL AS ReactionId;
         RETURN;
     END
@@ -1330,6 +1438,7 @@ BEGIN
 
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
+        RAISERROR ('Failed to create reaction.', 16, 1);
         SELECT NULL AS ReactionId;
         RETURN;
     END
@@ -1347,6 +1456,7 @@ BEGIN
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0 OR
        DBO.RF_IsReactionTypeLegal(@ReactionType) = 0
     BEGIN
+        RAISERROR ('Failed to update reaction type.', 16, 1);
         SELECT 0 AS ReactionTypeUpdated;
         RETURN;
     END
@@ -1366,6 +1476,7 @@ AS
 BEGIN
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
+        RAISERROR ('Failed to update reaction.', 16, 1);
         SELECT 0 AS ReactionUpdated;
         RETURN;
     END
@@ -1384,14 +1495,21 @@ AS
 BEGIN
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
+        RAISERROR ('Failed to delete reaction.', 16, 1);
         SELECT 0 AS ReactionDeleted;
         RETURN;
     END
 
     DELETE FROM Reactions WHERE reactionId = @ReactionId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReactionDeleted;
+    IF DBO.RF_ReactionIdExists(@ReactionId) = 1
+    BEGIN
+        RAISERROR ('Failed to delete reaction.', 16, 1);
+        SELECT 0 AS ReactionDeleted;
+        RETURN;
+    END
+    
+    SELECT 1 AS ReactionDeleted;
 END;
 GO
 
@@ -1412,7 +1530,3 @@ BEGIN
     SELECT DBO.RF_GetReactionType(@ReactionId) AS ReactionType;
 END;
 GO
-
-
-
-
