@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-height, initial-scale=1.0">
     <title>Elden Ring - Kontroller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -25,8 +25,8 @@
 </head>
 
 <!-- Write Review Modal -->
-<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
-  <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6">
+<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden" style="align-items: center;">
+  <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6 mt-16">
     
     <!-- Top bar -->
     <div class="flex justify-between text-blue-400 font-semibold text-lg">
@@ -34,27 +34,39 @@
       <button onclick="closeReviewModal()">Save</button>
     </div>
 
-    <!-- Game Title and Date -->
-    <div class="text-center">
-      <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
-      <p class="text-sm text-gray-400" id="reviewDate"></p>
-    </div>
-
-    <!-- Rating -->
-    <div class="text-center space-y-2">
-      <div class="text-sm text-gray-400 font-semibold" id="rateLabel">Rate</div>
-      <div class="flex justify-center gap-1">
-        <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1">&#9733;</span>
-        <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2">&#9733;</span>
-        <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3">&#9733;</span>
-        <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4">&#9733;</span>
-        <span class="star text-2xl text-gray-500 cursor-pointer" data-value="5">&#9733;</span>
+    <!-- Game Title, Poster, and Date -->
+    <div class="space-y-2">
+      <div class="flex items-center space-x-4">
+        <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
+        <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
+      </div>
+      <div class="flex justify-between items-center">
+        <span id="dateLabel" class="text-sm text-gray-400">Date</span>
+        <p class="text-sm text-gray-400" id="reviewDate"></p>
       </div>
     </div>
 
-    <!-- Like -->
-    <div class="text-center">
-      <span id="heartIcon" class="text-2xl text-gray-500 cursor-pointer">&#10084;</span>
+    <!-- Rating and Like on the same line -->
+    <div class="flex justify-between items-center space-y-0">
+      <div class="text-center space-x-2">
+        <div id="rateLabel" class="text-sm text-gray-400 font-semibold">Rate</div>
+        <div class="flex justify-center gap-1">
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="0.5">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.0">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.5">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.0">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.5">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.0">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.5">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.0">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.5">&#9733;</span>
+          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="5.0">&#9733;</span>
+        </div>
+      </div>
+      <div class="text-center">
+        <div id="likeLabel" class="text-sm text-gray-400 font-semibold">Like</div>
+        <span id="heartIcon" class="text-2xl text-green-500 cursor-pointer" style="font-family: 'Font Awesome 6 Free'; content: '\f004';">&#x2665;</span>
+      </div>
     </div>
 
     <!-- Textarea -->
@@ -391,55 +403,71 @@
         });
     </script>
 
-      <script>
+    <script>
         // Show modal when clicking Write Review
-            document.querySelectorAll('.action-popup button').forEach(btn => {
-                if (btn.textContent.includes('Write Review')) {
+        document.querySelectorAll('.action-popup button').forEach(btn => {
+            if (btn.textContent.includes('Write Review')) {
                 btn.addEventListener('click', () => {
                     document.getElementById('reviewModal').classList.remove('hidden');
                     document.getElementById('reviewDate').textContent = new Date().toLocaleDateString('en-US', {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
                     });
                     document.getElementById('actionPopup').classList.remove('show');
                 });
-                }
-            });
-
-            function closeReviewModal() {
-                document.getElementById('reviewModal').classList.add('hidden');
             }
+        });
 
-            // Rating logic
-            let rating = 0;
-            const stars = document.querySelectorAll('.star');
-            const rateLabel = document.getElementById('rateLabel');
-            stars.forEach((star, i) => {
-                star.addEventListener('click', () => {
-                rating = i + 1;
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+        }
+
+        // Rating logic with half stars and revert
+        let rating = 0;
+        const stars = document.querySelectorAll('.star');
+        const rateLabel = document.getElementById('rateLabel');
+        stars.forEach((star) => {
+            star.addEventListener('click', () => {
+                const value = parseFloat(star.getAttribute('data-value'));
+                if (rating === value) {
+                    rating = 0; // Revert to no rating
+                    rateLabel.textContent = "Rate";
+                } else {
+                    rating = value;
+                    rateLabel.textContent = "Rated";
+                }
                 updateStars();
-                rateLabel.textContent = "Rated";
-                });
             });
+        });
 
-            function updateStars() {
-                stars.forEach((s, i) => {
-                if (i < rating) {
+        function updateStars() {
+            stars.forEach((s) => {
+                const value = parseFloat(s.getAttribute('data-value'));
+                if (value <= rating) {
                     s.classList.remove('text-gray-500');
                     s.classList.add('text-green-500');
                 } else {
                     s.classList.remove('text-green-500');
                     s.classList.add('text-gray-500');
                 }
-                });
-            }
-
-            // Like logic
-            const heartIcon = document.getElementById('heartIcon');
-            heartIcon.addEventListener('click', () => {
-                heartIcon.classList.toggle('text-red-500');
-                heartIcon.classList.toggle('text-gray-500');
             });
-      </script>
+        }
+
+        // Like logic with label update using green heart to red
+        const heartIcon = document.getElementById('heartIcon');
+        const likeLabel = document.getElementById('likeLabel');
+        const dateLabel = document.getElementById('dateLabel');
+        heartIcon.addEventListener('click', () => {
+            heartIcon.classList.toggle('text-red-500');
+            heartIcon.classList.toggle('text-green-500');
+            likeLabel.textContent = heartIcon.classList.contains('text-red-500') ? "Liked" : "Like";
+        });
+
+        // Date label click to turn red
+        dateLabel.addEventListener('click', () => {
+            dateLabel.classList.toggle('text-red-400');
+            dateLabel.classList.toggle('text-gray-400');
+        });
+    </script>
 
     <script type="module" src="./js/event.js"></script>
 </body>

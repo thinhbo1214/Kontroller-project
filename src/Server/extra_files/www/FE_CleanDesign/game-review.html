@@ -2,80 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-height, initial-scale=1.0">
-    <title>Elden Ring - Kontroller</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elden Ring Review - Kontroller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .rating-curve {
-            background: linear-gradient(90deg, #10b981 80%, #fbbf24 15%, #ef4444 5%);
-            height: 8px;
-            border-radius: 4px;
-        }
-        .backdrop-overlay {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
-        }
-        .action-popup {
-            display: none;
-        }
-        .action-popup.show {
-            display: block;
-        }
-    </style>
 </head>
-
-<!-- Write Review Modal -->
-<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden" style="align-items: center;">
-  <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6 mt-16">
-    
-    <!-- Top bar -->
-    <div class="flex justify-between text-blue-400 font-semibold text-lg">
-      <button onclick="closeReviewModal()">Cancel</button>
-      <button onclick="closeReviewModal()">Save</button>
-    </div>
-
-    <!-- Game Title, Poster, and Date -->
-    <div class="space-y-2">
-      <div class="flex items-center space-x-4">
-        <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
-        <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
-      </div>
-      <div class="flex justify-between items-center">
-        <span id="dateLabel" class="text-sm text-gray-400">Date</span>
-        <p class="text-sm text-gray-400" id="reviewDate"></p>
-      </div>
-    </div>
-
-    <!-- Rating and Like on the same line -->
-    <div class="flex justify-between items-center space-y-0">
-      <div class="text-center space-x-2">
-        <div id="rateLabel" class="text-sm text-gray-400 font-semibold">Rate</div>
-        <div class="flex justify-center gap-1">
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="0.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="5.0">&#9733;</span>
-        </div>
-      </div>
-      <div class="text-center">
-        <div id="likeLabel" class="text-sm text-gray-400 font-semibold">Like</div>
-        <span id="heartIcon" class="text-2xl text-green-500 cursor-pointer" style="font-family: 'Font Awesome 6 Free'; content: '\f004';">&#x2665;</span>
-      </div>
-    </div>
-
-    <!-- Textarea -->
-    <div>
-      <textarea rows="8" placeholder="Write your review..." class="w-full bg-gray-800 text-white p-4 rounded-lg focus:outline-none resize-none"></textarea>
-    </div>
-  </div>
-</div>
-
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Main Toolbar -->
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
@@ -123,352 +54,203 @@
         </div>
     </header>
 
-    <!-- Game Detail Content -->
-    <main class="relative">
-        <!-- Backdrop Image -->
-        <div class="relative h-96 bg-cover bg-center" 
-             style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=400&fit=crop')">
-            <div class="backdrop-overlay absolute inset-0"></div>
-            
-            <!-- Game Card -->
-            <div class="absolute bottom-6 left-6 flex items-end space-x-6 z-10">
-                <!-- Poster -->
-                <div class="flex-shrink-0">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop" 
-                         alt="Elden Ring" class="w-48 h-72 rounded-lg shadow-2xl">
+    <!-- Review Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        <!-- Back Button -->
+        <button onclick="window.history.back()" class="flex items-center space-x-2 text-gray-400 hover:text-white mb-6">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+
+        <!-- Review Card -->
+        <div class="bg-gray-800 rounded-lg p-8 shadow-xl">
+            <div class="flex flex-col lg:flex-row lg:space-x-8">
+                <!-- Left Side - Game Poster -->
+                <div class="flex-shrink-0 mb-6 lg:mb-0">
+                    <a href="game-detail.html" class="block hover:opacity-80 transition-opacity">
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop" 
+                             alt="Elden Ring" class="w-48 h-72 rounded-lg shadow-lg mx-auto lg:mx-0">
+                    </a>
                 </div>
-                
-                <!-- Game Info -->
-                <div class="pb-4">
-                    <h1 class="text-4xl font-bold mb-2">Elden Ring</h1>
-                    <div class="flex items-center space-x-6 mb-4">
-                        <!-- Rating -->
-                        <div class="flex items-center space-x-3">
-                            <span class="text-3xl font-bold text-green-400">4.7</span>
-                            <div class="flex flex-col">
-                                <div class="rating-curve w-32"></div>
-                                <span class="text-sm text-gray-300 mt-1">Based on 15,234 reviews</span>
+
+                <!-- Right Side - Review Content -->
+                <div class="flex-1">
+                    <!-- Header -->
+                    <div class="mb-6">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" 
+                                 alt="John Doe" class="w-12 h-12 rounded-full">
+                            <div>
+                                <h2 class="font-semibold text-lg">John Doe</h2>
+                                <p class="text-gray-400 text-sm">March 15, 2024</p>
                             </div>
                         </div>
-                        
-                        <!-- Action Button -->
-                        <div class="relative">
-                            <button id="actionBtn" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
-                                Action
-                            </button>
+
+                        <!-- Game Title and Rating -->
+                        <div class="mb-4">
+                            <h1 class="text-3xl font-bold mb-2">Elden Ring</h1>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex text-yellow-400 text-xl">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-lg font-semibold">5/5</span>
+                                </div>
+                                <span class="text-gray-400">•</span>
+                                <span class="text-gray-400">2022</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Text -->
+                    <div class="mb-6">
+                        <div class="prose prose-lg text-gray-300 max-w-none">
+                            <p class="mb-4">
+                                Elden Ring is nothing short of a masterpiece that represents the pinnacle of FromSoftware's creative vision. 
+                                This open-world souls-like experience manages to retain everything that made the Dark Souls series beloved while 
+                                expanding the formula in ways that feel both natural and revolutionary.
+                            </p>
                             
-                            <!-- Action Popup -->
-                            <div id="actionPopup" class="action-popup absolute top-full mt-2 left-0 bg-gray-800 rounded-lg shadow-xl border border-gray-700 min-w-48 z-20">
-                                <div class="p-2">
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <span>Rate & Log</span>
-                                    </button>
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
-                                        <i class="fas fa-edit text-blue-400"></i>
-                                        <span>Write Review</span>
-                                    </button>
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
-                                        <i class="fas fa-plus text-green-400"></i>
-                                        <span>Add to List</span>
-                                    </button>
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
-                                        <i class="fas fa-bookmark text-purple-400"></i>
-                                        <span>Add to Watchlist</span>
-                                    </button>
-                                </div>
-                            </div>
+                            <p class="mb-4">
+                                The world design is simply breathtaking. The Lands Between feels like a living, breathing world filled with 
+                                secrets, mysteries, and stories told through environmental storytelling. Every corner of this massive world 
+                                has been crafted with incredible attention to detail, from the towering spires of Stormveil Castle to the 
+                                ethereal beauty of the Eternal City of Nokron.
+                            </p>
+                            
+                            <p class="mb-4">
+                                Combat remains challenging and rewarding, with a diverse array of weapons, spells, and abilities that allow 
+                                for numerous playstyles. The addition of the horse, Torrent, fundamentally changes how you approach exploration 
+                                and even some boss battles, adding a new layer of mobility and strategy.
+                            </p>
+                            
+                            <p class="mb-4">
+                                What truly sets Elden Ring apart is how it respects the player's time and curiosity. Unlike previous FromSoftware 
+                                titles, if you're stuck on a particular boss or area, you can simply explore elsewhere and return stronger. 
+                                This design philosophy makes the game more accessible without compromising its challenging nature.
+                            </p>
+                            
+                            <p>
+                                Elden Ring is a game that will be remembered for years to come. It's a testament to what happens when 
+                                visionary game design meets masterful world-building. This is essential gaming.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-400 mb-3">TAGS</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Masterpiece</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Open World</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Challenging</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Beautiful</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Atmospheric</span>
+                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RPG</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-700">
+                        <!-- Like Button -->
+                        <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                            <i class="fas fa-heart text-lg"></i>
+                            <span class="font-semibold">87 likes</span>
+                        </button>
+
+                        <!-- Share Options -->
+                        <div class="flex items-center space-x-4">
+                            <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                                <i class="fas fa-share text-lg"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-yellow-400 transition-colors">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tabs Section -->
-        <div class="bg-gray-800 border-b border-gray-700">
-            <div class="max-w-7xl mx-auto px-6">
-                <nav class="flex space-x-8">
-                    <button class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium" data-tab="reviews">
-                        Reviews
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="details">
-                        Details
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="genres">
-                        Genres
-                    </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="services">
-                        Services
-                    </button>
-                </nav>
-            </div>
-        </div>
-
-        <!-- Tab Content -->
-        <div class="max-w-7xl mx-auto px-6 py-8">
-            <!-- Reviews Tab -->
-            <div id="reviews" class="tab-content">
-                <h2 class="text-2xl font-bold mb-6">Reviews</h2>
-                <div class="space-y-6">
-                    <!-- Review Item -->
-                    <div class="bg-gray-800 rounded-lg p-6">
-                        <div class="flex items-start space-x-4">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
-                                 alt="Reviewer" class="w-12 h-12 rounded-full">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <h3 class="font-semibold">John Doe</h3>
-                                    <div class="flex text-yellow-400">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="text-sm text-gray-400">March 15, 2024</span>
-                                </div>
-                                <p class="text-gray-300 mb-3">
-                                    Elden Ring is a masterpiece that combines the best elements of Dark Souls with an expansive open world. 
-                                    The game's intricate world-building and challenging gameplay create an unforgettable experience.
-                                </p>
-                                <div class="flex items-center space-x-4">
-                                    <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                                        <i class="fas fa-heart"></i>
-                                        <span>24</span>
-                                    </button>
-                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">RPG</span>
-                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">Open World</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- More Review Items -->
-                    <div class="bg-gray-800 rounded-lg p-6">
-                        <div class="flex items-start space-x-4">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
-                                 alt="Reviewer" class="w-12 h-12 rounded-full">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <h3 class="font-semibold">Sarah Wilson</h3>
-                                    <div class="flex text-yellow-400">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                    </div>
-                                    <span class="text-sm text-gray-400">March 10, 2024</span>
-                                </div>
-                                <p class="text-gray-300 mb-3">
-                                    Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming at times. 
-                                    Still, it's a game that rewards patience and skill.
-                                </p>
-                                <div class="flex items-center space-x-4">
-                                    <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                                        <i class="fas fa-heart"></i>
-                                        <span>12</span>
-                                    </button>
-                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">Challenging</span>
-                                    <span class="text-xs bg-gray-700 px-2 py-1 rounded">Beautiful</span>
-                                </div>
-                            </div>
+        <!-- Comments Section -->
+        <div class="mt-8 bg-gray-800 rounded-lg p-6">
+            <h3 class="text-xl font-bold mb-6">Comments</h3>
+            
+            <!-- Comment Form -->
+            <div class="mb-6">
+                <div class="flex items-start space-x-4">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                         alt="Your Avatar" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <textarea placeholder="Write a comment..." 
+                                  class="w-full bg-gray-700 text-white rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                  rows="3"></textarea>
+                        <div class="flex justify-end mt-2">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                Post Comment
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Details Tab -->
-            <div id="details" class="tab-content hidden">
-                <h2 class="text-2xl font-bold mb-6">Details</h2>
-                <div class="bg-gray-800 rounded-lg p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="font-semibold text-gray-400 mb-2">Studio</h3>
-                            <p class="text-white">FromSoftware</p>
+            <!-- Comments List -->
+            <div class="space-y-4">
+                <!-- Comment Item -->
+                <div class="flex items-start space-x-4">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
+                         alt="Sarah Wilson" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <div class="bg-gray-700 rounded-lg p-4">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-semibold text-sm">Sarah Wilson</h4>
+                                <span class="text-gray-400 text-xs">2 days ago</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                Absolutely agree with your review! The world design is incredible and I love how they managed to keep the challenging nature while making it more accessible.
+                            </p>
                         </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-400 mb-2">Publisher</h3>
-                            <p class="text-white">Bandai Namco Entertainment</p>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-400 mb-2">Release Date</h3>
-                            <p class="text-white">February 25, 2022</p>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-400 mb-2">Country</h3>
-                            <p class="text-white">Japan</p>
-                        </div>
-                        <div class="md:col-span-2">
-                            <h3 class="font-semibold text-gray-400 mb-2">Languages</h3>
-                            <p class="text-white">English, Japanese, Korean, Chinese, French, Italian, German, Spanish, Portuguese, Russian</p>
-                        </div>
-                        <div class="md:col-span-2">
-                            <h3 class="font-semibold text-gray-400 mb-2">Description</h3>
-                            <p class="text-white">Elden Ring is an action RPG which takes place in the Lands Between, sometime after the Shattering of the titular Elden Ring. Players must explore and fight their way through the vast open-world to unite all the shards, restore the Elden Ring, and become the Elden Lord.</p>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>5</span>
+                            </button>
+                            <button class="text-gray-400 hover:text-white text-sm">Reply</button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Genres Tab -->
-            <div id="genres" class="tab-content hidden">
-                <h2 class="text-2xl font-bold mb-6">Genres</h2>
-                <div class="bg-gray-800 rounded-lg p-6">
-                    <div class="flex flex-wrap gap-3">
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Action RPG</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Open World</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Dark Fantasy</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Souls-like</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Third-Person</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Challenging</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Services Tab -->
-            <div id="services" class="tab-content hidden">
-                <h2 class="text-2xl font-bold mb-6">Available On</h2>
-                <div class="bg-gray-800 rounded-lg p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
-                            <i class="fab fa-steam text-2xl text-blue-400"></i>
-                            <div>
-                                <h3 class="font-semibold">Steam</h3>
-                                <p class="text-sm text-gray-400">PC</p>
+                <!-- Comment Item -->
+                <div class="flex items-start space-x-4">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face" 
+                         alt="Mike Chen" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <div class="bg-gray-700 rounded-lg p-4">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-semibold text-sm">Mike Chen</h4>
+                                <span class="text-gray-400 text-xs">1 day ago</span>
                             </div>
+                            <p class="text-gray-300 text-sm">
+                                Great review! I'm still working my way through it but so far it's been an amazing experience. The boss fights are epic!
+                            </p>
                         </div>
-                        <div class="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
-                            <i class="fab fa-playstation text-2xl text-blue-600"></i>
-                            <div>
-                                <h3 class="font-semibold">PlayStation</h3>
-                                <p class="text-sm text-gray-400">PS4, PS5</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-3 p-3 bg-gray-700 rounded-lg">
-                            <i class="fab fa-xbox text-2xl text-green-500"></i>
-                            <div>
-                                <h3 class="font-semibold">Xbox</h3>
-                                <p class="text-sm text-gray-400">Xbox One, Series X/S</p>
-                            </div>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>3</span>
+                            </button>
+                            <button class="text-gray-400 hover:text-white text-sm">Reply</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-
-    <script>
-        // Action button popup
-        const actionBtn = document.getElementById('actionBtn');
-        const actionPopup = document.getElementById('actionPopup');
-
-        actionBtn.addEventListener('click', () => {
-            actionPopup.classList.toggle('show');
-        });
-
-        // Close popup when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!actionBtn.contains(e.target) && !actionPopup.contains(e.target)) {
-                actionPopup.classList.remove('show');
-            }
-        });
-
-        // Tab functionality
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetTab = btn.getAttribute('data-tab');
-                
-                // Remove active class from all buttons
-                tabBtns.forEach(b => {
-                    b.classList.remove('active', 'border-blue-500', 'text-blue-400');
-                    b.classList.add('border-transparent', 'text-gray-300');
-                });
-                
-                // Add active class to clicked button
-                btn.classList.add('active', 'border-blue-500', 'text-blue-400');
-                btn.classList.remove('border-transparent', 'text-gray-300');
-                
-                // Hide all tab contents
-                tabContents.forEach(content => {
-                    content.classList.add('hidden');
-                });
-                
-                // Show target tab content
-                document.getElementById(targetTab).classList.remove('hidden');
-            });
-        });
-    </script>
-
-    <script>
-        // Show modal when clicking Write Review
-        document.querySelectorAll('.action-popup button').forEach(btn => {
-            if (btn.textContent.includes('Write Review')) {
-                btn.addEventListener('click', () => {
-                    document.getElementById('reviewModal').classList.remove('hidden');
-                    document.getElementById('reviewDate').textContent = new Date().toLocaleDateString('en-US', {
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                    });
-                    document.getElementById('actionPopup').classList.remove('show');
-                });
-            }
-        });
-
-        function closeReviewModal() {
-            document.getElementById('reviewModal').classList.add('hidden');
-        }
-
-        // Rating logic with half stars and revert
-        let rating = 0;
-        const stars = document.querySelectorAll('.star');
-        const rateLabel = document.getElementById('rateLabel');
-        stars.forEach((star) => {
-            star.addEventListener('click', () => {
-                const value = parseFloat(star.getAttribute('data-value'));
-                if (rating === value) {
-                    rating = 0; // Revert to no rating
-                    rateLabel.textContent = "Rate";
-                } else {
-                    rating = value;
-                    rateLabel.textContent = "Rated";
-                }
-                updateStars();
-            });
-        });
-
-        function updateStars() {
-            stars.forEach((s) => {
-                const value = parseFloat(s.getAttribute('data-value'));
-                if (value <= rating) {
-                    s.classList.remove('text-gray-500');
-                    s.classList.add('text-green-500');
-                } else {
-                    s.classList.remove('text-green-500');
-                    s.classList.add('text-gray-500');
-                }
-            });
-        }
-
-        // Like logic with label update using green heart to red
-        const heartIcon = document.getElementById('heartIcon');
-        const likeLabel = document.getElementById('likeLabel');
-        const dateLabel = document.getElementById('dateLabel');
-        heartIcon.addEventListener('click', () => {
-            heartIcon.classList.toggle('text-red-500');
-            heartIcon.classList.toggle('text-green-500');
-            likeLabel.textContent = heartIcon.classList.contains('text-red-500') ? "Liked" : "Like";
-        });
-
-        // Date label click to turn red
-        dateLabel.addEventListener('click', () => {
-            dateLabel.classList.toggle('text-red-400');
-            dateLabel.classList.toggle('text-gray-400');
-        });
-    </script>
-
     <script type="module" src="./js/event.js"></script>
 </body>
 </html>
