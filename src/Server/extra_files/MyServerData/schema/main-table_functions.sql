@@ -1,5 +1,5 @@
 -- Function helpers
--- 1. check URL legality
+-- 1. Check URL legality
 CREATE OR ALTER FUNCTION F_IsUrlLegal (
     @Url VARCHAR(255)
 )
