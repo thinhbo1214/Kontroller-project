@@ -38,9 +38,9 @@ namespace Server.Source.Database
             return DatabaseHelper.GetScalarValue<int>(result);
         }
 
-        protected object? ExecuteScalar<T>(string sqlPath, object data)
+        protected object? ExecuteScalar<TParam>(string sqlPath, object data)
         {
-            if (data is not T model)
+            if (data is not TParam model)
                 return null;
 
             var db = Simulation.GetModel<DatabaseManager>();

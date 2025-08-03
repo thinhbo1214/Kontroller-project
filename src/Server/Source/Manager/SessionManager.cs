@@ -53,7 +53,7 @@ namespace Server.Source.Manager
                 }
             }
 
-            Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
+            RemoveSession(sessionId); // xoá nếu hết hạn hoặc IP sai
             return null;
         }
 
@@ -70,7 +70,7 @@ namespace Server.Source.Manager
                 }
             }
 
-            Remove(sessionId); // xoá nếu hết hạn hoặc IP sai
+            RemoveSession(sessionId); // xoá nếu hết hạn hoặc IP sai
             return false;
         }
         public bool Authorization(HttpRequest request, out string userId, HttpsSession session = null)
@@ -92,13 +92,66 @@ namespace Server.Source.Manager
             }    
             return false;
         }
-        public void Remove(string sessionId)
+        public bool RemoveCurrentSession(HttpRequest request, HttpsSession session = null)
+        {
+            string token = TokenHelper.GetToken(request);
+
+            if (TokenHelper.TryParseToken(token, out var sessionId))
+            {
+                if (sessionId != null)
+                {
+                    RemoveSession(sessionId);
+                }
+                TokenHelper.RemoveToken(session.Response);
+                return true;
+            }
+            return false;
+        }
+        private void RemoveSessionInternal(string sessionId)
+        {
+            _sessions.Remove(sessionId);
+        }
+
+        private void RemoveSession(string sessionId)
         {
             using (new WriteLock(_lock))
             {
-                _sessions.Remove(sessionId);
+                RemoveSessionInternal(sessionId);
             }
         }
+
+        public void RemoveAllSessionOfUser(string userId)
+        {
+            using (new WriteLock(_lock))
+            {
+                var sessionIds = _sessions
+                    .Where(kv => kv.Value.UserId == userId)
+                    .Select(kv => kv.Key)
+                    .ToList();
+
+                foreach (var sessionId in sessionIds)
+                {
+                    RemoveSessionInternal(sessionId); // không lock lại
+                }
+            }
+        }
+
+        public void RemoveAllSessionsExcept(string userId, string sessionIdToKeep)
+        {
+            using (new WriteLock(_lock))
+            {
+                var sessionIds = _sessions
+                    .Where(kv => kv.Value.UserId == userId && kv.Key != sessionIdToKeep)
+                    .Select(kv => kv.Key)
+                    .ToList();
+
+                foreach (var sessionId in sessionIds)
+                {
+                    RemoveSessionInternal(sessionId);
+                }
+            }
+        }
+
 
         public void Clear()
         {

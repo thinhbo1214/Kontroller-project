@@ -28,7 +28,7 @@ namespace Server.Source.Event
                         catch (Exception ex)
                         {
                             session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 500));
-                            Simulation.GetModel<LogManager>().Log("Lỗi trong APIEvent: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
+                            Simulation.GetModel<LogManager>().Log("Lỗi trong APIAuth: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
                         }
                         finally
                         {

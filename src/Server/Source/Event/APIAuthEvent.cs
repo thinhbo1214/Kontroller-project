@@ -7,7 +7,7 @@ using Server.Source.NetCoreServer;
 
 namespace Server.Source.Event
 {
-    public class APILoginEvent : Simulation.Event<APILoginEvent>, IApiEvent
+    public class APIAuthEvent : Simulation.Event<APIAuthEvent>, IApiEvent
     {
         public HttpRequest request { get; set; }
         public HttpsSession session { get; set; }
@@ -24,7 +24,7 @@ namespace Server.Source.Event
                         await Simulation.GetModel<SimulationManager>().Limiter.WaitAsync();
                         try
                         {
-                            Simulation.GetModel<APILoginHandler>().Handle(request, session);
+                            Simulation.GetModel<APIAuthHandler>().Handle(request, session);
                         }
                         catch (Exception ex)
                         {

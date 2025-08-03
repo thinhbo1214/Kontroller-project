@@ -7,16 +7,6 @@ namespace Server.Source.Extra
     {
         public abstract string Type { get; }
 
-        public virtual string DecodKeyValue(string key)
-        {
-            // Decode the key value
-            key = Uri.UnescapeDataString(key);
-            key = key.Replace(Type, "", StringComparison.InvariantCultureIgnoreCase);
-            key = key.Replace("?key=", "", StringComparison.InvariantCultureIgnoreCase);
-
-            return key;
-        }
-
         public virtual bool CanHandle(string path) => path.StartsWith(Type, StringComparison.OrdinalIgnoreCase);
         public virtual void Handle(HttpRequest request, HttpsSession session) 
         {

@@ -10,14 +10,14 @@ namespace Server.Source.Handler
         private readonly static List<IHandler> handlers = new()
         {
             GetModel<APICacheHandler>(),
-            GetModel<APILoginHandler>(),
+            GetModel<APIAuthHandler>(),
         };
 
         // Trả về IApiEvent thay vì Event gốc
         private readonly static Dictionary<Type, Func<IApiEvent>> handlerEventMap = new()
         {
             { typeof(APICacheHandler), () => Schedule<CacheEvent>(0.25f) },
-            { typeof(APILoginHandler), () => Schedule<APILoginEvent>(0.25f) }
+            { typeof(APIAuthHandler), () => Schedule<APIAuthEvent>(0.25f) }
         };
 
         public void Handle(HttpRequest request, HttpsSession session)

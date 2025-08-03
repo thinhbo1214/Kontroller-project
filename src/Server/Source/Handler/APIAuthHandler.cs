@@ -11,10 +11,26 @@ using System.Reflection;
 
 namespace Server.Source.Handler
 {
-    internal class APILoginHandler : HandlerBase
+    internal class APIAuthHandler : HandlerBase
     {
-        public override string Type => "/api/login";
-        public override void Handle(HttpRequest request, HttpsSession session)
+        public override string Type => "/api/auth";
+
+        public override void PostHandle(HttpRequest request, HttpsSession session)
+        {
+            switch (request.Url)
+            {
+                case "/api/auth/login":
+                    PostLogin(request, session);
+                    break;
+                case "/api/auth/logout":
+                    PostLogout(request, session);
+                    break;
+                default:
+                    ErrorHandle(request, session);
+                    break;
+            }
+        }
+        private void PostLogin(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
 
@@ -36,7 +52,6 @@ namespace Server.Source.Handler
 
             // Đăng nhập thành công:
             string userId = AccountDatabase.Instance.CheckLoginAccount(account);
-            Simulation.GetModel<LogManager>().Log(userId);
 
             if (!userId.IsNullOrEmpty())
             {
@@ -49,6 +64,13 @@ namespace Server.Source.Handler
                 var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
                 session.SendResponseAsync(errorResponse);
             }
+        }
+        private void PostLogout(HttpRequest request, HttpsSession session)
+        {
+            var sessionManager = Simulation.GetModel<SessionManager>();
+            int statusCode = sessionManager.RemoveCurrentSession(request, session) ? 200 : 400;
+            var response = ResponseHelper.MakeJsonResponse(session.Response, statusCode);
+            session.SendResponseAsync(response);
         }
 
     }
