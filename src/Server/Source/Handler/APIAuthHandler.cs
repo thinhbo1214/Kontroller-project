@@ -26,7 +26,7 @@ namespace Server.Source.Handler
                     PostLogout(request, session);
                     break;
                 default:
-                    ErrorHandle(request, session);
+                    ErrorHandle(session);
                     break;
             }
         }
@@ -36,8 +36,7 @@ namespace Server.Source.Handler
 
             if (sessionManager.Authorization(request, out string id, session))
             {
-                var response = ResponseHelper.MakeJsonResponse(session.Response, 200); // tạo response
-                session.SendResponseAsync(response); // gửi response
+                OkHandle(session);
                 return;
             }
 
@@ -45,8 +44,7 @@ namespace Server.Source.Handler
             var account = JsonHelper.Deserialize<Account>(value);
             if (account == null)
             {
-                var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
-                session.SendResponseAsync(errorResponse);
+                ErrorHandle(session);
                 return;
             }
 
@@ -58,19 +56,20 @@ namespace Server.Source.Handler
                 var response = ResponseHelper.NewUserSession(userId, session.Response);
 
                 session.SendResponseAsync(response); // gửi response
+                return;
             }
-            else
-            {
-                var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
-                session.SendResponseAsync(errorResponse);
-            }
+
+            ErrorHandle(session);
+
         }
         private void PostLogout(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
-            int statusCode = sessionManager.RemoveCurrentSession(request, session) ? 200 : 400;
-            var response = ResponseHelper.MakeJsonResponse(session.Response, statusCode);
-            session.SendResponseAsync(response);
+
+            if (sessionManager.RemoveCurrentSession(request, session))
+                OkHandle(session);
+            else
+                ErrorHandle(session);
         }
 
     }

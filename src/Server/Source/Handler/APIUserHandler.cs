@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic.ApplicationServices;
 using Server.Source.Core;
 using Server.Source.Data;
 using Server.Source.Database;
@@ -10,24 +11,33 @@ using System.Reflection;
 
 namespace Server.Source.Handler
 {
+    using User = Server.Source.Data.User;
     internal class APIUserHandler : HandlerBase
     {
         public override string Type => "/api/user";
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
-            var useId = DecodeHelper.GetParamWithURL("useId", request.Url);
+            var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
 
-            if (string.IsNullOrEmpty(useId))
+            if (string.IsNullOrEmpty(userId))
             {
-                session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 400));
+                string token = TokenHelper.GetToken(request);
+                if (TokenHelper.TryParseToken(token, out var sessionId))
+                {
+                    userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+                }
+            }
+            if (string.IsNullOrEmpty(userId))
+            {
+
                 return;
             }
 
-            session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 404));
+            var userInfo = DatabaseHelper.GetData<User>(userId);
+            var response = ResponseHelper.MakeJsonResponse(session.Response, userInfo, 200); // tạo response
+            session.SendResponseAsync(response);
 
         }
-
-
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
@@ -35,8 +45,7 @@ namespace Server.Source.Handler
             //Nếu đã đăng nhập và phiên còn hạn
             if (sessionManager.Authorization(request, out string id, session))
             {
-                var response = ResponseHelper.MakeJsonResponse(session.Response, 200); // tạo response
-                session.SendResponseAsync(response); // gửi response
+                OkHandle(session);
                 return;
             }
 

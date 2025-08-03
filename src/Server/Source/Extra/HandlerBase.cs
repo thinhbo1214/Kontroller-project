@@ -1,4 +1,5 @@
-﻿using Server.Source.Interface;
+﻿using Server.Source.Helper;
+using Server.Source.Interface;
 using Server.Source.NetCoreServer;
 
 namespace Server.Source.Extra
@@ -27,7 +28,7 @@ namespace Server.Source.Extra
                 case "TRACE":
                     TraceHandle(request, session); break;
                 default:
-                    ErrorHandle(request, session); break;
+                    ErrorHandle(session); break;
             }
         }
         public virtual void HeadHandle(HttpsSession session) 
@@ -46,9 +47,20 @@ namespace Server.Source.Extra
         {
             session.SendResponseAsync(session.Response.MakeTraceResponse(request));
         }
-        public virtual void ErrorHandle(HttpRequest request, HttpsSession session)
+        protected virtual void SendJsonResponse(HttpsSession session, object data, int statusCode)
         {
-            session.SendResponseAsync(session.Response.MakeErrorResponse("Unsupported HTTP method: " + request.Method));
+            var response = data != null
+                ? ResponseHelper.MakeJsonResponse(session.Response, data, statusCode)
+                : ResponseHelper.MakeJsonResponse(session.Response, statusCode);
+            session.SendResponseAsync(response);
+        }
+        public virtual void ErrorHandle(HttpsSession session, object data = null)
+        {
+            SendJsonResponse(session, data, 400);
+        }
+        public virtual void OkHandle(HttpsSession session, object data = null)
+        {
+            SendJsonResponse(session, data, 200);
         }
     }
 }

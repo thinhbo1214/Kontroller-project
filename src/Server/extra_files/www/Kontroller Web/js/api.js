@@ -121,7 +121,7 @@ export class UserAPI extends API {
   static baseUrl = '/api/user';
 
   async GetSelf() {
-        const query = API.buildQuery({});
+    const query = API.buildQuery({});
     const res = await this.GET(query);
     return res;
   }

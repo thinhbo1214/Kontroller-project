@@ -39,8 +39,8 @@
         {
             UserId = "";
             Account = new Account();
-            Email = "";
-            Avatar = "";
+            Email = null;
+            Avatar = null;
             isLoggedIn = false;
 
         }
