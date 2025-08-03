@@ -1,212 +1,95 @@
-// event.js - Xử lý các sự kiện trên trang đăng nhập
-import { LoginAPI } from './api.js';
-import { AuthHandler } from './handle.js';
-import { UIManager } from './ui.js';
+import { Auth } from './auth.js';
+import { UI } from './ui.js';
 
-class EventManager {
+class EventHandler {
     constructor() {
-        this.loginAPI = new LoginAPI();
-        this.authHandler = new AuthHandler();
-        this.uiManager = new UIManager();
         this.init();
     }
 
     init() {
-        this.bindEvents();
-        this.setupKeyboardEvents();
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.bindEvents());
+        } else {
+            this.bindEvents();
+        }
     }
 
     bindEvents() {
-        // Bind login button click event
-        const loginButton = document.getElementById('button-auth');
-        if (loginButton) {
-            loginButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handleLoginClick();
-            });
-        }
+        // Initialize Lucide icons
+        lucide.createIcons();
 
-        // Bind password toggle events
-        const toggleButtons = document.querySelectorAll('.toggle-password');
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const inputId = e.target.closest('button').previousElementSibling.id || 
-                              e.target.closest('button').parentElement.querySelector('input').id;
-                this.togglePasswordVisibility(inputId, e.target.closest('button'));
-            });
-        });
+        // Get elements
+        const elements = {
+            backBtn: document.getElementById('backBtn'),
+            signupForm: document.getElementById('signupForm'),
+            togglePasswordBtn: document.getElementById('togglePasswordBtn'),
+            signupEmail: document.getElementById('signupEmail')
+        };
 
-        // Bind input field events for validation
-        const usernameInput = document.getElementById('loginUsername');
-        const passwordInput = document.getElementById('loginPassword');
+        // Back button
+        elements.backBtn?.addEventListener('click', this.handleBack);
 
-        if (usernameInput) {
-            usernameInput.addEventListener('blur', () => {
-                this.validateUsername();
-            });
-            usernameInput.addEventListener('input', () => {
-                this.clearFieldError('loginUsername');
-            });
-        }
+        // Signup form
+        elements.signupForm?.addEventListener('submit', this.handleSignupSubmit);
 
-        if (passwordInput) {
-            passwordInput.addEventListener('blur', () => {
-                this.validatePassword();
-            });
-            passwordInput.addEventListener('input', () => {
-                this.clearFieldError('loginPassword');
-            });
-        }
+        // Password toggle
+        elements.togglePasswordBtn?.addEventListener('click', this.handlePasswordToggle);
 
-        // Bind forgot password
-        const forgotLink = document.querySelector('[onclick="showForgotPassword()"]');
-        if (forgotLink) {
-            forgotLink.removeAttribute('onclick');
-            forgotLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handleForgotPassword();
-            });
-        }
+        // Email validation
+        elements.signupEmail?.addEventListener('blur', this.handleEmailValidation);
+
+        // Global keyboard events
+        document.addEventListener('keydown', this.handleKeydown);
     }
 
-    setupKeyboardEvents() {
-        // Enter key for login
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const activeElement = document.activeElement;
-                if (activeElement && 
-                   (activeElement.id === 'loginUsername' || activeElement.id === 'loginPassword')) {
-                    e.preventDefault();
-                    this.handleLoginClick();
-                }
-            }
-        });
-
-        // Escape key to clear errors
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.uiManager.clearAllErrors();
-            }
-        });
+    // Event handlers
+    handleBack = () => {
+        window.location.href = 'index.html';
     }
 
-    async handleLoginClick() {
-        try {
-            // Validate inputs first
-            if (!this.validateInputs()) {
-                return;
-            }
-
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            // Show loading
-            this.uiManager.showLoading();
-            
-            // Disable button to prevent double submission
-            this.uiManager.setButtonState('button-auth', false);
-
-            // Call login API
-            const result = await this.authHandler.login(username, password);
-            
-            if (result.success) {
-                this.uiManager.showSuccess('Login successful! Redirecting...');
-                // Redirect after short delay
-                setTimeout(() => {
-                    window.location.href = 'profile.html';
-                }, 1500);
-            } else {
-                this.uiManager.showError(result.message || 'Login failed. Please check your credentials.');
-                this.uiManager.setButtonState('button-auth', true);
-            }
-
-        } catch (error) {
-            console.error('Login error:', error);
-            this.uiManager.showError('An unexpected error occurred. Please try again.');
-            this.uiManager.setButtonState('button-auth', true);
-        } finally {
-            this.uiManager.hideLoading();
-        }
-    }
-
-    validateInputs() {
-        const username = document.getElementById('loginUsername').value.trim();
-        const password = document.getElementById('loginPassword').value;
+    handleSignupSubmit = async (e) => {
+        e.preventDefault();
         
-        let isValid = true;
+        const formData = new FormData(e.target);
+        const username = document.getElementById('signupUsername').value;
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
 
-        // Clear previous errors
-        this.uiManager.clearAllErrors();
-
-        // Validate username
-        if (!username) {
-            this.uiManager.showFieldError('loginUsername', 'Username is required');
-            isValid = false;
-        } else if (username.length < 3) {
-            this.uiManager.showFieldError('loginUsername', 'Username must be at least 3 characters');
-            isValid = false;
-        }
-
-        // Validate password
-        if (!password) {
-            this.uiManager.showFieldError('loginPassword', 'Password is required');
-            isValid = false;
-        } else if (password.length < 4) {
-            this.uiManager.showFieldError('loginPassword', 'Password must be at least 4 characters');
-            isValid = false;
-        }
-
-        return isValid;
+        await Auth.signup(username, email, password);
     }
 
-    validateUsername() {
-        const username = document.getElementById('loginUsername').value.trim();
-        if (username && username.length < 3) {
-            this.uiManager.showFieldError('loginUsername', 'Username must be at least 3 characters');
-            return false;
-        }
-        return true;
+    handlePasswordToggle = (e) => {
+        const button = e.currentTarget;
+        const targetId = button.dataset.target;
+        UI.togglePassword(targetId, button);
     }
 
-    validatePassword() {
-        const password = document.getElementById('loginPassword').value;
-        if (password && password.length < 4) {
-            this.uiManager.showFieldError('loginPassword', 'Password must be at least 4 characters');
-            return false;
-        }
-        return true;
-    }
-
-    clearFieldError(fieldId) {
-        this.uiManager.clearFieldError(fieldId);
-    }
-
-    togglePasswordVisibility(inputId, button) {
-        const input = document.getElementById(inputId);
-        const icon = button.querySelector('i');
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.setAttribute('data-lucide', 'eye-off');
+    handleEmailValidation = (e) => {
+        const email = e.target.value;
+        if (email && !UI.validateEmail(email)) {
+            e.target.style.borderColor = '#ef4444';
+            e.target.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.3)';
         } else {
-            input.type = 'password';
-            icon.setAttribute('data-lucide', 'eye');
-        }
-        
-        // Recreate icons
-        if (window.lucide) {
-            window.lucide.createIcons();
+            e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            e.target.style.boxShadow = 'none';
         }
     }
 
-    handleForgotPassword() {
-        this.uiManager.showForgotPasswordModal();
+    handleKeydown = (e) => {
+        // Enter key for signup form inputs
+        if (e.key === 'Enter' && this.isSignupInput(e.target)) {
+            e.preventDefault();
+            document.getElementById('signupForm').dispatchEvent(new Event('submit'));
+        }
+    }
+
+    // Helper methods
+    isSignupInput(element) {
+        const signupInputIds = ['signupUsername', 'signupEmail', 'signupPassword'];
+        return signupInputIds.includes(element.id);
     }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new EventManager();
-});
-
-export { EventManager };
+// Initialize event handler
+new EventHandler();
