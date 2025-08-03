@@ -3,6 +3,7 @@ using Server.Source.Core;
 using Server.Source.Helper;
 using Server.Source.Interface;
 using Server.Source.Manager;
+using Server.Source.Extra;
 
 namespace Server.Source.Database
 {
@@ -12,10 +13,6 @@ namespace Server.Source.Database
 
         public IDatabase GetInstance() => this;
 
-        protected class ParamsId
-        {
-            public string Id { get; set; }
-        }
 
         public virtual object Get(string id)
         {
@@ -28,12 +25,11 @@ namespace Server.Source.Database
             return list.FirstOrDefault();
         }
 
-        public virtual int Delete(string id)
+        public virtual int Delete(object data)
         {
-            object obj = new ParamsId { Id = id };
             var sqlPath = $"{TableName}/delete_{TableName.ToLower()}";
 
-            var result = ExecuteQuery<T, ParamsId>(sqlPath, obj);
+            var result = ExecuteQuery<T, DeleteRequestBase>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }
@@ -70,4 +66,5 @@ namespace Server.Source.Database
             return DatabaseHelper.MapToList<T>(dt);
         }
     }
-}
+
+ }

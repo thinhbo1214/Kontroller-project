@@ -3,6 +3,7 @@ using Server.Source.Data;
 using Server.Source.Helper;
 using Server.Source.Manager;
 using System.Data;
+using Server.Source.Extra;
 
 namespace Server.Source.Database
 {
@@ -14,18 +15,6 @@ namespace Server.Source.Database
         public static UserDatabase Instance => _instance ??= new UserDatabase();
 
         protected override string TableName => "user";
-
-        protected class ParamsChangeEmail
-        {
-            public string UserId { get; set; }
-            public string Email { get; set; }
-        }
-
-        protected class ParamsChangeAvatar
-        {
-            public string UserId { get; set; }
-            public string Avatar { get; set; }
-        }
 
         public virtual int ChangeEmail(object data)
         {

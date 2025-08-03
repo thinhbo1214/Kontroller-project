@@ -1,12 +1,13 @@
 ﻿using Server.Source.Core;
 using Server.Source.Handler;
 using Server.Source.Helper;
+using Server.Source.Interface;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
 
 namespace Server.Source.Event
 {
-    public class APIUserEvent: Simulation.Event<APIUserEvent>
+    public class APIUserEvent: Simulation.Event<APIUserEvent>, IApiEvent
     {
         public HttpRequest request { get; set; }
         public HttpsSession session { get; set; }

@@ -4,6 +4,7 @@ using Server.Source.Data;
 using Server.Source.Helper;
 using Server.Source.Manager;
 using System.Reflection;
+using Server.Source.Extra;
 
 namespace Server.Source.Database
 {
@@ -16,29 +17,11 @@ namespace Server.Source.Database
 
         protected override string TableName => "account";
 
-        protected class ParamsChangePassword
-        {
-            public string UserId { get; set; }
-            public string OldPassword { get; set; }
-            public string NewPassword { get; set; }
-        }
 
-        protected class ParamsChangeUsername
-        {
-            public string UserId { get; set; }
-            public string Username { get; set; }
-        }
-        protected class ParamsForgetPassword
-        {
-            public string UserId { get; set; }
-            public string Email { get; set; }
-        }
-
-
-        public virtual string CreateAccount(Account model)
+        public virtual string CreateAccount(object data)
         {
             var sqlPath = $"{TableName}/create_account";
-            var result = ExecuteScalar<Account>(sqlPath, model);
+            var result = ExecuteScalar<Account>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<string>(result);
         }

@@ -4,6 +4,6 @@
     {
         public IDatabase GetInstance();
         public object Get(string id);
-        public int Delete(string id);
+        public int Delete(object data);
     }
 }

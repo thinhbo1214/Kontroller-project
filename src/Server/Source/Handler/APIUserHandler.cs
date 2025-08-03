@@ -27,17 +27,17 @@ namespace Server.Source.Handler
                     userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
                 }
             }
+
             if (string.IsNullOrEmpty(userId))
             {
-
+                ErrorHandle(session);
                 return;
             }
 
             var userInfo = DatabaseHelper.GetData<User>(userId);
-            var response = ResponseHelper.MakeJsonResponse(session.Response, userInfo, 200); // tạo response
-            session.SendResponseAsync(response);
-
+            OkHandle(session, userInfo);
         }
+
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
@@ -54,56 +54,122 @@ namespace Server.Source.Handler
             // Gưi dữ liệu ko đủ
             if (account == null)
             {
-                var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
-                session.SendResponseAsync(errorResponse);
+                ErrorHandle(session);
                 return;
             }
 
             // Đăng ký thành công:
             string userId = AccountDatabase.Instance.CreateAccount(account);
+            Simulation.GetModel<LogManager>().Log(account.ToString());
             if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);
-
                 session.SendResponseAsync(response); // gửi response
+                return;
             }
-            else
-            {
-                var errorResponse = ResponseHelper.MakeJsonResponse(session.Response, 400);
-                session.SendResponseAsync(errorResponse);
-            }
+            
+            ErrorHandle(session);
         }
         public override void PutHandle(HttpRequest request, HttpsSession session)
         {
-            var key = DecodeHelper.GetParamWithURL("key", request.Url);
-            var value = request.Body;
+            var sessionManager = Simulation.GetModel<SessionManager>();
+            if (!sessionManager.Authorization(request, out string userId, session))
+            {
+                ErrorHandle(session);
+                return;
+            }
 
-            // Put the cache value
-            CommonCache.GetInstance().PutCacheValue(key, value);
+            switch (request.Url)
+            {
+                case "/api/user/email":
+                    PutUserEmail(request, session);
+                    break;
+                case "/api/user/avatar":
+                    PutUserAvatar(request, session);
+                    break;
+                case "/api/user/username":
+                    PutUserUsername(request, session);
+                    break;
+                case "/api/user/password":
+                    PutUserPassword(request, session);
+                    break;
+                case "/api/user/forgetpassword":
+                    PutUserForgetPassword(request, session);
+                    break;
+                default:
+                    ErrorHandle(session);
+                    break;
+            }
 
-            // Lưu vào ổ đĩa
-            //DatabaseManager.SaveFile(key, value);
-
-            // Response with the cache value
-            session.SendResponseAsync(session.Response.MakeOkResponse());
         }
+        private void PutUserEmail(HttpRequest request, HttpsSession session)
+        {
+            object data = JsonHelper.Deserialize<object>(request.Body);
+            if (UserDatabase.Instance.ChangeEmail(data) == 1)
+            {
+                OkHandle(session);
+                return;
+            }
+            ErrorHandle(session);
+        }
+        private void PutUserAvatar(HttpRequest request, HttpsSession session)
+        {
+            object data = JsonHelper.Deserialize<object>(request.Body);
+            if (UserDatabase.Instance.ChangeAvatar(data) == 1)
+            {
+                OkHandle(session);
+                return;
+            }
+            ErrorHandle(session);
+        }
+        private void PutUserUsername(HttpRequest request, HttpsSession session)
+        {
+            object data = JsonHelper.Deserialize<object>(request.Body);
+            if (AccountDatabase.Instance.ChangeUsername(data) == 1)
+            {
+                OkHandle(session);
+                return;
+            }
+            ErrorHandle(session);
+        }
+        private void PutUserPassword(HttpRequest request, HttpsSession session)
+        {
+            object data = JsonHelper.Deserialize<object>(request.Body);
+            if (AccountDatabase.Instance.ChangePassword(data) == 1)
+            {
+                OkHandle(session);
+                return;
+            }
+            ErrorHandle(session);
+        }
+        private void PutUserForgetPassword(HttpRequest request, HttpsSession session)
+        {
+            object data = JsonHelper.Deserialize<object>(request.Body);
+            if (AccountDatabase.Instance.ForgetPassword(data) == 1)
+            {
+                OkHandle(session);
+                return;
+            }
+            ErrorHandle(session);
+        }
+
         public override void DeleteHandle(HttpRequest request, HttpsSession session)
         {
-            var key = DecodeHelper.GetParamWithURL("key", request.Url);
-
-            // Delete the cache value
-            if (CommonCache.GetInstance().DeleteCacheValue(key, out var value))
+            var sessionManager = Simulation.GetModel<SessionManager>();
+            if (!sessionManager.Authorization(request, out string userId, session))
             {
-                //DatabaseManager.DeleteFile(key, out _); // xóa luôn file gốc
-                // Response with the cache value
-                session.SendResponseAsync(session.Response.MakeGetResponse(value));
+                ErrorHandle(session);
+                return;
             }
-            //else if (DatabaseManager.DeleteFile(key, out var fileContent))
-            //{
-            //    session.SendResponseAsync(session.Response.MakeGetResponse(fileContent));
-            //}
-            else
-                session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Deleted cache value was not found for the key: " + key));
+            var data = JsonHelper.Deserialize<DeleteAccountRequest>(request.Body);
+
+            if (AccountDatabase.Instance.Delete(data) == 1)
+            {
+                OkHandle(session);
+                return;
+            }
+            ErrorHandle(session);
         }
+
     }
 }

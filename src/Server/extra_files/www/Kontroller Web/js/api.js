@@ -2,6 +2,16 @@ function showResponse(text) {
   const pre = document.getElementById('response');
   pre.textContent = text;
 }
+function isTokenValid(token) {
+  try {
+    const decoded = atob(token); // base64 decode
+    const [sessionId, expire] = decoded.split(':');
+    return parseInt(expire) > Math.floor(Date.now() / 1000);
+  } catch {
+    return false;
+  }
+}
+
 
 // === Base API ===
 class API {
@@ -85,9 +95,15 @@ class API {
   }
 }
 
-export class LoginAuth extends API {
+export class APIAuth extends API {
   static baseUrl = '/api/auth';
 
+  static isLoggedIn() {
+    const token = localStorage.getItem('token');
+    return token && isTokenValid(token);
+
+
+  }
   // kiểm tra tài khoản mật khẩu trả về okay 
   async PostLogin(username, password) {
     if (!username || !password) {
@@ -117,7 +133,7 @@ export class LoginAuth extends API {
 
 
 // API để tương tác với user
-export class UserAPI extends API {
+export class APIUser extends API {
   static baseUrl = '/api/user';
 
   async GetSelf() {
