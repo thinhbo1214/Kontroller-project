@@ -70,12 +70,14 @@ jobs:
           echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
 
           # Lấy danh sách commit per author và lưu ra file tạm
-          git shortlog -s -n > commit_count.txt
+          git shortlog -s -n > commit.txt
 
-          # Ghi từng dòng commit của contributor vào báo cáo
-          while read line; do
-            count=$(echo "$line" | sed -E 's/^ *([0-9]+).*/\1/')
-            author=$(echo "$line" | sed -E 's/^ *[0-9]+[ \t]+//')
+          # Đếm và lọc tác giả (bắt chước cách của authors_count.txt)
+          sort commit.txt | uniq -c | sort -nr > commit_count.txt
+
+          # Format kết quả
+          while read count author_raw; do
+            author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
             echo "- $author: \`$count commit\`" >> report.txt
           done < commit_count.txt
 
