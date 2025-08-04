@@ -30,14 +30,14 @@ jobs:
         message="📊 **Báo cáo đóng góp dòng code** ($report_date):"
 
         while IFS=',' read -r date author lines; do
-          sanitized_author=$(echo "$author" | sed 's/"/'\''/g' | sed 's/,/ /g')
-          message="$message\n- \`$sanitized_author\`: $lines dòng"
+          sanitized_author=$(echo "$author" | tr -d '"' | tr -d "'" | sed 's/,/ /g')
+          sanitized_lines=$(echo "$lines" | tr -d '\r\n')
+          message="$message\n- \`$sanitized_author\`: $sanitized_lines dòng"
         done < <(tail -n +2 ./src/metrics/line_contribution.csv)
 
-        # encode message safely using jq
-        payload=$(jq -Rn --arg msg "$message" '{content: $msg}')
-
         echo -e "$message"
+
+        payload=$(jq -Rn --arg msg "$message" '{content: $msg}')
 
         curl -H "Content-Type: application/json" \
             -X POST \
