@@ -65,8 +65,8 @@ jobs:
           echo "🧾 **Thông tin commit mới nhất:**" >> report.txt
           echo "- Commit bởi: $(git log -1 --pretty=format:'%an')" >> report.txt
           echo "- Message: \"$(git log -1 --pretty=format:'%s')\"" >> report.txt
-          echo "File thay đổi trong commit mới nhất:" >> report.txt
-          git diff-tree --no-commit-id --name-only -r HEAD >> report.txt
+          echo "- 🗂️ File thay đổi trong commit mới nhất:" >> report.txt
+          git diff-tree --no-commit-id --name-only -r HEAD | sed 's/^/  - /' >> report.txt
           
           echo "" >> report.txt
           echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
