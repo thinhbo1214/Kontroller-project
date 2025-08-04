@@ -80,7 +80,7 @@ jobs:
           echo "- 🧮 Tổng số commit toàn repo: \`$total_commits\`" >> report.txt
           
           echo "" >> report.txt
-          echo "🧾 **Báo cáo số dòng đóng góp**:" > report.txt
+          echo "🧾 **Báo cáo số dòng đóng góp**:" >> report.txt
 
           # Xóa file tạm nếu có
           rm -f authors.txt authors_count.txt
@@ -98,6 +98,9 @@ jobs:
             author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
             echo "- **$author**: \`$count dòng\`" >> report.txt
           done < authors_count.txt
+
+          # ✅ Tính tổng số dòng
+          total_lines=$(awk '{sum += $1} END {print sum}' authors_count.txt)
 
           echo "" >> report.txt
           echo "- 🧮 Tổng số dòng được thống kê: \`$total_lines\`" >> report.txt
