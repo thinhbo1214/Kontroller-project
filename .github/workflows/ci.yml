@@ -59,12 +59,14 @@ jobs:
 
       - name: Tính số điểm đóng góp bằng git
         run: |
-          echo "📊 **BÁO CÁO CI – $(date +%Y-%m-%d)**" >> report.txt
+          echo "📊 **BÁO CÁO CI – $(TZ='Asia/Ho_Chi_Minh' date '+%Y-%m-%d %H:%M:%S')**" >> report.txt
 
           echo "" >> report.txt
           echo "🧾 **Thông tin commit mới nhất:**" >> report.txt
           echo "- Commit bởi: $(git log -1 --pretty=format:'%an')" >> report.txt
           echo "- Message: \"$(git log -1 --pretty=format:'%s')\"" >> report.txt
+          echo "File thay đổi trong commit mới nhất:" >> report.txt
+          git diff-tree --no-commit-id --name-only -r HEAD >> report.txt
           
           echo "" >> report.txt
           echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
