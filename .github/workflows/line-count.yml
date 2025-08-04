@@ -14,21 +14,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # để có toàn bộ history cho `git blame`
+          fetch-depth: 0  # Lấy toàn bộ history cho git blame
+
+      - name: Cài jq (nếu chưa có)
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Tính số dòng đóng góp bằng git
         run: |
           echo "📊 **Báo cáo đóng góp dòng code** ($(date +%Y-%m-%d)):" > report.txt
 
-          find . -type f -name '*.py' -o -name '*.js' -o -name '*.ts' -o -name '*.java' -o -name '*.cs' | while read file; do
-            git blame --line-porcelain "$file" | grep "^author " >> authors.txt
+          # Xóa file tạm nếu có
+          rm -f authors.txt authors_count.txt
+
+          # Lấy tất cả file do git quản lý (không giới hạn đuôi)
+          git ls-files | while read file; do
+            git blame --line-porcelain "$file" | grep "^author " >> authors.txt || true
           done
 
+          # Đếm và lọc tác giả
           sort authors.txt | uniq -c | sort -nr > authors_count.txt
 
-          cat authors_count.txt | while read count author; do
+          # Format kết quả
+          while read count author_raw; do
+            author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
             echo "- \`$author\`: $count dòng" >> report.txt
-          done
+          done < authors_count.txt
 
           cat report.txt
 
@@ -40,6 +50,6 @@ jobs:
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "$payload" \
-               $DISCORD_WEBHOOK
+               "$DISCORD_WEBHOOK"
         env:
           DISCORD_WEBHOOK: https://discord.com/api/webhooks/1401911119290961962/PGaNzn5IWIiOgixqCCzMPfNsIoWaj77rTqh7W7MFfwc87ezxfhr-ZMTwWUQQ83hH1Y3E
