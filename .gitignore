@@ -11,3 +11,6 @@ src/Server/MyServerData
 pa
 Client Web Test
 Kontroller Web
+automatically-notified.yml
+docker-ci.yml
+winforms-ci.yml
