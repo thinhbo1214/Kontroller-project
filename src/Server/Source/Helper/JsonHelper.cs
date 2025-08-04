@@ -3,6 +3,17 @@ using System.Text.Json.Serialization;
 
 namespace Server.Source.Helper
 {
+    /// <summary>
+    /// JsonHelper cung cấp các tiện ích để:<br/>
+    /// - Chuyển object thành JSON string.<br/>
+    /// - Parse JSON string thành object kiểu cụ thể hoặc Dictionary.<br/>
+    /// - Thêm hoặc xoá thuộc tính trong JSON string trước khi parse.<br/>
+    /// - Xử lý an toàn lỗi khi format JSON không hợp lệ.<br/>
+    /// Sử dụng System.Text.Json, cấu hình sẵn để:<br/>
+    /// - Bỏ qua thuộc tính null khi serialize.<br/>
+    /// - Không phân biệt chữ hoa/thường khi parse.<br/>
+    /// - Cho phép dấu phẩy cuối và bỏ qua comment.<br/>
+    /// </summary>
     public static class JsonHelper
     {
         private static readonly JsonSerializerOptions DefaultOptions = new()
