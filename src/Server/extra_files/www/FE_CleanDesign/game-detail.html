@@ -40,6 +40,56 @@
             gap: 0.5rem;
             animation: fadeIn 0.3s ease-in-out;
         }
+        .list-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1f2937;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            z-index: 60;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .list-popup.show {
+            display: block;
+        }
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-bottom: 1px solid #4b5563;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .list-posters {
+            display: flex;
+            gap: 0.25rem;
+            margin-right: 1rem;
+        }
+        .list-posters img {
+            width: 60px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .list-details {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .list-info {
+            flex-grow: 1;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -152,6 +202,65 @@
     <span>added to PlayLaterList</span>
 </div>
 
+<!-- Add to Lists Popup -->
+<div id="listPopup" class="list-popup">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Add to Lists</h2>
+        <button onclick="closeListPopup()" class="text-blue-400 hover:text-blue-300">Close</button>
+    </div>
+    <div class="space-y-4">
+        <!-- List Item 1 -->
+        <div class="list-item">
+            <div class="list-posters">
+                <img src="https://via.placeholder.com/60x90" alt="Game 1">
+                <img src="https://via.placeholder.com/60x90" alt="Game 2">
+                <img src="https://via.placeholder.com/60x90" alt="Game 3">
+                <img src="https://via.placeholder.com/60x90" alt="Game 4">
+                <img src="https://via.placeholder.com/60x90" alt="Game 5">
+            </div>
+            <div class="list-details">
+                <div class="list-info">
+                    <h3 class="text-lg font-semibold">Favorite Games</h3>
+                    <p class="text-sm text-gray-400">12 games</p>
+                    <p class="text-sm text-gray-300 mt-1">A collection of my top-rated games.</p>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Add</button>
+            </div>
+        </div>
+        <!-- List Item 2 -->
+        <div class="list-item">
+            <div class="list-posters">
+                <img src="https://via.placeholder.com/60x90" alt="Game 1">
+                <img src="https://via.placeholder.com/60x90" alt="Game 2">
+                <img src="https://via.placeholder.com/60x90" alt="Game 3">
+            </div>
+            <div class="list-details">
+                <div class="list-info">
+                    <h3 class="text-lg font-semibold">To Play</h3>
+                    <p class="text-sm text-gray-400">8 games</p>
+                    <p class="text-sm text-gray-300 mt-1">Games I plan to play soon.</p>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Add</button>
+            </div>
+        </div>
+        <!-- List Item 3 -->
+        <div class="list-item">
+            <div class="list-posters">
+                <img src="https://via.placeholder.com/60x90" alt="Game 1">
+                <img src="https://via.placeholder.com/60x90" alt="Game 2">
+            </div>
+            <div class="list-details">
+                <div class="list-info">
+                    <h3 class="text-lg font-semibold">Completed</h3>
+                    <p class="text-sm text-gray-400">5 games</p>
+                    <p class="text-sm text-gray-300 mt-1">Games I’ve finished playing.</p>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Main Toolbar -->
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
@@ -246,7 +355,7 @@
                                     </button>
                                     <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
                                         <i class="fas fa-plus text-green-400"></i>
-                                        <span>Add to List</span>
+                                        <span>Add to Lists</span>
                                     </button>
                                     <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
                                         <i class="fas fa-bookmark text-purple-400"></i>
@@ -489,6 +598,13 @@
                     document.getElementById('actionPopup').classList.remove('show');
                 });
             }
+            // Show list popup when clicking Add to Lists
+            if (btn.textContent.includes('Add to Lists')) {
+                btn.addEventListener('click', () => {
+                    document.getElementById('listPopup').classList.add('show');
+                    document.getElementById('actionPopup').classList.remove('show');
+                });
+            }
             // Show success popup when clicking Add to PlayLaterList
             if (btn.textContent.includes('Add to PlayLaterList')) {
                 btn.addEventListener('click', () => {
@@ -506,6 +622,10 @@
 
         function closeRateLogModal() {
             document.getElementById('rateLogModal').classList.add('hidden');
+        }
+
+        function closeListPopup() {
+            document.getElementById('listPopup').classList.remove('show');
         }
 
         // Rating logic with half stars and revert for Review Modal
