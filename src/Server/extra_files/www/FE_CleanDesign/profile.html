@@ -6,6 +6,67 @@
     <title>Reviews - Kontroller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .edit-mode .editable-poster {
+            border: 2px dashed #4b5563;
+            background-color: #374151;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .edit-mode .editable-poster:hover {
+            background-color: #4b5563;
+        }
+        .editable-poster img {
+            display: block;
+        }
+        .gray-poster {
+            background-color: #4b5563;
+            position: relative;
+        }
+        .gray-poster::after {
+            content: "+";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #9ca3af;
+        }
+        #editMode {
+            width: 600px; /* Wide enough for 5 posters */
+        }
+        #favoriteGamesEdit {
+            position: relative;
+            min-height: 80px;
+        }
+        #searchPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1f2937;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        #searchPopup.active {
+            display: block;
+        }
+        #searchPopup .close-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+        }
+        #searchPopup .close-btn:hover {
+            color: #f87171;
+        }
+    </style>
 </head>
 <body class="bg-slate-900 text-white">
     <!-- Header with Avatar, Username and Main Toolbar -->
@@ -14,13 +75,57 @@
             <!-- Top Bar with Avatar, Username and Search -->
             <div class="flex items-center justify-between mb-4">
                 <!-- Left side: Avatar and Username -->
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 relative">
                     <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
                     <div>
-                        <h2 class="text-lg font-bold text-white">Username</h2>
-                        <div class="flex items-center space-x-2 text-sm text-gray-300">
-                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        <div class="flex items-center space-x-2">
+                            <h2 id="usernameDisplay" class="text-lg font-bold text-white">Username</h2>
+                            <button id="editButton" class="text-blue-400 hover:text-blue-300 text-sm">Edit</button>
+                        </div>
+                        <!-- Edit Mode -->
+                        <div id="editMode" class="hidden absolute bg-gray-800 p-4 rounded-lg shadow-lg mt-2 w-80 z-50">
+                            <div class="flex justify-between mb-4">
+                                <button id="cancelEdit" class="text-red-400 hover:text-red-300">Cancel</button>
+                                <button id="saveEdit" class="text-green-400 hover:text-green-300">Save</button>
+                            </div>
+                            <div class="space-y-4">
+                                <!-- Edit Name -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Name</label>
+                                    <input id="editName" type="text" value="Username" class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <!-- Edit Website Links -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Website Links</label>
+                                    <input id="editLinks" type="text" placeholder="Add website URL" class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <!-- Edit Favorite Games -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Favorite Games</label>
+                                    <div id="favoriteGamesEdit" class="flex space-x-2 overflow-x-auto pb-2">
+                                        <div class="editable-poster" data-index="0">
+                                            <img src="https://via.placeholder.com/150x200" alt="Game 1" class="w-24 h-32 rounded-lg shadow-lg">
+                                        </div>
+                                        <div class="editable-poster" data-index="1">
+                                            <img src="https://via.placeholder.com/150x200" alt="Game 2" class="w-24 h-32 rounded-lg shadow-lg">
+                                        </div>
+                                        <div class="editable-poster" data-index="2">
+                                            <img src="https://via.placeholder.com/150x200" alt="Game 3" class="w-24 h-32 rounded-lg shadow-lg">
+                                        </div>
+                                        <div class="editable-poster" data-index="3">
+                                            <img src="" alt="Game 4" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
+                                        </div>
+                                        <div class="editable-poster" data-index="4">
+                                            <img src="" alt="Game 5" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Edit Bio -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Bio</label>
+                                    <textarea id="editBio" class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" rows="4">Passionate gamer who loves exploring new worlds and experiencing epic stories. RPGs and action-adventure games are my favorite genres. Always looking for the next great gaming experience!</textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,19 +142,17 @@
                 </div>
             </div>
                 
-                <!-- Main Navigation -->
-                <nav class="flex space-x-4">
-                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Profile</a>
-                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
-                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
-                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
-                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
-                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
-                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
-                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
-                    
-                </nav>
-            </div>
+            <!-- Main Navigation -->
+            <nav class="flex space-x-4">
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Profile</a>
+                <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+            </nav>
         </div>
     </header>
 
@@ -58,17 +161,8 @@
         <div class="container mx-auto px-6 py-6">
             <div class="flex items-center justify-between">
                 <!-- External Links -->
-                <div class="flex space-x-4">
-                    <a href="#" class="text-blue-400 hover:text-blue-300">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-purple-400 hover:text-purple-300">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M16.942 6.247c-.684-.684-1.792-.684-2.476 0L12 8.713 9.534 6.247c-.684-.684-1.792-.684-2.476 0-.684.684-.684 1.792 0 2.476L9.524 11.19c.684.684 1.792.684 2.476 0l2.466-2.467c.684-.684.684-1.792 0-2.476z"/>
-                        </svg>
-                    </a>
+                <div id="externalLinks" class="flex space-x-4">
+                    <!-- Links will be populated here -->
                 </div>
                 
                 <!-- Stats -->
@@ -102,7 +196,7 @@
                 <!-- 5 Favorite Games -->
                 <section>
                     <h2 class="text-xl font-bold mb-4">Favorite Games</h2>
-                    <div class="flex space-x-4 overflow-x-auto pb-2">
+                    <div id="favoriteGamesDisplay" class="flex space-x-4 overflow-x-auto pb-2">
                         <div class="flex-shrink-0">
                             <img src="https://via.placeholder.com/150x200" alt="Game 1" class="w-24 h-32 rounded-lg shadow-lg">
                         </div>
@@ -113,10 +207,10 @@
                             <img src="https://via.placeholder.com/150x200" alt="Game 3" class="w-24 h-32 rounded-lg shadow-lg">
                         </div>
                         <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Game 4" class="w-24 h-32 rounded-lg shadow-lg">
+                            <img src="" alt="Game 4" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
                         </div>
                         <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Game 5" class="w-24 h-32 rounded-lg shadow-lg">
+                            <img src="" alt="Game 5" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
                         </div>
                     </div>
                 </section>
@@ -220,7 +314,7 @@
                 <!-- Bio -->
                 <section class="bg-gray-800 p-6 rounded-lg">
                     <h3 class="text-lg font-semibold mb-4">Bio</h3>
-                    <p class="text-gray-300 leading-relaxed">
+                    <p id="bioDisplay" class="text-gray-300 leading-relaxed">
                         Passionate gamer who loves exploring new worlds and experiencing epic stories. RPGs and action-adventure games are my favorite genres. Always looking for the next great gaming experience!
                     </p>
                 </section>
@@ -252,8 +346,6 @@
                             <p class="font-medium">Top 10 RPGs of All Time</p>
                             <p class="text-sm text-gray-400">👍 45 likes • 3 months ago</p>
                         </a>
-
-            
                         <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
                             <p class="font-medium">Best Indie Games 2024</p>
                             <p class="text-sm text-gray-400">👍 32 likes • 1 month ago</p>
@@ -267,5 +359,107 @@
             </div>
         </div>
     </main>
+
+    <!-- Search Popup -->
+    <div id="searchPopup" class="hidden">
+        <span class="close-btn" id="closeSearchPopup">&times;</span>
+        <div class="relative">
+            <input type="text" id="searchInput" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+            <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+    </div>
+
+    <script>
+        // Edit Mode Toggle
+        const editButton = document.getElementById('editButton');
+        const editMode = document.getElementById('editMode');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const saveEdit = document.getElementById('saveEdit');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const editName = document.getElementById('editName');
+        const editLinks = document.getElementById('editLinks');
+        const externalLinks = document.getElementById('externalLinks');
+        const favoriteGamesEdit = document.getElementById('favoriteGamesEdit');
+        const bioDisplay = document.getElementById('bioDisplay');
+        const editBio = document.getElementById('editBio');
+        const favoriteGamesDisplay = document.getElementById('favoriteGamesDisplay');
+        const searchPopup = document.getElementById('searchPopup');
+        const searchInput = document.getElementById('searchInput');
+        const closeSearchPopup = document.getElementById('closeSearchPopup');
+        let activePosterIndex = null;
+
+        editButton.addEventListener('click', () => {
+            editMode.classList.remove('hidden');
+            editName.value = usernameDisplay.textContent;
+            editBio.value = bioDisplay.textContent;
+            const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
+            const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
+            displayPosters.forEach((dp, i) => {
+                editPosters[i].src = dp.src;
+                editPosters[i].alt = dp.alt;
+            });
+        });
+
+        cancelEdit.addEventListener('click', () => {
+            editMode.classList.add('hidden');
+            searchPopup.classList.remove('active');
+            activePosterIndex = null;
+        });
+
+        saveEdit.addEventListener('click', () => {
+            usernameDisplay.textContent = editName.value;
+            externalLinks.innerHTML = '';
+            if (editLinks.value) {
+                const link = document.createElement('a');
+                link.href = editLinks.value;
+                link.className = 'text-blue-400 hover:text-blue-300';
+                link.innerHTML = '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"/></svg>';
+                externalLinks.appendChild(link);
+            }
+            bioDisplay.textContent = editBio.value;
+            const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
+            const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
+            editPosters.forEach((ep, i) => {
+                displayPosters[i].src = ep.src;
+                displayPosters[i].alt = ep.alt;
+            });
+            editMode.classList.add('hidden');
+            searchPopup.classList.remove('active');
+            activePosterIndex = null;
+        });
+
+        // Favorite Games Poster Editing
+        const posters = favoriteGamesEdit.querySelectorAll('.editable-poster');
+        posters.forEach(poster => {
+            poster.addEventListener('click', () => {
+                activePosterIndex = poster.getAttribute('data-index');
+                searchPopup.classList.add('active');
+                searchInput.focus();
+            });
+        });
+
+        closeSearchPopup.addEventListener('click', () => {
+            searchPopup.classList.remove('active');
+            activePosterIndex = null;
+        });
+
+        searchInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                searchPopup.classList.remove('active');
+                activePosterIndex = null;
+            }, 200);
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && activePosterIndex !== null) {
+                const searchValue = searchInput.value;
+                posters[activePosterIndex].querySelector('img').src = `https://via.placeholder.com/150x200?text=${encodeURIComponent(searchValue)}`;
+                posters[activePosterIndex].querySelector('img').alt = searchValue;
+                searchInput.value = '';
+                searchPopup.classList.remove('active');
+                activePosterIndex = null;
+            }
+        });
+    </script>
 </body>
 </html>
