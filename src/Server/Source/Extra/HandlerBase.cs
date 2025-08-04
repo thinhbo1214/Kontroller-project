@@ -4,49 +4,123 @@ using Server.Source.NetCoreServer;
 
 namespace Server.Source.Extra
 {
+    /// <summary>
+    /// Cung cấp lớp cơ sở cho các handler xử lý HTTP request theo phương thức (GET, POST, PUT, DELETE).
+    /// Tự động phân tuyến đến hàm xử lý phù hợp dựa trên URL và phương thức HTTP.
+    /// </summary>
     public abstract class HandlerBase : IHandler
     {
+        /// <summary>
+        /// Tên định danh cho handler, dùng để khớp phần đầu URL.
+        /// </summary>
         public abstract string Type { get; }
 
+        /// <summary>
+        /// Các route xử lý GET request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> GetRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Các route xử lý POST request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> PostRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Các route xử lý PUT request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> PutRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Các route xử lý DELETE request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> DeleteRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Kiểm tra xem handler này có thể xử lý path đã cho hay không.
+        /// </summary>
+        /// <param name="path">Đường dẫn URL được yêu cầu.</param>
+        /// <returns>True nếu handler có thể xử lý path này.</returns>
         public virtual bool CanHandle(string path) => path.StartsWith(Type, StringComparison.OrdinalIgnoreCase);
-        public virtual void Handle(HttpRequest request, HttpsSession session) 
+
+        /// <summary>
+        /// Xử lý request chính. Tự động phân tuyến dựa trên phương thức HTTP và đường dẫn.
+        /// </summary>
+        /// <param name="request">Request nhận được từ client.</param>
+        /// <param name="session">Phiên kết nối hiện tại.</param>
+        public virtual void Handle(HttpRequest request, HttpsSession session)
         {
-            switch (request.Method.ToUpper())
-            { 
-                case "HEAD":
-                    HeadHandle(session); break;
-                case "GET":
-                    GetHandle(request, session); break;
-                case "POST":
-                    PostHandle(request, session); break;
-                case "PUT":
-                    PutHandle(request, session); break;
-                case "DELETE":
-                    DeleteHandle(request, session); break;
-                case "OPTION":
-                    OptionsHandle(request, session); break;
-                case "TRACE":
-                    TraceHandle(request, session); break;
-                default:
-                    ErrorHandle(session); break;
+            string path = request.Url;
+
+            Dictionary<string, Action<HttpRequest, HttpsSession>>? routes = request.Method.ToUpper() switch
+            {
+                "GET" => GetRoutes,
+                "POST" => PostRoutes,
+                "PUT" => PutRoutes,
+                "DELETE" => DeleteRoutes,
+                _ => null
+            };
+
+            if (routes != null && routes.TryGetValue(path, out var action))
+            {
+                action(request, session);
+            }
+            else
+            {
+                ErrorHandle(session);
             }
         }
-        public virtual void HeadHandle(HttpsSession session) 
+
+        /// <summary>
+        /// Xử lý HTTP HEAD request. Trả về header mà không có nội dung.
+        /// </summary>
+        /// <param name="session">Phiên kết nối hiện tại.</param>
+        public virtual void HeadHandle(HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeHeadResponse());
         }
+
+        /// <summary>
+        /// Xử lý HTTP GET request. Ghi đè nếu cần custom riêng.
+        /// </summary>
         public virtual void GetHandle(HttpRequest request, HttpsSession session) { }
+
+        /// <summary>
+        /// Xử lý HTTP POST request. Ghi đè nếu cần custom riêng.
+        /// </summary>
         public virtual void PostHandle(HttpRequest request, HttpsSession session) { }
+
+        /// <summary>
+        /// Xử lý HTTP PUT request. Ghi đè nếu cần custom riêng.
+        /// </summary>
         public virtual void PutHandle(HttpRequest request, HttpsSession session) { }
+
+        /// <summary>
+        /// Xử lý HTTP DELETE request. Ghi đè nếu cần custom riêng.
+        /// </summary>
         public virtual void DeleteHandle(HttpRequest request, HttpsSession session) { }
+
+        /// <summary>
+        /// Xử lý HTTP OPTIONS request. Trả về các phương thức được hỗ trợ.
+        /// </summary>
         public virtual void OptionsHandle(HttpRequest request, HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeOptionsResponse());
         }
+
+        /// <summary>
+        /// Xử lý HTTP TRACE request. Trả về nội dung của chính request gửi lên.
+        /// </summary>
         public virtual void TraceHandle(HttpRequest request, HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeTraceResponse(request));
         }
+
+        /// <summary>
+        /// Gửi phản hồi dạng JSON với mã trạng thái và dữ liệu cho client.
+        /// </summary>
+        /// <param name="session">Phiên kết nối hiện tại.</param>
+        /// <param name="data">Dữ liệu JSON muốn trả về (nếu có).</param>
+        /// <param name="statusCode">Mã trạng thái HTTP.</param>
         protected virtual void SendJsonResponse(HttpsSession session, object data, int statusCode)
         {
             var response = data != null
@@ -54,10 +128,22 @@ namespace Server.Source.Extra
                 : ResponseHelper.MakeJsonResponse(session.Response, statusCode);
             session.SendResponseAsync(response);
         }
+
+        /// <summary>
+        /// Gửi phản hồi lỗi dạng JSON với mã lỗi 400 (Bad Request).
+        /// </summary>
+        /// <param name="session">Phiên kết nối hiện tại.</param>
+        /// <param name="data">Thông tin lỗi bổ sung (nếu có).</param>
         public virtual void ErrorHandle(HttpsSession session, object data = null)
         {
             SendJsonResponse(session, data, 400);
         }
+
+        /// <summary>
+        /// Gửi phản hồi thành công dạng JSON với mã 200 (OK).
+        /// </summary>
+        /// <param name="session">Phiên kết nối hiện tại.</param>
+        /// <param name="data">Dữ liệu muốn trả về (nếu có).</param>
         public virtual void OkHandle(HttpsSession session, object data = null)
         {
             SendJsonResponse(session, data, 200);

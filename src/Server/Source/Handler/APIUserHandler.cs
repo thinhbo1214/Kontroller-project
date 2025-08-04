@@ -12,23 +12,32 @@ using System.Reflection;
 namespace Server.Source.Handler
 {
     using User = Server.Source.Data.User;
+
+    /// <summary>
+    /// Xử lý các API liên quan đến người dùng, như đăng ký, đăng nhập, cập nhật email, avatar, username, v.v.
+    /// </summary>
     internal class APIUserHandler : HandlerBase
     {
+        /// <summary>
+        /// Kiểu đường dẫn chính của handler. Dùng để xác định handler phù hợp khi routing.
+        /// </summary>
         public override string Type => "/api/user";
-        private readonly Dictionary<string, Action<HttpRequest, HttpsSession>> PutRoutes;
+
+        /// <summary>
+        /// Khởi tạo và đăng ký các route PUT tương ứng với các chức năng người dùng.
+        /// </summary>
         public APIUserHandler()
         {
-            PutRoutes = new Dictionary<string, Action<HttpRequest, HttpsSession>>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["/api/user/email"] = PutUserEmail,
-                ["/api/user/avatar"] = PutUserAvatar,
-                ["/api/user/username"] = PutUserUsername,
-                ["/api/user/password"] = PutUserPassword,
-                ["/api/user/forgetpassword"] = PutUserForgetPassword
-            };
+            PutRoutes["/api/user/email"] = PutUserEmail;
+            PutRoutes["/api/user/avatar"] = PutUserAvatar;
+            PutRoutes["/api/user/username"] = PutUserUsername;
+            PutRoutes["/api/user/password"] = PutUserPassword;
+            PutRoutes["/api/user/forgetpassword"] = PutUserForgetPassword;
         }
 
-
+        /// <summary>
+        /// Xử lý yêu cầu GET để lấy thông tin người dùng theo userId hoặc token.
+        /// </summary>
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
@@ -52,11 +61,13 @@ namespace Server.Source.Handler
             OkHandle(session, userInfo);
         }
 
+        /// <summary>
+        /// Xử lý POST cho việc đăng nhập hoặc đăng ký tài khoản người dùng.
+        /// </summary>
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
 
-            //Nếu đã đăng nhập và phiên còn hạn
             if (sessionManager.Authorization(request, out string id, session))
             {
                 OkHandle(session);
@@ -65,24 +76,26 @@ namespace Server.Source.Handler
 
             var value = request.Body;
             var account = JsonHelper.Deserialize<Account>(value);
-            // Gưi dữ liệu ko đủ
             if (account == null)
             {
                 ErrorHandle(session);
                 return;
             }
 
-            // Đăng ký thành công:
             string userId = AccountDatabase.Instance.CreateAccount(account);
             if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);
-                session.SendResponseAsync(response); // gửi response
+                session.SendResponseAsync(response);
                 return;
             }
-            
+
             ErrorHandle(session);
         }
+
+        /// <summary>
+        /// Xử lý PUT để cập nhật thông tin người dùng qua các route được đăng ký.
+        /// </summary>
         public override void PutHandle(HttpRequest request, HttpsSession session)
         {
             if (PutRoutes.TryGetValue(request.Url, out var handler))
@@ -93,8 +106,11 @@ namespace Server.Source.Handler
             {
                 ErrorHandle(session);
             }
-
         }
+
+        /// <summary>
+        /// Hàm tiện ích dùng chung cho các phương thức PUT để xác thực và gán thêm trường UserId.
+        /// </summary>
         private T PutBase<T>(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
@@ -106,6 +122,8 @@ namespace Server.Source.Handler
             var newData = JsonHelper.AddPropertyAndDeserialize<T>(request.Body, "UserId", userId);
             return newData;
         }
+
+        /// <summary>Cập nhật email người dùng.</summary>
         private void PutUserEmail(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<object>(request, session);
@@ -116,6 +134,8 @@ namespace Server.Source.Handler
             }
             OkHandle(session);
         }
+
+        /// <summary>Cập nhật avatar người dùng.</summary>
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<object>(request, session);
@@ -126,6 +146,8 @@ namespace Server.Source.Handler
             }
             OkHandle(session);
         }
+
+        /// <summary>Cập nhật username người dùng.</summary>
         private void PutUserUsername(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<object>(request, session);
@@ -136,6 +158,8 @@ namespace Server.Source.Handler
             }
             OkHandle(session);
         }
+
+        /// <summary>Cập nhật password người dùng.</summary>
         private void PutUserPassword(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<object>(request, session);
@@ -146,6 +170,8 @@ namespace Server.Source.Handler
             }
             OkHandle(session);
         }
+
+        /// <summary>Thực hiện quên mật khẩu cho người dùng.</summary>
         private void PutUserForgetPassword(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<object>(request, session);
@@ -157,6 +183,9 @@ namespace Server.Source.Handler
             OkHandle(session);
         }
 
+        /// <summary>
+        /// Xử lý xóa tài khoản người dùng.
+        /// </summary>
         public override void DeleteHandle(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
@@ -165,15 +194,16 @@ namespace Server.Source.Handler
                 ErrorHandle(session);
                 return;
             }
-            var data = JsonHelper.Deserialize<DeleteAccountRequest>(request.Body);
 
+            var data = JsonHelper.Deserialize<DeleteAccountRequest>(request.Body);
             if (AccountDatabase.Instance.Delete(data) == 1)
             {
                 OkHandle(session);
                 return;
             }
+
             ErrorHandle(session);
         }
-
     }
 }
+
