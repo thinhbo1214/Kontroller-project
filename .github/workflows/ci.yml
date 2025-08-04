@@ -72,14 +72,14 @@ jobs:
           # Lấy danh sách commit per author và lưu ra file tạm
           git shortlog -s -n > commit.txt
 
-          # Đếm và lọc tác giả (bắt chước cách của authors_count.txt)
-          sort commit.txt | uniq -c | sort -nr > commit_count.txt
 
           # Format kết quả
           while read count author_raw; do
-            author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
-            echo "- $author: \`$count commit\`" >> report.txt
-          done < commit_count.txt
+            if [ -n "$count" ] && [ -n "$author_raw" ]; then
+              author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
+              echo "- $author: \`$count commit\`" >> report.txt
+            fi
+          done < commit.txt
 
           # Tổng số commit toàn repo
           total_commits=$(git rev-list --count HEAD)
