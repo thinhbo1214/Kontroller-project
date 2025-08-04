@@ -29,27 +29,20 @@ jobs:
         report_date=$(date +%Y-%m-%d)
         message="📊 **Báo cáo đóng góp dòng code** ($report_date):"
 
-        if [ ! -f ./src/metrics/line_contribution.csv ]; then
-          echo "❌ Không tìm thấy file CSV!"
-          exit 1
-        fi
-
-        tail -n +2 ./src/metrics/line_contribution.csv | while IFS=',' read -r date author lines; do
-          # Nếu bất kỳ dòng nào không đủ 3 cột sẽ bị bỏ qua
-          if [[ -z "$author" || -z "$lines" ]]; then continue; fi
-
-          sanitized_author=$(echo "$author" | tr -d '"' | sed 's/,/ /g')
+        while IFS=',' read -r date author lines; do
+          sanitized_author=$(echo "$author" | sed 's/"/'\''/g' | sed 's/,/ /g')
           message="$message\n- \`$sanitized_author\`: $lines dòng"
-        done
+        done < <(tail -n +2 ./src/metrics/line_contribution.csv)
 
-        echo -e "$message"  # Gửi log ra console trước
-
+        # encode message safely using jq
         payload=$(jq -Rn --arg msg "$message" '{content: $msg}')
 
+        echo -e "$message"
+
         curl -H "Content-Type: application/json" \
-             -X POST \
-             -d "$payload" \
-             "$DISCORD_WEBHOOK"
+            -X POST \
+            -d "$payload" \
+            $DISCORD_WEBHOOK
       env:
         DISCORD_WEBHOOK: https://discord.com/api/webhooks/1401911119290961962/PGaNzn5IWIiOgixqCCzMPfNsIoWaj77rTqh7W7MFfwc87ezxfhr-ZMTwWUQQ83hH1Y3E
 
