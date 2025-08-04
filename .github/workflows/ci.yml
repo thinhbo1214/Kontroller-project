@@ -46,7 +46,7 @@ jobs:
   # -----------------------------
   report:
     runs-on: ubuntu-latest
-    needs: [build]
+    # needs: [build]
     
     steps:
       - name: Checkout code
@@ -72,6 +72,16 @@ jobs:
           # Lấy danh sách commit per author và lưu ra file tạm
           git shortlog -s -n > commit.txt
 
+          # Kiểm tra xem file commit.txt có rỗng không
+          if [ ! -s commit.txt ]; then
+            echo "Lỗi: Không lấy được dữ liệu commit từ git shortlog." >> report.txt
+            exit 1
+          fi
+
+          # Debug: In nội dung commit.txt
+          echo "Debug: Nội dung commit.txt:" >> report.txt
+          cat commit.txt >> report.txt
+          echo "" >> report.txt
 
           # Format kết quả
           while read count author_raw; do
