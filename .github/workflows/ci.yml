@@ -63,21 +63,22 @@ jobs:
 
           echo "" >> report.txt
           echo "🧾 **Thông tin commit mới nhất:**" >> report.txt
-          echo "- ✅ Commit mới nhất bởi: \`$(git log -1 --pretty=format:'%an')\`" >> report.txt
-          echo "- 💬 Message: _\"$(git log -1 --pretty=format:'%s')\"_" >> report.txt
+          echo "- Commit bởi: $(git log -1 --pretty=format:'%an')" >> report.txt
+          echo "- Message: \"$(git log -1 --pretty=format:'%s')\"" >> report.txt
           
           echo "" >> report.txt
           echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
 
           # Danh sách commit của từng người
-          git shortlog -s -n | while read count name; do
-            echo "- **$name**: \`$count commit\`" >> report.txt
+          git shortlog -s -n | while IFS= read -r line; do
+            count=$(echo "$line" | awk '{print $1}')
+            name=$(echo "$line" | cut -d' ' -f2-)
+            echo "- $name: \`$count commit\`" >> report.txt
           done
 
           # Tổng số commit toàn repo
           total_commits=$(git rev-list --count HEAD)
-          echo "" >> report.txt
-          echo "- 🧮 Tổng số commit toàn repo: \`$total_commits\`" >> report.txt
+          echo "- Tổng số commit toàn repo: \`$total_commits\`" >> report.txt
           
           echo "" >> report.txt
           echo "🧾 **Báo cáo số dòng đóng góp**:" >> report.txt
@@ -102,9 +103,8 @@ jobs:
           # ✅ Tính tổng số dòng
           total_lines=$(awk '{sum += $1} END {print sum}' authors_count.txt)
 
-          echo "" >> report.txt
-          echo "- 🧮 Tổng số dòng được thống kê: \`$total_lines\`" >> report.txt
-          echo "- 📂 Tổng số file được thống kê: \`$(git ls-files | wc -l)\`" >> report.txt
+          echo "- Tổng số dòng được thống kê: \`$total_lines\`" >> report.txt
+          echo "- Tổng số file được thống kê: \`$(git ls-files | wc -l)\`" >> report.txt
 
           echo "" >> report.txt
           cat report.txt
