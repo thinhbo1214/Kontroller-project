@@ -1,7 +1,7 @@
 import { Auth } from './auth.js';
 import { UI } from './ui.js';
 
-class EventHandler {
+class ClickHandler {
     constructor() {
         this.init();
     }
@@ -9,87 +9,132 @@ class EventHandler {
     init() {
         // Wait for DOM to be ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.bindEvents());
+            document.addEventListener('DOMContentLoaded', () => this.bindClickEvents());
         } else {
-            this.bindEvents();
+            this.bindClickEvents();
         }
     }
 
-    bindEvents() {
+    bindClickEvents() {
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Get elements
-        const elements = {
-            backBtn: document.getElementById('backBtn'),
-            signupForm: document.getElementById('signupForm'),
-            togglePasswordBtn: document.getElementById('togglePasswordBtn'),
-            signupEmail: document.getElementById('signupEmail')
-        };
-
-        // Back button
-        elements.backBtn?.addEventListener('click', this.handleBack);
-
-        // Signup form
-        elements.signupForm?.addEventListener('submit', this.handleSignupSubmit);
-
-        // Password toggle
-        elements.togglePasswordBtn?.addEventListener('click', this.handlePasswordToggle);
-
-        // Email validation
-        elements.signupEmail?.addEventListener('blur', this.handleEmailValidation);
-
-        // Global keyboard events
-        document.addEventListener('keydown', this.handleKeydown);
+        // Bind all click events using event delegation
+        document.addEventListener('click', this.handleGlobalClick);
     }
 
-    // Event handlers
-    handleBack = () => {
+    handleGlobalClick = (e) => {
+        const target = e.target;
+        const clickAction = target.dataset.click || target.id;
+
+        // Route click events based on element ID or data-click attribute
+        switch (clickAction) {
+            case 'backBtn':
+            case 'back':
+                this.handleBack(e);
+                break;
+            
+            case 'signupBtn':
+            case 'signup':
+                this.handleSignup(e);
+                break;
+            
+            case 'togglePasswordBtn':
+            case 'toggle-password':
+                this.handlePasswordToggle(e);
+                break;
+            
+            case 'loginBtn':
+            case 'login':
+                this.handleLogin(e);
+                break;
+            
+            case 'logoutBtn':
+            case 'logout':
+                this.handleLogout(e);
+                break;
+            
+            default:
+                // Handle form submissions
+                if (target.type === 'submit') {
+                    this.handleFormSubmit(e);
+                }
+                break;
+        }
+    }
+
+    // Click event handlers
+    handleBack = (e) => {
+        e.preventDefault();
         window.location.href = 'index.html';
     }
 
-    handleSignupSubmit = async (e) => {
+    handleSignup = async (e) => {
         e.preventDefault();
         
-        const formData = new FormData(e.target);
-        const username = document.getElementById('signupUsername').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
+        const username = document.getElementById('signupUsername')?.value;
+        const email = document.getElementById('signupEmail')?.value;
+        const password = document.getElementById('signupPassword')?.value;
 
-        await Auth.signup(username, email, password);
+        if (username && email && password) {
+            await Auth.signup(username, email, password);
+        }
+    }
+
+    handleLogin = async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('loginEmail')?.value;
+        const password = document.getElementById('loginPassword')?.value;
+
+        if (email && password) {
+            await Auth.login(email, password);
+        }
+    }
+
+    handleLogout = async (e) => {
+        e.preventDefault();
+        await Auth.logout();
     }
 
     handlePasswordToggle = (e) => {
-        const button = e.currentTarget;
+        e.preventDefault();
+        const button = e.target;
         const targetId = button.dataset.target;
         UI.togglePassword(targetId, button);
     }
 
-    handleEmailValidation = (e) => {
-        const email = e.target.value;
-        if (email && !UI.validateEmail(email)) {
-            e.target.style.borderColor = '#ef4444';
-            e.target.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.3)';
-        } else {
-            e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            e.target.style.boxShadow = 'none';
+    handleFormSubmit = async (e) => {
+        const form = e.target.closest('form');
+        if (!form) return;
+
+        e.preventDefault();
+        
+        switch (form.id) {
+            case 'signupForm':
+                this.handleSignup(e);
+                break;
+            case 'loginForm':
+                this.handleLogin(e);
+                break;
         }
     }
 
-    handleKeydown = (e) => {
-        // Enter key for signup form inputs
-        if (e.key === 'Enter' && this.isSignupInput(e.target)) {
-            e.preventDefault();
-            document.getElementById('signupForm').dispatchEvent(new Event('submit'));
-        }
+    // Utility methods
+    validateEmail(email) {
+        return UI.validateEmail ? UI.validateEmail(email) : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Helper methods
-    isSignupInput(element) {
-        const signupInputIds = ['signupUsername', 'signupEmail', 'signupPassword'];
-        return signupInputIds.includes(element.id);
+    showError(message) {
+        console.error(message);
+        // Add your error display logic here
+    }
+
+    showSuccess(message) {
+        console.log(message);
+        // Add your success display logic here
     }
 }
 
-// Initialize event handler
-new EventHandler();
+// Initialize click handler
+new ClickHandler();
