@@ -1,7 +1,12 @@
-import { Auth } from './auth.js';
+import { Handle } from './handle.js';
 import { UI } from './ui.js';
 
-class ClickHandler {
+// cach them su kien moi gom 3 cach
+// 1 Thêm case mới trong handleGlobalClick
+// 2 Tạo handler method tương ứng
+// 3 Thêm ID hoặc data-click attribute cho element
+
+class EventHandler {
     constructor() {
         this.init();
     }
@@ -9,132 +14,211 @@ class ClickHandler {
     init() {
         // Wait for DOM to be ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.bindClickEvents());
+            document.addEventListener('DOMContentLoaded', () => this.bindEvents());
         } else {
-            this.bindClickEvents();
+            this.bindEvents();
         }
     }
 
-    bindClickEvents() {
-        // Initialize Lucide icons
-        lucide.createIcons();
+    bindEvents() {
+        // Initialize Lucide icons if available
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
 
-        // Bind all click events using event delegation
+        // Global click event listener using event delegation
         document.addEventListener('click', this.handleGlobalClick);
+        
+        // Global form submit listener
+        document.addEventListener('submit', this.handleGlobalSubmit);
+        
+        // Global input events for real-time validation
+        document.addEventListener('input', this.handleGlobalInput);
+        document.addEventListener('blur', this.handleGlobalBlur);
+        
+        // Global keyboard events
+        document.addEventListener('keydown', this.handleGlobalKeydown);
     }
 
+    // Global click handler - routes all click events
     handleGlobalClick = (e) => {
         const target = e.target;
-        const clickAction = target.dataset.click || target.id;
+        const action = target.dataset.click || target.id || target.className;
 
-        // Route click events based on element ID or data-click attribute
-        switch (clickAction) {
-            case 'backBtn':
-            case 'back':
-                this.handleBack(e);
+        // Route based on data-click attribute, ID, or specific classes
+        switch (true) {
+            // Back navigation
+            case action.includes('back') || action.includes('backBtn'):
+                Handle.handleBack(e);
                 break;
-            
-            case 'signupBtn':
-            case 'signup':
-                this.handleSignup(e);
+
+            // Authentication actions
+            case action.includes('signup') || action.includes('signupBtn'):
+                Handle.handleSignup(e);
                 break;
-            
-            case 'togglePasswordBtn':
-            case 'toggle-password':
-                this.handlePasswordToggle(e);
+
+            case action.includes('login') || action.includes('loginBtn'):
+                Handle.handleLogin(e);
                 break;
-            
-            case 'loginBtn':
-            case 'login':
-                this.handleLogin(e);
+
+            case action.includes('logout') || action.includes('logoutBtn'):
+                Handle.handleLogout(e);
                 break;
-            
-            case 'logoutBtn':
-            case 'logout':
-                this.handleLogout(e);
+
+            // Password toggle
+            case action.includes('toggle-password') || action.includes('togglePasswordBtn'):
+                Handle.handlePasswordToggle(e);
                 break;
-            
+
+            // Modal controls
+            case action.includes('modal-open'):
+                Handle.handleModalOpen(e);
+                break;
+
+            case action.includes('modal-close'):
+                Handle.handleModalClose(e);
+                break;
+
+            // Tab switching
+            case action.includes('tab-'):
+                Handle.handleTabSwitch(e);
+                break;
+
+            // Generic button actions
+            case target.tagName === 'BUTTON' && target.type === 'button':
+                Handle.handleGenericButton(e);
+                break;
+
+            // Links with data-action
+            case target.tagName === 'A' && target.dataset.action:
+                e.preventDefault();
+                Handle.handleLinkAction(e);
+                break;
+
             default:
-                // Handle form submissions
-                if (target.type === 'submit') {
-                    this.handleFormSubmit(e);
+                // Let other clicks pass through
+                break;
+        }
+    }
+
+    // Global form submit handler
+    handleGlobalSubmit = (e) => {
+        const form = e.target;
+        const formId = form.id;
+        const formAction = form.dataset.action;
+
+        // Route form submissions
+        switch (formId || formAction) {
+            case 'signupForm':
+            case 'signup':
+                e.preventDefault();
+                Handle.handleSignupSubmit(e);
+                break;
+
+            case 'loginForm':
+            case 'login':
+                e.preventDefault();
+                Handle.handleLoginSubmit(e);
+                break;
+
+            case 'contactForm':
+            case 'contact':
+                e.preventDefault();
+                Handle.handleContactSubmit(e);
+                break;
+
+            default:
+                // Let other forms submit normally or handle generically
+                if (form.dataset.preventDefault === 'true') {
+                    e.preventDefault();
+                    Handle.handleGenericForm(e);
                 }
                 break;
         }
     }
 
-    // Click event handlers
-    handleBack = (e) => {
-        e.preventDefault();
-        window.location.href = 'index.html';
-    }
+    // Global input handler for real-time validation
+    handleGlobalInput = (e) => {
+        const target = e.target;
+        const inputType = target.type;
+        const inputId = target.id;
 
-    handleSignup = async (e) => {
-        e.preventDefault();
-        
-        const username = document.getElementById('signupUsername')?.value;
-        const email = document.getElementById('signupEmail')?.value;
-        const password = document.getElementById('signupPassword')?.value;
-
-        if (username && email && password) {
-            await Auth.signup(username, email, password);
-        }
-    }
-
-    handleLogin = async (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('loginEmail')?.value;
-        const password = document.getElementById('loginPassword')?.value;
-
-        if (email && password) {
-            await Auth.login(email, password);
-        }
-    }
-
-    handleLogout = async (e) => {
-        e.preventDefault();
-        await Auth.logout();
-    }
-
-    handlePasswordToggle = (e) => {
-        e.preventDefault();
-        const button = e.target;
-        const targetId = button.dataset.target;
-        UI.togglePassword(targetId, button);
-    }
-
-    handleFormSubmit = async (e) => {
-        const form = e.target.closest('form');
-        if (!form) return;
-
-        e.preventDefault();
-        
-        switch (form.id) {
-            case 'signupForm':
-                this.handleSignup(e);
+        switch (inputType) {
+            case 'email':
+                Handle.handleEmailInput(e);
                 break;
-            case 'loginForm':
-                this.handleLogin(e);
+            
+            case 'password':
+                Handle.handlePasswordInput(e);
+                break;
+            
+            case 'text':
+                if (inputId.includes('username')) {
+                    Handle.handleUsernameInput(e);
+                }
+                break;
+
+            default:
+                // Generic input handling if needed
                 break;
         }
     }
 
-    // Utility methods
-    validateEmail(email) {
-        return UI.validateEmail ? UI.validateEmail(email) : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Global blur handler for validation
+    handleGlobalBlur = (e) => {
+        const target = e.target;
+        
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            Handle.handleInputValidation(e);
+        }
     }
 
-    showError(message) {
-        console.error(message);
-        // Add your error display logic here
+    // Global keyboard handler
+    handleGlobalKeydown = (e) => {
+        switch (e.key) {
+            case 'Enter':
+                if (this.isFormInput(e.target)) {
+                    Handle.handleEnterKey(e);
+                }
+                break;
+            
+            case 'Escape':
+                Handle.handleEscapeKey(e);
+                break;
+            
+            case 'Tab':
+                // Handle tab navigation if needed
+                break;
+
+            default:
+                break;
+        }
     }
 
-    showSuccess(message) {
-        console.log(message);
-        // Add your success display logic here
+    // Helper methods
+    isFormInput(element) {
+        return ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName);
+    }
+
+    // Method to manually trigger events (useful for programmatic calls)
+    triggerEvent(eventType, selector, data = {}) {
+        const element = document.querySelector(selector);
+        if (element) {
+            const event = new CustomEvent(eventType, { detail: data });
+            element.dispatchEvent(event);
+        }
+    }
+
+    // Method to add dynamic event listeners
+    addClickHandler(selector, handler) {
+        document.addEventListener('click', (e) => {
+            if (e.target.matches(selector)) {
+                handler(e);
+            }
+        });
     }
 }
 
-// Initialize click handler
-new ClickHandler();
+// Initialize and export
+const Events = new EventHandler();
+export { Events };

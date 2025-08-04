@@ -1,340 +1,326 @@
-// handle.js - Xử lý logic xác thực và API calls
-import { LoginAPI } from './api.js';
+import { API } from './api.js';
+import { UI } from './ui.js';
 
-class AuthHandler {
+class HandleManager {
     constructor() {
-        this.loginAPI = new LoginAPI();
-        this.maxRetries = 3;
-        this.retryDelay = 1000; // 1 second
+        this.currentModal = null;
+        this.currentTab = null;
     }
 
-    /**
-     * Xử lý đăng nhập
-     * @param {string} username - Tên đăng nhập
-     * @param {string} password - Mật khẩu
-     * @returns {Promise<{success: boolean, message?: string, data?: any}>}
-     */
-    async login(username, password) {
-        try {
-            // Validate inputs
-            const validation = this.validateCredentials(username, password);
-            if (!validation.valid) {
-                return {
-                    success: false,
-                    message: validation.message
-                };
-            }
-
-            // Attempt login with retry mechanism
-            const result = await this.loginWithRetry(username, password);
-            
-            if (result.ok) {
-                // Login successful
-                const userData = result.data;
-                
-                // Store user data and token
-                this.storeAuthData(userData);
-                
-                // Log successful login
-                this.logActivity('login_success', { username });
-                
-                return {
-                    success: true,
-                    data: userData
-                };
-            } else {
-                // Login failed
-                const errorMessage = this.getErrorMessage(result.status, result.data);
-                
-                // Log failed login
-                this.logActivity('login_failed', { username, status: result.status });
-                
-                return {
-                    success: false,
-                    message: errorMessage
-                };
-            }
-
-        } catch (error) {
-            console.error('Login handler error:', error);
-            
-            // Log error
-            this.logActivity('login_error', { username, error: error.message });
-            
-            return {
-                success: false,
-                message: 'Network error. Please check your connection and try again.'
-            };
-        }
+    // Navigation handlers
+    handleBack = (e) => {
+        e.preventDefault();
+        const target = e.target.dataset.target || 'index.html';
+        window.location.href = target;
     }
 
-    /**
-     * Đăng nhập với cơ chế retry
-     */
-    async loginWithRetry(username, password, attempt = 1) {
-        try {
-            const result = await this.loginAPI.PostLogin(username, password);
-            return result;
-        } catch (error) {
-            if (attempt < this.maxRetries && this.isRetryableError(error)) {
-                console.warn(`Login attempt ${attempt} failed, retrying...`);
-                await this.delay(this.retryDelay * attempt);
-                return this.loginWithRetry(username, password, attempt + 1);
-            }
-            throw error;
-        }
-    }
-
-    /**
-     * Kiểm tra xem lỗi có thể retry được không
-     */
-    isRetryableError(error) {
-        // Network errors, timeouts, và 5xx server errors có thể retry
-        return (
-            error.name === 'TypeError' || // Network error
-            error.name === 'TimeoutError' ||
-            (error.status >= 500 && error.status < 600)
-        );
-    }
-
-    /**
-     * Delay utility function
-     */
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    /**
-     * Validate credentials
-     */
-    validateCredentials(username, password) {
-        if (!username || !password) {
-            return {
-                valid: false,
-                message: 'Username and password are required'
-            };
-        }
-
-        if (typeof username !== 'string' || typeof password !== 'string') {
-            return {
-                valid: false,
-                message: 'Invalid credential format'
-            };
-        }
-
-        if (username.trim().length < 3) {
-            return {
-                valid: false,
-                message: 'Username must be at least 3 characters long'
-            };
-        }
-
-        if (password.length < 4) {
-            return {
-                valid: false,
-                message: 'Password must be at least 4 characters long'
-            };
-        }
-
-        // Check for potentially dangerous characters
-        const dangerousChars = /[<>\"'&]/;
-        if (dangerousChars.test(username) || dangerousChars.test(password)) {
-            return {
-                valid: false,
-                message: 'Invalid characters in credentials'
-            };
-        }
-
-        return { valid: true };
-    }
-
-    /**
-     * Get error message based on status code
-     */
-    getErrorMessage(status, data) {
-        switch (status) {
-            case 400:
-                return data?.message || 'Invalid request. Please check your credentials.';
-            case 401:
-                return 'Invalid username or password. Please try again.';
-            case 403:
-                return 'Access denied. Your account may be suspended.';
-            case 404:
-                return 'Login service not found. Please contact support.';
-            case 429:
-                return 'Too many login attempts. Please wait a moment and try again.';
-            case 500:
-                return 'Server error. Please try again later.';
-            case 502:
-            case 503:
-            case 504:
-                return 'Service temporarily unavailable. Please try again later.';
-            default:
-                return data?.message || 'Login failed. Please try again.';
-        }
-    }
-
-    /**
-     * Store authentication data
-     */
-    storeAuthData(userData) {
-        try {
-            // Store user data
-            if (userData.user) {
-                this.setUserData(userData.user);
-            }
-
-            // Store token if provided
-            if (userData.token) {
-                this.setAuthToken(userData.token);
-            }
-
-            // Store login timestamp
-            this.setLoginTime();
-
-        } catch (error) {
-            console.error('Error storing auth data:', error);
-        }
-    }
-
-    /**
-     * Set user data in localStorage
-     */
-    setUserData(user) {
-        try {
-            const userData = JSON.stringify(user);
-            localStorage.setItem('user', userData);
-        } catch (error) {
-            console.error('Error storing user data:', error);
-        }
-    }
-
-    /**
-     * Set auth token
-     */
-    setAuthToken(token) {
-        try {
-            localStorage.setItem('authToken', token);
-            // Also set in API class for future requests
-            if (window.API) {
-                window.API.setToken(token);
-            }
-        } catch (error) {
-            console.error('Error storing auth token:', error);
-        }
-    }
-
-    /**
-     * Set login time
-     */
-    setLoginTime() {
-        try {
-            localStorage.setItem('loginTime', Date.now().toString());
-        } catch (error) {
-            console.error('Error storing login time:', error);
-        }
-    }
-
-    /**
-     * Get stored user data
-     */
-    getUserData() {
-        try {
-            const userData = localStorage.getItem('user');
-            return userData ? JSON.parse(userData) : null;
-        } catch (error) {
-            console.error('Error retrieving user data:', error);
-            return null;
-        }
-    }
-
-    /**
-     * Get stored auth token
-     */
-    getAuthToken() {
-        try {
-            return localStorage.getItem('authToken');
-        } catch (error) {
-            console.error('Error retrieving auth token:', error);
-            return null;
-        }
-    }
-
-    /**
-     * Check if user is logged in
-     */
-    isLoggedIn() {
-        const token = this.getAuthToken();
-        const user = this.getUserData();
-        const loginTime = localStorage.getItem('loginTime');
+    // Authentication handlers
+    handleSignup = async (e) => {
+        e.preventDefault();
         
-        if (!token || !user || !loginTime) {
+        const form = document.getElementById('signupForm');
+        if (form) {
+            this.handleSignupSubmit({ target: form });
+        }
+    }
+
+    handleSignupSubmit = async (e) => {
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        const userData = {
+            username: formData.get('username') || document.getElementById('signupUsername')?.value,
+            email: formData.get('email') || document.getElementById('signupEmail')?.value,
+            password: formData.get('password') || document.getElementById('signupPassword')?.value
+        };
+
+        // Validate data
+        if (!this.validateSignupData(userData)) {
+            return;
+        }
+
+        try {
+            UI.showLoading(true);
+            const result = await API.signup(userData);
+            
+            if (result.success) {
+                UI.showSuccess('Đăng ký thành công!');
+                setTimeout(() => window.location.href = 'login.html', 2000);
+            } else {
+                UI.showError(result.message || 'Đăng ký thất bại');
+            }
+        } catch (error) {
+            UI.showError('Có lỗi xảy ra: ' + error.message);
+        } finally {
+            UI.showLoading(false);
+        }
+    }
+
+    handleLogin = async (e) => {
+        e.preventDefault();
+        
+        const form = document.getElementById('loginForm');
+        if (form) {
+            this.handleLoginSubmit({ target: form });
+        }
+    }
+
+    handleLoginSubmit = async (e) => {
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        const loginData = {
+            email: formData.get('email') || document.getElementById('loginEmail')?.value,
+            password: formData.get('password') || document.getElementById('loginPassword')?.value
+        };
+
+        if (!this.validateLoginData(loginData)) {
+            return;
+        }
+
+        try {
+            UI.showLoading(true);
+            const result = await API.login(loginData);
+            
+            if (result.success) {
+                UI.showSuccess('Đăng nhập thành công!');
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            } else {
+                UI.showError(result.message || 'Đăng nhập thất bại');
+            }
+        } catch (error) {
+            UI.showError('Có lỗi xảy ra: ' + error.message);
+        } finally {
+            UI.showLoading(false);
+        }
+    }
+
+    handleLogout = async (e) => {
+        e.preventDefault();
+        
+        try {
+            const result = await API.logout();
+            if (result.success) {
+                UI.showSuccess('Đăng xuất thành công!');
+                setTimeout(() => window.location.href = 'index.html', 1000);
+            }
+        } catch (error) {
+            UI.showError('Có lỗi khi đăng xuất');
+        }
+    }
+
+    // UI handlers
+    handlePasswordToggle = (e) => {
+        e.preventDefault();
+        const button = e.target.closest('button');
+        const targetId = button.dataset.target;
+        
+        if (targetId) {
+            UI.togglePassword(targetId, button);
+        }
+    }
+
+    handleModalOpen = (e) => {
+        e.preventDefault();
+        const modalId = e.target.dataset.modal;
+        if (modalId) {
+            this.currentModal = modalId;
+            UI.showModal(modalId);
+        }
+    }
+
+    handleModalClose = (e) => {
+        e.preventDefault();
+        if (this.currentModal) {
+            UI.hideModal(this.currentModal);
+            this.currentModal = null;
+        }
+    }
+
+    handleTabSwitch = (e) => {
+        e.preventDefault();
+        const tabId = e.target.dataset.tab;
+        if (tabId) {
+            UI.switchTab(tabId);
+            this.currentTab = tabId;
+        }
+    }
+
+    // Input handlers
+    handleEmailInput = (e) => {
+        const email = e.target.value;
+        const isValid = this.validateEmail(email);
+        UI.updateInputValidation(e.target, isValid, 'Email không hợp lệ');
+    }
+
+    handlePasswordInput = (e) => {
+        const password = e.target.value;
+        const strength = this.getPasswordStrength(password);
+        UI.updatePasswordStrength(e.target, strength);
+    }
+
+    handleUsernameInput = (e) => {
+        const username = e.target.value;
+        const isValid = username.length >= 3;
+        UI.updateInputValidation(e.target, isValid, 'Tên người dùng phải có ít nhất 3 ký tự');
+    }
+
+    handleInputValidation = (e) => {
+        const input = e.target;
+        const value = input.value.trim();
+        
+        switch (input.type) {
+            case 'email':
+                const emailValid = this.validateEmail(value);
+                UI.updateInputValidation(input, emailValid, 'Email không hợp lệ');
+                break;
+                
+            case 'password':
+                const passwordValid = value.length >= 6;
+                UI.updateInputValidation(input, passwordValid, 'Mật khẩu phải có ít nhất 6 ký tự');
+                break;
+                
+            default:
+                if (input.required && !value) {
+                    UI.updateInputValidation(input, false, 'Trường này là bắt buộc');
+                } else {
+                    UI.updateInputValidation(input, true);
+                }
+                break;
+        }
+    }
+
+    // Keyboard handlers
+    handleEnterKey = (e) => {
+        const form = e.target.closest('form');
+        if (form) {
+            e.preventDefault();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.click();
+            }
+        }
+    }
+
+    handleEscapeKey = (e) => {
+        // Close modals on escape
+        if (this.currentModal) {
+            this.handleModalClose(e);
+        }
+    }
+
+    // Generic handlers
+    handleGenericButton = (e) => {
+        const button = e.target;
+        const action = button.dataset.action;
+        
+        if (action) {
+            // Handle custom actions
+            console.log('Generic button action:', action);
+        }
+    }
+
+    handleLinkAction = (e) => {
+        const link = e.target;
+        const action = link.dataset.action;
+        
+        switch (action) {
+            case 'scroll-to':
+                const target = link.dataset.target;
+                UI.scrollToElement(target);
+                break;
+                
+            default:
+                console.log('Link action:', action);
+                break;
+        }
+    }
+
+    handleGenericForm = async (e) => {
+        const form = e.target;
+        const action = form.dataset.action;
+        
+        console.log('Generic form submission:', action);
+        // Handle generic form submissions
+    }
+
+    handleContactSubmit = async (e) => {
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        const contactData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            message: formData.get('message')
+        };
+
+        try {
+            UI.showLoading(true);
+            const result = await API.contact(contactData);
+            
+            if (result.success) {
+                UI.showSuccess('Tin nhắn đã được gửi thành công!');
+                form.reset();
+            } else {
+                UI.showError('Có lỗi khi gửi tin nhắn');
+            }
+        } catch (error) {
+            UI.showError('Có lỗi xảy ra: ' + error.message);
+        } finally {
+            UI.showLoading(false);
+        }
+    }
+
+    // Validation methods
+    validateEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    validateSignupData(data) {
+        if (!data.username || data.username.length < 3) {
+            UI.showError('Tên người dùng phải có ít nhất 3 ký tự');
             return false;
         }
-
-        // Check if login is not too old (24 hours)
-        const twentyFourHours = 24 * 60 * 60 * 1000;
-        const isTokenValid = (Date.now() - parseInt(loginTime)) < twentyFourHours;
         
-        return isTokenValid;
+        if (!this.validateEmail(data.email)) {
+            UI.showError('Email không hợp lệ');
+            return false;
+        }
+        
+        if (!data.password || data.password.length < 6) {
+            UI.showError('Mật khẩu phải có ít nhất 6 ký tự');
+            return false;
+        }
+        
+        return true;
     }
 
-    /**
-     * Logout user
-     */
-    logout() {
-        try {
-            localStorage.removeItem('user');
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('loginTime');
-            localStorage.removeItem('token'); // Remove API token as well
-            
-            // Log logout activity
-            this.logActivity('logout');
-            
-            // Redirect to login page
-            window.location.href = 'auth.html';
-        } catch (error) {
-            console.error('Error during logout:', error);
+    validateLoginData(data) {
+        if (!this.validateEmail(data.email)) {
+            UI.showError('Email không hợp lệ');
+            return false;
         }
+        
+        if (!data.password) {
+            UI.showError('Vui lòng nhập mật khẩu');
+            return false;
+        }
+        
+        return true;
     }
 
-    /**
-     * Log user activity
-     */
-    logActivity(action, details = {}) {
-        try {
-            const logEntry = {
-                action,
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent,
-                url: window.location.href,
-                ...details
-            };
-
-            // Store in localStorage for debugging (keep only last 10 entries)
-            const logs = JSON.parse(localStorage.getItem('activityLogs') || '[]');
-            logs.unshift(logEntry);
-            logs.splice(10); // Keep only last 10 entries
-            localStorage.setItem('activityLogs', JSON.stringify(logs));
-
-            // Could also send to server for analytics
-            console.log('Activity logged:', logEntry);
-        } catch (error) {
-            console.error('Error logging activity:', error);
-        }
-    }
-
-    /**
-     * Clear old activity logs
-     */
-    clearOldLogs() {
-        try {
-            localStorage.removeItem('activityLogs');
-        } catch (error) {
-            console.error('Error clearing logs:', error);
-        }
+    getPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        return strength;
     }
 }
 
-export { AuthHandler };
+// Initialize and export
+const Handle = new HandleManager();
+export { Handle };
