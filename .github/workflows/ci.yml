@@ -69,12 +69,15 @@ jobs:
           echo "" >> report.txt
           echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
 
-          # Danh sách commit của từng người
-          git shortlog -s -n | while IFS= read -r line; do
-            count=$(echo "$line" | awk '{print $1}')
-            name=$(echo "$line" | cut -d' ' -f2-)
-            echo "- $name: \`$count commit\`" >> report.txt
-          done
+          # Lấy danh sách commit per author và lưu ra file tạm
+          git shortlog -s -n > commit_count.txt
+
+          # Ghi từng dòng commit của contributor vào báo cáo
+          while read line; do
+            count=$(echo "$line" | sed -E 's/^ *([0-9]+).*/\1/')
+            author=$(echo "$line" | sed -E 's/^ *[0-9]+[ \t]+//')
+            echo "- $author: \`$count commit\`" >> report.txt
+          done < commit_count.txt
 
           # Tổng số commit toàn repo
           total_commits=$(git rev-list --count HEAD)
@@ -97,12 +100,11 @@ jobs:
           # Format kết quả
           while read count author_raw; do
             author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
-            echo "- **$author**: \`$count dòng\`" >> report.txt
+            echo "- $author: \`$count dòng\`" >> report.txt
           done < authors_count.txt
 
           # ✅ Tính tổng số dòng
           total_lines=$(awk '{sum += $1} END {print sum}' authors_count.txt)
-
           echo "- Tổng số dòng được thống kê: \`$total_lines\`" >> report.txt
           echo "- Tổng số file được thống kê: \`$(git ls-files | wc -l)\`" >> report.txt
 
