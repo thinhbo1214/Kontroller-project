@@ -8,9 +8,18 @@ using System.Reflection;
 
 namespace Server.Source.Helper
 {
+    /// <summary>
+    /// Cung cấp các hàm trợ giúp chuẩn hóa thao tác với database:
+    /// - Truy xuất/xóa dữ liệu theo kiểu
+    /// - Chuyển đổi object sang Dictionary phục vụ cho SQL
+    /// - Map DataTable về List hoặc object
+    /// - Chuyển đổi giá trị đơn kiểu an toàn
+    /// </summary>
     public class DatabaseHelper
     {
-        // Trả về IApiEvent thay vì Event gốc
+        /// <summary>
+        /// Map giữa kiểu dữ liệu và instance database tương ứng
+        /// </summary>
         private readonly static Dictionary<Type, IDatabase> databaseMap = new()
         {
             { typeof(Account),  AccountDatabase.Instance },
@@ -24,6 +33,10 @@ namespace Server.Source.Helper
             { typeof(Review), ReviewDatabase.Instance },
             { typeof(User), UserDatabase.Instance },
         };
+
+        /// <summary>
+        /// Lấy dữ liệu từ database theo id và kiểu dữ liệu
+        /// </summary>
         public static T GetData<T>(string id)
         {
             T result = default;
@@ -38,6 +51,9 @@ namespace Server.Source.Helper
             return result;
         }
 
+        /// <summary>
+        /// Xóa dữ liệu từ database theo id và kiểu dữ liệu
+        /// </summary>
         public static void DeleteData<T>(string id)
         {
             if (databaseMap.TryGetValue(typeof(T), out var database))
@@ -46,7 +62,9 @@ namespace Server.Source.Helper
             }
         }
 
-        // Convert object (DTO, Model) => Dictionary<string, object>
+        /// <summary>
+        /// Chuyển object thành Dictionary với tên cột và giá trị (hỗ trợ prefix @ cho tên)
+        /// </summary>
         public static Dictionary<string, object> ToDictionary<T>(T obj)
         {
             var dict = new Dictionary<string, object>();
@@ -57,27 +75,9 @@ namespace Server.Source.Helper
             return dict;
         }
 
-        //public static Dictionary<string, object> ToDictionary(object obj)
-        //{
-        //    var dict = new Dictionary<string, object>();
-        //    var type = obj.GetType();
-
-        //    foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-        //    {
-        //        dict[prop.Name.StartsWith("@") ? prop.Name : "@" + prop.Name] = prop.GetValue(obj) ?? DBNull.Value;
-        //    }
-
-        //    return dict;
-        //}
-
-
-        /*Cách dùng VD: 
-         var parameters = ToParameterDictionary(
-            ("Username", "admin"),
-            ("Password", "123456"),
-            ("Email", DBNull.Value)
-        );
-         */
+        /// <summary>
+        /// Chuyển mảng tham số (tuple name-value) thành Dictionary có prefix @
+        /// </summary>
         public static Dictionary<string, object> ToParameterDictionary(params (string name, object value)[] parameters)
         {
             var dict = new Dictionary<string, object>();
@@ -88,14 +88,9 @@ namespace Server.Source.Helper
             return dict;
         }
 
-
-        /* Cách dùng VD:
-         var parameters = ToParameterDictionary(new Dictionary<string, object>
-        {
-            ["Username"] = "admin",
-            ["Password"] = "123456"
-        });
-         */
+        /// <summary>
+        /// Chuyển Dictionary input thành Dictionary có prefix @ và xử lý null
+        /// </summary>
         public static Dictionary<string, object> ToParameterDictionary(Dictionary<string, object> input)
         {
             return input.ToDictionary(
@@ -104,7 +99,9 @@ namespace Server.Source.Helper
             );
         }
 
-        // Convert DataTable => List<T>
+        /// <summary>
+        /// Chuyển đổi DataTable thành danh sách đối tượng T
+        /// </summary>
         public static List<T> MapToList<T>(DataTable dt) where T : new()
         {
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -128,6 +125,9 @@ namespace Server.Source.Helper
             return list;
         }
 
+        /// <summary>
+        /// Lấy giá trị đơn từ object đầu vào, trả về kiểu T hoặc giá trị mặc định nếu lỗi
+        /// </summary>
         public static T? GetScalarValue<T>(object? value, T? defaultValue = default)
         {
             try
@@ -145,15 +145,12 @@ namespace Server.Source.Helper
             }
         }
 
-
+        /// <summary>
+        /// Lấy phần tử đầu tiên từ DataTable đã map về kiểu T (hoặc null nếu không có)
+        /// </summary>
         public static T? MapToSingle<T>(DataTable dt) where T : new()
         {
             return MapToList<T>(dt).FirstOrDefault();
         }
-
-
     }
-
-
 }
-
