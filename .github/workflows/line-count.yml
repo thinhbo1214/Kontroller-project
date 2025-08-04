@@ -21,11 +21,17 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install Git (nếu chưa có)
+    - name: Install Git
       run: sudo apt-get install git -y
 
     - name: Run blame line counter
       run: python ./src/metrics/blame_line_counter.py
 
-    - name: Show output CSV (debug)
+    - name: Upload CSV artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: line-contribution
+        path: ./src/metrics/line_contribution.csv
+
+    - name: Show output CSV
       run: cat ./src/metrics/line_contribution.csv || echo "CSV not found"
