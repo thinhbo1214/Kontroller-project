@@ -6,16 +6,25 @@ using Server.Source.View;
 
 namespace Server.Source.MainApp
 {
+    /// <summary>
+    /// Điểm khởi chạy chính của ứng dụng Windows Forms, chịu trách nhiệm khởi tạo và chạy ứng dụng máy chủ.
+    /// </summary>
     internal static class Program
     {
         /// <summary>
-        ///  The main entry point for the application.
+        /// Điểm nhập chính cho ứng dụng.
         /// </summary>
+        /// <remarks>
+        /// Phương thức này thực hiện các bước sau:
+        /// - Khởi tạo cấu hình ứng dụng thông qua <see cref="AppInitializer.Initialize"/>.
+        /// - Thiết lập mô hình máy chủ (<see cref="ModelServer"/>) trong hệ thống mô phỏng.
+        /// - Khởi tạo trình bày máy chủ (<see cref="ServerPresenter"/>).
+        /// - Chạy giao diện người dùng chính của máy chủ (<see cref="ViewServer"/>) trong vòng lặp ứng dụng Windows Forms.
+        /// Để tùy chỉnh cấu hình ứng dụng như thiết lập DPI cao hoặc phông chữ mặc định, xem thêm tại https://aka.ms/applicationconfiguration.
+        /// </remarks>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             AppInitializer.Initialize();
 
             Simulation.SetModel<ModelServer>(new ModelServer());
