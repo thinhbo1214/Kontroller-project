@@ -73,7 +73,7 @@ jobs:
           git shortlog -s -n --all > commit.txt
           while read count author_raw; do
             author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
-            echo "author $author: $count commit" >> report.txt
+            echo "- author $author: $count commit" >> report.txt
           done < commit.txt
 
           # Tổng số commit toàn repo
