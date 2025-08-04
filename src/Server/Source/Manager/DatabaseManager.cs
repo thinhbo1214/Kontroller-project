@@ -3,47 +3,73 @@ using Server.Source.Core;
 using Server.Source.Helper;
 using System.Data;
 
-
 namespace Server.Source.Manager
 {
+    /// <summary>
+    /// Quản lý kết nối cơ sở dữ liệu SQL Server và thực thi các truy vấn SQL, hỗ trợ lưu trữ cache câu lệnh SQL từ tệp.
+    /// </summary>
     public class DatabaseManager
     {
         private readonly string _basePath; // Nơi chứa thư mục gốc chứa file sql
         private readonly string _connectionString;
 
         /// <summary>
-        /// Cache sql: key -> câu lệnh sql, key dạng "folder/file" hoặc "file"
+        /// Bộ nhớ cache cho các câu lệnh SQL, với khóa dạng "folder/file" hoặc "file".
         /// </summary>
         private readonly Dictionary<string, string> _sqlCache = new Dictionary<string, string>();
 
         /// <summary>
-        /// Dùng để kiểm tra file thay đổi hay chưa
+        /// Theo dõi thời gian sửa đổi cuối cùng của các tệp SQL để kiểm tra thay đổi.
         /// </summary>
         private readonly Dictionary<string, DateTime> _fileLastWriteTime = new Dictionary<string, DateTime>();
 
         private SqlConnection? _connection;
+
+        /// <summary>
+        /// Khởi động dịch vụ SQL Server với tên dịch vụ được chỉ định.
+        /// </summary>
+        /// <param name="serviceName">Tên của dịch vụ SQL Server (mặc định là "MSSQLSERVER").</param>
         public void StartSqlService(string serviceName = "MSSQLSERVER")
         {
             ServiceHelper.RunServiceCommand(serviceName, "start");
         }
 
+        /// <summary>
+        /// Dừng dịch vụ SQL Server với tên dịch vụ được chỉ định.
+        /// </summary>
+        /// <param name="serviceName">Tên của dịch vụ SQL Server (mặc định là "MSSQLSERVER").</param>
         public void StopSqlService(string serviceName = "MSSQLSERVER")
         {
             ServiceHelper.RunServiceCommand(serviceName, "stop");
         }
+
+        /// <summary>
+        /// Khởi tạo <see cref="DatabaseManager"/> với đường dẫn thư mục SQL và chuỗi kết nối.
+        /// </summary>
+        /// <param name="basePath">Đường dẫn thư mục chứa các tệp SQL.</param>
+        /// <param name="connectionString">Chuỗi kết nối tới cơ sở dữ liệu SQL Server.</param>
+        /// <exception cref="ArgumentNullException">Ném ra nếu <paramref name="basePath"/> hoặc <paramref name="connectionString"/> là null.</exception>
         public DatabaseManager(string basePath, string connectionString)
         {
             _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
+
+        /// <summary>
+        /// Khởi tạo <see cref="DatabaseManager"/> với đường dẫn mặc định và chuỗi kết nối tới cơ sở dữ liệu KontrollerDB.
+        /// </summary>
         public DatabaseManager()
         {
             _basePath = Path.Combine(AppContext.BaseDirectory, "extra_files", "MyServerData", "queries");
             _connectionString = "Server=localhost;Database=KontrollerDB;Integrated Security=True;TrustServerCertificate=True;";
         }
+
         /// <summary>
-        /// Lấy câu lệnh SQL từ cache hoặc đọc file, hỗ trợ thư mục con (ví dụ "users/get_user_by_id")
+        /// Lấy câu lệnh SQL từ cache hoặc đọc từ tệp, hỗ trợ thư mục con (ví dụ: "users/get_user_by_id").
         /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL trong cache hoặc đường dẫn tệp (ví dụ: "users/get_user_by_id").</param>
+        /// <returns>Chuỗi câu lệnh SQL.</returns>
+        /// <exception cref="FileNotFoundException">Ném ra nếu tệp SQL không tồn tại.</exception>
         public string GetSql(string key)
         {
             if (_sqlCache.TryGetValue(key, out var cachedSql))
@@ -83,6 +109,13 @@ namespace Server.Source.Manager
             }
         }
 
+        /// <summary>
+        /// Tải lại câu lệnh SQL từ tệp và cập nhật cache.
+        /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL.</param>
+        /// <param name="fullPath">Đường dẫn đầy đủ tới tệp SQL.</param>
+        /// <param name="lastWriteTime">Thời gian sửa đổi cuối cùng của tệp.</param>
+        /// <returns>Chuỗi câu lệnh SQL được tải lại.</returns>
         private string ReloadSql(string key, string fullPath, DateTime lastWriteTime)
         {
             string sql = File.ReadAllText(fullPath);
@@ -91,6 +124,11 @@ namespace Server.Source.Manager
             return sql;
         }
 
+        /// <summary>
+        /// Chuyển đổi khóa thành đường dẫn đầy đủ tới tệp SQL.
+        /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL (ví dụ: "users/get_user_by_id").</param>
+        /// <returns>Đường dẫn đầy đủ tới tệp SQL (ví dụ: "D:/MyServerData/users/get_user_by_id.sql").</returns>
         private string GetFullPathFromKey(string key)
         {
             // Key có thể là "users/get_user_by_id" => convert thành D:/MyServerData/users/get_user_by_id.sql
@@ -99,7 +137,7 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Xóa cache SQL (toàn bộ)
+        /// Xóa toàn bộ cache câu lệnh SQL và thời gian sửa đổi tệp.
         /// </summary>
         public void ClearCache()
         {
@@ -108,8 +146,9 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Mở kết nối tới database
+        /// Mở kết nối tới cơ sở dữ liệu SQL Server.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối không thể mở.</exception>
         public void OpenConnection()
         {
             if (_connection == null)
@@ -124,7 +163,7 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Đóng kết nối database
+        /// Đóng và giải phóng kết nối cơ sở dữ liệu.
         /// </summary>
         public void CloseConnection()
         {
@@ -138,11 +177,12 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Thực thi câu lệnh SQL không trả về dữ liệu (INSERT, UPDATE, DELETE)
+        /// Thực thi câu lệnh SQL không trả về dữ liệu (INSERT, UPDATE, DELETE).
         /// </summary>
-        /// <param name="key">Tên file sql (key trong cache)</param>
-        /// <param name="parameters">Tham số SQL nếu có</param>
-        /// <returns>Số dòng bị ảnh hưởng</returns>
+        /// <param name="key">Khóa của câu lệnh SQL trong cache hoặc tệp.</param>
+        /// <param name="parameters">Tham số SQL (nếu có).</param>
+        /// <returns>Số dòng bị ảnh hưởng bởi câu lệnh.</returns>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối chưa được mở.</exception>
         public int ExecuteNonQuery(string key, Dictionary<string, object>? parameters = null)
         {
             string sql = GetSql(key);
@@ -151,8 +191,12 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Thực thi câu lệnh SQL trả về dữ liệu dạng DataTable (SELECT)
+        /// Thực thi câu lệnh SQL trả về dữ liệu dưới dạng <see cref="DataTable"/> (SELECT).
         /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL trong cache hoặc tệp.</param>
+        /// <param name="parameters">Tham số SQL (nếu có).</param>
+        /// <returns>Bảng dữ liệu chứa kết quả truy vấn.</returns>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối chưa được mở.</exception>
         public DataTable ExecuteQuery(string key, Dictionary<string, object>? parameters = null)
         {
             string sql = GetSql(key);
@@ -164,8 +208,12 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Thực thi câu lệnh SQL trả về một giá trị (thường dùng với COUNT, SUM, ...)
+        /// Thực thi câu lệnh SQL trả về một giá trị duy nhất (thường dùng với COUNT, SUM, ...).
         /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL trong cache hoặc tệp.</param>
+        /// <param name="parameters">Tham số SQL (nếu có).</param>
+        /// <returns>Giá trị duy nhất từ truy vấn hoặc <c>null</c> nếu không có kết quả.</returns>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối chưa được mở.</exception>
         public object? ExecuteScalar(string key, Dictionary<string, object>? parameters = null)
         {
             string sql = GetSql(key);
@@ -174,8 +222,12 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Tạo SqlCommand với tham số và kết nối đã mở sẵn
+        /// Tạo đối tượng <see cref="SqlCommand"/> với câu lệnh SQL và tham số.
         /// </summary>
+        /// <param name="sql">Câu lệnh SQL cần thực thi.</param>
+        /// <param name="parameters">Tham số SQL (nếu có).</param>
+        /// <returns>Đối tượng <see cref="SqlCommand"/> đã được cấu hình.</returns>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối chưa được mở.</exception>
         private SqlCommand CreateCommand(string sql, Dictionary<string, object>? parameters)
         {
             if (_connection == null || _connection.State != ConnectionState.Open)
@@ -197,8 +249,12 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Async version của ExecuteQuery
+        /// Thực thi câu lệnh SQL trả về dữ liệu dưới dạng <see cref="DataTable"/> bất đồng bộ (SELECT).
         /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL trong cache hoặc tệp.</param>
+        /// <param name="parameters">Tham số SQL (nếu có).</param>
+        /// <returns>Bảng dữ liệu chứa kết quả truy vấn.</returns>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối chưa được mở.</exception>
         public async Task<DataTable> ExecuteQueryAsync(string key, Dictionary<string, object>? parameters = null)
         {
             string sql = GetSql(key);
@@ -210,8 +266,12 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Async version của ExecuteNonQuery
+        /// Thực thi câu lệnh SQL không trả về dữ liệu bất đồng bộ (INSERT, UPDATE, DELETE).
         /// </summary>
+        /// <param name="key">Khóa của câu lệnh SQL trong cache hoặc tệp.</param>
+        /// <param name="parameters">Tham số SQL (nếu có).</param>
+        /// <returns>Số dòng bị ảnh hưởng bởi câu lệnh.</returns>
+        /// <exception cref="InvalidOperationException">Ném ra nếu kết nối chưa được mở.</exception>
         public async Task<int> ExecuteNonQueryAsync(string key, Dictionary<string, object>? parameters = null)
         {
             string sql = GetSql(key);
@@ -219,17 +279,16 @@ namespace Server.Source.Manager
             return await cmd.ExecuteNonQueryAsync();
         }
 
-        /// <summary>
-        /// Giải phóng tài nguyên
-        /// </summary>
+        // Ghi chú: Không có phương thức Dispose rõ ràng trong mã gốc, có thể cần xem xét thêm IDisposable
     }
 }
 
 /*
+// Ví dụ cách sử dụng:
 // var connStr = "Server=localhost;Database=MyDatabase;User Id=myUsername;Password=myPassword;";
 // var connStr = "Server=localhost;Database=MyDatabase;Integrated Security=True;";
 // Truy cập SQL Server ở máy khác
-//var connStr = "Server=192.168.1.100;Database=MyDb;User Id=sa;Password=pass;";
+// var connStr = "Server=192.168.1.100;Database=MyDb;User Id=sa;Password=pass;";
 
 var connStr = "your connection string here";
 using var dbManager = new DatabaseManager("D:/MyServerData", connStr);
@@ -247,5 +306,4 @@ var param = new Dictionary<string, object> { ["@UserName"] = "John", ["@Age"] = 
 int rows = dbManager.ExecuteNonQuery("users/insert_user", param);
 
 dbManager.CloseConnection();
-
- */
+*/
