@@ -15,6 +15,20 @@ namespace Server.Source.Handler
     internal class APIUserHandler : HandlerBase
     {
         public override string Type => "/api/user";
+        private readonly Dictionary<string, Action<HttpRequest, HttpsSession>> PutRoutes;
+        public APIUserHandler()
+        {
+            PutRoutes = new Dictionary<string, Action<HttpRequest, HttpsSession>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["/api/user/email"] = PutUserEmail,
+                ["/api/user/avatar"] = PutUserAvatar,
+                ["/api/user/username"] = PutUserUsername,
+                ["/api/user/password"] = PutUserPassword,
+                ["/api/user/forgetpassword"] = PutUserForgetPassword
+            };
+        }
+
+
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
@@ -60,7 +74,6 @@ namespace Server.Source.Handler
 
             // Đăng ký thành công:
             string userId = AccountDatabase.Instance.CreateAccount(account);
-            Simulation.GetModel<LogManager>().Log(account.ToString());
             if (!userId.IsNullOrEmpty())
             {
                 var response = ResponseHelper.NewUserSession(userId, session.Response);
@@ -72,85 +85,76 @@ namespace Server.Source.Handler
         }
         public override void PutHandle(HttpRequest request, HttpsSession session)
         {
+            if (PutRoutes.TryGetValue(request.Url, out var handler))
+            {
+                handler.Invoke(request, session);
+            }
+            else
+            {
+                ErrorHandle(session);
+            }
+
+        }
+        private T PutBase<T>(HttpRequest request, HttpsSession session)
+        {
             var sessionManager = Simulation.GetModel<SessionManager>();
             if (!sessionManager.Authorization(request, out string userId, session))
+            {
+                return default;
+            }
+
+            var newData = JsonHelper.AddPropertyAndDeserialize<T>(request.Body, "UserId", userId);
+            return newData;
+        }
+        private void PutUserEmail(HttpRequest request, HttpsSession session)
+        {
+            var data = PutBase<object>(request, session);
+            if (data == null || UserDatabase.Instance.ChangeEmail(data) != 1)
             {
                 ErrorHandle(session);
                 return;
             }
-
-            switch (request.Url)
-            {
-                case "/api/user/email":
-                    PutUserEmail(request, session);
-                    break;
-                case "/api/user/avatar":
-                    PutUserAvatar(request, session);
-                    break;
-                case "/api/user/username":
-                    PutUserUsername(request, session);
-                    break;
-                case "/api/user/password":
-                    PutUserPassword(request, session);
-                    break;
-                case "/api/user/forgetpassword":
-                    PutUserForgetPassword(request, session);
-                    break;
-                default:
-                    ErrorHandle(session);
-                    break;
-            }
-
-        }
-        private void PutUserEmail(HttpRequest request, HttpsSession session)
-        {
-            object data = JsonHelper.Deserialize<object>(request.Body);
-            if (UserDatabase.Instance.ChangeEmail(data) == 1)
-            {
-                OkHandle(session);
-                return;
-            }
-            ErrorHandle(session);
+            OkHandle(session);
         }
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
-            object data = JsonHelper.Deserialize<object>(request.Body);
-            if (UserDatabase.Instance.ChangeAvatar(data) == 1)
+            var data = PutBase<object>(request, session);
+            if (data == null || UserDatabase.Instance.ChangeAvatar(data) != 1)
             {
-                OkHandle(session);
+                ErrorHandle(session);
                 return;
             }
-            ErrorHandle(session);
+            OkHandle(session);
         }
         private void PutUserUsername(HttpRequest request, HttpsSession session)
         {
-            object data = JsonHelper.Deserialize<object>(request.Body);
-            if (AccountDatabase.Instance.ChangeUsername(data) == 1)
+            var data = PutBase<object>(request, session);
+            if (data == null || AccountDatabase.Instance.ChangeUsername(data) != 1)
             {
-                OkHandle(session);
+                ErrorHandle(session);
                 return;
             }
-            ErrorHandle(session);
+            OkHandle(session);
         }
         private void PutUserPassword(HttpRequest request, HttpsSession session)
         {
-            object data = JsonHelper.Deserialize<object>(request.Body);
-            if (AccountDatabase.Instance.ChangePassword(data) == 1)
+            var data = PutBase<object>(request, session);
+            if (data == null || AccountDatabase.Instance.ChangePassword(data) != 1)
             {
-                OkHandle(session);
+                ErrorHandle(session);
                 return;
             }
-            ErrorHandle(session);
+            OkHandle(session);
         }
         private void PutUserForgetPassword(HttpRequest request, HttpsSession session)
         {
-            object data = JsonHelper.Deserialize<object>(request.Body);
-            if (AccountDatabase.Instance.ForgetPassword(data) == 1)
+            var data = PutBase<object>(request, session);
+            if (data == null || AccountDatabase.Instance.ForgetPassword(data) != 1)
             {
-                OkHandle(session);
+                ErrorHandle(session);
                 return;
             }
-            ErrorHandle(session);
+            OkHandle(session);
         }
 
         public override void DeleteHandle(HttpRequest request, HttpsSession session)

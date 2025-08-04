@@ -55,4 +55,9 @@ namespace Server.Source.Extra
         public string UserId { get; set; }
         public string Avatar { get; set; }
     }
+    public class ForgetPasswordRequest
+    {
+        public string Email { get; set; }
+    }
+
 }

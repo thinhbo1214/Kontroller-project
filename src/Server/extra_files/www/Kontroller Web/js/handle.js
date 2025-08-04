@@ -33,14 +33,46 @@ export class Handle {
         const res = await api.PostUser(username, password, email);
 
         if (res.ok) {
-            UI.toast("Đăng ký thành công");
             UI.showLoading();
+
             setTimeout(() => {
-                UI.hideLoading();
+                UI.toast("Đăng ký thành công");
+
+                setTimeout(() => {
+                    UI.hideLoading();
+                }, 2000);
                 UI.goTo(Pages.AUTH);
             }, 2000);
         } else {
             UI.toast("Thông tin đăng ký không hợp lệ");
+        }
+    }
+    static async ForgetPassword() {
+        const email = prompt('Hãy nhập vào email của bạn: ');
+
+        const api = new APIUser();
+        UI.showLoading();
+        const res = await api.PostForgetPassword(email);
+
+        if (true) {
+            setTimeout(() => {
+                 UI.toast("Đã khôi phục mật khẩu, hãy kiểm tra email của bạn.");
+
+                setTimeout(() => {
+                    UI.goTo(Pages.INDEX);
+                }, 1000);
+                setTimeout(() => {
+                    UI.hideLoading();
+                }, 3000);
+               
+
+                // Tắt loading sau khi toast hiện (ví dụ 2s sau)
+
+
+
+            }, 2000); // Đợi 2s rồi mới hiển thị toast
+        } else {
+            UI.toast("Email không hợp lệ.");
         }
     }
 }

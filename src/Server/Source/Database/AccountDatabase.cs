@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Server.Source.Core;
 using Server.Source.Data;
+using Server.Source.Extra;
 using Server.Source.Helper;
 using Server.Source.Manager;
 using System.Reflection;
-using Server.Source.Extra;
 
 namespace Server.Source.Database
 {
@@ -52,7 +53,6 @@ namespace Server.Source.Database
         {
             var sqlPath = $"{TableName}/forget_password";
             var result = ExecuteScalar<ParamsForgetPassword>(sqlPath, data);
-
             return DatabaseHelper.GetScalarValue<int>(result);
         }
 

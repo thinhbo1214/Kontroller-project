@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Ví dụ thêm: Đăng xuất
-    listenIfExists('#button-logout', 'click', () => {
-        Handle.Logout();
+    listenIfExists('#button-forgetpassword', 'click', () => {
+        Handle.ForgetPassword();
     });
 
     // Ví dụ khác: Tải profile

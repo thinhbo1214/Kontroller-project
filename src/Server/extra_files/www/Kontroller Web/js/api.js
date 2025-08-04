@@ -199,6 +199,20 @@ export class APIUser extends API {
     });
     return res;
   }
+  async PostForgetPassword(email) {
+    if (!email) {
+      alert('Email is required!');
+      return;
+    }
+    const payload = { email }
+    const query = API.buildPathWithQuery('forgetpassword');
+    const res = await this.POST(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    return res;
+  }
 
   async DeleteUser() {
     const query = API.buildQuery({});
