@@ -1,0 +1,95 @@
+get:
+  tags:
+    - rate
+  summary: Get a rate by ID
+  operationId: GetRateById
+  parameters:
+    - name: rateId
+      in: query
+      required: true
+      description: The ID of the rate to retrieve
+      schema:
+        type: string
+        example: 'rate001'
+  responses:
+    200:
+      description: Rate found
+      content:
+        application/json:
+          schema:
+            $ref: './components/schemas/Rate.yml#/Rate'
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    404:
+      $ref: './components/responses/AllStatusCode.yml#/404'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
+
+post:
+  tags:
+    - rate
+  summary: Create a new rate
+  operationId: CreateRate
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/Rate.yml#/Rate'
+  responses:
+    201:
+      description: Rate created
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
+
+put:
+  tags:
+    - rate
+  summary: Update an existing rate
+  operationId: UpdateRate
+  parameters:
+    - name: rateId
+      in: query
+      required: true
+      description: The ID of the rate to update
+      schema:
+        type: string
+        example: 'rate001'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './components/schemas/Rate.yml#/Rate'
+  responses:
+    200:
+      description: Rate updated
+    400:
+      $ref: './components/responses/AllStatusCode.yml#/400'
+    404:
+      $ref: './components/responses/AllStatusCode.yml#/404'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
+
+delete:
+  tags:
+    - rate
+  summary: Delete a rate
+  operationId: DeleteRate
+  parameters:
+    - name: rateId
+      in: query
+      required: true
+      description: The ID of the rate to delete
+      schema:
+        type: string
+        example: 'rate001'
+  responses:
+    200:
+      description: Rate deleted
+    404:
+      $ref: './components/responses/AllStatusCode.yml#/404'
+    500:
+      $ref: './components/responses/AllStatusCode.yml#/500'
