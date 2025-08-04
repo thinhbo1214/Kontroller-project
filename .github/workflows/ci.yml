@@ -1,0 +1,119 @@
+name: Full CI with Lint, Security, Build & Notify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # -----------------------------
+  build:
+    name: 🚀 Build App
+    runs-on: windows-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      security-events: write
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Build WinForm dạng self-contained vào thư mục BuildOutput
+        run: dotnet publish ./src/Server/Server.csproj -c Release -o ./BuildOutput --self-contained false -r win-x64
+
+      - name: Ghi đè extra_files từ repo vào BuildOutput
+        shell: pwsh
+        run: |
+          $source = "${{ github.workspace }}/src/Server/extra_files"
+          $destination = "${{ github.workspace }}/BuildOutput/extra_files"
+          if (Test-Path $destination) {
+            Remove-Item $destination -Recurse -Force
+          }
+          Copy-Item $source $destination -Recurse
+          Write-Host "Đã sao chép và ghi đè extra_files từ repo vào BuildOutput."
+
+      - name: Upload thư mục BuildOutput (GitHub tự zip khi tải về)
+        uses: actions/upload-artifact@v4
+        with:
+          name: KontrollerApp
+          path: BuildOutput
+          if-no-files-found: error
+          retention-days: 7
+
+  # -----------------------------
+  report:
+    runs-on: ubuntu-latest
+    needs: [build]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Lấy toàn bộ history cho git blame
+
+      - name: Cài jq (nếu chưa có)
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Tính số điểm đóng góp bằng git
+        run: |
+          echo "📊 **BÁO CÁO CI – $(date +%Y-%m-%d)**" >> report.txt
+
+          echo "" >> report.txt
+          echo "🧾 **Thông tin commit mới nhất:**" >> report.txt
+          echo "- ✅ Commit mới nhất bởi: \`$(git log -1 --pretty=format:'%an')\`" >> report.txt
+          echo "- 💬 Message: _\"$(git log -1 --pretty=format:'%s')\"_" >> report.txt
+          
+          echo "" >> report.txt
+          echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
+
+          # Danh sách commit của từng người
+          git shortlog -s -n | while read count name; do
+            echo "- **$name**: \`$count commit\`" >> report.txt
+          done
+
+          # Tổng số commit toàn repo
+          total_commits=$(git rev-list --count HEAD)
+          echo "" >> report.txt
+          echo "- 🧮 Tổng số commit toàn repo: \`$total_commits\`" >> report.txt
+          
+          echo "" >> report.txt
+          echo "🧾 **Báo cáo số dòng đóng góp**:" > report.txt
+
+          # Xóa file tạm nếu có
+          rm -f authors.txt authors_count.txt
+
+          # Lấy tất cả file do git quản lý (không giới hạn đuôi)
+          git ls-files | while read file; do
+            git blame --line-porcelain "$file" | grep "^author " >> authors.txt || true
+          done
+
+          # Đếm và lọc tác giả
+          sort authors.txt | uniq -c | sort -nr > authors_count.txt
+
+          # Format kết quả
+          while read count author_raw; do
+            author=$(echo "$author_raw" | sed 's/^ *//; s/["'\'']//g')
+            echo "- **$author**: \`$count dòng\`" >> report.txt
+          done < authors_count.txt
+
+          echo "" >> report.txt
+          echo "- 🧮 Tổng số dòng được thống kê: \`$total_lines\`" >> report.txt
+          echo "- 📂 Tổng số file được thống kê: \`$(git ls-files | wc -l)\`" >> report.txt
+
+          echo "" >> report.txt
+          cat report.txt
+
+      - name: Gửi báo cáo đến Discord
+        run: |
+          message=$(cat report.txt)
+          payload=$(jq -Rn --arg msg "$message" '{content: $msg}')
+
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "$payload" \
+               "$DISCORD_WEBHOOK"
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
