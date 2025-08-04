@@ -6,15 +6,20 @@ using System.Text;
 
 namespace Server.Source.Helper
 {
+    /// <summary>
+    /// Hỗ trợ thực thi các lệnh CMD trong hệ thống.
+    /// Cho phép chạy lệnh có hoặc không cần quyền admin, hiển thị hoặc ẩn cửa sổ CMD,
+    /// và nhận kết quả đầu ra (synchronously hoặc asynchronously).
+    /// </summary>
     public static class CmdHelper
     {
         /// <summary>
-        /// 
+        /// Thực thi lệnh CMD không cần nhận kết quả đầu ra.
         /// </summary>
-        /// <param name="command"></param>
-        /// <param name="runAsAdmin"></param>
-        /// <param name="showWindow"></param>
-        /// <param name="workingDirectory"></param>
+        /// <param name="command">Chuỗi lệnh cần thực thi.</param>
+        /// <param name="runAsAdmin">Có chạy dưới quyền admin hay không.</param>
+        /// <param name="showWindow">Có hiển thị cửa sổ CMD hay không.</param>
+        /// <param name="workingDirectory">Thư mục làm việc hiện tại (nếu có).</param>
         public static void RunCommand(
         string command,
         bool runAsAdmin = false,
@@ -44,6 +49,14 @@ namespace Server.Source.Helper
                 Simulation.GetModel<LogManager>().Log(ex);
             }
         }
+
+        /// <summary>
+        /// Thực thi lệnh CMD và nhận kết quả đầu ra đồng bộ.
+        /// </summary>
+        /// <param name="command">Chuỗi lệnh cần thực thi.</param>
+        /// <param name="runAsAdmin">Có chạy dưới quyền admin hay không.</param>
+        /// <param name="workingDirectory">Thư mục làm việc hiện tại (nếu có).</param>
+        /// <returns>Kết quả xuất ra từ lệnh đã thực thi (stdout + stderr).</returns>
         public static string RunCommandWithOutput(string command, bool runAsAdmin = false, string workingDirectory = null)
         {
             var psi = new ProcessStartInfo
@@ -77,6 +90,14 @@ namespace Server.Source.Helper
                 return $"ERROR: {ex.Message}";
             }
         }
+
+        /// <summary>
+        /// Thực thi lệnh CMD và nhận kết quả đầu ra bất đồng bộ (async).
+        /// </summary>
+        /// <param name="command">Chuỗi lệnh cần thực thi.</param>
+        /// <param name="runAsAdmin">Có chạy dưới quyền admin hay không.</param>
+        /// <param name="workingDirectory">Thư mục làm việc hiện tại (nếu có).</param>
+        /// <returns>Task chứa chuỗi đầu ra từ lệnh (stdout + stderr).</returns>
         public static async Task<string> RunCommandWithOutputAsync(string command, bool runAsAdmin = false, string workingDirectory = null)
         {
             var psi = new ProcessStartInfo
