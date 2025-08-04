@@ -1,4 +1,4 @@
-name: Build & Analyze
+name: Line Contribution Report
 
 on:
   push:
@@ -7,31 +7,35 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  report:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  # Cần thiết để git blame hoạt động đúng
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    - name: Install Git
-      run: sudo apt-get install git -y
-
     - name: Run blame line counter
       run: python ./src/metrics/blame_line_counter.py
 
-    - name: Upload CSV artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: line-contribution
-        path: ./src/metrics/line_contribution.csv
+    - name: Send Discord notification
+      run: |
+        report_date=$(date +%Y-%m-%d)
+        message="📊 **Line Contribution Report** ($report_date):"
 
-    - name: Show output CSV
-      run: cat ./src/metrics/line_contribution.csv || echo "CSV not found"
+        tail -n +2 ./src/metrics/line_contribution.csv | while IFS=',' read -r date author lines; do
+          message="$message\n- \`$author\`: $lines lines"
+        done
+
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d "{\"content\": \"$message\"}" \
+             $DISCORD_WEBHOOK
+      env:
+        DISCORD_WEBHOOK: ${{ https://discord.com/api/webhooks/1401911119290961962/PGaNzn5IWIiOgixqCCzMPfNsIoWaj77rTqh7W7MFfwc87ezxfhr-ZMTwWUQQ83hH1Y3E }}
