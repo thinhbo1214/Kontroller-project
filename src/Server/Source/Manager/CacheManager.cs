@@ -4,13 +4,21 @@ using System.Text;
 
 namespace Server.Source.Manager
 {
+    /// <summary>
+    /// Quản lý bộ nhớ cache để lưu trữ và truy xuất dữ liệu dưới dạng JSON, sử dụng <see cref="FileCache"/> làm cơ chế lưu trữ.
+    /// </summary>
     public class CacheManager
     {
         private readonly FileCache _fileCache = new FileCache();
 
         /// <summary>
-        /// Cache một object bất kỳ dưới dạng JSON
+        /// Lưu trữ một đối tượng bất kỳ dưới dạng JSON vào cache.
         /// </summary>
+        /// <typeparam name="T">Kiểu của đối tượng cần lưu.</typeparam>
+        /// <param name="key">Khóa để xác định đối tượng trong cache.</param>
+        /// <param name="obj">Đối tượng cần lưu trữ.</param>
+        /// <param name="timeout">Thời gian tồn tại của mục cache (nếu có). Mặc định là không giới hạn.</param>
+        /// <returns>Trả về <c>true</c> nếu lưu thành công, ngược lại trả về <c>false</c>.</returns>
         public bool Set<T>(string key, T obj, TimeSpan? timeout = null)
         {
             try
@@ -26,8 +34,15 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Lấy object đã lưu từ cache và chuyển thành kiểu T
+        /// Lấy đối tượng từ cache và chuyển đổi thành kiểu <typeparamref name="T"/>.
         /// </summary>
+        /// <typeparam name="T">Kiểu của đối tượng cần lấy.</typeparam>
+        /// <param name="key">Khóa để xác định đối tượng trong cache.</param>
+        /// <returns>
+        /// Một tuple chứa:
+        /// - <c>found</c>: <c>true</c> nếu tìm thấy và giải mã thành công, ngược lại là <c>false</c>.
+        /// - <c>result</c>: Đối tượng kiểu <typeparamref name="T"/> nếu tìm thấy, ngược lại là giá trị mặc định.
+        /// </returns>
         public (bool found, T result) Get<T>(string key)
         {
             var (found, bytes) = _fileCache.Find(key);
@@ -46,8 +61,14 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Lấy chuỗi JSON từ cache (nếu không cần deserialize)
+        /// Lấy chuỗi JSON trực tiếp từ cache mà không cần giải mã thành đối tượng.
         /// </summary>
+        /// <param name="key">Khóa để xác định dữ liệu trong cache.</param>
+        /// <returns>
+        /// Một tuple chứa:
+        /// - <c>found</c>: <c>true</c> nếu tìm thấy dữ liệu, ngược lại là <c>false</c>.
+        /// - <c>json</c>: Chuỗi JSON nếu tìm thấy, ngược lại là <c>null</c>.
+        /// </returns>
         public (bool found, string json) GetJson(string key)
         {
             var (found, bytes) = _fileCache.Find(key);
@@ -65,34 +86,41 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Gỡ bỏ key khỏi cache
+        /// Xóa một mục khỏi cache dựa trên khóa.
         /// </summary>
+        /// <param name="key">Khóa của mục cần xóa.</param>
+        /// <returns>Trả về <c>true</c> nếu xóa thành công, ngược lại trả về <c>false</c>.</returns>
         public bool Remove(string key)
         {
             return _fileCache.Remove(key);
         }
 
         /// <summary>
-        /// Tải dữ liệu từ thư mục vào cache theo dõi
+        /// Tải dữ liệu từ một thư mục vào cache với các tham số tùy chỉnh.
         /// </summary>
+        /// <param name="path">Đường dẫn thư mục chứa dữ liệu cần tải.</param>
+        /// <param name="prefix">Tiền tố cho các khóa trong cache. Mặc định là "/".</param>
+        /// <param name="filter">Bộ lọc tệp (ví dụ: "*.*"). Mặc định là "*.*".</param>
+        /// <param name="timeout">Thời gian tồn tại của các mục cache (nếu có). Mặc định là không giới hạn.</param>
+        /// <returns>Trả về <c>true</c> nếu tải thành công, ngược lại trả về <c>false</c>.</returns>
         public bool LoadPath(string path, string prefix = "/", string filter = "*.*", TimeSpan? timeout = null)
         {
             return _fileCache.InsertPath(path, prefix, filter, timeout ?? TimeSpan.Zero);
         }
 
         /// <summary>
-        /// Xoá toàn bộ cache
+        /// Xóa toàn bộ dữ liệu trong cache.
         /// </summary>
         public void Clear()
         {
             _fileCache.Clear();
         }
-
     }
 }
+
 /*
 ✅ Cách sử dụng: 
-📝 Lưu một object:
+📝 Lưu một đối tượng:
 var user = new { Id = 1, Name = "Thuận" };
 cacheManager.Set("/user/1", user);
  
@@ -104,7 +132,7 @@ if (found)
     Send(data); // hoặc HTTP stream.Write(data)
 }
  
-📥 Đọc lại và chuyển thành object
+📥 Đọc lại và chuyển thành đối tượng
 var (found, userObj) = cacheManager.Get<YourUserClass>("/user/1");
 if (found)
 {
@@ -113,5 +141,4 @@ if (found)
    
 🧹 Dọn sạch cache
 cacheManager.Clear();
-
- */
+*/
