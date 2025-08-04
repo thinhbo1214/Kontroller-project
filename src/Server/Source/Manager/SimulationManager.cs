@@ -2,40 +2,45 @@
 
 namespace Server.Source.Manager
 {
+    /// <summary>
+    /// Quản lý vòng lặp mô phỏng (simulation) chạy nền, đảm bảo xử lý các sự kiện định kỳ và an toàn đa luồng.
+    /// </summary>
     public class SimulationManager
     {
         /// <summary>
-        /// Bộ điều khiển tín hiệu hủy để dừng task một cách an toàn.
+        /// Bộ điều khiển tín hiệu hủy để dừng tác vụ nền một cách an toàn.
         /// </summary>
         private CancellationTokenSource _cts = new();
 
         /// <summary>
-        /// Task xử lý nền.
+        /// Tác vụ nền xử lý vòng lặp mô phỏng.
         /// </summary>
-        /// 
         private Task _simulationTask;
 
         /// <summary>
-        /// Tối đa Task xử lý event.
+        /// Giới hạn số lượng tác vụ xử lý sự kiện đồng thời, mặc định là 20.
         /// </summary>
         public readonly SemaphoreSlim Limiter = new SemaphoreSlim(20);
 
         /// <summary>
-        /// Khởi chạy Simulation Manager trong nền (tự động).
+        /// Khởi động <see cref="SimulationManager"/> để chạy vòng lặp mô phỏng trong nền.
         /// </summary>
+        /// <remarks>
+        /// Nếu tác vụ đã chạy, phương thức sẽ bỏ qua. Nếu tác vụ đã bị hủy trước đó, một <see cref="CancellationTokenSource"/> mới sẽ được tạo.
+        /// </remarks>
         public void Start()
         {
             if (_simulationTask != null && !_simulationTask.IsCompleted)
-                return; // đã chạy rồi
+                return; // Đã chạy rồi
 
             if (_cts.IsCancellationRequested)
-                _cts = new CancellationTokenSource(); // Reset token nếu đã huỷ trước đó
+                _cts = new CancellationTokenSource(); // Reset token nếu đã hủy trước đó
 
             _simulationTask = Task.Run(() => Run(_cts.Token));
         }
 
         /// <summary>
-        /// Restart component
+        /// Khởi động lại <see cref="SimulationManager"/> bằng cách dừng và khởi chạy lại.
         /// </summary>
         public void Restart()
         {
@@ -44,8 +49,11 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Dừng simulation và toàn bộ task nền.
+        /// Dừng vòng lặp mô phỏng và tất cả các tác vụ nền, ghi log thông báo.
         /// </summary>
+        /// <remarks>
+        /// Gửi tín hiệu hủy và đợi tác vụ nền hoàn tất. Ghi log thông báo dừng vào <see cref="LogManager"/>.
+        /// </remarks>
         public void Stop()
         {
             _cts.Cancel();
@@ -63,9 +71,10 @@ namespace Server.Source.Manager
         }
 
         /// <summary>
-        /// Vòng lặp chính của Simalation Manager, chạy nền.
+        /// Vòng lặp chính chạy nền của <see cref="SimulationManager"/>, gọi <see cref="Simulation.Tick"/> định kỳ.
         /// </summary>
-        /// <param name="token">CancellationToken để dừng an toàn</param>
+        /// <param name="token">Mã hủy để dừng tác vụ một cách an toàn.</param>
+        /// <returns>Tác vụ bất đồng bộ chạy vòng lặp mô phỏng.</returns>
         private async Task Run(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
@@ -84,4 +93,3 @@ namespace Server.Source.Manager
         }
     }
 }
-
