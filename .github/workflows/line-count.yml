@@ -29,20 +29,20 @@ jobs:
         report_date=$(date +%Y-%m-%d)
         message="📊 **Báo cáo đóng góp dòng code** ($report_date):"
 
-        while IFS=',' read -r date author lines; do
-          sanitized_author=$(echo "$author" | tr -d '"' | tr -d "'" | sed 's/,/ /g')
-          sanitized_lines=$(echo "$lines" | tr -d '\r\n')
-          message="$message\n- \`$sanitized_author\`: $sanitized_lines dòng"
-        done < <(tail -n +2 ./src/metrics/line_contribution.csv)
+        tail -n +2 ./src/metrics/line_contribution.csv | while IFS=',' read -r _raw_date _author _lines; do
+          author=$(echo "$_author" | sed 's/[",]//g' | xargs)      # remove " , and trim spaces
+          lines=$(echo "$_lines" | sed 's/[^0-9]//g')              # keep only digits
+          message="$message\n- \`$author\`: $lines dòng"
+        done
 
         echo -e "$message"
 
         payload=$(jq -Rn --arg msg "$message" '{content: $msg}')
 
         curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "$payload" \
-            $DISCORD_WEBHOOK
+              -X POST \
+              -d "$payload" \
+              $DISCORD_WEBHOOK
       env:
         DISCORD_WEBHOOK: https://discord.com/api/webhooks/1401911119290961962/PGaNzn5IWIiOgixqCCzMPfNsIoWaj77rTqh7W7MFfwc87ezxfhr-ZMTwWUQQ83hH1Y3E
 
