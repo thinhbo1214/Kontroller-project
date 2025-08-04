@@ -38,4 +38,4 @@ jobs:
              -d "{\"content\": \"$message\"}" \
              $DISCORD_WEBHOOK
       env:
-        DISCORD_WEBHOOK: ${{ https://discord.com/api/webhooks/1401911119290961962/PGaNzn5IWIiOgixqCCzMPfNsIoWaj77rTqh7W7MFfwc87ezxfhr-ZMTwWUQQ83hH1Y3E }}
+        DISCORD_WEBHOOK: https://discord.com/api/webhooks/1401911119290961962/PGaNzn5IWIiOgixqCCzMPfNsIoWaj77rTqh7W7MFfwc87ezxfhr-ZMTwWUQQ83hH1Y3E
