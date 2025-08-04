@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header with Avatar, Username and Main Toolbar -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <!-- Top Bar with Avatar, Username and Search -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Left side: Avatar and Username -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-300">
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side: Search and Friends button -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <a href="friends.html" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium flex items-center">
+                        <i class="fas fa-users mr-2"></i>Friends and People
+                    </a>
+                </div>
+            </div>
+                
+                <!-- Main Navigation -->
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Page Title -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold mb-8">My activities</h1>
+            <p class="text-gray-400">Your recent gaming activities and interactions</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="mb-8 bg-gray-800 p-4 rounded-lg">
+            <div class="flex flex-wrap gap-4">
+                <select class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Activities</option>
+                    <option value="games">Game Activities</option>
+                    <option value="reviews">Reviews</option>
+                    <option value="lists">Lists</option>
+                    <option value="social">Social</option>
+                </select>
+                
+                <select class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="date_desc">Sort by Date (Newest)</option>
+                    <option value="date_asc">Sort by Date (Oldest)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="space-y-4">
+            <!-- Activity Item 1 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-play text-green-400"></i>
+                                <span class="text-white font-medium">You started playing</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">Elden Ring</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">3 days ago</span>
+                        </div>
+                        <p class="text-gray-300">Added to your currently playing games</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 2 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-heart text-red-400"></i>
+                                <span class="text-white font-medium">You liked a review from</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">@daniel_games</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">5 days ago</span>
+                        </div>
+                        <p class="text-gray-300">Liked their review of <span class="text-blue-400 cursor-pointer hover:underline">Baldur's Gate 3</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 3 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="text-white font-medium">You rated</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">The Witcher 3: Wild Hunt</span>
+                                <div class="flex text-yellow-400 text-sm ml-1">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <span class="text-gray-400 text-sm">1 week ago</span>
+                        </div>
+                        <p class="text-gray-300">Gave it a 5-star rating and added it to your favorites</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 4 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-edit text-blue-400"></i>
+                                <span class="text-white font-medium">You wrote a review for</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">Hollow Knight</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">1 week ago</span>
+                        </div>
+                        <div class="bg-gray-700 rounded p-3 mt-2">
+                            <p class="text-gray-300 text-sm italic">"An indie masterpiece that rivals the best AAA metroidvanias. The hand-drawn art style is absolutely gorgeous..."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 5 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-list text-purple-400"></i>
+                                <span class="text-white font-medium">You created a new list</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">"Best Indie Games of 2024"</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">2 weeks ago</span>
+                        </div>
+                        <p class="text-gray-300">Added 8 games to the list</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 6 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-user-plus text-green-400"></i>
+                                <span class="text-white font-medium">You followed</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">@sarah_gamer</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">2 weeks ago</span>
+                        </div>
+                        <p class="text-gray-300">Now following their reviews and activities</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 7 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400"></i>
+                                <span class="text-white font-medium">You completed</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">God of War Ragnarök</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">3 weeks ago</span>
+                        </div>
+                        <p class="text-gray-300">Finished the main story and updated your game status</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 8 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-bookmark text-orange-400"></i>
+                                <span class="text-white font-medium">You added</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">Starfield</span>
+                                <span class="text-white font-medium">to your watchlist</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">3 weeks ago</span>
+                        </div>
+                        <p class="text-gray-300">Planning to play this game soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Item 9 -->
+            <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-start gap-4">
+                    <!-- User Avatar -->
+                    <img src="https://via.placeholder.com/50" alt="Your Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 flex-shrink-0">
+                    
+                    <!-- Activity Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-comment text-cyan-400"></i>
+                                <span class="text-white font-medium">You commented on</span>
+                                <span class="text-blue-400 font-semibold cursor-pointer hover:underline">@mike_plays</span>
+                                <span class="text-white font-medium">'s review</span>
+                            </div>
+                            <span class="text-gray-400 text-sm">1 month ago</span>
+                        </div>
+                        <p class="text-gray-300">Commented on their review of <span class="text-blue-400 cursor-pointer hover:underline">Cyberpunk 2077</span></p>
+                        <div class="bg-gray-700 rounded p-3 mt-2">
+                            <p class="text-gray-300 text-sm italic">"Great points about the recent updates! The game has definitely improved a lot since launch."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
