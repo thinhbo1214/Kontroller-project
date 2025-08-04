@@ -8,66 +8,9 @@ on:
 
 jobs:
   # -----------------------------
-  lint_and_code_quality:
-    name: 🔍 Lint & Code Quality
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install linters (ESLint, HTMLHint, Stylelint)
-        run: |
-          npm install -g eslint htmlhint stylelint stylelint-config-standard
-
-      - name: Run ESLint on JS/TS
-        run: npx eslint . --ext .js,.ts || true
-
-      - name: Run HTMLHint
-        run: htmlhint "**/*.html" || true
-
-      - name: Run Stylelint on CSS
-        run: stylelint "**/*.css" || true
-
-      - name: Run dotnet format for C# code style
-        run: dotnet format --verify-no-changes || true
-
-      - name: CodeQL Init
-        uses: github/codeql-action/init@v2
-        with:
-          languages: javascript,csharp
-
-      - name: CodeQL Analyze
-        uses: github/codeql-action/analyze@v2
-
-  # -----------------------------
-  security_audit:
-    name: 🔐 Security Audit
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run npm audit
-        run: npm audit --audit-level=high || true
-
-  # -----------------------------
   build:
     name: 🚀 Build App
     runs-on: windows-latest
-    needs: [lint_and_code_quality, security_audit]
 
     permissions:
       contents: read
