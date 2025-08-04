@@ -13,14 +13,19 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Cần thiết để git blame hoạt động đúng
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    - name: Install Git
+    - name: Install Git (nếu chưa có)
       run: sudo apt-get install git -y
 
     - name: Run blame line counter
       run: python ./src/metrics/blame_line_counter.py
+
+    - name: Show output CSV (debug)
+      run: cat ./src/metrics/line_contribution.csv || echo "CSV not found"
