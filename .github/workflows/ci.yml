@@ -69,20 +69,23 @@ jobs:
           echo "" >> report.txt
           echo "🧾 **Báo cáo số commit đóng góp**:" >> report.txt
 
-          # Lưu commit theo từng người ra file
-          git shortlog -s -n > commit_count.txt
+          # Lấy danh sách commit per author
+          git shortlog -s -n --all > commit.txt
 
-          # Debug: In nội dung commit.txt
-          echo "Debug: Nội dung commit.txt:" >> report.txt
-          cat commit.txt >> report.txt
-          echo "" >> report.txt
+          # Kiểm tra xem file commit.txt có rỗng không
+          if [ ! -s commit.txt ]; then
+            echo "Lỗi: File commit.txt rỗng hoặc không được tạo." >> report.txt
+            echo "Debug: Nội dung git shortlog trực tiếp:" >> report.txt
+            git shortlog -s -n --all >> report.txt
+            exit 1
+          fi
 
-          # Ghi vào report.txt
-          echo -e "\n🧾 Số commit theo từng người:" >> report.txt
-          while read count name_rest; do
-            name=$(echo "$name_rest" | sed 's/^ *//')
-            echo "- $name: \`$count commit\`" >> report.txt
-          done < commit_count.txt
+          # Format kết quả
+          while read -r line; do
+            count=$(echo "$line" | awk '{print $1}')
+            author=$(echo "$line" | cut -d' ' -f2-)
+            echo "- $author: \`$count commit\`" >> report.txt
+          done < commit.txt
 
           # Tổng số commit toàn repo
           total_commits=$(git rev-list --count HEAD)
