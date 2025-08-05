@@ -17,6 +17,12 @@ get:
         application/json:
           schema:
             $ref: './components/schemas/Comment.yml#/Comment'
+            data:
+            - name: commentId
+            - name: content
+            - name: author
+            - name: dateCreated
+            - name: reactions
 post:
   summary: Create a new comment
   operationId: CreateComment
@@ -26,6 +32,9 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/Comment.yml#/Comment'
+          data:
+          - name: content
+          - name: author
   responses:
     201:
       description: ./components/responses/AllStatusCode.yml#/201'
@@ -46,6 +55,9 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/Comment.yml#/Comment'
+          data:
+          - name: commentId
+          - name: content
   responses:
     200:
       $ref: './components/responses/AllStatusCode.yml#/200'

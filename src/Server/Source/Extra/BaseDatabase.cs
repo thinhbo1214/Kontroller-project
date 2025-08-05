@@ -63,7 +63,6 @@ namespace Server.Source.Database
         {
             if (data is not TParam model)
                 return null;
-
             var db = Simulation.GetModel<DatabaseManager>();
             db.OpenConnection();
 

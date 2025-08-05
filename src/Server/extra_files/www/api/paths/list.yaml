@@ -18,6 +18,12 @@ get:
             application/json:
               schema:
                 $ref: './components/schemas/List.yml#/List'
+                data:
+                  - name: listId
+                  - name: title
+                  - name: descriptions
+                  - name: games
+                  - name: dateCreated
         400:
           $ref: './components/responses/AllStatusCode.yml#/400'
         404:
@@ -36,6 +42,10 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/List.yml#/List'
+          data:
+          - name: title
+          - name: description
+          - name: games
   responses:
     201:
       description: List created
@@ -63,6 +73,11 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/List.yml#/List'
+          data:
+            - name: listId
+            - name: title
+            - name: descriptions
+            - name: games
   responses:
     200:
       description: List updated

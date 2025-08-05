@@ -18,6 +18,10 @@ get:
           application/json:
             schema:
               $ref: './components/schemas/Activity.yml#/Activity'
+              data:
+              - name: activityId
+              - name: content
+              - name: dateDo
       400:
         $ref: './components/responses/AllStatusCode.yml#/400'
       404:
@@ -36,6 +40,8 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/Activity.yml#/Activity'
+          data:
+          - name: content
   responses:
     201:
       description: Activity created
@@ -63,6 +69,9 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/Activity.yml#/Activity'
+          data:
+            - name: activityId
+            - name: content
   responses:
     200:
       description: Activity updated

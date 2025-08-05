@@ -36,6 +36,11 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/Rate.yml#/Rate'
+          data: 
+          - name: rateId
+          - name: value
+          - name: rater
+          - name: target
   responses:
     201:
       description: Rate created
@@ -63,6 +68,9 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/Rate.yml#/Rate'
+          data:
+          - name: rateId
+          - name: value
   responses:
     200:
       description: Rate updated
@@ -93,3 +101,4 @@ delete:
       $ref: './components/responses/AllStatusCode.yml#/404'
     500:
       $ref: './components/responses/AllStatusCode.yml#/500'
+

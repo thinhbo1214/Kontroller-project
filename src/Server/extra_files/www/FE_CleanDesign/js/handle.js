@@ -1,5 +1,5 @@
 import { APIAuth, APIUser } from './api.js';
-import { UIManager } from './ui.js';
+import { Pages, UIManager } from './ui.js';
 
 // Initialize and export
 const UI = new UIManager();
@@ -7,26 +7,28 @@ const UI = new UIManager();
 export class Handle {
     static async Login(username, password) {
         if (!username || !password) {
-            UI.toast("Vui lòng nhập đầy đủ thông tin");
+            UI.showWarning("Vui lòng nhập đầy đủ thông tin!");
             return false;
         }
 
         const api = new APIAuth();
         UI.showLoading();
-        const res = await api.PostLogin(username, password);
 
-        if (res.ok) {
-            setTimeout(() => {
-                UI.hideLoading();
-                UI.goTo(Pages.PROFILE);
-            }, 2000);
-        } else {
-            UI.toast("Sai tài khoản hoặc mật khẩu");
+        const res = await api.PostLogin(username, password);
+        UI.hideLoading();
+
+        if (!res.ok) {
+            UI.showWarning("Tài khoản hoặc mật khẩu không đúng!");
+            return false;
         }
+
+        UI.showSuccess("Đăng nhập thành công!");
+        UI.goTo(Pages.PROFILE);
+        return true;
     }
     static async Register(username, password, email) {
         if (!username || !password || !email) {
-            UI.toast("Vui lòng nhập đầy đủ thông tin");
+            UI.showWarning("Vui lòng nhập đầy đủ thông tin!");
             return false;
         }
 
@@ -35,13 +37,13 @@ export class Handle {
         const res = await api.PostUser(username, password, email);
 
         if (res.ok) {
-            setTimeout(() => {
-                UI.hideLoading();
-                UI.goTo(Pages.AUTH);
-            }, 2000);
+            UI.showSuccess("Đăng ký thành công");
+            UI.goTo(Pages.AUTH);
         } else {
-            UI.toast("Thông tin đăng ký không hợp lệ");
+            UI.showWarning("Thông tin đăng ký không hợp lệ");
         }
+
+        UI.hideLoading();
     }
     
 }

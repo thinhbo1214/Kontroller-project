@@ -8,6 +8,9 @@ export class UIManager {
         this.createNotificationContainer();
     }
 
+    goTo(page) {
+        window.location.href = page;
+    }
     // Existing notification methods...
     createNotificationContainer() {
         if (!document.getElementById('notificationContainer')) {
@@ -507,3 +510,19 @@ export class UIManager {
         notifications.forEach(notification => notification.remove());
     }
 }
+
+export const Pages = {
+    AUTH: 'auth.html',
+    PROFILE: 'profile.html',
+    ACTIVITY: 'activity.html',
+    DIARY: 'diary.html',
+    FRIENDS: 'friends.html',
+    GAME_DETAIL: 'game-detail.html',
+    GAME_REVIEW: 'game-review.html',
+    GAMES: 'games.html',
+    INDEX: 'index.html',
+    LIKES: 'likes.html',
+    LISTS: 'lists.html',
+    REGISTER: 'rigister.html',
+    REVIEW: 'review.html' 
+};

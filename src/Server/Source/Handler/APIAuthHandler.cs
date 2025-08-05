@@ -15,19 +15,20 @@ namespace Server.Source.Handler
     {
         public override string Type => "/api/auth";
 
+        public APIAuthHandler() 
+        {
+            PostRoutes["/api/auth/login"] = PostLogin;
+            PostRoutes["/api/auth/logout"] = PostLogout;
+        }
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
-            switch (request.Url)
+            if (PostRoutes.TryGetValue(request.Url, out var handler))
             {
-                case "/api/auth/login":
-                    PostLogin(request, session);
-                    break;
-                case "/api/auth/logout":
-                    PostLogout(request, session);
-                    break;
-                default:
-                    ErrorHandle(session);
-                    break;
+                handler.Invoke(request, session);
+            }
+            else
+            {
+                ErrorHandle(session);
             }
         }
         private void PostLogin(HttpRequest request, HttpsSession session)
@@ -47,7 +48,6 @@ namespace Server.Source.Handler
                 ErrorHandle(session);
                 return;
             }
-
             // Đăng nhập thành công:
             string userId = AccountDatabase.Instance.CheckLoginAccount(account);
 
