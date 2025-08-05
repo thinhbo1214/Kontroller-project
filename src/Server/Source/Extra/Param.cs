@@ -85,4 +85,46 @@
     {
         public string Email { get; set; }
     }
+
+    /// <summary>
+    /// Yêu cầu gửi email, chứa đầy đủ thông tin người gửi, người nhận và nội dung.
+    /// </summary>
+    public class EmailSendRequest
+    {
+        /// <summary>
+        /// Email dùng để đăng nhập SMTP (sẽ kết hợp với mật khẩu từ cấu hình NotifyManager).
+        /// </summary>
+        public string SmtpUser { get; set; } = default!;
+
+        /// <summary>
+        /// Email hiển thị là người gửi.
+        /// </summary>
+        public string FromEmail { get; set; } = default!;
+
+        /// <summary>
+        /// Email người nhận.
+        /// </summary>
+        public string ToEmail { get; set; } = default!;
+
+        /// <summary>
+        /// Tiêu đề email.
+        /// </summary>
+        public string Subject { get; set; } = default!;
+
+        /// <summary>
+        /// Nội dung email.
+        /// </summary>
+        public string Body { get; set; } = default!;
+
+        /// <summary>
+        /// Cho biết nội dung email có phải là HTML hay không.
+        /// </summary>
+        public bool IsHtml { get; set; } = false;
+
+        /// <summary>
+        /// Danh sách đường dẫn tuyệt đối tới các tệp đính kèm.
+        /// </summary>
+        public List<string> Attachments { get; set; } = new();
+    }
+
 }
