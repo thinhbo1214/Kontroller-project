@@ -5,19 +5,40 @@ class HandleManager {
     constructor() {
         this.currentModal = null;
         this.currentTab = null;
+        this.selectedGames = [];
+        this.currentTags = [];
+        this.sampleGames = [
+            { id: 1, title: "The Witcher 3: Wild Hunt", genre: "RPG", year: 2015, poster: "https://via.placeholder.com/150x200/DC2626/FFFFFF?text=Witcher+3" },
+            { id: 2, title: "Red Dead Redemption 2", genre: "Action", year: 2018, poster: "https://via.placeholder.com/150x200/DC2626/FFFFFF?text=RDR2" },
+            { id: 3, title: "Cyberpunk 2077", genre: "RPG", year: 2020, poster: "https://via.placeholder.com/150x200/FBBF24/000000?text=Cyberpunk" },
+            { id: 4, title: "God of War", genre: "Action", year: 2018, poster: "https://via.placeholder.com/150x200/1F2937/FFFFFF?text=God+of+War" },
+            { id: 5, title: "The Last of Us Part II", genre: "Action", year: 2020, poster: "https://via.placeholder.com/150x200/059669/FFFFFF?text=TLOU2" },
+            // Add more games as needed...
+        ];
+        this.listData = {
+            // Sample list data structure
+            1: {
+                title: "TOP 10 GAMES OF ALL TIME",
+                description: "This is my personal take, not objective. These are the games that have had the most impact on me personally and shaped my gaming experience over the years.",
+                date: "July 15, 2025",
+                likes: 24,
+                gameCount: 12,
+                tags: ["Personal Favorites", "All Time", "Masterpieces"],
+                games: [1, 2, 3, 4, 5]
+            }
+            // Add more list data...
+        };
     }
 
-    // Navigation handlers
+    // Existing methods...
     handleBack = (e) => {
         e.preventDefault();
         const target = e.target.dataset.target || 'index.html';
         window.location.href = target;
     }
 
-    // Authentication handlers
     handleSignup = async (e) => {
         e.preventDefault();
-        
         const form = document.getElementById('signupForm');
         if (form) {
             this.handleSignupSubmit({ target: form });
@@ -34,31 +55,29 @@ class HandleManager {
             password: formData.get('password') || document.getElementById('signupPassword')?.value
         };
 
-        // Validate data
         if (!this.validateSignupData(userData)) {
             return;
         }
 
         try {
-            UI.showLoading(true);
+            UI.showLoading('Creating account...');
             const result = await API.signup(userData);
             
             if (result.success) {
-                UI.showSuccess('Đăng ký thành công!');
+                UI.showSuccess('Account created successfully!');
                 setTimeout(() => window.location.href = 'login.html', 2000);
             } else {
-                UI.showError(result.message || 'Đăng ký thất bại');
+                UI.showError(result.message || 'Signup failed');
             }
         } catch (error) {
-            UI.showError('Có lỗi xảy ra: ' + error.message);
+            UI.showError('An error occurred: ' + error.message);
         } finally {
-            UI.showLoading(false);
+            UI.hideLoading();
         }
     }
 
     handleLogin = async (e) => {
         e.preventDefault();
-        
         const form = document.getElementById('loginForm');
         if (form) {
             this.handleLoginSubmit({ target: form });
@@ -79,19 +98,19 @@ class HandleManager {
         }
 
         try {
-            UI.showLoading(true);
+            UI.showLoading('Signing in...');
             const result = await API.login(loginData);
             
             if (result.success) {
-                UI.showSuccess('Đăng nhập thành công!');
+                UI.showSuccess('Login successful!');
                 setTimeout(() => window.location.href = 'dashboard.html', 1500);
             } else {
-                UI.showError(result.message || 'Đăng nhập thất bại');
+                UI.showError(result.message || 'Login failed');
             }
         } catch (error) {
-            UI.showError('Có lỗi xảy ra: ' + error.message);
+            UI.showError('An error occurred: ' + error.message);
         } finally {
-            UI.showLoading(false);
+            UI.hideLoading();
         }
     }
 
@@ -101,15 +120,156 @@ class HandleManager {
         try {
             const result = await API.logout();
             if (result.success) {
-                UI.showSuccess('Đăng xuất thành công!');
+                UI.showSuccess('Logged out successfully!');
                 setTimeout(() => window.location.href = 'index.html', 1000);
             }
         } catch (error) {
-            UI.showError('Có lỗi khi đăng xuất');
+            UI.showError('Error logging out');
         }
     }
 
-    // UI handlers
+    // Lists Page Handlers
+    handleCreateList = (e) => {
+        e.preventDefault();
+        this.currentModal = 'createListModal';
+        UI.showModal('createListModal');
+        this.resetCreateListForm();
+    }
+
+    handleListClick = (e) => {
+        e.preventDefault();
+        const listCard = e.target.closest('.list-card');
+        if (listCard) {
+            const listId = listCard.getAttribute('data-list-id');
+            this.showListDetail(listId);
+        }
+    }
+
+    handleCreateListSubmit = async (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById('listTitle')?.value.trim();
+        const description = document.getElementById('listDescription')?.value.trim();
+        const privacy = document.getElementById('listPrivacy')?.value;
+
+        if (!title) {
+            UI.showError('Please enter a list title');
+            return;
+        }
+
+        const newList = {
+            title: title,
+            description: description || 'No description provided.',
+            privacy: privacy,
+            tags: [...this.currentTags],
+            games: [...this.selectedGames],
+            gameCount: this.selectedGames.length,
+            likes: 0
+        };
+
+        try {
+            UI.showLoading('Creating list...');
+            const result = await API.createList(newList);
+            
+            if (result.success) {
+                UI.showSuccess('List created successfully!');
+                this.addListToPage(result.data);
+                this.handleModalClose(e);
+            } else {
+                UI.showError(result.message || 'Failed to create list');
+            }
+        } catch (error) {
+            UI.showError('An error occurred: ' + error.message);
+        } finally {
+            UI.hideLoading();
+        }
+    }
+
+    handleSortChange = (e) => {
+        const sortBy = e.target.value;
+        this.sortLists(sortBy);
+    }
+
+    handleGameSearch = (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        
+        if (query.length < 2) {
+            UI.clearGameSearchResults();
+            return;
+        }
+
+        const results = this.sampleGames.filter(game => 
+            game.title.toLowerCase().includes(query) && 
+            !this.selectedGames.find(sg => sg.id === game.id)
+        ).slice(0, 5);
+
+        UI.displayGameSearchResults(results, this.handleAddGameToList.bind(this));
+    }
+
+    handleAddGameToList = (gameId) => {
+        const game = this.sampleGames.find(g => g.id === gameId);
+        if (game && !this.selectedGames.find(sg => sg.id === gameId)) {
+            this.selectedGames.push(game);
+            UI.updateSelectedGames(this.selectedGames, this.handleRemoveGameFromList.bind(this));
+            UI.clearGameSearch();
+        }
+    }
+
+    handleRemoveGameFromList = (gameId) => {
+        this.selectedGames = this.selectedGames.filter(game => game.id !== gameId);
+        UI.updateSelectedGames(this.selectedGames, this.handleRemoveGameFromList.bind(this));
+    }
+
+    handleTagInput = (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            this.addTag(e.target.value.trim());
+            e.target.value = '';
+        }
+    }
+
+    handleTagInputBlur = (e) => {
+        const tag = e.target.value.trim();
+        if (tag) {
+            this.addTag(tag);
+            e.target.value = '';
+        }
+    }
+
+    handleRemoveTag = (tag) => {
+        this.currentTags = this.currentTags.filter(t => t !== tag);
+        UI.updateTagsList(this.currentTags, this.handleRemoveTag.bind(this));
+    }
+
+    handleLikeList = async (e) => {
+        e.preventDefault();
+        const listId = e.target.dataset.listId;
+        
+        try {
+            const result = await API.likeList(listId);
+            if (result.success) {
+                UI.showSuccess('List liked!');
+                // Update UI to reflect the like
+                this.updateListLikes(listId, result.data.likes);
+            }
+        } catch (error) {
+            UI.showError('Failed to like list');
+        }
+    }
+
+    handleShareList = async (e) => {
+        e.preventDefault();
+        const listId = e.target.dataset.listId;
+        const shareUrl = `${window.location.origin}/list/${listId}`;
+        
+        try {
+            await UI.copyToClipboard(shareUrl);
+        } catch (error) {
+            UI.showError('Failed to copy share link');
+        }
+    }
+
+    // UI Handlers
     handlePasswordToggle = (e) => {
         e.preventDefault();
         const button = e.target.closest('button');
@@ -137,20 +297,11 @@ class HandleManager {
         }
     }
 
-    handleTabSwitch = (e) => {
-        e.preventDefault();
-        const tabId = e.target.dataset.tab;
-        if (tabId) {
-            UI.switchTab(tabId);
-            this.currentTab = tabId;
-        }
-    }
-
-    // Input handlers
+    // Input validation handlers
     handleEmailInput = (e) => {
         const email = e.target.value;
         const isValid = this.validateEmail(email);
-        UI.updateInputValidation(e.target, isValid, 'Email không hợp lệ');
+        UI.updateInputValidation(e.target, isValid, 'Invalid email address');
     }
 
     handlePasswordInput = (e) => {
@@ -162,7 +313,7 @@ class HandleManager {
     handleUsernameInput = (e) => {
         const username = e.target.value;
         const isValid = username.length >= 3;
-        UI.updateInputValidation(e.target, isValid, 'Tên người dùng phải có ít nhất 3 ký tự');
+        UI.updateInputValidation(e.target, isValid, 'Username must be at least 3 characters');
     }
 
     handleInputValidation = (e) => {
@@ -172,17 +323,17 @@ class HandleManager {
         switch (input.type) {
             case 'email':
                 const emailValid = this.validateEmail(value);
-                UI.updateInputValidation(input, emailValid, 'Email không hợp lệ');
+                UI.updateInputValidation(input, emailValid, 'Invalid email address');
                 break;
                 
             case 'password':
                 const passwordValid = value.length >= 6;
-                UI.updateInputValidation(input, passwordValid, 'Mật khẩu phải có ít nhất 6 ký tự');
+                UI.updateInputValidation(input, passwordValid, 'Password must be at least 6 characters');
                 break;
                 
             default:
                 if (input.required && !value) {
-                    UI.updateInputValidation(input, false, 'Trường này là bắt buộc');
+                    UI.updateInputValidation(input, false, 'This field is required');
                 } else {
                     UI.updateInputValidation(input, true);
                 }
@@ -203,72 +354,47 @@ class HandleManager {
     }
 
     handleEscapeKey = (e) => {
-        // Close modals on escape
         if (this.currentModal) {
             this.handleModalClose(e);
         }
     }
 
-    // Generic handlers
-    handleGenericButton = (e) => {
-        const button = e.target;
-        const action = button.dataset.action;
-        
-        if (action) {
-            // Handle custom actions
-            console.log('Generic button action:', action);
+    // Helper methods
+    addTag(tag) {
+        if (tag && !this.currentTags.includes(tag) && this.currentTags.length < 10) {
+            this.currentTags.push(tag);
+            UI.updateTagsList(this.currentTags, this.handleRemoveTag.bind(this));
         }
     }
 
-    handleLinkAction = (e) => {
-        const link = e.target;
-        const action = link.dataset.action;
-        
-        switch (action) {
-            case 'scroll-to':
-                const target = link.dataset.target;
-                UI.scrollToElement(target);
-                break;
-                
-            default:
-                console.log('Link action:', action);
-                break;
-        }
+    resetCreateListForm() {
+        this.selectedGames = [];
+        this.currentTags = [];
+        UI.resetCreateListForm();
     }
 
-    handleGenericForm = async (e) => {
-        const form = e.target;
-        const action = form.dataset.action;
-        
-        console.log('Generic form submission:', action);
-        // Handle generic form submissions
+    showListDetail(listId) {
+        const list = this.listData[listId];
+        if (!list) return;
+
+        const listGames = list.games.map(gameId => 
+            this.sampleGames.find(g => g.id === gameId)
+        ).filter(Boolean);
+
+        UI.showListDetailModal(list, listGames);
+        this.currentModal = 'listDetailModal';
     }
 
-    handleContactSubmit = async (e) => {
-        const form = e.target;
-        const formData = new FormData(form);
-        
-        const contactData = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            message: formData.get('message')
-        };
+    sortLists(sortBy) {
+        UI.sortListsInDOM(sortBy);
+    }
 
-        try {
-            UI.showLoading(true);
-            const result = await API.contact(contactData);
-            
-            if (result.success) {
-                UI.showSuccess('Tin nhắn đã được gửi thành công!');
-                form.reset();
-            } else {
-                UI.showError('Có lỗi khi gửi tin nhắn');
-            }
-        } catch (error) {
-            UI.showError('Có lỗi xảy ra: ' + error.message);
-        } finally {
-            UI.showLoading(false);
-        }
+    addListToPage(listData) {
+        UI.addListToPage(listData, this.handleListClick.bind(this));
+    }
+
+    updateListLikes(listId, newLikes) {
+        UI.updateListLikes(listId, newLikes);
     }
 
     // Validation methods
@@ -278,17 +404,17 @@ class HandleManager {
 
     validateSignupData(data) {
         if (!data.username || data.username.length < 3) {
-            UI.showError('Tên người dùng phải có ít nhất 3 ký tự');
+            UI.showError('Username must be at least 3 characters');
             return false;
         }
         
         if (!this.validateEmail(data.email)) {
-            UI.showError('Email không hợp lệ');
+            UI.showError('Invalid email address');
             return false;
         }
         
         if (!data.password || data.password.length < 6) {
-            UI.showError('Mật khẩu phải có ít nhất 6 ký tự');
+            UI.showError('Password must be at least 6 characters');
             return false;
         }
         
@@ -297,12 +423,12 @@ class HandleManager {
 
     validateLoginData(data) {
         if (!this.validateEmail(data.email)) {
-            UI.showError('Email không hợp lệ');
+            UI.showError('Invalid email address');
             return false;
         }
         
         if (!data.password) {
-            UI.showError('Vui lòng nhập mật khẩu');
+            UI.showError('Please enter your password');
             return false;
         }
         
