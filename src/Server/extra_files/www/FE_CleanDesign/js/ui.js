@@ -1,5 +1,5 @@
 // ui.js - Extended UI Manager for Lists functionality
-class UIManager {
+export class UIManager {
     constructor() {
         this.init();
     }
@@ -507,7 +507,3 @@ class UIManager {
         notifications.forEach(notification => notification.remove());
     }
 }
-
-// Initialize and export
-const UI = new UIManager();
-export { UI };

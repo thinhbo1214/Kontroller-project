@@ -71,7 +71,7 @@ namespace Server.Source.Model
         /// <summary>
         /// Thư mục chứa nội dung tĩnh (web) của máy chủ.
         /// </summary>
-        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "Kontroller Web");
+        private string www = Path.Combine(ExecutableDirectory, "extra_files", "www", "FE_CleanDesign");
 
         /// <summary>
         /// Lấy hoặc thiết lập thư mục chứa nội dung tĩnh của máy chủ.
@@ -79,7 +79,7 @@ namespace Server.Source.Model
         public string WWW { get => www; set => www = value; }
 
         /// <summary>
-        /// Ngữ cảnh SSL cho máy chủ.
+        /// Ngữ cảnh SSL cho máy chủ.   
         /// </summary>
         private SslContext context;
 
