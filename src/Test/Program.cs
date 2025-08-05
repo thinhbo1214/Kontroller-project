@@ -1,14 +1,16 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Server.Source.Extra;
+using Server.Source.Manager;
+using System.Net;
 
-string _connectionString = "Server=localhost;Database=KontrollerDB;Integrated Security=True;TrustServerCertificate=True;";
+NotifyManager notifyManager = new NotifyManager("smtp.gmail.com", 587, "aysd pgdv lfib ldll");
+notifyManager.Start();
+notifyManager.OnEmailSent += req =>
+{
+    Console.WriteLine("Đã reset mật khẩu");
+    // Không chặn thread xử lý SendMailAsync
+    _ = Task.Run(() => notifyManager.Stop());
+};
+notifyManager.SendMailResetPassword("kingnemacc1@gmail.com", ">fkV1gq3gD1v");
 
-using var conn = new SqlConnection(_connectionString);
-try
-{
-    conn.Open();
-    Console.WriteLine("✅ Kết nối thành công!");
-}
-catch (Exception ex)
-{
-    Console.WriteLine("❌ Lỗi khi kết nối: " + ex.Message);
-}
+
+while (true);

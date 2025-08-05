@@ -136,6 +136,9 @@ namespace Server.Source.Extra
         /// <param name="data">Thông tin lỗi bổ sung (nếu có).</param>
         public virtual void ErrorHandle(HttpsSession session, object data = null)
         {
+            if (data is string message)
+                data = new { message };
+
             SendJsonResponse(session, data, 400);
         }
 
@@ -146,7 +149,13 @@ namespace Server.Source.Extra
         /// <param name="data">Dữ liệu muốn trả về (nếu có).</param>
         public virtual void OkHandle(HttpsSession session, object data = null)
         {
+            if (data is string message)
+                data = new { message };
+
             SendJsonResponse(session, data, 200);
         }
+
     }
+
+
 }

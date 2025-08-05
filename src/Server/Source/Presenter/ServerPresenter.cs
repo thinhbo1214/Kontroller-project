@@ -56,6 +56,9 @@ namespace Server.Source.Presenter
             Simulation.GetModel<LogManager>().Log("⚙️ SessionManager.Start()", LogLevel.INFO, LogSource.SYSTEM);
             Simulation.GetModel<SessionManager>().Start();
 
+            Simulation.GetModel<LogManager>().Log("⚙️ NotifyManager.Start()", LogLevel.INFO, LogSource.SYSTEM);
+            Simulation.GetModel<NotifyManager>().Start();
+
             Simulation.GetModel<LogManager>().Log("🚀 Model.Start()", LogLevel.INFO, LogSource.SYSTEM);
             Simulation.GetModel<ModelServer>().Start();
 
@@ -100,6 +103,7 @@ namespace Server.Source.Presenter
                 {
                     Simulation.GetModel<SessionManager>().Stop();
                     Simulation.GetModel<SimulationManager>().Stop();
+                    Simulation.GetModel<NotifyManager>().Stop();
                     Simulation.GetModel<ModelServer>().Stop();
                     Simulation.GetModel<ModelServer>().Server.Stop();
                     Simulation.GetModel<LogManager>().Log("Server stopped.", LogLevel.INFO, LogSource.SYSTEM);

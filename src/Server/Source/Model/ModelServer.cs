@@ -268,6 +268,7 @@ namespace Server.Source.Model
             Simulation.SetModel<SimulationManager>(new SimulationManager());
             Simulation.SetModel<SessionManager>(new SessionManager());
             Simulation.SetModel<DatabaseManager>(new DatabaseManager());
+            Simulation.SetModel<NotifyManager>(new NotifyManager());
 
             // MVP
             Simulation.SetModel<ServerPresenter>(new ServerPresenter());

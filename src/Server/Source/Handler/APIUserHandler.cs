@@ -28,11 +28,11 @@ namespace Server.Source.Handler
         /// </summary>
         public APIUserHandler()
         {
+            PostRoutes["/api/user"] = PostHandle;
             PutRoutes["/api/user/email"] = PutUserEmail;
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
             PutRoutes["/api/user/username"] = PutUserUsername;
             PutRoutes["/api/user/password"] = PutUserPassword;
-            PutRoutes["/api/user/forgetpassword"] = PutUserForgetPassword;
         }
 
         /// <summary>
@@ -91,6 +91,7 @@ namespace Server.Source.Handler
             }
 
             ErrorHandle(session);
+
         }
 
         /// <summary>
@@ -118,8 +119,12 @@ namespace Server.Source.Handler
             {
                 return default;
             }
+            // Deserialize trực tiếp trước (để giữ nguyên casing từ JSON)
+            var data = JsonHelper.Deserialize<T>(request.Body);
+            if (data == null)
+                return default;
 
-            var newData = JsonHelper.AddPropertyAndDeserialize<T>(request.Body, "UserId", userId);
+            var newData = JsonHelper.AddPropertyAndDeserialize<T>(JsonHelper.Serialize(data), "UserId", userId);
             return newData;
         }
 
@@ -164,18 +169,6 @@ namespace Server.Source.Handler
         {
             var data = PutBase<object>(request, session);
             if (data == null || AccountDatabase.Instance.ChangePassword(data) != 1)
-            {
-                ErrorHandle(session);
-                return;
-            }
-            OkHandle(session);
-        }
-
-        /// <summary>Thực hiện quên mật khẩu cho người dùng.</summary>
-        private void PutUserForgetPassword(HttpRequest request, HttpsSession session)
-        {
-            var data = PutBase<object>(request, session);
-            if (data == null || AccountDatabase.Instance.ForgetPassword(data) != 1)
             {
                 ErrorHandle(session);
                 return;
