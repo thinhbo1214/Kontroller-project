@@ -16,10 +16,10 @@ export class Handle {
         const res = await api.PostLogin(username, password);
 
         if (res.ok) {
-            setTimeout(() => {
-                UI.goTo(Pages.PROFILE);
-            }, 2000);
             UI.showSuccess("Đăng nhập thành công");
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Đợi 2 giây để người dùng thấy message
+            UI.goTo(Pages.PROFILE);
+
         } else {
             UI.showWarning("Sai tài khoản hoặc mật khẩu");
         }
@@ -36,14 +36,13 @@ export class Handle {
         const res = await api.PostUser(username, password, email);
 
         if (res.ok) {
-            setTimeout(() => {
-                
-                UI.goTo(Pages.AUTH);
-            }, 2000);
             UI.showSuccess("Đăng ký thành công");
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Đợi 2 giây
+            UI.goTo(Pages.AUTH);
         } else {
             UI.showWarning("Thông tin đăng ký không hợp lệ");
         }
+
         UI.hideLoading();
     }
 }
