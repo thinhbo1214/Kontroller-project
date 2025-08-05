@@ -88,11 +88,11 @@ namespace Server.Source.Database
         /// </summary>
         /// <param name="data">Thông tin người dùng để xác minh (ParamsForgetPassword).</param>
         /// <returns>1 nếu gửi thành công, 0 nếu không hợp lệ.</returns>
-        public virtual int ForgetPassword(object data)
+        public virtual string ForgetPassword(object data)
         {
             var sqlPath = $"{TableName}/forget_password";
-            var result = ExecuteScalar<ParamsForgetPassword>(sqlPath, data);
-            return DatabaseHelper.GetScalarValue<int>(result);
+            var result = ExecuteScalar<ForgetPasswordRequest>(sqlPath, data);
+            return DatabaseHelper.GetScalarValue<string>(result);
         }
     }
 }

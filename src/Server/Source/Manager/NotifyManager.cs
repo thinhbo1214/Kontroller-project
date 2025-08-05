@@ -71,6 +71,14 @@ namespace Server.Source.Manager
             _useSsl = useSsl;
         }
 
+        public NotifyManager()
+        {
+            _smtpHost = "smtp.gmail.com";
+            _smtpPort = 587;
+            _smtpPass = "aysd pgdv lfib ldll";
+            _useSsl = true;
+        }
+
         /// <summary>
         /// Bắt đầu hệ thống gửi email nền.
         /// Nếu đang chạy thì sẽ không làm gì.
@@ -101,6 +109,36 @@ namespace Server.Source.Manager
             }
         }
 
+        private string QuickFormatResetPassword(string password)
+        {
+            // Mã hóa HTML để tránh special chars phá cấu trúc HTML
+            var safePassword = WebUtility.HtmlEncode(password);
+
+            // Dùng verbatim + interpolation để dễ đọc; TrimStart() loại indent thừa
+            var body = $@"
+            <html>
+              <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                <h2 style='color: #2c3e50;'>Xin chào,</h2>
+                <p>Yêu cầu reset mật khẩu của bạn đã được xử lý thành công.</p>
+                <p>
+                  <strong>Mật khẩu mới của bạn: 
+                    <span style='color: #e74c3c;'>{safePassword}</span>
+                  </strong>
+                </p>
+                <p>Hãy đăng nhập ngay và đổi mật khẩu để đảm bảo an toàn tài khoản.</p>
+                <p style='color: #999; font-size: 12px;'>
+                  Nếu bạn không yêu cầu reset mật khẩu, vui lòng bỏ qua email này.
+                </p>
+                <hr />
+                <p style='font-size: 12px; color: #999;'>
+                  &copy; 2025 Hệ thống Kontroller - Email tự động, vui lòng không trả lời.
+                </p>
+              </body>
+            </html>".Trim(); // Trim để loại khoảng trắng ở đầu/cuối
+
+            return body;
+        }
+
         /// <summary>
         /// Thêm một yêu cầu gửi email vào hàng đợi.
         /// </summary>
@@ -109,7 +147,20 @@ namespace Server.Source.Manager
         {
             _queue.Add(request);
         }
+        public void SendMailResetPassword(string toEmail, string password)
+        {
 
+            var mail = new EmailSendRequest
+            {
+                SmtpUser = "kingnemacc@gmail.com",
+                FromEmail = "kingnemacc@gmail.com",
+                ToEmail = toEmail,
+                Subject = "Phản hồi reset mật khẩu",
+                IsHtml = true,
+                Body = QuickFormatResetPassword(password)
+            };
+            Send(mail);
+        }
         /// <summary>
         /// Vòng lặp chính xử lý gửi email nền.
         /// Lấy email từ hàng đợi, gửi qua SMTP và phát sự kiện tương ứng.

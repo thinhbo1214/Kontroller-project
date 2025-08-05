@@ -52,7 +52,6 @@ BEGIN
 END
 GO
 
-
 -- #User table procedures
 -- 1. Procedure to create a new user
 CREATE OR ALTER PROCEDURE UP_CreateUser
