@@ -18,6 +18,10 @@ get:
         application/json:
           schema:
             $ref: './components/schemas/Diary.yml#/Diary'
+            data:
+            - name: diaryId
+            - name: gameLogged
+            - name: dateLogged
     400:
       $ref: './components/responses/AllStatusCode.yml#/400'
     404:
@@ -36,6 +40,8 @@ post:
       application/json:
         schema:
           $ref: './components/schemas/Diary.yml#/Diary'
+          data:
+          - name: gameLogged
   responses:
     201:
       description: Diary created
@@ -63,6 +69,9 @@ put:
       application/json:
         schema:
           $ref: './components/schemas/Diary.yml#/Diary'
+          data:
+          - name: diaryId
+          - name: gameLogged
   responses:
     200:
       description: Diary updated
