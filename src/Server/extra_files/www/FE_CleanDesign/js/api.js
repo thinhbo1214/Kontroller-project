@@ -340,3 +340,224 @@ export class CacheAPI extends API {
     return res;
   }
 }
+// API để tương tác với Diary 
+export class DiaryAPI extends API {
+  static baseUrl = '/api/diary';
+
+  // Lấy diary 
+  async GetDiary(diaryId) {
+    const query = API.buildQuery({ diaryId });
+    const res = await this.GET(query);
+    return res;
+  }
+
+  // Tạo mới diary 
+  async PostDiary(gameLogged = []) {
+    const payload = { gameLogged };
+
+    const res = await this.POST('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Cập nhật danh sách game của diary
+  async PutDiary(diaryId, gameLogged = []) {
+    const payload = { gameLogged };
+
+    const res = await this.PUT(`?diaryId=${diaryId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Xoá diary theo diaryId
+  async DeleteDiary(diaryId) {
+    const query = API.buildQuery({ diaryId });
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
+// API để tương tác với Activity 
+export class ActivityAPI extends API {
+  static baseUrl = '/api/activity';
+
+  // Lấy activity theo activityId
+  async GetActivity(activityId) {
+    const query = API.buildQuery({ activityId });
+    const res = await this.GET(query);
+    return res;
+  }
+
+  // Tạo mới activity 
+  async PostActivity(content = '', dateDo = '') {
+    const payload = { content, dateDo };
+
+    const res = await this.POST('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Cập nhật nội dung activity 
+  async PutActivity(activityId, content = '', dateDo = '') {
+    const payload = { content, dateDo };
+
+    const res = await this.PUT(`?activityId=${activityId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Xoá activity 
+  async DeleteActivity(activityId) {
+    const query = API.buildQuery({ activityId });
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
+
+// API để tương tác với Comment 
+export class CommentAPI extends API {
+  static baseUrl = '/api/comment';
+
+  // Lấy comment 
+  async GetComment(commentId) {
+    const query = API.buildQuery({ commentId });
+    const res = await this.GET(query);
+    return res;
+  }
+
+  // Tạo mới comment 
+  async PostComment(content = '', author = '') {
+    const payload = { content, author };
+
+    const res = await this.POST('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Cập nhật nội dung comment 
+  async PutComment(commentId, content = '') {
+    const payload = { content };
+
+    const res = await this.PUT(`?commentId=${commentId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Xoá comment theo 
+  async DeleteComment(commentId) {
+    const query = API.buildQuery({ commentId });
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
+export class RateAPI extends API {
+  static baseUrl = '/api/rate';
+
+  // Lấy rating 
+  async GetRate(rateId) {
+    const query = API.buildQuery({ rateId });
+    const res = await this.GET(query);
+    return res;
+  }
+
+  // Tạo rating mới 
+  async PostRate(value = 1, rater = '', target = '') {
+    const payload = {
+      value,
+      rater,
+      target
+    };
+
+    const res = await this.POST('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  //  cập nhật rate
+  async PutRate(rateId, value) {
+    const payload = { value };
+
+    const res = await this.PUT(`?rateId=${rateId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Xoá rate
+  async DeleteRate(rateId) {
+    const query = API.buildQuery({ rateId });
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
+export class ListAPI extends API {
+  static baseUrl = '/api/list';
+
+  // lấy list
+  async GetList(listId) {
+    const query = API.buildQuery({ listId });
+    const res = await this.GET(query);
+    return res;
+  }
+
+  // tạo list mới
+  async PostList(title = '', descriptions = '', games = []) {
+    const payload = {
+      title,
+      descriptions,
+      games
+    };
+
+    const res = await this.POST('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // cập nhật list
+  async PutList(listId, title = '', descriptions = '', games = []) {
+    const payload = {
+      title,
+      descriptions,
+      games
+    };
+
+    const res = await this.PUT(`?listId=${listId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    });
+
+    return res;
+  }
+
+  // Xóa list
+  async DeleteList(listId) {
+    const query = API.buildQuery({ listId });
+    const res = await this.DELETE(query);
+    return res;
+  }
+}
