@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
         Handle.Logout();
     });
 
-    // Ví dụ khác: Tải profile
-    listenIfExists('#load-profile', 'click', () => {
-        Handle.LoadProfile();
+    listenIfExists('#createListBtn', 'click', () => {
+        
     });
+
+
 
     // Thêm các listener khác tùy bạn
 

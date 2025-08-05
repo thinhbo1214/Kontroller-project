@@ -43,4 +43,5 @@ export class Handle {
             UI.toast("Thông tin đăng ký không hợp lệ");
         }
     }
+    
 }

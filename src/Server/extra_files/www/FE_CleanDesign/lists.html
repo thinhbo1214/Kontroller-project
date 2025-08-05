@@ -6,79 +6,6 @@
     <title>Lists - Kontroller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .hover-gray-750:hover {
-            background-color: #374151;
-        }
-        .list-card {
-            transition: all 0.3s ease;
-        }
-        .list-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-        .poster-overlay {
-            background: linear-gradient(45deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3));
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: #1f2937;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            width: 90%;
-            max-width: 900px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalFadeIn 0.3s ease-out;
-        }
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        .game-search-item {
-            transition: background-color 0.2s ease;
-        }
-        .game-search-item:hover {
-            background-color: #374151;
-        }
-        .selected-game {
-            background-color: #1e40af !important;
-        }
-        .tag-input {
-            min-height: 100px;
-        }
-        .game-poster {
-            transition: transform 0.2s ease;
-        }
-        .game-poster:hover {
-            transform: scale(1.05);
-        }
-        .char-counter {
-            font-size: 0.75rem;
-            margin-top: 0.25rem;
-        }
-    </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Header with Avatar, Username and Main Toolbar -->
@@ -88,9 +15,9 @@
             <div class="flex items-center justify-between mb-4">
                 <!-- Left side: Avatar and Username -->
                 <div class="flex items-center space-x-3">
-                    <img src="https://via.placeholder.com/50x50/4F46E5/FFFFFF?text=U" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
                     <div>
-                        <h2 class="text-lg font-bold text-white">kontroller.user</h2>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
                         <div class="flex items-center space-x-2 text-sm text-gray-300">
                             <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
                             <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
@@ -111,129 +38,198 @@
             </div>
 
             <!-- Main Navigation -->
-            <nav class="flex space-x-1">
-                <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Profile</a>
-                <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Activity</a>
-                <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Games</a>
-                <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Diary</a>
-                <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Reviews</a>
-                <a href="watchlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Watchlist</a>
-                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">Lists</a>
-                <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-gray-300 hover:text-white">Likes</a>
-            </nav>
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>    
+                </nav>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Page Header -->
+        <!-- Page Title and Filter Bar -->
         <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h1 class="text-3xl font-bold">My Lists</h1>
-                <div class="flex items-center space-x-4">
-                    <span class="text-gray-400 text-sm">Sort by:</span>
-                    <select id="sortSelect" class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none">
+            <h1 class="text-3xl font-bold mb-8">My lists</h1>
+            
+            <!-- Filter Bar -->
+            <div class="flex items-center space-x-4 mb-6 bg-gray-800 p-4 rounded-lg">
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-300">Sort by:</label>
+                    <select class="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none">
                         <option value="date">Date Created</option>
                         <option value="title">Title</option>
                         <option value="games">Number of Games</option>
-                        <option value="likes">Most Liked</option>
                     </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded border border-gray-600">
+                        <i class="fas fa-sort-amount-down mr-2"></i>Newest First
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Lists Container -->
-        <div id="listsContainer" class="space-y-6">
+        <!-- Lists Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- List Item 1 -->
-            <div class="list-card bg-gray-800 rounded-lg overflow-hidden hover-gray-750 cursor-pointer" data-date="2025-07-15" data-title="TOP 10 GAMES OF ALL TIME" data-games="12" data-likes="24" data-list-id="1">
-                <div class="flex">
-                    <!-- Left side: Game Posters Preview -->
-                    <div class="relative w-80 h-32 bg-gray-700 flex-shrink-0">
-                        <div class="text-center py-4 text-gray-400">
-                            <i class="fas fa-gamepad text-2xl mb-2"></i>
-                            <div class="text-sm">Displaying the posters of several first games</div>
-                        </div>
-                        <div class="poster-overlay absolute inset-0 flex items-center justify-center">
-                            <span class="text-white text-lg font-bold bg-black bg-opacity-50 px-3 py-1 rounded">12 Games</span>
-                        </div>
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-colors cursor-pointer">
+                <!-- Game Posters Preview -->
+                <div class="relative h-48 bg-gray-700">
+                    <div class="grid grid-cols-3 h-full">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 1" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 2" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 3" class="w-full h-full object-cover">
                     </div>
-                    
-                    <!-- Right side: List Details -->
-                    <div class="flex-1 p-6">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-xl font-bold mb-2 text-white">TOP 10 GAMES OF ALL TIME</h3>
-                                <p class="text-gray-400 text-sm mb-4 leading-relaxed">This is my personal take, not objective. These are the games that have had the most impact on me personally and shaped my gaming experience over the years.</p>
-                            </div>
-                            <div class="text-right text-sm text-gray-400 ml-4">
-                                <div class="mb-2">July 15, 2025</div>
-                                <div class="flex items-center justify-end space-x-1">
-                                    <i class="fas fa-heart text-red-500"></i>
-                                    <span>24 likes</span>
-                                </div>
-                            </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">12 Games</span>
+                    </div>
+                </div>
+                
+                <!-- List Details -->
+                <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2 text-white">TOP 10 GAMES OF ALL TIME</h3>
+                    <p class="text-gray-400 text-sm mb-3">This is my personal take, not objective. These are the games that have had the most impact on me personally.</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>July 15, 2025</span>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-heart text-red-500"></i>
+                            <span>24 likes</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- List Item 2 -->
-            <div class="list-card bg-gray-800 rounded-lg overflow-hidden hover-gray-750 cursor-pointer" data-date="2025-07-10" data-title="Best Indie Games 2024" data-games="8" data-likes="18" data-list-id="2">
-                <div class="flex">
-                    <div class="relative w-80 h-32 bg-gray-700 flex-shrink-0">
-                        <div class="text-center py-4 text-gray-400">
-                            <i class="fas fa-gamepad text-2xl mb-2"></i>
-                            <div class="text-sm">Displaying the posters of several first games</div>
-                        </div>
-                        <div class="poster-overlay absolute inset-0 flex items-center justify-center">
-                            <span class="text-white text-lg font-bold bg-black bg-opacity-50 px-3 py-1 rounded">8 Games</span>
-                        </div>
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-colors cursor-pointer">
+                <div class="relative h-48 bg-gray-700">
+                    <div class="grid grid-cols-3 h-full">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 1" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 2" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 3" class="w-full h-full object-cover">
                     </div>
-                    
-                    <div class="flex-1 p-6">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-xl font-bold mb-2 text-white">Best Indie Games 2024</h3>
-                                <p class="text-gray-400 text-sm mb-4 leading-relaxed">A carefully curated collection of the most innovative and creative indie games that caught my attention this year. Each one offers something unique.</p>
-                            </div>
-                            <div class="text-right text-sm text-gray-400 ml-4">
-                                <div class="mb-2">July 10, 2025</div>
-                                <div class="flex items-center justify-end space-x-1">
-                                    <i class="fas fa-heart text-red-500"></i>
-                                    <span>18 likes</span>
-                                </div>
-                            </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">8 Games</span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2 text-white">Best Indie Games 2024</h3>
+                    <p class="text-gray-400 text-sm mb-3">A collection of the most innovative and creative indie games that caught my attention this year.</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>July 10, 2025</span>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-heart text-red-500"></i>
+                            <span>18 likes</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- List Item 3 -->
-            <div class="list-card bg-gray-800 rounded-lg overflow-hidden hover-gray-750 cursor-pointer" data-date="2025-07-05" data-title="Co-op Games with Friends" data-games="15" data-likes="31" data-list-id="3">
-                <div class="flex">
-                    <div class="relative w-80 h-32 bg-gray-700 flex-shrink-0">
-                        <div class="text-center py-4 text-gray-400">
-                            <i class="fas fa-gamepad text-2xl mb-2"></i>
-                            <div class="text-sm">Displaying the posters of several first games</div>
-                        </div>
-                        <div class="poster-overlay absolute inset-0 flex items-center justify-center">
-                            <span class="text-white text-lg font-bold bg-black bg-opacity-50 px-3 py-1 rounded">15 Games</span>
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-colors cursor-pointer">
+                <div class="relative h-48 bg-gray-700">
+                    <div class="grid grid-cols-3 h-full">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 1" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 2" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">15 Games</span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2 text-white">Co-op Games with Friends</h3>
+                    <p class="text-gray-400 text-sm mb-3">Perfect games to play with friends for an amazing cooperative experience.</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>July 5, 2025</span>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-heart text-red-500"></i>
+                            <span>31 likes</span>
                         </div>
                     </div>
-                    
-                    <div class="flex-1 p-6">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-xl font-bold mb-2 text-white">Co-op Games with Friends</h3>
-                                <p class="text-gray-400 text-sm mb-4 leading-relaxed">Perfect games to play with friends for an amazing cooperative experience. From puzzle games to action adventures.</p>
-                            </div>
-                            <div class="text-right text-sm text-gray-400 ml-4">
-                                <div class="mb-2">July 5, 2025</div>
-                                <div class="flex items-center justify-end space-x-1">
-                                    <i class="fas fa-heart text-red-500"></i>
-                                    <span>31 likes</span>
-                                </div>
-                            </div>
+                </div>
+            </div>
+
+            <!-- List Item 4 -->
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-colors cursor-pointer">
+                <div class="relative h-48 bg-gray-700">
+                    <div class="grid grid-cols-3 h-full">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 1" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 2" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">6 Games</span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2 text-white">Horror Games for Halloween</h3>
+                    <p class="text-gray-400 text-sm mb-3">Spine-chilling games perfect for getting into the Halloween spirit.</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>June 28, 2025</span>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-heart text-red-500"></i>
+                            <span>12 likes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Item 5 -->
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-colors cursor-pointer">
+                <div class="relative h-48 bg-gray-700">
+                    <div class="grid grid-cols-3 h-full">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 1" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 2" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">20 Games</span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2 text-white">RPGs That Changed Gaming</h3>
+                    <p class="text-gray-400 text-sm mb-3">Revolutionary RPGs that have shaped the genre and influenced countless other games.</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>June 20, 2025</span>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-heart text-red-500"></i>
+                            <span>45 likes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Item 6 -->
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-colors cursor-pointer">
+                <div class="relative h-48 bg-gray-700">
+                    <div class="grid grid-cols-3 h-full">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 1" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 2" class="w-full h-full object-cover">
+                        <img src="https://via.placeholder.com/200x300" alt="Game 3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">9 Games</span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2 text-white">Short Games Worth Playing</h3>
+                    <p class="text-gray-400 text-sm mb-3">Great games that can be completed in under 10 hours but leave a lasting impression.</p>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span>June 15, 2025</span>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-heart text-red-500"></i>
+                            <span>16 likes</span>
                         </div>
                     </div>
                 </div>
@@ -241,142 +237,12 @@
         </div>
 
         <!-- Create New List Button -->
-        <div class="mt-12 text-center">
-            <button id="createListBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl">
+        <div class="mt-8 text-center">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 <i class="fas fa-plus mr-2"></i>Create New List
             </button>
         </div>
     </main>
-
-    <!-- List Detail Modal -->
-    <div id="listDetailModal" class="modal">
-        <div class="modal-content">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex-1">
-                    <h2 id="listDetailTitle" class="text-2xl font-bold text-white mb-2"></h2>
-                    <div class="flex items-center space-x-4 text-sm text-gray-400">
-                        <span id="listDetailDate"></span>
-                        <span class="flex items-center space-x-1">
-                            <i class="fas fa-heart text-red-500"></i>
-                            <span id="listDetailLikes"></span>
-                        </span>
-                        <span class="flex items-center space-x-1">
-                            <i class="fas fa-gamepad"></i>
-                            <span id="listDetailGameCount"></span>
-                        </span>
-                    </div>
-                </div>
-                <button id="closeDetailModal" class="text-gray-400 hover:text-white text-2xl ml-4">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div class="mb-6">
-                <p id="listDetailDescription" class="text-gray-300 leading-relaxed"></p>
-            </div>
-
-            <div id="listDetailTags" class="mb-6"></div>
-
-            <div class="mb-4">
-                <h3 class="text-lg font-semibold text-white mb-4">Games in this list</h3>
-                <div id="listDetailGames" class="grid gap-4"></div>
-            </div>
-
-            <div class="flex space-x-4 pt-4 border-t border-gray-600">
-                <button data-click="likeList" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-                    <i class="fas fa-heart mr-2"></i>Like List
-                </button>
-                <button data-click="shareList" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-                    <i class="fas fa-share mr-2"></i>Share List
-                </button>
-                <button class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-                    <i class="fas fa-edit"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create List Modal -->
-    <div id="createListModal" class="modal">
-        <div class="modal-content">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-white">Create New List</h2>
-                <button id="closeModal" class="text-gray-400 hover:text-white text-2xl">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <form id="createListForm" class="space-y-6">
-                <!-- List Title -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">List Title *</label>
-                    <input type="text" id="listTitle" required maxlength="100" 
-                           class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-                           placeholder="e.g. My Favorite RPGs">
-                    <div class="char-counter text-xs text-gray-400 mt-1">Maximum 100 characters</div>
-                </div>
-
-                <!-- List Description -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                    <textarea id="listDescription" rows="4" maxlength="500"
-                              class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none resize-none"
-                              placeholder="Describe your list and what makes these games special..."></textarea>
-                    <div class="char-counter text-xs text-gray-400 mt-1">Maximum 500 characters</div>
-                </div>
-
-                <!-- Privacy Settings -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Privacy</label>
-                    <select id="listPrivacy" class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
-                        <option value="public">Public - Anyone can see this list</option>
-                        <option value="friends">Friends Only - Only your friends can see this list</option>
-                        <option value="private">Private - Only you can see this list</option>
-                    </select>
-                </div>
-
-                <!-- Tags -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Tags (Optional)</label>
-                    <div class="relative">
-                        <input type="text" id="tagInput" 
-                               class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-                               placeholder="Type tags separated by commas (e.g. RPG, Fantasy, Indie)">
-                    </div>
-                    <div id="tagsList" class="flex flex-wrap gap-2 mt-2"></div>
-                    <div class="text-xs text-gray-400 mt-1">Add tags to help others discover your list</div>
-                </div>
-
-                <!-- Add Games Section -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Add Games (Optional)</label>
-                    <div class="relative mb-3">
-                        <input type="text" id="gameSearch" 
-                               class="w-full bg-gray-700 text-white px-4 py-3 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-                               placeholder="Search for games to add...">
-                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                    
-                    <!-- Game search results -->
-                    <div id="gameSearchResults" class="space-y-2 max-h-40 overflow-y-auto mb-4"></div>
-                    
-                    <!-- Selected games -->
-                    <div id="selectedGames" class="space-y-2"></div>
-                    <div class="text-xs text-gray-400">You can add games later by editing the list</div>
-                </div>
-
-                <!-- Form Actions -->
-                <div class="flex space-x-4 pt-4">
-                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors">
-                        <i class="fas fa-save mr-2"></i>Create List
-                    </button>
-                    <button type="button" id="cancelCreate" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="bg-gray-800 border-t border-gray-700 mt-16">
@@ -387,10 +253,21 @@
         </div>
     </footer>
 
-    <!-- Import JavaScript modules -->
-    <script type="module">
-        import { Events } from './js/event.js';
-        // Events is automatically initialized when imported
+    <script>
+        // Add interactivity for sorting
+        document.querySelector('select').addEventListener('change', function() {
+            console.log('Sort by:', this.value);
+            // Here you would integrate with your backend API to fetch sorted lists
+        });
+
+        // Add click handlers for list items
+        document.querySelectorAll('.cursor-pointer').forEach(item => {
+            item.addEventListener('click', function() {
+                console.log('Clicked on list:', this.querySelector('h3').textContent);
+                // Here you would navigate to the individual list page
+                // window.location.href = 'list-detail.html?id=' + listId;
+            });
+        });
     </script>
 </body>
 </html>
