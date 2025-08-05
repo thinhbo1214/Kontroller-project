@@ -1,10 +1,22 @@
 import { Handle } from './handle.js';
+import { UIManager } from './ui.js';
+
+// Initialize and export
+const UI = new UIManager();
+
 
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
     const element = document.querySelector(selector);
     if (element) {
         element.addEventListener(event, handler);
+    }
+}
+
+// Hàm tiện ích: Thêm listener vào window nếu tồn tại (luôn tồn tại)
+function listenWindow(event, handler) {
+    if (typeof handler === 'function') {
+        window.addEventListener(event, handler);
     }
 }
 
@@ -36,5 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Thêm các listener khác tùy bạn
 
-    
+    //-----------------------------------------------//
+    listenWindow('load', () => {
+        UI.showLoading();
+        setTimeout(() => UI.hideLoading(), 2000);
+    });
 });
