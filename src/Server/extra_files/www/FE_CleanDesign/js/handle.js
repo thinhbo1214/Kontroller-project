@@ -1,5 +1,5 @@
 import { APIAuth, APIUser } from './api.js';
-import { UIManager } from './ui.js';
+import { Pages, UIManager } from './ui.js';
 
 // Initialize and export
 const UI = new UIManager();
@@ -7,7 +7,7 @@ const UI = new UIManager();
 export class Handle {
     static async Login(username, password) {
         if (!username || !password) {
-            UI.toast("Vui lòng nhập đầy đủ thông tin");
+            UI.showWarning("Vui lòng nhập đầy đủ thông tin");
             return false;
         }
 
@@ -17,16 +17,17 @@ export class Handle {
 
         if (res.ok) {
             setTimeout(() => {
-                UI.hideLoading();
                 UI.goTo(Pages.PROFILE);
             }, 2000);
+            UI.showSuccess("Đăng nhập thành công");
         } else {
-            UI.toast("Sai tài khoản hoặc mật khẩu");
+            UI.showWarning("Sai tài khoản hoặc mật khẩu");
         }
+        UI.hideLoading();
     }
     static async Register(username, password, email) {
         if (!username || !password || !email) {
-            UI.toast("Vui lòng nhập đầy đủ thông tin");
+            UI.showWarning("Vui lòng nhập đầy đủ thông tin");
             return false;
         }
 
@@ -36,11 +37,13 @@ export class Handle {
 
         if (res.ok) {
             setTimeout(() => {
-                UI.hideLoading();
+                
                 UI.goTo(Pages.AUTH);
             }, 2000);
+            UI.showSuccess("Đăng ký thành công");
         } else {
-            UI.toast("Thông tin đăng ký không hợp lệ");
+            UI.showWarning("Thông tin đăng ký không hợp lệ");
         }
+        UI.hideLoading();
     }
 }
