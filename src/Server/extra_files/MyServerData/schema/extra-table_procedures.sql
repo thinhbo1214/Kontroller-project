@@ -1,21 +1,32 @@
--- # Procedures for Game_Service table
--- 1. Procedure to add a game to a service
+/* 
+    Procedure: GSP_AddGameToService
+    Description: Adds a game to a specified service in the Game_Service table.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to add.
+        @ServiceName (NVARCHAR(30)): Name of the service to associate with the game.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE GSP_AddGameToService
-@GameId UNIQUEIDENTIFIER,
-@ServiceName NVARCHAR(30),
-@Result INT OUTPUT
+    @GameId UNIQUEIDENTIFIER,
+    @ServiceName NVARCHAR(30),
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    /* Check if game-service pair is usable */
     IF DBO.GSF_IsGameServiceUsable(@GameId, @ServiceName) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert game-service pair */
     INSERT INTO [Game_Service] (gameId, serviceName)
     VALUES (@GameId, @ServiceName);
 
+    /* Verify insertion */
     IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 0
     BEGIN
         SET @Result = 0;
@@ -26,23 +37,34 @@ BEGIN
 END;
 GO
 
--- 2. Procedure to remove a game from a service
+/* 
+    Procedure: GSP_RemoveGameFromService
+    Description: Removes a game from a specified service in the Game_Service table.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to remove.
+        @ServiceName (NVARCHAR(30)): Name of the service to disassociate.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE GSP_RemoveGameFromService
-@GameId UNIQUEIDENTIFIER,
-@ServiceName NVARCHAR(30),
-@Result INT OUTPUT
+    @GameId UNIQUEIDENTIFIER,
+    @ServiceName NVARCHAR(30),
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if game-service pair exists */
     IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete game-service pair */
     DELETE FROM [Game_Service] WHERE gameId = @GameId AND serviceName = @ServiceName;
 
+    /* Verify deletion */
     IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 1
     BEGIN
         SET @Result = 0;
@@ -53,56 +75,83 @@ BEGIN
 END;
 GO
 
--- 3. Procedure to get all services for a game
+/* 
+    Procedure: GSP_GetGameServices
+    Description: Retrieves all services associated with a specified game from the Game_Service table.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to query.
+    Returns: Result set containing all services for the specified game.
+*/
 CREATE OR ALTER PROCEDURE GSP_GetGameServices
-@GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate game ID */
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
         RETURN;
     END;
 
+    /* Select all services for the game */
     SELECT * FROM [Game_Service] WHERE gameId = @GameId;
 END;
 GO
 
--- 4. Procedure to get all games for a service
+/* 
+    Procedure: GSP_GetServiceGames
+    Description: Retrieves all games associated with a specified service from the Game_Service table.
+    Parameters:
+        @ServiceName (NVARCHAR(30)): Name of the service to query.
+    Returns: Result set containing all games for the specified service.
+*/
 CREATE OR ALTER PROCEDURE GSP_GetServiceGames
-@ServiceName NVARCHAR(30)
+    @ServiceName NVARCHAR(30)
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate service name */
     IF DBO.GSF_IsServiceNameLegal(@ServiceName) = 0
     BEGIN 
         RETURN;
     END;
 
+    /* Select all games for the service */
     SELECT * FROM [Game_Service] WHERE serviceName = @ServiceName;
 END;
 GO
 
--- # User_diary
+/* 
+    Procedure: UDP_AddUserDiary
+    Description: Adds a user-diary association to the User_Diary table.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user.
+        @DiaryId (UNIQUEIDENTIFIER): ID of the diary.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE UDP_AddUserDiary
-@UserId UNIQUEIDENTIFIER,
-@DiaryId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserId UNIQUEIDENTIFIER,
+    @DiaryId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if user-diary pair already exists */
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
-    END
+    END;
 
+    /* Insert user-diary pair */
     INSERT INTO [User_Diary] (userId, diaryId)
     VALUES (@UserId, @DiaryId);
 
+    /* Verify insertion */
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 0
     BEGIN
         SET @Result = 0;
@@ -113,91 +162,139 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: UDP_DeleteUserDiary
+    Description: Removes a user-diary association from the User_Diary table.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user.
+        @DiaryId (UNIQUEIDENTIFIER): ID of the diary.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE UDP_DeleteUserDiary
-@UserId UNIQUEIDENTIFIER,
-@DiaryId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserId UNIQUEIDENTIFIER,
+    @DiaryId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if user-diary pair exists */
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END
+    END;
 
+    /* Delete user-diary pair */
     DELETE FROM [User_Diary] WHERE userId = @UserId AND diaryId = @DiaryId;
 
+    /* Verify deletion */
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
-    END
+    END;
 
     SET @Result = @@ROWCOUNT;
 END;
 GO
 
+/* 
+    Procedure: UDP_GetAllUserDiary
+    Description: Retrieves all user-diary associations from the User_Diary table.
+    Parameters: None
+    Returns: Result set containing all user-diary pairs.
+*/
 CREATE OR ALTER PROCEDURE UDP_GetAllUserDiary
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all user-diary pairs */
     SELECT * FROM User_Diary;
 END;
 GO
 
+/* 
+    Procedure: UDP_GetDiariesOfUser
+    Description: Retrieves all diary IDs associated with a specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing diary IDs for the specified user, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE UDP_GetDiariesOfUser
-@UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SELECT NULL AS DiaryId;
         RETURN;
-    END
+    END;
 
+    /* Select diary IDs for the user */
     SELECT diaryId FROM [User_Diary] WHERE userId = @UserId;
 END;
 GO
 
+/* 
+    Procedure: UDP_GetUsersOfDiary
+    Description: Retrieves all user IDs associated with a specified diary.
+    Parameters:
+        @DiaryId (UNIQUEIDENTIFIER): ID of the diary to query.
+    Returns: Result set containing user IDs for the specified diary, or NULL if diary does not exist.
+*/
 CREATE OR ALTER PROCEDURE UDP_GetUsersOfDiary
-@DiaryId UNIQUEIDENTIFIER
+    @DiaryId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate diary ID */
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
         SELECT NULL AS UserId;
         RETURN;
-    END
+    END;
 
+    /* Select user IDs for the diary */
     SELECT userId FROM [User_Diary] WHERE diaryId = @DiaryId;
 END;
 GO
 
--- # User_List
+/* 
+    Procedure: ULP_AddUserList
+    Description: Adds a user-list association to the User_List table.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user.
+        @ListId (UNIQUEIDENTIFIER): ID of the list.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE ULP_AddUserList
-@UserId UNIQUEIDENTIFIER,
-@ListId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserId UNIQUEIDENTIFIER,
+    @ListId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if user-list pair already exists */
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert user-list pair */
     INSERT INTO [User_List] (userId, listId)
     VALUES (@UserId, @ListId);
 
+    /* Verify insertion */
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 0
     BEGIN
         SET @Result = 0;
@@ -208,22 +305,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: ULP_DeleteUserList
+    Description: Removes a user-list association from the User_List table.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user.
+        @ListId (UNIQUEIDENTIFIER): ID of the list.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE ULP_DeleteUserList
-@UserId UNIQUEIDENTIFIER,
-@ListId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserId UNIQUEIDENTIFIER,
+    @ListId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if user-list pair exists */
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete user-list pair */
     DELETE FROM [User_List] WHERE userId = @UserId AND listId = @ListId;
 
+    /* Verify deletion */
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 1
     BEGIN
         SET @Result = 0;
@@ -234,56 +343,90 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: ULP_GetAllUserList
+    Description: Retrieves all user-list associations from the User_List table.
+    Parameters: None
+    Returns: Result set containing all user-list pairs.
+*/
 CREATE OR ALTER PROCEDURE ULP_GetAllUserList
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all user-list pairs */
     SELECT * FROM [User_List];
 END;
 GO
 
+/* 
+    Procedure: ULP_GetListsOfUser
+    Description: Retrieves all list IDs associated with a specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing list IDs for the specified user, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE ULP_GetListsOfUser
-@UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SELECT NULL AS ListId;
         RETURN;
     END;
 
+    /* Select list IDs for the user */
     SELECT listId FROM [User_List] WHERE userId = @UserId;
 END;
 GO
 
+/* 
+    Procedure: ULP_GetUsersOfList
+    Description: Retrieves all user IDs associated with a specified list.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list to query.
+    Returns: Result set containing user IDs for the specified list, or NULL if list does not exist.
+*/
 CREATE OR ALTER PROCEDURE ULP_GetUsersOfList
-@ListId UNIQUEIDENTIFIER
+    @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate list ID */
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         SELECT NULL AS UserId;
         RETURN;
     END;
 
+    /* Select user IDs for the list */
     SELECT userId FROM [User_List] WHERE listId = @ListId;
 END;
 GO
--- # User_User
--- 1. Thủ tục thêm quan hệ follow
+
+/* 
+    Procedure: UUP_AddUserFollow
+    Description: Adds a follower-following relationship to the User_User table.
+    Parameters:
+        @UserFollower (UNIQUEIDENTIFIER): ID of the follower user.
+        @UserFollowing (UNIQUEIDENTIFIER): ID of the user being followed.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE UUP_AddUserFollow
-@UserFollower UNIQUEIDENTIFIER,
-@UserFollowing UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserFollower UNIQUEIDENTIFIER,
+    @UserFollowing UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if follower-following pair exists or if user is trying to follow themselves */
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1 OR
        @UserFollower = @UserFollowing
     BEGIN
@@ -291,9 +434,11 @@ BEGIN
         RETURN;
     END;
 
+    /* Insert follower-following pair */
     INSERT INTO [User_User] (userFollower, userFollowing)
     VALUES (@UserFollower, @UserFollowing);
 
+    /* Verify insertion */
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 0
     BEGIN
         SET @Result = 0;
@@ -304,24 +449,35 @@ BEGIN
 END;
 GO
 
--- 2. Thủ tục xóa quan hệ follow
+/* 
+    Procedure: UUP_RemoveUserFollow
+    Description: Removes a follower-following relationship from the User_User table.
+    Parameters:
+        @UserFollower (UNIQUEIDENTIFIER): ID of the follower user.
+        @UserFollowing (UNIQUEIDENTIFIER): ID of the user being followed.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE UUP_RemoveUserFollow
-@UserFollower UNIQUEIDENTIFIER,
-@UserFollowing UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserFollower UNIQUEIDENTIFIER,
+    @UserFollowing UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if follower-following pair exists */
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete follower-following pair */
     DELETE FROM [User_User]
     WHERE userFollower = @UserFollower AND userFollowing = @UserFollowing;
 
+    /* Verify deletion */
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1
     BEGIN
         SET @Result = 0;
@@ -332,62 +488,89 @@ BEGIN
 END;
 GO
 
--- 3. Thủ tục lấy tất cả user người dùng đang follow
+/* 
+    Procedure: UUP_GetFollowingUsers
+    Description: Retrieves all users that a specified user is following.
+    Parameters:
+        @UserFollower (UNIQUEIDENTIFIER): ID of the follower user.
+    Returns: Result set containing IDs of users being followed, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE UUP_GetFollowingUsers
-@UserFollower UNIQUEIDENTIFIER
+    @UserFollower UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserFollower) = 0
     BEGIN
         SELECT NULL AS userFollowing;
         RETURN;
     END;
 
+    /* Select users being followed */
     SELECT userFollowing
     FROM [User_User]
     WHERE userFollower = @UserFollower;
 END;
 GO
 
--- 4. Thủ tục lấy tất cả người đang follow user
+/* 
+    Procedure: UUP_GetFollowerUsers
+    Description: Retrieves all users that are following a specified user.
+    Parameters:
+        @UserFollowing (UNIQUEIDENTIFIER): ID of the user being followed.
+    Returns: Result set containing IDs of follower users, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE UUP_GetFollowerUsers
-@UserFollowing UNIQUEIDENTIFIER
+    @UserFollowing UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserFollowing) = 0
     BEGIN
         SELECT NULL AS userFollower;
         RETURN;
     END;
 
+    /* Select follower users */
     SELECT userFollower
     FROM [User_User]
     WHERE userFollowing = @UserFollowing;
 END;
 GO
 
--- # User_Activity
+/* 
+    Procedure: UAP_CreateUserActivity
+    Description: Adds a user-activity association to the User_Activity table.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user.
+        @ActivityId (UNIQUEIDENTIFIER): ID of the activity.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE UAP_CreateUserActivity
-@UserId UNIQUEIDENTIFIER,
-@ActivityId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserId UNIQUEIDENTIFIER,
+    @ActivityId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if user-activity pair already exists */
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert user-activity pair */
     INSERT INTO [User_Activity] (userId, activityId)
     VALUES (@UserId, @ActivityId);
 
+    /* Verify insertion */
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 0
     BEGIN
         SET @Result = 0;
@@ -398,23 +581,35 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: UAP_DeleteUserActivity
+    Description: Removes a user-activity association from the User_Activity table.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user.
+        @ActivityId (UNIQUEIDENTIFIER): ID of the activity.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE UAP_DeleteUserActivity
-@UserId UNIQUEIDENTIFIER,
-@ActivityId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @UserId UNIQUEIDENTIFIER,
+    @ActivityId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if user-activity pair exists */
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete user-activity pair */
     DELETE FROM [User_Activity]
     WHERE userId = @UserId AND activityId = @ActivityId;
 
+    /* Verify deletion */
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
     BEGIN
         SET @Result = 0;
@@ -425,67 +620,103 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: UAP_GetAllUserActivity
+    Description: Retrieves all user-activity associations from the User_Activity table.
+    Parameters: None
+    Returns: Result set containing all user-activity pairs.
+*/
 CREATE OR ALTER PROCEDURE UAP_GetAllUserActivity
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all user-activity pairs */
     SELECT * FROM [User_Activity];
 END;
 GO
 
+/* 
+    Procedure: UAP_GetActivitiesByUser
+    Description: Retrieves all activity IDs associated with a specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing activity IDs for the specified user, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE UAP_GetActivitiesByUser
-@UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SELECT NULL AS ActivityId;
         RETURN;
     END;
 
+    /* Select activity IDs for the user */
     SELECT activityId FROM [User_Activity]
     WHERE userId = @UserId;
 END;
 GO
 
+/* 
+    Procedure: UAP_GetUsersByActivity
+    Description: Retrieves all user IDs associated with a specified activity.
+    Parameters:
+        @ActivityId (UNIQUEIDENTIFIER): ID of the activity to query.
+    Returns: Result set containing user IDs for the specified activity, or NULL if activity does not exist.
+*/
 CREATE OR ALTER PROCEDURE UAP_GetUsersByActivity
-@ActivityId UNIQUEIDENTIFIER
+    @ActivityId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate activity ID */
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
         SELECT NULL AS UserId;
         RETURN;
     END;
 
+    /* Select user IDs for the activity */
     SELECT userId FROM [User_Activity]
     WHERE activityId = @ActivityId;
 END;
 GO
 
--- # Review_User
+/* 
+    Procedure: RUP_CreateReviewUser
+    Description: Adds a review-author association to the Review_User table.
+    Parameters:
+        @Author (UNIQUEIDENTIFIER): ID of the user who authored the review.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RUP_CreateReviewUser
-@Author UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @Author UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if review-author pair already exists */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert review-author pair */
     INSERT INTO [Review_User] (author, reviewId)
     VALUES (@Author, @ReviewId);
 
+    /* Verify insertion */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
@@ -496,23 +727,35 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RUP_DeleteReviewUser
+    Description: Removes a review-author association from the Review_User table.
+    Parameters:
+        @Author (UNIQUEIDENTIFIER): ID of the user who authored the review.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RUP_DeleteReviewUser
-@Author UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @Author UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if review-author pair exists */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete review-author pair */
     DELETE FROM [Review_User]
     WHERE author = @Author AND reviewId = @ReviewId;
 
+    /* Verify deletion */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
@@ -523,73 +766,105 @@ BEGIN
 END;
 GO
 
--- 3. Procedure: Get all Review_User links
+/* 
+    Procedure: RUP_GetAllReviewUsers
+    Description: Retrieves all review-author associations from the Review_User table.
+    Parameters: None
+    Returns: Result set containing all review-author pairs.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetAllReviewUsers
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all review-author pairs */
     SELECT * FROM [Review_User];
 END;
 GO
 
--- 4. Procedure: Get all reviewIds by author
+/* 
+    Procedure: RUP_GetReviewIdsByAuthor
+    Description: Retrieves all review IDs authored by a specified user.
+    Parameters:
+        @Author (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing review IDs for the specified author, or NULL if author does not exist.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetReviewIdsByAuthor
-@Author UNIQUEIDENTIFIER
+    @Author UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate author ID */
     IF DBO.UF_UserIdExists(@Author) = 0
     BEGIN
         SELECT NULL AS ReviewId;
         RETURN;
     END;
 
+    /* Select review IDs for the author */
     SELECT reviewId
     FROM [Review_User]
     WHERE author = @Author;
 END;
 GO
 
-
--- 5. Procedure: Get all authors by reviewId
+/* 
+    Procedure: RUP_GetAuthorsByReviewId
+    Description: Retrieves all author IDs for a specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns: Result set containing author IDs for the specified review, or NULL if review does not exist.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetAuthorsByReviewId
-@ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SELECT NULL AS Author;
         RETURN;
     END;
 
+    /* Select author IDs for the review */
     SELECT author
     FROM [Review_User]
     WHERE reviewId = @ReviewId;
 END;
 GO
 
--- # Review_Rate
+/* 
+    Procedure: RRP_AddReviewRate
+    Description: Adds a rate-review association to the Review_Rate table.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RRP_AddReviewRate
-@RateId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @RateId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if rate-review pair already exists */
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert rate-review pair */
     INSERT INTO [Review_Rate] (rateId, reviewId)
     VALUES (@RateId, @ReviewId);
 
+    /* Verify insertion */
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
@@ -600,22 +875,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RRP_DeleteReviewRate
+    Description: Removes a rate-review association from the Review_Rate table.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RRP_DeleteReviewRate
-@RateId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @RateId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if rate-review pair exists */
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete rate-review pair */
     DELETE FROM [Review_Rate] WHERE rateId = @RateId AND reviewId = @ReviewId;
 
+    /* Verify deletion */
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
@@ -626,65 +913,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RRP_GetAllReviewRate
+    Description: Retrieves all rate-review associations from the Review_Rate table.
+    Parameters: None
+    Returns: Result set containing all rate-review pairs.
+*/
 CREATE OR ALTER PROCEDURE RRP_GetAllReviewRate
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all rate-review pairs */
     SELECT * FROM [Review_Rate];
 END;
 GO
 
+/* 
+    Procedure: RRP_GetReviewsOfRate
+    Description: Retrieves all review IDs associated with a specified rate.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate to query.
+    Returns: Result set containing review IDs for the specified rate, or NULL if rate does not exist.
+*/
 CREATE OR ALTER PROCEDURE RRP_GetReviewsOfRate
-@RateId UNIQUEIDENTIFIER
+    @RateId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate rate ID */
     IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
         SELECT NULL AS ReviewId;
         RETURN;
     END;
 
+    /* Select review IDs for the rate */
     SELECT reviewId FROM [Review_Rate] WHERE rateId = @RateId;
 END;
 GO
 
+/* 
+    Procedure: RRP_GetRatesOfReview
+    Description: Retrieves all rate IDs associated with a specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns: Result set containing rate IDs for the specified review, or NULL if review does not exist.
+*/
 CREATE OR ALTER PROCEDURE RRP_GetRatesOfReview
-@ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SELECT NULL AS RateId;
         RETURN;
     END;
 
+    /* Select rate IDs for the review */
     SELECT rateId FROM [Review_Rate] WHERE reviewId = @ReviewId;
 END;
 GO
 
--- #R Review_Reaction
+/* 
+    Procedure: RRP_CreateReviewReaction
+    Description: Adds a reaction-review association to the Review_Reaction table.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RRP_CreateReviewReaction
-@ReactionId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ReactionId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF  DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
+    /* Check if reaction-review pair already exists */
+    IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert reaction-review pair */
     INSERT INTO [Review_Reaction] (reactionId, reviewId)
     VALUES (@ReactionId, @ReviewId);
 
+    /* Verify insertion */
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
@@ -695,23 +1018,35 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RRP_DeleteReviewReaction
+    Description: Removes a reaction-review association from the Review_Reaction table.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RRP_DeleteReviewReaction
-@ReactionId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ReactionId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if reaction-review pair exists */
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete reaction-review pair */
     DELETE FROM [Review_Reaction]
     WHERE reactionId = @ReactionId AND reviewId = @ReviewId;
 
+    /* Verify deletion */
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
@@ -722,67 +1057,103 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RRP_GetAllReviewReactions
+    Description: Retrieves all reaction-review associations from the Review_Reaction table.
+    Parameters: None
+    Returns: Result set containing all reaction-review pairs.
+*/
 CREATE OR ALTER PROCEDURE RRP_GetAllReviewReactions
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all reaction-review pairs */
     SELECT * FROM [Review_Reaction];
 END;
 GO
 
+/* 
+    Procedure: RRP_GetReactionsByReview
+    Description: Retrieves all reaction IDs associated with a specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns: Result set containing reaction IDs for the specified review, or NULL if review does not exist.
+*/
 CREATE OR ALTER PROCEDURE RRP_GetReactionsByReview
-@ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SELECT NULL AS ReactionId;
         RETURN;
     END;
 
+    /* Select reaction IDs for the review */
     SELECT reactionId FROM [Review_Reaction]
     WHERE reviewId = @ReviewId;
 END;
 GO
 
+/* 
+    Procedure: RRP_GetReviewsByReaction
+    Description: Retrieves all review IDs associated with a specified reaction.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction to query.
+    Returns: Result set containing review IDs for the specified reaction, or NULL if reaction does not exist.
+*/
 CREATE OR ALTER PROCEDURE RRP_GetReviewsByReaction
-@ReactionId UNIQUEIDENTIFIER
+    @ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate reaction ID */
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
         SELECT NULL AS ReviewId;
         RETURN;
     END;
 
+    /* Select review IDs for the reaction */
     SELECT reviewId FROM [Review_Reaction]
     WHERE reactionId = @ReactionId;
 END;
 GO
 
--- # Game_Review
+/* 
+    Procedure: GRP_AddGameReview
+    Description: Adds a game-review association to the Game_Review table.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE GRP_AddGameReview
-@GameId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @GameId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if game-review pair already exists */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert game-review pair */
     INSERT INTO [Game_Review] (gameId, reviewId)
     VALUES (@GameId, @ReviewId);
 
+    /* Verify insertion */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
@@ -793,22 +1164,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: GRP_DeleteGameReview
+    Description: Removes a game-review association from the Game_Review table.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE GRP_DeleteGameReview
-@GameId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @GameId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if game-review pair exists */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete game-review pair */
     DELETE FROM [Game_Review] WHERE gameId = @GameId AND reviewId = @ReviewId;
 
+    /* Verify deletion */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
@@ -819,65 +1202,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: GRP_GetAllGameReview
+    Description: Retrieves all game-review associations from the Game_Review table.
+    Parameters: None
+    Returns: Result set containing all game-review pairs.
+*/
 CREATE OR ALTER PROCEDURE GRP_GetAllGameReview
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all game-review pairs */
     SELECT * FROM [Game_Review];
 END;
 GO
 
+/* 
+    Procedure: GRP_GetGameOfReview
+    Description: Retrieves all game IDs associated with a specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns: Result set containing game IDs for the specified review, or NULL if review does not exist.
+*/
 CREATE OR ALTER PROCEDURE GRP_GetGameOfReview
-@ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SELECT NULL AS ReviewId;
         RETURN;
     END;
 
+    /* Select game IDs for the review */
     SELECT gameId FROM [Game_Review] WHERE reviewId = @ReviewId;
 END;
 GO
 
+/* 
+    Procedure: GRP_GetReviewOfGame
+    Description: Retrieves all review IDs associated with a specified game.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to query.
+    Returns: Result set containing review IDs for the specified game, or NULL if game does not exist.
+*/
 CREATE OR ALTER PROCEDURE GRP_GetReviewOfGame
-@GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate game ID */
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
         SELECT NULL AS GameId;
         RETURN;
     END;
 
+    /* Select review IDs for the game */
     SELECT reviewId FROM [Game_Review] WHERE gameId = @GameId;
 END;
 GO
 
--- # Reaction_User
+/* 
+    Procedure: RUP_AddReactionUser
+    Description: Adds a reaction-author association to the Reaction_User table.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction.
+        @Author (UNIQUEIDENTIFIER): ID of the user who authored the reaction.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RUP_AddReactionUser
-@ReactionId UNIQUEIDENTIFIER,
-@Author UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ReactionId UNIQUEIDENTIFIER,
+    @Author UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if reaction-author pair already exists */
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert reaction-author pair */
     INSERT INTO [Reaction_User] (reactionId, author)
     VALUES (@ReactionId, @Author);
 
+    /* Verify insertion */
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 0
     BEGIN
         SET @Result = 0;
@@ -888,22 +1307,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RUP_DeleteReactionUser
+    Description: Removes a reaction-author association from the Reaction_User table.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction.
+        @Author (UNIQUEIDENTIFIER): ID of the user who authored the reaction.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RUP_DeleteReactionUser
-@ReactionId UNIQUEIDENTIFIER,
-@Author UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ReactionId UNIQUEIDENTIFIER,
+    @Author UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if reaction-author pair exists */
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete reaction-author pair */
     DELETE FROM [Reaction_User] WHERE reactionId = @ReactionId AND author = @Author;
 
+    /* Verify deletion */
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
     BEGIN
         SET @Result = 0;
@@ -914,65 +1345,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RUP_GetAllReactionUser
+    Description: Retrieves all reaction-author associations from the Reaction_User table.
+    Parameters: None
+    Returns: Result set containing all reaction-author pairs.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetAllReactionUser
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all reaction-author pairs */
     SELECT * FROM [Reaction_User];
 END;
 GO
 
+/* 
+    Procedure: RUP_GetReactionsOfUser
+    Description: Retrieves all reaction IDs authored by a specified user.
+    Parameters:
+        @Author (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing reaction IDs for the specified user, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetReactionsOfUser
-@Author UNIQUEIDENTIFIER
+    @Author UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@Author) = 0
     BEGIN
         SELECT NULL AS ReactionId;
         RETURN;
     END;
 
+    /* Select reaction IDs for the user */
     SELECT reactionId FROM [Reaction_User] WHERE author = @Author;
 END;
 GO
 
+/* 
+    Procedure: RUP_GetUsersOfReaction
+    Description: Retrieves all user IDs associated with a specified reaction.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction to query.
+    Returns: Result set containing user IDs for the specified reaction, or NULL if reaction does not exist.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetUsersOfReaction
-@ReactionId UNIQUEIDENTIFIER
+    @ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate reaction ID */
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
         SELECT NULL AS Author;
         RETURN;
     END;
 
+    /* Select user IDs for the reaction */
     SELECT author FROM [Reaction_User] WHERE reactionId = @ReactionId;
 END;
 GO
 
--- # Rate_User
+/* 
+    Procedure: RUP_AddRateUser
+    Description: Adds a rate-rater association to the Rate_User table.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate.
+        @Rater (UNIQUEIDENTIFIER): ID of the user who rated.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RUP_AddRateUser
-@RateId UNIQUEIDENTIFIER,
-@Rater UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @RateId UNIQUEIDENTIFIER,
+    @Rater UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if rate-rater pair already exists */
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert rate-rater pair */
     INSERT INTO [Rate_User] (rateId, rater)
     VALUES (@RateId, @Rater);
 
+    /* Verify insertion */
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 0
     BEGIN
         SET @Result = 0;
@@ -983,22 +1450,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RUP_DeleteRateUser
+    Description: Removes a rate-rater association from the Rate_User table.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate.
+        @Rater (UNIQUEIDENTIFIER): ID of the user who rated.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RUP_DeleteRateUser
-@RateId UNIQUEIDENTIFIER,
-@Rater UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @RateId UNIQUEIDENTIFIER,
+    @Rater UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if rate-rater pair exists */
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete rate-rater pair */
     DELETE FROM [Rate_User] WHERE rateId = @RateId AND rater = @Rater;
 
+    /* Verify deletion */
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 1
     BEGIN
         SET @Result = 0;
@@ -1009,65 +1488,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RUP_GetAllRateUser
+    Description: Retrieves all rate-rater associations from the Rate_User table.
+    Parameters: None
+    Returns: Result set containing all rate-rater pairs.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetAllRateUser
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all rate-rater pairs */
     SELECT * FROM [Rate_User];
 END;
 GO
 
+/* 
+    Procedure: RUP_GetRatesOfUser
+    Description: Retrieves all rate IDs associated with a specified user.
+    Parameters:
+        @Rater (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing rate IDs for the specified user, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetRatesOfUser
-@Rater UNIQUEIDENTIFIER
+    @Rater UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@Rater) = 0
     BEGIN
         SELECT NULL AS RateId;
         RETURN;
     END;
 
+    /* Select rate IDs for the user */
     SELECT rateId FROM [Rate_User] WHERE rater = @Rater;
 END;
 GO
 
+/* 
+    Procedure: RUP_GetUsersOfRate
+    Description: Retrieves all user IDs associated with a specified rate.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate to query.
+    Returns: Result set containing user IDs for the specified rate, or NULL if rate does not exist.
+*/
 CREATE OR ALTER PROCEDURE RUP_GetUsersOfRate
-@RateId UNIQUEIDENTIFIER
+    @RateId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate rate ID */
     IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
         SELECT NULL AS Rater;
         RETURN;
     END;
 
+    /* Select user IDs for the rate */
     SELECT rater FROM [Rate_User] WHERE rateId = @RateId;
 END;
 GO
 
--- # Rate_Game
+/* 
+    Procedure: RGP_AddRateGame
+    Description: Adds a rate-game association to the Rate_Game table.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate.
+        @TargetGame (UNIQUEIDENTIFIER): ID of the game being rated.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RGP_AddRateGame
-@RateId UNIQUEIDENTIFIER,
-@TargetGame UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @RateId UNIQUEIDENTIFIER,
+    @TargetGame UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if rate-game pair already exists */
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert rate-game pair */
     INSERT INTO [Rate_Game] (rateId, targetGame)
     VALUES (@RateId, @TargetGame);
 
+    /* Verify insertion */
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 0
     BEGIN
         SET @Result = 0;
@@ -1078,22 +1593,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RGP_DeleteRateGame
+    Description: Removes a rate-game association from the Rate_Game table.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate.
+        @TargetGame (UNIQUEIDENTIFIER): ID of the game being rated.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE RGP_DeleteRateGame
-@RateId UNIQUEIDENTIFIER,
-@TargetGame UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @RateId UNIQUEIDENTIFIER,
+    @TargetGame UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if rate-game pair exists */
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete rate-game pair */
     DELETE FROM [Rate_Game] WHERE rateId = @RateId AND targetGame = @TargetGame;
 
+    /* Verify deletion */
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
     BEGIN
         SET @Result = 0;
@@ -1104,65 +1631,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: RGP_GetAllRateGame
+    Description: Retrieves all rate-game associations from the Rate_Game table.
+    Parameters: None
+    Returns: Result set containing all rate-game pairs.
+*/
 CREATE OR ALTER PROCEDURE RGP_GetAllRateGame
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all rate-game pairs */
     SELECT * FROM [Rate_Game];
 END;
 GO
 
+/* 
+    Procedure: RGP_GetRatesOfGame
+    Description: Retrieves all rate IDs associated with a specified game.
+    Parameters:
+        @TargetGame (UNIQUEIDENTIFIER): ID of the game to query.
+    Returns: Result set containing rate IDs for the specified game, or NULL if game does not exist.
+*/
 CREATE OR ALTER PROCEDURE RGP_GetRatesOfGame
-@TargetGame UNIQUEIDENTIFIER
+    @TargetGame UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate game ID */
     IF DBO.GF_GameIdExists(@TargetGame) = 0
     BEGIN
         SELECT NULL AS RateId;
         RETURN;
     END;
 
+    /* Select rate IDs for the game */
     SELECT rateId FROM [Rate_Game] WHERE targetGame = @TargetGame;
 END;
 GO
 
+/* 
+    Procedure: RGP_GetGamesOfRate
+    Description: Retrieves all game IDs associated with a specified rate.
+    Parameters:
+        @RateId (UNIQUEIDENTIFIER): ID of the rate to query.
+    Returns: Result set containing game IDs for the specified rate, or NULL if rate does not exist.
+*/
 CREATE OR ALTER PROCEDURE RGP_GetGamesOfRate
-@RateId UNIQUEIDENTIFIER
+    @RateId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate rate ID */
     IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
         SELECT NULL AS TargetGame;
         RETURN;
     END;
 
+    /* Select game IDs for the rate */
     SELECT targetGame FROM [Rate_Game] WHERE rateId = @RateId;
 END;
 GO
 
--- #List_ListItem
+/* 
+    Procedure: LLP_AddListListItem
+    Description: Adds a list-list item association to the List_ListItem table.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list.
+        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE LLP_AddListListItem
-@ListId UNIQUEIDENTIFIER,
-@ListItemId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ListId UNIQUEIDENTIFIER,
+    @ListItemId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if list-list item pair already exists */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert list-list item pair */
     INSERT INTO [List_ListItem] (listId, listItemId)
     VALUES (@ListId, @ListItemId);
 
+    /* Verify insertion */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
     BEGIN
         SET @Result = 0;
@@ -1173,22 +1736,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: LLP_DeleteListListItem
+    Description: Removes a list-list item association from the List_ListItem table.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list.
+        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE LLP_DeleteListListItem
-@ListId UNIQUEIDENTIFIER,
-@ListItemId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ListId UNIQUEIDENTIFIER,
+    @ListItemId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if list-list item pair exists */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete list-list item pair */
     DELETE FROM [List_ListItem] WHERE listId = @ListId AND listItemId = @ListItemId;
 
+    /* Verify deletion */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
     BEGIN
         SET @Result = 0;
@@ -1199,65 +1774,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: LLP_GetAllListListItem
+    Description: Retrieves all list-list item associations from the List_ListItem table.
+    Parameters: None
+    Returns: Result set containing all list-list item pairs.
+*/
 CREATE OR ALTER PROCEDURE LLP_GetAllListListItem
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all list-list item pairs */
     SELECT * FROM [List_ListItem];
 END;
 GO
 
+/* 
+    Procedure: LLP_GetListItemsOfList
+    Description: Retrieves all list item IDs associated with a specified list.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list to query.
+    Returns: Result set containing list item IDs for the specified list, or NULL if list does not exist.
+*/
 CREATE OR ALTER PROCEDURE LLP_GetListItemsOfList
-@ListId UNIQUEIDENTIFIER
+    @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate list ID */
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         SELECT NULL AS ListItemId;
         RETURN;
     END;
 
+    /* Select list item IDs for the list */
     SELECT listItemId FROM [List_ListItem] WHERE listId = @ListId;
 END;
 GO
 
+/* 
+    Procedure: LLP_GetListsOfListItem
+    Description: Retrieves all list IDs associated with a specified list item.
+    Parameters:
+        @ListItemId (UNIQUEIDENTIFIER): ID of the list item to query.
+    Returns: Result set containing list IDs for the specified list item, or NULL if list item does not exist.
+*/
 CREATE OR ALTER PROCEDURE LLP_GetListsOfListItem
-@ListItemId UNIQUEIDENTIFIER
+    @ListItemId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate list item ID */
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
         SELECT NULL AS ListId;
         RETURN;
     END;
 
+    /* Select list IDs for the list item */
     SELECT listId FROM [List_ListItem] WHERE listItemId = @ListItemId;
 END;
 GO
 
--- #ListItem_Game
+/* 
+    Procedure: LIGP_AddListItemGame
+    Description: Adds a list item-game association to the ListItem_Game table.
+    Parameters:
+        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
+        @TargetGame (UNIQUEIDENTIFIER): ID of the game.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE LIGP_AddListItemGame
-@ListItemId UNIQUEIDENTIFIER,
-@TargetGame UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ListItemId UNIQUEIDENTIFIER,
+    @TargetGame UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if list item-game pair already exists */
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert list item-game pair */
     INSERT INTO [ListItem_Game] (listItemId, targetGame)
     VALUES (@ListItemId, @TargetGame);
 
+    /* Verify insertion */
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
     BEGIN
         SET @Result = 0;
@@ -1268,90 +1879,139 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: LIGP_DeleteListItemGame
+    Description: Removes a list item-game association from the ListItem_Game table.
+    Parameters:
+        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
+        @TargetGame (UNIQUEIDENTIFIER): ID of the game.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE LIGP_DeleteListItemGame
-@ListItemId UNIQUEIDENTIFIER,
-@TargetGame UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @ListItemId UNIQUEIDENTIFIER,
+    @TargetGame UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if list item-game pair exists */
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete list item-game pair */
     DELETE FROM [ListItem_Game] WHERE listItemId = @ListItemId AND targetGame = @TargetGame;
 
+    /* Verify deletion */
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
+
     SET @Result = @@ROWCOUNT;
 END;
 GO
 
+/* 
+    Procedure: LIGP_GetAllListItemGame
+    Description: Retrieves all list item-game associations from the ListItem_Game table.
+    Parameters: None
+    Returns: Result set containing all list item-game pairs.
+*/
 CREATE OR ALTER PROCEDURE LIGP_GetAllListItemGame
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all list item-game pairs */
     SELECT * FROM [ListItem_Game];
 END;
 GO
 
+/* 
+    Procedure: LIGP_GetGamesOfListItem
+    Description: Retrieves all game IDs associated with a specified list item.
+    Parameters:
+        @ListItemId (UNIQUEIDENTIFIER): ID of the list item to query.
+    Returns: Result set containing game IDs for the specified list item, or NULL if list item does not exist.
+*/
 CREATE OR ALTER PROCEDURE LIGP_GetGamesOfListItem
-@ListItemId UNIQUEIDENTIFIER
+    @ListItemId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate list item ID */
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
         SELECT NULL AS TargetGame;
         RETURN;
     END;
 
+    /* Select game IDs for the list item */
     SELECT targetGame FROM [ListItem_Game] WHERE listItemId = @ListItemId;
 END;
 GO
 
+/* 
+    Procedure: LIGP_GetListItemsOfGame
+    Description: Retrieves all list item IDs associated with a specified game.
+    Parameters:
+        @TargetGame (UNIQUEIDENTIFIER): ID of the game to query.
+    Returns: Result set containing list item IDs for the specified game, or NULL if game does not exist.
+*/
 CREATE OR ALTER PROCEDURE LIGP_GetListItemsOfGame
-@TargetGame UNIQUEIDENTIFIER
+    @TargetGame UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate game ID */
     IF DBO.GF_GameIdExists(@TargetGame) = 0
     BEGIN
         SELECT NULL AS ListItemId;
         RETURN;
     END;
 
+    /* Select list item IDs for the game */
     SELECT listItemId FROM [ListItem_Game] WHERE targetGame = @TargetGame;
 END;
 GO
 
--- # Comment_User
+/* 
+    Procedure: CUP_AddCommentUser
+    Description: Adds a comment-author association to the Comment_User table.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment.
+        @Author (UNIQUEIDENTIFIER): ID of the user who authored the comment.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE CUP_AddCommentUser
-@CommentId UNIQUEIDENTIFIER,
-@Author UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @CommentId UNIQUEIDENTIFIER,
+    @Author UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if comment-author pair already exists */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert comment-author pair */
     INSERT INTO [Comment_User] (commentId, author)
     VALUES (@CommentId, @Author);
 
+    /* Verify insertion */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 0
     BEGIN
         SET @Result = 0;
@@ -1362,22 +2022,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: CUP_DeleteCommentUser
+    Description: Removes a comment-author association from the Comment_User table.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment.
+        @Author (UNIQUEIDENTIFIER): ID of the user who authored the comment.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE CUP_DeleteCommentUser
-@CommentId UNIQUEIDENTIFIER,
-@Author UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @CommentId UNIQUEIDENTIFIER,
+    @Author UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if comment-author pair exists */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete comment-author pair */
     DELETE FROM [Comment_User] WHERE commentId = @CommentId AND author = @Author;
 
+    /* Verify deletion */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
     BEGIN
         SET @Result = 0;
@@ -1388,91 +2060,139 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: CUP_GetAllCommentUser
+    Description: Retrieves all comment-author associations from the Comment_User table.
+    Parameters: None
+    Returns: Result set containing all comment-author pairs.
+*/
 CREATE OR ALTER PROCEDURE CUP_GetAllCommentUser
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all comment-author pairs */
     SELECT * FROM [Comment_User];
 END;
 GO
 
+/* 
+    Procedure: CUP_GetCommentsOfUser
+    Description: Retrieves all comment IDs authored by a specified user.
+    Parameters:
+        @Author (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns: Result set containing comment IDs for the specified user, or NULL if user does not exist.
+*/
 CREATE OR ALTER PROCEDURE CUP_GetCommentsOfUser
-@Author UNIQUEIDENTIFIER
+    @Author UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@Author) = 0
     BEGIN
         SELECT NULL AS CommentId;
         RETURN;
     END;
 
+    /* Select comment IDs for the user */
     SELECT commentId FROM [Comment_User] WHERE author = @Author;
 END;
 GO
 
+/* 
+    Procedure: CUP_GetUsersOfComment
+    Description: Retrieves all user IDs associated with a specified comment.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment to query.
+    Returns: Result set containing user IDs for the specified comment, or NULL if comment does not exist.
+*/
 CREATE OR ALTER PROCEDURE CUP_GetUsersOfComment
-@CommentId UNIQUEIDENTIFIER
+    @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate comment ID */
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
         SELECT NULL AS Author;
         RETURN;
     END;
 
+    /* Select user IDs for the comment */
     SELECT author FROM [Comment_User] WHERE commentId = @CommentId;
 END;
 GO
 
--- #Comment_Reaction
+/* 
+    Procedure: CRP_AddCommentReaction
+    Description: Adds a comment-reaction association to the Comment_Reaction table.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment.
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE CRP_AddCommentReaction
-@CommentId UNIQUEIDENTIFIER,
-@ReactionId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @CommentId UNIQUEIDENTIFIER,
+    @ReactionId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if comment-reaction pair already exists */
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert comment-reaction pair */
     INSERT INTO [Comment_Reaction] (commentId, reactionId)
     VALUES (@CommentId, @ReactionId);
 
+    /* Verify insertion */
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
-    SET @Result = 0;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
+/* 
+    Procedure: CRP_DeleteCommentReaction
+    Description: Removes a comment-reaction association from the Comment_Reaction table.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment.
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE CRP_DeleteCommentReaction
-@CommentId UNIQUEIDENTIFIER,
-@ReactionId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @CommentId UNIQUEIDENTIFIER,
+    @ReactionId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if comment-reaction pair exists */
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete comment-reaction pair */
     DELETE FROM [Comment_Reaction] WHERE commentId = @CommentId AND reactionId = @ReactionId;
 
+    /* Verify deletion */
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
     BEGIN
         SET @Result = 0;
@@ -1483,65 +2203,101 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: CRP_GetAllCommentReaction
+    Description: Retrieves all comment-reaction associations from the Comment_Reaction table.
+    Parameters: None
+    Returns: Result set containing all comment-reaction pairs.
+*/
 CREATE OR ALTER PROCEDURE CRP_GetAllCommentReaction
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Select all comment-reaction pairs */
     SELECT * FROM [Comment_Reaction];
 END;
 GO
 
+/* 
+    Procedure: CRP_GetReactionsOfComment
+    Description: Retrieves all reaction IDs associated with a specified comment.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment to query.
+    Returns: Result set containing reaction IDs for the specified comment, or NULL if comment does not exist.
+*/
 CREATE OR ALTER PROCEDURE CRP_GetReactionsOfComment
-@CommentId UNIQUEIDENTIFIER
+    @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate comment ID */
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
         SELECT NULL AS ReactionId;
         RETURN;
     END;
 
+    /* Select reaction IDs for the comment */
     SELECT reactionId FROM [Comment_Reaction] WHERE commentId = @CommentId;
 END;
 GO
 
+/* 
+    Procedure: CRP_GetCommentsOfReaction
+    Description: Retrieves all comment IDs associated with a specified reaction.
+    Parameters:
+        @ReactionId (UNIQUEIDENTIFIER): ID of the reaction to query.
+    Returns: Result set containing comment IDs for the specified reaction, or NULL if reaction does not exist.
+*/
 CREATE OR ALTER PROCEDURE CRP_GetCommentsOfReaction
-@ReactionId UNIQUEIDENTIFIER
+    @ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate reaction ID */
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
         SELECT NULL AS CommentId;
         RETURN;
     END;
 
+    /* Select comment IDs for the reaction */
     SELECT commentId FROM [Comment_Reaction] WHERE reactionId = @ReactionId;
 END;
 GO
 
--- #Comment_Review
+/* 
+    Procedure: CRP_AddCommentReview
+    Description: Adds a comment-review association to the Comment_Review table.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE CRP_AddCommentReview
-@CommentId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @CommentId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if comment-review pair already exists */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Insert comment-review pair */
     INSERT INTO [Comment_Review] (commentId, reviewId)
     VALUES (@CommentId, @ReviewId);
 
+    /* Verify insertion */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
@@ -1552,22 +2308,34 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: CRP_DeleteCommentReview
+    Description: Removes a comment-review association from the Comment_Review table.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment.
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns: None (sets @Result to indicate success or failure).
+*/
 CREATE OR ALTER PROCEDURE CRP_DeleteCommentReview
-@CommentId UNIQUEIDENTIFIER,
-@ReviewId UNIQUEIDENTIFIER,
-@Result INT OUTPUT
+    @CommentId UNIQUEIDENTIFIER,
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Check if comment-review pair exists */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
+    /* Delete comment-review pair */
     DELETE FROM [Comment_Review] WHERE commentId = @CommentId AND reviewId = @ReviewId;
 
+    /* Verify deletion */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
     BEGIN
         SET @Result = 0;
@@ -1578,42 +2346,68 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: CRP_GetAllCommentReview
+    Description: Retrieves all comment-review associations from the Comment_Review table.
+    Parameters: None
+    Returns: Result set containing all comment-review pairs.
+*/
 CREATE OR ALTER PROCEDURE CRP_GetAllCommentReview
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    /* Select all comment-review pairs */
     SELECT * FROM [Comment_Review];
 END;
 GO
 
+/* 
+    Procedure: CRP_GetReviewsByComment
+    Description: Retrieves all review IDs associated with a specified comment.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment to query.
+    Returns: Result set containing review IDs for the specified comment, or NULL if comment does not exist.
+*/
 CREATE OR ALTER PROCEDURE CRP_GetReviewsByComment
     @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate comment ID */
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
         SELECT NULL AS ReviewId;
         RETURN;
     END;
 
+    /* Select review IDs for the comment */
     SELECT reviewId FROM [Comment_Review] WHERE commentId = @CommentId;
 END;
 GO
 
+/* 
+    Procedure: CRP_GetCommentsByReview
+    Description: Retrieves all comment IDs associated with a specified review from the Comment_Review table.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns: Result set containing comment IDs for the specified review, or NULL if the review does not exist.
+*/
 CREATE OR ALTER PROCEDURE CRP_GetCommentsByReview
     @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SELECT NULL AS CommentId;
         RETURN;
     END;
 
+    /* Select comment IDs for the review */
     SELECT commentId FROM [Comment_Review] WHERE reviewId = @ReviewId;
 END;
 GO
