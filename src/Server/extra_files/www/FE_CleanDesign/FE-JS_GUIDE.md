@@ -1,6 +1,6 @@
 screens
 
-### 1. Profile Screen Backend Handling Description
+### 1. Profile Screen 
 
 **Interactive Features:**
 - **Show and Store**: Displays and allows storage of username, avatar, bio, external links, 5 favorite game posters, and 3 currently playing games.
@@ -142,7 +142,7 @@ screens
 
 
 
-### 4. Lists Screen Backend Handling Description
+### 4. Lists Screen
 
 **Interactive Features:**
 - **Show**: Displays a grid of user-created lists, each with a title, description, total number of games, creation date, and like count (heart icon).
