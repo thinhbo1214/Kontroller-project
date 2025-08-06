@@ -1,5 +1,5 @@
 -- DECLARE @Username varchar(100) = 'admin1'
--- DECLARE @Password varchar(100) = '}qW9v9Aoe!X+'
+-- DECLARE @Password varchar(100) = '1Hr8g8uo9Kz#'
 
 BEGIN TRY
        EXEC DBO.UP_CheckLoginAccount @Username, @Password; -- Check if the account exists and return UsedId if success

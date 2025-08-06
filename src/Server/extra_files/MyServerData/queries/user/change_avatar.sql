@@ -1,5 +1,5 @@
--- DECLARE @UserId UNIQUEIDENTIFIER = 'B570F1D1-B092-4A16-BD0F-F73837A5F3DF';
--- DECLARE @Avatar varchar(100) = 'https://drive.google.com/file/d/1vqINurv3bx5mZOfC4zsQyHoIwM0SC_nj/view?usp=drive_link'
+-- DECLARE @UserId UNIQUEIDENTIFIER = 'a21fb87f-2185-4863-abe5-0da8a0c41b20';
+-- DECLARE @Avatar varchar(255) = 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png'
 
 BEGIN TRY
     BEGIN TRANSACTION;

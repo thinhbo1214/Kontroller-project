@@ -1,0 +1,7 @@
+-- DECLARE @UserId VARCHAR(100) = 'a96e7ea1-425b-4c86-a9d3-8ed076db7e9a';
+BEGIN TRY
+    EXEC DBO.UP_GetUserDisplayInfo @UserId;
+END TRY
+BEGIN CATCH
+    SELECT  NULL AS UserId
+END CATCH

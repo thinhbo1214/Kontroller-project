@@ -246,13 +246,17 @@ CREATE OR ALTER FUNCTION UF_EmailExists (
 RETURNS BIT
 AS
 BEGIN
-    DECLARE @Exists BIT;
-
-    SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM [Users]
-    WHERE email = @Email;
-
-    RETURN @Exists;
+    RETURN (
+        SELECT CASE
+                   WHEN EXISTS (
+                       SELECT 1
+                       FROM [Users]
+                       WHERE email = @Email
+                   )
+                   THEN 1
+                   ELSE 0
+               END
+    );
 END;
 GO
 
@@ -505,7 +509,7 @@ AS
 RETURN
 (
     SELECT serviceName AS ServiceName
-    FROM Game_Service
+    FROM [Game_Service]
     WHERE gameId = @GameId
 );
 GO
@@ -665,7 +669,7 @@ BEGIN
     END;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Reviews WHERE reviewId = @ReviewId
+                    SELECT 1 FROM [Reviews] WHERE reviewId = @ReviewId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -786,7 +790,7 @@ BEGIN
         RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Comments WHERE commentId = @CommentId
+                    SELECT 1 FROM [Comments] WHERE commentId = @CommentId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -798,7 +802,7 @@ CREATE OR ALTER FUNCTION CF_GetComment (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM Comments WHERE commentId = @CommentId
+    SELECT * FROM [Comments] WHERE commentId = @CommentId
 );
 GO
 
@@ -813,7 +817,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @Content NVARCHAR(MAX);
-    SELECT @Content = content FROM Comments WHERE commentId = @CommentId;
+    SELECT @Content = content FROM [Comments] WHERE commentId = @CommentId;
     RETURN @Content;
 END;
 GO
@@ -829,7 +833,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @CreatedAt DATETIME;
-    SELECT @CreatedAt = created_at FROM Comments WHERE commentId = @CommentId;
+    SELECT @CreatedAt = created_at FROM [Comments] WHERE commentId = @CommentId;
     RETURN @CreatedAt;
 END;
 GO
@@ -869,7 +873,7 @@ BEGIN
         RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Rates WHERE rateId = @RateId
+                    SELECT 1 FROM [Rates] WHERE rateId = @RateId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -881,7 +885,7 @@ CREATE OR ALTER FUNCTION RF_GetRate (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM Rates WHERE rateId = @RateId
+    SELECT * FROM [Rates] WHERE rateId = @RateId
 );
 GO
 
@@ -896,7 +900,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @Value INT;
-    SELECT @Value = rateValue FROM Rates WHERE rateId = @RateId;
+    SELECT @Value = rateValue FROM [Rates] WHERE rateId = @RateId;
     RETURN @Value;
 END;
 GO
@@ -928,7 +932,7 @@ BEGIN
         RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Lists WHERE listId = @ListId
+                    SELECT 1 FROM [Lists] WHERE listId = @ListId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -940,7 +944,7 @@ CREATE OR ALTER FUNCTION LF_GetList (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM Lists WHERE listId = @ListId
+    SELECT * FROM [Lists] WHERE listId = @ListId
 );
 GO
 
@@ -955,7 +959,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @_Name NVARCHAR(100);
-    SELECT @_Name = _name FROM Lists WHERE listId = @ListId;
+    SELECT @_Name = _name FROM [Lists] WHERE listId = @ListId;
     RETURN @_Name;
 END;
 GO
@@ -971,7 +975,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @Descriptions NVARCHAR(MAX);
-    SELECT @Descriptions = descriptions FROM Lists WHERE listId = @ListId;
+    SELECT @Descriptions = descriptions FROM [Lists] WHERE listId = @ListId;
     RETURN @Descriptions;
 END;
 GO
@@ -987,7 +991,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @CreatedAt DATETIME;
-    SELECT @CreatedAt = created_at FROM Lists WHERE listId = @ListId;
+    SELECT @CreatedAt = created_at FROM [Lists] WHERE listId = @ListId;
     RETURN @CreatedAt;
 END;
 GO
@@ -1042,7 +1046,7 @@ BEGIN
 
     DECLARE @Exists BIT;
     SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM List_items
+    FROM [List_items]
     WHERE listItemId = @ListItemId;
 
     RETURN @Exists;
@@ -1056,7 +1060,7 @@ CREATE OR ALTER FUNCTION LIF_GetListItem (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM List_items
+    SELECT * FROM [List_items]
     WHERE listItemId = @ListItemId
 );
 GO
@@ -1074,7 +1078,7 @@ BEGIN
     DECLARE @Result NVARCHAR(100) = NULL;
 
     SELECT @Result = title
-    FROM List_items
+    FROM [List_items]
     WHERE listItemId = @ListItemId;
 
     RETURN @Result;
@@ -1103,7 +1107,7 @@ BEGIN
     IF @ActivityId IS NULL RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Activities WHERE activityId = @ActivityId
+                    SELECT 1 FROM [Activities] WHERE activityId = @ActivityId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -1116,7 +1120,7 @@ RETURNS TABLE
 AS
 RETURN
     SELECT *
-    FROM Activities
+    FROM [Activities]
     WHERE activityId = @ActivityId;
 GO
 
@@ -1131,7 +1135,7 @@ BEGIN
 
     DECLARE @Content NVARCHAR(MAX);
     SELECT @Content = content
-    FROM Activities
+    FROM [Activities]
     WHERE activityId = @ActivityId;
 
     RETURN @Content;
@@ -1149,7 +1153,7 @@ BEGIN
 
     DECLARE @Date DATETIME;
     SELECT @Date = dateDo
-    FROM Activities
+    FROM [Activities]
     WHERE activityId = @ActivityId;
 
     RETURN @Date;
@@ -1187,7 +1191,7 @@ BEGIN
         RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Diaries WHERE diaryId = @DiaryId
+                    SELECT 1 FROM [Diaries] WHERE diaryId = @DiaryId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -1199,7 +1203,7 @@ CREATE OR ALTER FUNCTION DF_GetDiary (
 RETURNS TABLE
 AS
 RETURN
-    SELECT * FROM Diaries WHERE diaryId = @DiaryId;
+    SELECT * FROM [Diaries] WHERE diaryId = @DiaryId;
 GO
 
 -- 3. Function to get dateLogged
@@ -1213,7 +1217,7 @@ BEGIN
         RETURN NULL;
 
     DECLARE @Date DATETIME;
-    SELECT @Date = dateLogged FROM Diaries WHERE diaryId = @DiaryId;
+    SELECT @Date = dateLogged FROM [Diaries] WHERE diaryId = @DiaryId;
     RETURN @Date;
 END;
 GO
@@ -1228,7 +1232,7 @@ BEGIN
     IF @ReactionId IS NULL RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM Reactions WHERE reactionId = @ReactionId
+                    SELECT 1 FROM [Reactions] WHERE reactionId = @ReactionId
                 ) THEN 1 ELSE 0 END);
 END;
 GO
@@ -1259,7 +1263,7 @@ CREATE OR ALTER FUNCTION RF_GetReaction (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM Reactions
+    SELECT * FROM [Reactions]
     WHERE reactionId = @ReactionId
 );
 GO
@@ -1274,7 +1278,7 @@ BEGIN
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0 RETURN NULL;
 
     DECLARE @ReactionType INT;
-    SELECT @ReactionType = reactionType FROM Reactions WHERE reactionId = @ReactionId;
+    SELECT @ReactionType = reactionType FROM [Reactions] WHERE reactionId = @ReactionId;
 
     RETURN @ReactionType;
 END;
@@ -1290,7 +1294,7 @@ BEGIN
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0 RETURN NULL;
 
     DECLARE @DateDo DATETIME;
-    SELECT @DateDo = dateDo FROM Reactions WHERE reactionId = @ReactionId;
+    SELECT @DateDo = dateDo FROM [Reactions] WHERE reactionId = @ReactionId;
 
     RETURN @DateDo;
 END;

@@ -1,5 +1,4 @@
--- DECLARE @UserId UNIQUEIDENTIFIER = 'a96e7ea1-425b-4c86-a9d3-8ed076db7e9a';
--- DECLARE @Email varchar(100) = 'admin1@gmail.com'
+DECLARE @Email varchar(100) = 'admin1@gmail.com'
 
 BEGIN TRY
     BEGIN TRANSACTION;

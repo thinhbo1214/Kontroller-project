@@ -57,129 +57,132 @@ GO
 CREATE OR ALTER PROCEDURE UP_CreateUser
 @Username VARCHAR(100) = NULL,
 @Password VARCHAR(100) = NULL,
-@Email VARCHAR(100) = NULL
+@Email VARCHAR(100) = NULL,
+@NewUserId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.UF_IsUserInputValid(@Username, @Password, @Email) = 0
     BEGIN
-        RAISERROR('Failed to create user', 16, 1);
-        SELECT NULL AS UserId;
+        SET @NewUserId = NULL;
         RETURN;
     END;
 
-    DECLARE @UserId UNIQUEIDENTIFIER = NEWID();
+    SET @NewUserId = NEWID();
 
-    INSERT INTO Users (userId, username, password_hash, email)
-    VALUES (@UserId, @Username, HASHBYTES('SHA2_256', @Password), @Email);
+    INSERT INTO [Users] (userId, username, password_hash, email)
+    VALUES (@NewUserId, @Username, HASHBYTES('SHA2_256', @Password), @Email);
 
-    IF DBO.UF_UserIdExists(@UserId) = 0
+    IF DBO.UF_UserIdExists(@NewUserId) = 0
     BEGIN
-        RAISERROR('Failed to create user', 16, 1);
-        SELECT NULL AS UserId;
+        SET @NewUserId = NULL;
         RETURN;
     END;
-
-    SELECT @UserId AS UserId;
-
 END;
 GO
 
 -- 2. Procedure to update username
 CREATE OR ALTER PROCEDURE UP_UpdateUsername
 @UserId UNIQUEIDENTIFIER,
-@NewUsername VARCHAR(100)
+@NewUsername VARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.UF_IsUsernameUsable(@NewUsername) = 0
     BEGIN
-        RAISERROR('Failed to update username', 16, 1);
-        SELECT 0 AS UsernameUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Users SET username = @NewUsername WHERE UserId = @UserId;
+    UPDATE [Users] SET username = @NewUsername WHERE UserId = @UserId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS UsernameUpdated;
+    SET @Result =  @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update user email
 CREATE OR ALTER PROCEDURE UP_UpdateUserEmail
 @UserId UNIQUEIDENTIFIER,
-@NewEmail VARCHAR(100)
+@NewEmail VARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.UF_IsEmailUsable(@NewEmail) = 0
     BEGIN
-        RAISERROR('Failed to update email', 16, 1);
-        SELECT 0 AS EmailUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Users SET email = @NewEmail WHERE UserId = @UserId;
+    UPDATE [Users] SET email = @NewEmail WHERE UserId = @UserId;
 
-    DECLARE @rowsAffected INT = @@ROWCOUNT;
-    SELECT  @rowsAffected AS EmailUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 4. Procedure to update user avatar
 CREATE OR ALTER PROCEDURE UP_UpdateUserAvatar
 @UserId UNIQUEIDENTIFIER,
-@NewAvatar VARCHAR(255)
+@NewAvatar VARCHAR(255),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.UF_IsAvatarLegal(@NewAvatar) = 0
     BEGIN
-        RAISERROR('Failed to update avatar.', 16, 1);
-        SELECT 0 AS AvatarUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Users SET avatar = @NewAvatar WHERE UserId = @UserId;
+    UPDATE [Users] SET avatar = @NewAvatar WHERE UserId = @UserId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS AvatarUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 5. Procedure to update user login status
 CREATE OR ALTER PROCEDURE UP_UpdateUserLoginStatus
 @UserId UNIQUEIDENTIFIER,
-@IsLoggedIn BIT
+@IsLoggedIn BIT,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF @IsLoggedIn IS NULL
     BEGIN
-        RAISERROR('Failed to update login status', 16, 1);
-        SELECT 0 AS LoginStatusUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Users SET isLoggedIn = @IsLoggedIn WHERE UserId = @UserId;
+    UPDATE [Users] SET isLoggedIn = @IsLoggedIn WHERE UserId = @UserId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS LoginStatusUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 6. Procedure to update password
 CREATE OR ALTER PROCEDURE UP_UpdatePassword
 @UserId UNIQUEIDENTIFIER,
-@NewPassword VARCHAR(100)
+@NewPassword VARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.UF_IsPasswordLegal(@NewPassword) = 0
     BEGIN
-        RAISERROR('Failed to update password.', 16, 1);
-        SELECT 0 AS PasswordUpdated;
+        SET @Result = 0;
         RETURN;
     END;
-    UPDATE Users SET password_hash = HASHBYTES('SHA2_256', @NewPassword) WHERE UserId = @UserId;
+    UPDATE [Users] SET password_hash = HASHBYTES('SHA2_256', @NewPassword) WHERE UserId = @UserId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS PasswordUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -190,26 +193,31 @@ CREATE OR ALTER PROCEDURE UP_UpdateUserDetails
 @Password VARCHAR(100) = NULL,
 @Email VARCHAR(100) = NULL,
 @Avatar VARCHAR(255) = NULL,
-@IsUserLoggedIn BIT = NULL
+@IsUserLoggedIn BIT = NULL,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         RETURN;
     END;
-
-    EXEC DBO.UP_UpdateUsername @UserId, @Username;
+    DECLARE @TEMP INT = 0;
+    EXEC DBO.UP_UpdateUsername @UserId, @Username, @Result = @TEMP OUTPUT;
+    SET @Result += @TEMP;
     
-    EXEC DBO.UP_UpdatePassword @UserId, @Password;
+    EXEC DBO.UP_UpdatePassword @UserId, @Password, @Result = @TEMP OUTPUT;
+    SET @Result += @TEMP;
 
-    EXEC DBO.UP_UpdateUserEmail @UserId, @Email;
+    EXEC DBO.UP_UpdateUserEmail @UserId, @Email, @Result = @TEMP OUTPUT;
+    SET @Result += @TEMP;
 
-    EXEC DBO.UP_UpdateUserAvatar @UserId, @Avatar;
+    EXEC DBO.UP_UpdateUserAvatar @UserId, @Avatar, @Result = @TEMP OUTPUT;
+    SET @Result += @TEMP;
 
-    EXEC DBO.UP_UpdateUserLoginStatus @UserId, @IsUserLoggedIn;
-
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS UserDetailsUpdated;
+    EXEC DBO.UP_UpdateUserLoginStatus @UserId, @IsUserLoggedIn, @Result = @TEMP OUTPUT;
+    SET @Result += @TEMP;
 
 END;
 GO
@@ -217,27 +225,27 @@ GO
 -- 8. Procedure to delete a user
 CREATE OR ALTER PROCEDURE UP_DeleteUser
 @UserId UNIQUEIDENTIFIER,
-@Password VARCHAR(100) = NULL
+@Password VARCHAR(100) = NULL,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
 
     IF DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
     BEGIN
-        RAISERROR('Failed to delete user', 16, 1);
-        SELECT 0 AS UserDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    DELETE FROM Users WHERE UserId = @UserId;
+    DELETE FROM [Users] WHERE UserId = @UserId;
     
     IF DBO.UF_UserIdExists(@UserId) = 1
     BEGIN
-        RAISERROR('Failed to delete user', 16, 1);
-        SELECT 0 AS UserDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    SELECT 1 AS UserDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -246,12 +254,9 @@ CREATE OR ALTER PROCEDURE UP_CheckUserLoggedIn
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserId) = 0
-    BEGIN
-        RETURN;
-    END;
+    SET NOCOUNT ON;
 
-    SELECT DBO.UF_IsUserLoggedIn(@UserId);
+    SELECT DBO.UF_IsUserLoggedIn(@UserId) AS IsUserLoggedIn;
 END;
 GO
 
@@ -260,11 +265,9 @@ CREATE OR ALTER PROCEDURE UP_GetUserDetails
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserId) = 0
-    BEGIN
-        RETURN;
-    END;
-    SELECT * FROM UF_GetUserDetails(@UserId);
+    SET NOCOUNT ON;
+
+    SELECT * FROM UF_GetUserDetails(@UserId) AS UserDetails;
 END;
 GO
 
@@ -273,6 +276,7 @@ CREATE OR ALTER PROCEDURE UP_GetUserDisplayInfo
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
 
     SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar, DBO.UF_GetUsername(@UserId) AS Username;
 END;   
@@ -283,6 +287,8 @@ CREATE OR ALTER PROCEDURE UP_GetUserEmail
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.UF_GetEmail(@UserId) AS Email;
 END;
 GO
@@ -292,6 +298,8 @@ CREATE OR ALTER PROCEDURE UP_GetUserUsername
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.UF_GetUsername(@UserId) AS Username;
 END;
 GO
@@ -301,6 +309,8 @@ CREATE OR ALTER PROCEDURE UP_GetUserAvatar
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar;
 END;
 GO
@@ -310,6 +320,8 @@ CREATE OR ALTER PROCEDURE UP_GetUserLoginStatus
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.UF_IsUserLoggedIn(@UserId) AS IsLoggedIn;
 END;
 GO
@@ -319,29 +331,26 @@ CREATE OR ALTER PROCEDURE UP_CheckUserExists
 @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
-    IF DBO.UF_UserIdExists(@UserId) = 0
-    BEGIN
-        RETURN;
-    END;
+    SET NOCOUNT ON;
 
-    SELECT 1 AS UserExists;
+    SELECT DBO.UF_UserIdExists(@UserId) AS UserIdExists;
 END;
 GO
 
 -- 17. Procedure to check login account
 CREATE OR ALTER PROCEDURE UP_CheckLoginAccount
 @Username VARCHAR(100),
-@Password VARCHAR(100)
+@Password VARCHAR(100),
+@UserId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
-    DECLARE @UserId UNIQUEIDENTIFIER;
+    SET NOCOUNT ON;
 
     IF DBO.UF_IsUsernameLegal(@Username) = 0 
         OR DBO.UF_IsPasswordLegal(@Password) = 0
         OR DBO.UF_UsernameExists(@Username) = 0
     BEGIN
-        RAISERROR ('Failed to check login account.', 16, 1);
-        SELECT NULL AS UserId;
+        SET @UserId = NULL;
         RETURN;
     END;
 
@@ -349,30 +358,28 @@ BEGIN
 
     IF DBO.UF_IsPasswordMatch(@UserId, @Password) = 0
     BEGIN
-        RAISERROR ('Failed to check login account.', 16, 1);
-        SELECT NULL AS UserId;
+        SET @UserId = NULL;
         RETURN;
     END;
-
-    SELECT @UserId AS UserId;
 END;
 GO
 
 -- 18. Procedure to update password if forget password
 CREATE OR ALTER PROCEDURE UP_ForgetPassword
-@Email VARCHAR(100)
+@Email VARCHAR(100),
+@NewPassword VARCHAR(100) OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     DECLARE @UserId UNIQUEIDENTIFIER;
-    DECLARE @NewPassword VARCHAR(100);
 
     -- Check if email exists and get UserId
-    SELECT @UserId = userId FROM Users WHERE email = @Email;
+    SELECT @UserId = userId FROM [Users] WHERE email = @Email;
 
     IF @UserId IS NULL
     BEGIN
-        RAISERROR('Failed to reset password.', 16, 1);
-        SELECT NULL AS NewPassword;
+        SET @NewPassword = NULL;
         RETURN;
     END
 
@@ -380,19 +387,14 @@ BEGIN
     EXEC SP_GenerateStrongPassword @Length = 12, @Password = @NewPassword OUTPUT;
 
     -- Update password
-    UPDATE Users SET password_hash = HASHBYTES('SHA2_256', @NewPassword)
+    UPDATE [Users] SET password_hash = HASHBYTES('SHA2_256', @NewPassword)
     WHERE userId = @UserId;
 
     IF @@ROWCOUNT = 0
     BEGIN
-        RAISERROR('Failed to reset password.', 16, 1);
-        SELECT NULL AS NewPassword;
+        SET @NewPassword = NULL;
         RETURN;
     END
-
-    -- Return new password
-    SELECT @NewPassword AS NewPassword;
-
 END;
 GO
 
@@ -400,45 +402,38 @@ GO
 CREATE OR ALTER PROCEDURE UP_ChangePassword
 @UserId UNIQUEIDENTIFIER,
 @OldPassword VARCHAR(100),
-@NewPassword VARCHAR(100)
+@NewPassword VARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     -- Check user exists
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
-        RAISERROR('Failed to change password.', 16, 1);
-        SELECT 0 AS PasswordChanged;
+        SET @Result = 0;
         RETURN;
     END
 
     -- Check old password match
     IF DBO.UF_IsPasswordMatch(@UserId, @OldPassword) = 0
     BEGIN
-        RAISERROR('Failed to change password.', 16, 1);
-        SELECT 0 AS PasswordChanged;
+        SET @Result = 0;
         RETURN;
     END
 
     -- Check new password legality
     IF DBO.UF_IsPasswordLegal(@NewPassword) = 0
     BEGIN
-        RAISERROR('New password is not legal.', 16, 1);
-        SELECT 0 AS PasswordChanged;
+        SET @Result = 0;
         RETURN;
     END
 
     -- Update password
-    UPDATE Users SET password_hash = HASHBYTES('SHA2_256', @NewPassword)
+    UPDATE [Users] SET password_hash = HASHBYTES('SHA2_256', @NewPassword)
     WHERE userId = @UserId;
 
-    IF @@ROWCOUNT = 0
-    BEGIN
-        RAISERROR('Failed to change password.', 16, 1);
-        SELECT 0 AS PasswordChanged;
-        RETURN;
-    END
-    
-    SELECT 1 AS PasswordChanged;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -448,152 +443,157 @@ CREATE OR ALTER PROCEDURE GP_CreateGame
 @Title NVARCHAR(100),
 @Genre NVARCHAR(100),
 @Description NVARCHAR(MAX),
-@Details NVARCHAR(MAX)
+@Details NVARCHAR(MAX),
+@GameId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGameTitleLegal(@Title) = 0 
         OR DBO.GF_IsGameGenreLegal(@Genre) = 0 
         OR DBO.GF_IsGameDescriptionLegal(@Description) = 0
         OR DBO.GF_IsGameDetailsLegal(@Details) = 0
     BEGIN
-        RAISERROR('Failed to create game', 16, 1);
-        SELECT NULL AS GameId;
+        SET @GameId = NULL;
         RETURN;
     END;
 
-    DECLARE @GameId UNIQUEIDENTIFIER = NEWID();
+    SET @GameId = NEWID();
 
     INSERT INTO [Games] (gameId, title, genre, descriptions, details)
     VALUES (@GameId, @Title, @Genre, @Description, @Details);
 
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
-        RAISERROR('Failed to create game', 16, 1);
-        SELECT NULL AS GameId;
+        SET @GameId = NULL;
         RETURN;
     END;
-
-    SELECT @GameId AS GameId;
 END;
 GO
 
 -- 2. Procedure to update game title
 CREATE OR ALTER PROCEDURE GP_UpdateGameTitle
 @GameId UNIQUEIDENTIFIER,
-@NewTitle NVARCHAR(100)
+@NewTitle NVARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGameTitleLegal(@NewTitle) = 0
     BEGIN
-        RAISERROR('Failed to update game title', 16, 1);
-        SELECT 0 AS TitleUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Games] SET title = @NewTitle WHERE gameId = @GameId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS TitleUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update game genre
 CREATE OR ALTER PROCEDURE GP_UpdateGameGenre
 @GameId UNIQUEIDENTIFIER,
-@NewGenre NVARCHAR(100)
+@NewGenre NVARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGameGenreLegal(@NewGenre) = 0
     BEGIN
-        RAISERROR('Failed to update game genre', 16, 1);
-        SELECT 0 AS GenreUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Games] SET genre = @NewGenre WHERE gameId = @GameId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS GenreUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 4. Procedure to update game description
 CREATE OR ALTER PROCEDURE GP_UpdateGameDescription
 @GameId UNIQUEIDENTIFIER,
-@NewDescription NVARCHAR(MAX)
+@NewDescription NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGameDescriptionLegal(@NewDescription) = 0
     BEGIN
-        RAISERROR('Failed to update description', 16, 1);
-        SELECT 0 AS DescriptionUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Games] SET descriptions = @NewDescription WHERE gameId = @GameId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DescriptionUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 5. Procedure to update game details
 CREATE OR ALTER PROCEDURE GP_UpdateGameDetails
 @GameId UNIQUEIDENTIFIER,
-@NewDetails NVARCHAR(MAX)
+@NewDetails NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGameDetailsLegal(@NewDetails) = 0
     BEGIN
-        RAISERROR('Failed to update game details', 16, 1);
-        SELECT 0 AS DetailsUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Games] SET details = @NewDetails WHERE gameId = @GameId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DetailsUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 6. Procedure to update game poster
 CREATE OR ALTER PROCEDURE GP_UpdateGamePoster
 @GameId UNIQUEIDENTIFIER,
-@NewPoster VARCHAR(255)
+@NewPoster VARCHAR(255),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGamePosterLegal(@NewPoster) = 0
     BEGIN
-        RAISERROR('Failed to update poster', 16, 1);
-        SELECT 0 AS PosterUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Games] SET poster = @NewPoster WHERE gameId = @GameId;
-
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS PosterUpdated;
+    
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 7. Procedure to update game backdrop
 CREATE OR ALTER PROCEDURE GP_UpdateGameBackdrop
 @GameId UNIQUEIDENTIFIER,
-@NewBackdrop VARCHAR(255)
+@NewBackdrop VARCHAR(255),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_IsGameBackdropLegal(@NewBackdrop) = 0
     BEGIN
-        RAISERROR('Failed to update backdrop', 16, 1);
-        SELECT 0 AS BackdropUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Games] SET backdrop = @NewBackdrop WHERE gameId = @GameId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS BackdropUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -605,40 +605,50 @@ CREATE OR ALTER PROCEDURE GP_UpdateGameAllInfo
 @Descriptions NVARCHAR(MAX) = NULL,
 @Details NVARCHAR(MAX) = NULL,
 @Poster VARCHAR(255) = NULL,
-@Backdrop VARCHAR(255) = NULL
+@Backdrop VARCHAR(255) = NULL,
+@Result INT = 0 OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
         RETURN;
     END;
 
-    EXEC DBO.GP_UpdateGameTitle @GameId, @Title;
+    DECLARE @Temp INT;
 
-    EXEC DBO.GP_UpdateGameGenre @GameId, @Genre;
+    EXEC DBO.GP_UpdateGameTitle @GameId, @Title, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    EXEC DBO.GP_UpdateGameDescription @GameId, @Descriptions;
+    EXEC DBO.GP_UpdateGameGenre @GameId, @Genre, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    EXEC DBO.GP_UpdateGameDetails @GameId, @Details;
+    EXEC DBO.GP_UpdateGameDescription @GameId, @Descriptions, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    EXEC DBO.GP_UpdateGamePoster @GameId, @Poster;
+    EXEC DBO.GP_UpdateGameDetails @GameId, @Details, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    EXEC DBO.GP_UpdateGameBackdrop @GameId, @Backdrop;
+    EXEC DBO.GP_UpdateGamePoster @GameId, @Poster, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS GameInfoUpdated;
+    EXEC DBO.GP_UpdateGameBackdrop @GameId, @Backdrop, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 END;
 GO
 
 -- 9. Procedure to delete a game
 CREATE OR ALTER PROCEDURE GP_DeleteGame
-@GameId UNIQUEIDENTIFIER
+@GameId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
-        RAISERROR('Failed to delete game', 16, 1);
-        SELECT 0 AS GameDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
@@ -646,12 +656,11 @@ BEGIN
 
     IF DBO.GF_GameIdExists(@GameId) = 1
     BEGIN
-        RAISERROR('Failed to delete game', 16, 1);
-        SELECT 0 AS GameDeleted;
+        SET @Result = 0;
         RETURN;
     END;
                   
-    SELECT 1 AS GameDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -660,6 +669,8 @@ CREATE OR ALTER PROCEDURE GP_GetGameAllInfo
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM GF_GetGameAllInfo(@GameId);
 END;
 GO
@@ -669,6 +680,8 @@ CREATE OR ALTER PROCEDURE GP_GetGameTitle
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.GF_GetGameTitle(@GameId) AS Title;
 END;
 GO
@@ -678,6 +691,8 @@ CREATE OR ALTER PROCEDURE GP_GetGameGenre
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.GF_GetGameGenre(@GameId) AS Genre;
 END;
 GO
@@ -687,6 +702,8 @@ CREATE OR ALTER PROCEDURE GP_GetGameDescription
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.GF_GetGameDescription(@GameId) AS Description;
 END;
 GO
@@ -696,6 +713,8 @@ CREATE OR ALTER PROCEDURE GP_GetGameDetails
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.GF_GetGameDetails(@GameId) AS Details;
 END;
 GO
@@ -705,6 +724,8 @@ CREATE OR ALTER PROCEDURE GP_GetGamePoster
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.GF_GetGamePoster(@GameId) AS Poster;
 END;
 GO
@@ -714,6 +735,8 @@ CREATE OR ALTER PROCEDURE GP_GetGameBackdrop
 @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.GF_GetGameBackdrop(@GameId) AS Backdrop;
 END;
 GO
@@ -721,69 +744,70 @@ GO
 -- #Review table procedures
 -- 1. Procedure to create a new review
 CREATE OR ALTER PROCEDURE RP_CreateReview
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@ReviewId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_IsContentLegality(@Content) = 0
     BEGIN
-        RAISERROR ('Failed to create review.', 16, 1);
-        SELECT NULL AS ReviewId;
+        SET @ReviewId = NULL;
         RETURN;
     END;
 
-    DECLARE @ReviewId UNIQUEIDENTIFIER = NEWID();
+    SET @ReviewId = NEWID();
 
     INSERT INTO [Reviews] (reviewId, content)
     VALUES (@ReviewId,@Content);
 
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
-        RAISERROR ('Failed to create review.', 16, 1);
-        SELECT NULL AS ReviewId;
+        SET @ReviewId = NULL;
         RETURN;
     END;
-
-    SELECT @ReviewId AS ReviewId;
 END;
 GO
 
 -- 2. Procedure to update review content
 CREATE OR ALTER PROCEDURE RP_UpdateReviewContent
 @ReviewId UNIQUEIDENTIFIER,
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_IsContentLegality(@Content) = 0
     BEGIN
-        RAISERROR ('Failed to update review content.', 16, 1);
-        SELECT 0 AS ContentUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Reviews] SET content = @Content WHERE reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ContentUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update review rating
 CREATE OR ALTER PROCEDURE RP_UpdateReviewRating
 @ReviewId UNIQUEIDENTIFIER,
-@Rating DECIMAL(4,2)
+@Rating DECIMAL(4,2),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_IsRatingLegality(@Rating) = 0
     BEGIN
-        RAISERROR ('Failed to update review rating', 16, 1);
-        SELECT 0 AS RatingUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
     UPDATE [Reviews] SET rating = @Rating WHERE reviewId = @ReviewId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS RatingUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -791,33 +815,39 @@ GO
 CREATE OR ALTER PROCEDURE RP_UpdateReviewDetails
 @ReviewId UNIQUEIDENTIFIER,
 @Content NVARCHAR(MAX),
-@Rating DECIMAL(4,2)
+@Rating DECIMAL(4,2),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
-        RAISERROR ('Failed to update review details.', 16, 1);
-        SELECT 0 AS DetailsUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    EXEC RP_UpdateReviewContent @ReviewId, @Content;
-    EXEC RP_UpdateReviewRating @ReviewId, @Rating;
+    DECLARE @Temp INT;
+    EXEC RP_UpdateReviewContent @ReviewId, @Content, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReviewUpdated;
+    EXEC RP_UpdateReviewRating @ReviewId, @Rating, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
+
 END;
 GO
 
 -- 5. Procedure to delete a review
 CREATE OR ALTER PROCEDURE RP_DeleteReview
-@ReviewId UNIQUEIDENTIFIER
+@ReviewId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
-        RAISERROR('Failed to delete review', 16, 1);
-        SELECT 0 AS ReviewDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
@@ -825,12 +855,11 @@ BEGIN
 
     IF DBO.RF_ReviewIdExists(@ReviewId) = 1
     BEGIN
-        RAISERROR('Failed to delete review', 16, 1);
-        SELECT 0 AS ReviewDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    SELECT 1 AS ReviewDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -839,6 +868,8 @@ CREATE OR ALTER PROCEDURE RP_GetReviewDetails
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.RF_GetReview(@ReviewId);
 END;
 GO
@@ -848,6 +879,8 @@ CREATE OR ALTER PROCEDURE RP_GetReviewContent
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.RF_GetContent(@ReviewId) AS Content;
 END;
 GO
@@ -857,6 +890,8 @@ CREATE OR ALTER PROCEDURE RP_GetReviewRating
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.RF_GetRating(@ReviewId) AS Rating;
 END;
 GO
@@ -866,6 +901,8 @@ CREATE OR ALTER PROCEDURE RP_GetReviewDate
 @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.RF_GetDateCreated(@ReviewId) AS Date;
 END;
 GO
@@ -874,74 +911,75 @@ GO
 
 -- 1. Procedure to create a new comment
 CREATE OR ALTER PROCEDURE CP_CreateComment
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@CommentId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.CF_IsContentLegality(@Content) = 0
     BEGIN
-        RAISERROR ('Failed to create comment.', 16, 1);
-        SELECT NULL AS CommentId;
+        SET @CommentId = NULL;
         RETURN;
     END;
 
-    DECLARE @CommentId UNIQUEIDENTIFIER = NEWID();
+    SET @CommentId = NEWID();
 
-    INSERT INTO Comments (commentId, content)
+    INSERT INTO [Comments] (commentId, content)
     VALUES (@CommentId, @Content);
 
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
-        RAISERROR ('Failed to create comment.', 16, 1);
-        SELECT NULL AS CommentId;
+        SET @CommentId = NULL;
         RETURN;
     END;
-
-    SELECT @CommentId AS CommentId;
 END;
 GO
 
 -- 2. Procedure to update comment content
 CREATE OR ALTER PROCEDURE CP_UpdateCommentContent
 @CommentId UNIQUEIDENTIFIER,
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.CF_IsContentLegality(@Content) = 0
     BEGIN
-        RAISERROR ('Failed to update comment.', 16, 1);
-        SELECT 0 AS ContentUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Comments SET content = @Content WHERE commentId = @CommentId;
+    UPDATE [Comments] SET content = @Content WHERE commentId = @CommentId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ContentUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to delete a comment
 CREATE OR ALTER PROCEDURE CP_DeleteComment
-@CommentId UNIQUEIDENTIFIER
+@CommentId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
-        RAISERROR ('Failed to delete comment.', 16, 1);
-        SELECT 0 AS CommentDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    DELETE FROM Comments WHERE commentId = @CommentId;
+    DELETE FROM [Comments] WHERE commentId = @CommentId;
 
     IF DBO.CF_CommentIdExists(@CommentId) = 1
     BEGIN
-        RAISERROR ('Failed to delete comment.', 16, 1);
-        SELECT 0 AS CommentDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    SELECT 1 AS CommentDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -950,6 +988,8 @@ CREATE OR ALTER PROCEDURE CP_GetCommentDetails
 @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.CF_GetComment(@CommentId);
 END;
 GO
@@ -959,6 +999,8 @@ CREATE OR ALTER PROCEDURE CP_GetCommentContent
 @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.CF_GetContent(@CommentId) AS Content;
 END;
 GO
@@ -968,6 +1010,8 @@ CREATE OR ALTER PROCEDURE CP_GetCommentCreatedDate
 @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.CF_GetCreatedAt(@CommentId) AS CreatedAt;
 END;
 GO
@@ -976,74 +1020,76 @@ GO
 
 -- 1. Procedure to create a new rate
 CREATE OR ALTER PROCEDURE RP_CreateRate
-@RateValue INT
+@RateValue INT,
+@RateId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_IsRateLegal(@RateValue) = 0
     BEGIN
-        RAISERROR ('Failed to create rate.', 16, 1);
-        SELECT NULL AS RateId;
+        SET @RateId = NULL;
         RETURN;
     END;
 
-    DECLARE @RateId UNIQUEIDENTIFIER = NEWID();
+    SET @RateId = NEWID();
 
-    INSERT INTO Rates (rateId, rateValue)
+    INSERT INTO [Rates] (rateId, rateValue)
     VALUES (@RateId, @RateValue);
 
     IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
-        RAISERROR ('Failed to create rate.', 16, 1);
-        SELECT NULL AS RateId;
+        SET @RateId = NULL;
         RETURN;
     END;
 
-    SELECT @RateId AS RateId;
 END;
 GO
 
 -- 2. Procedure to update rate value
 CREATE OR ALTER PROCEDURE RP_UpdateRateValue
 @RateId UNIQUEIDENTIFIER,
-@RateValue INT
+@RateValue INT,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_IsRateLegal(@RateValue) = 0
     BEGIN
-        RAISERROR ('Failed to update rate.', 16, 1);
-        SELECT 0 AS RateUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Rates SET rateValue = @RateValue WHERE rateId = @RateId;
+    UPDATE [Rates] SET rateValue = @RateValue WHERE rateId = @RateId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS RateUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to delete a rate
 CREATE OR ALTER PROCEDURE RP_DeleteRate
-@RateId UNIQUEIDENTIFIER
+@RateId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_RateIdExists(@RateId) = 0
     BEGIN
-        RAISERROR ('Failed to delete rate.', 16, 1);
-        SELECT 0 AS RateDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    DELETE FROM Rates WHERE rateId = @RateId;
+    DELETE FROM [Rates] WHERE rateId = @RateId;
 
     IF DBO.RF_RateIdExists(@RateId) = 1
     BEGIN
-        RAISERROR ('Failed to delete rate.', 16, 1);
-        SELECT 0 AS RateDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    SELECT 1 AS RateDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1052,6 +1098,8 @@ CREATE OR ALTER PROCEDURE RP_GetRateDetails
 @RateId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.RF_GetRate(@RateId);
 END;
 GO
@@ -1061,6 +1109,8 @@ CREATE OR ALTER PROCEDURE RP_GetRateValue
 @RateId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.RF_GetValue(@RateId) AS RateValue;
 END;
 GO
@@ -1070,70 +1120,72 @@ GO
 -- 1. Procedure to create a new list
 CREATE OR ALTER PROCEDURE LP_CreateList
 @Name NVARCHAR(100),
-@Descriptions NVARCHAR(MAX) = NULL
+@Descriptions NVARCHAR(MAX) = NULL,
+@ListId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LF_IsNameLegal(@Name) = 0 OR
         DBO.LF_IsDescriptionLegal(@Descriptions) = 0
     BEGIN
-        RAISERROR ('Failed to create list.', 16, 1);
-        SELECT NULL AS ListId;
+        SET @ListId = NULL;
         RETURN;
     END;
 
-    DECLARE @ListId UNIQUEIDENTIFIER = NEWID();
+    SET @ListId = NEWID();
 
-    INSERT INTO Lists (listId, _name, descriptions)
+    INSERT INTO [Lists] (listId, _name, descriptions)
     VALUES (@ListId, @Name, @Descriptions);
 
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
-        RAISERROR ('Failed to create list.', 16, 1);
-        SELECT NULL AS ListId;
+        SET @ListId = NULL;
         RETURN;
     END;
 
-    SELECT @ListId AS ListId;
 END;
 GO
 
 -- 2. Procedure to update list name
 CREATE OR ALTER PROCEDURE LP_UpdateListName
 @ListId UNIQUEIDENTIFIER,
-@Name NVARCHAR(100)
+@Name NVARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LF_IsNameLegal(@Name) = 0
     BEGIN
-        RAISERROR ('Failed to update list name.', 16, 1);
-        SELECT 0 AS NameUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Lists SET _name = @Name WHERE listId = @ListId;
+    UPDATE [Lists] SET _name = @Name WHERE listId = @ListId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS NameUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update list descriptions
 CREATE OR ALTER PROCEDURE LP_UpdateListDescriptions
 @ListId UNIQUEIDENTIFIER,
-@Descriptions NVARCHAR(MAX)
+@Descriptions NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LF_IsDescriptionLegal(@Descriptions) = 0
     BEGIN
-        RAISERROR ('Failed to update list descriptions.', 16, 1);
-        SELECT 0 AS DescriptionsUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    UPDATE Lists SET descriptions = @Descriptions WHERE listId = @ListId;
+    UPDATE [Lists] SET descriptions = @Descriptions WHERE listId = @ListId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DescriptionsUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1141,46 +1193,52 @@ GO
 CREATE OR ALTER PROCEDURE LP_UpdateListDetails
 @ListId UNIQUEIDENTIFIER,
 @Name NVARCHAR(100),
-@Descriptions NVARCHAR(MAX)
+@Descriptions NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
-        RAISERROR ('Failed to update list details.', 16, 1);
-        SELECT 0 AS DetailsUpdated;
+        SET @Result = 0;
         RETURN;
     END;
 
-    EXEC LP_UpdateListName @ListId, @Name;
-    EXEC LP_UpdateListDescriptions @ListId, @Descriptions;
+    DECLARE @Temp INT;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DetailsUpdated;
+    EXEC LP_UpdateListName @ListId, @Name, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
+
+    EXEC LP_UpdateListDescriptions @ListId, @Descriptions, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
+
 END;
 GO
 
 -- 5. Procedure to delete a list
 CREATE OR ALTER PROCEDURE LP_DeleteList
-@ListId UNIQUEIDENTIFIER
+@ListId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
-        RAISERROR ('Failed to delete list.', 16, 1);
-        SELECT 0 AS ListDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    DELETE FROM Lists WHERE listId = @ListId;
+    DELETE FROM [Lists] WHERE listId = @ListId;
 
     IF DBO.LF_ListIdExists(@ListId) = 1
     BEGIN
-        RAISERROR ('Failed to delete list.', 16, 1);
-        SELECT 0 AS ListDeleted;
+        SET @Result = 0;
         RETURN;
     END;
 
-    SELECT 1 AS ListDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1189,6 +1247,8 @@ CREATE OR ALTER PROCEDURE LP_GetListDetails
 @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.LF_GetList(@ListId);
 END;
 GO
@@ -1198,6 +1258,8 @@ CREATE OR ALTER PROCEDURE LP_GetListName
 @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.LF_GetName(@ListId) AS Name;
 END;
 GO
@@ -1207,6 +1269,8 @@ CREATE OR ALTER PROCEDURE LP_GetListDescriptions
 @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.LF_GetDescriptions(@ListId) AS Descriptions;
 END;
 GO
@@ -1216,101 +1280,107 @@ CREATE OR ALTER PROCEDURE LP_GetListCreatedDate
 @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.LF_GetCreatedAt(@ListId) AS CreatedAt;
 END;
 GO
 
 -- 1. Procedure to create a new list item
 CREATE OR ALTER PROCEDURE LIP_CreateListItem
-@Title NVARCHAR(100)
+@Title NVARCHAR(100),
+@ListItemId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LIF_IsTitleLegal(@Title) = 0
     BEGIN
-        RAISERROR ('Failed to create list item.', 16, 1);
-        SELECT NULL AS ListItemId;
+        SET @ListItemId = NULL;
         RETURN;
     END
 
-    DECLARE @ListItemId UNIQUEIDENTIFIER = NEWID();
+    SET @ListItemId = NEWID();
 
-    INSERT INTO List_items (listItemId, title)
+    INSERT INTO [List_items] (listItemId, title)
     VALUES (@ListItemId, @Title);
 
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
-        RAISERROR ('Failed to create list item.', 16, 1);
-        SELECT NULL AS ListItemId;
+        SET @ListItemId = NULL;
         RETURN;
     END
 
-    SELECT @ListItemId AS ListItemId;
 END;
 GO
 
 -- 2. Procedure to update title
 CREATE OR ALTER PROCEDURE LIP_UpdateTitle
 @ListItemId UNIQUEIDENTIFIER,
-@Title NVARCHAR(100)
+@Title NVARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0 OR
        DBO.LIF_IsTitleLegal(@Title) = 0
     BEGIN
-        RAISERROR ('Failed to update list item.', 16, 1);
-        SELECT 0 AS TitleUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    UPDATE List_items SET title = @Title WHERE listItemId = @ListItemId;
+    UPDATE [List_items] SET title = @Title WHERE listItemId = @ListItemId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS TitleUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update all columns
 CREATE OR ALTER PROCEDURE LIP_UpdateListItem
 @ListItemId UNIQUEIDENTIFIER,
-@Title NVARCHAR(100)
+@Title NVARCHAR(100),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
-        RAISERROR ('Failed to update list item.', 16, 1);
-        SELECT 0 AS ListItemUpdated;
+        SET @Result = 0;
         RETURN;
     END
+    DECLARE @Temp INT;
 
-    EXEC LIP_UpdateTitle @ListItemId, @Title;
+    EXEC LIP_UpdateTitle @ListItemId, @Title, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ListItemUpdated;
 END;
 GO
 
 -- 4. Procedure to delete a list item
 CREATE OR ALTER PROCEDURE LIP_DeleteListItem
-@ListItemId UNIQUEIDENTIFIER
+@ListItemId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
     BEGIN
-        RAISERROR ('Failed to delete list item.', 16, 1);
-        SELECT 0 AS ListItemDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    DELETE FROM List_items WHERE listItemId = @ListItemId;
+    DELETE FROM [List_items] WHERE listItemId = @ListItemId;
 
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 1
     BEGIN
-        RAISERROR ('Failed to delete list item.', 16, 1);
-        SELECT 0 AS ListItemDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    SELECT 1 AS ListItemDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1319,6 +1389,8 @@ CREATE OR ALTER PROCEDURE LIP_GetListItem
 @ListItemId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.LIF_GetListItem(@ListItemId);
 END;
 GO
@@ -1328,102 +1400,110 @@ CREATE OR ALTER PROCEDURE LIP_GetTitle
 @ListItemId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.LIF_GetTitle(@ListItemId) AS Title;
 END;
 GO
 
 -- 1. Procedure to create new activity
 CREATE OR ALTER PROCEDURE AP_CreateActivity
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@ActivityId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.AF_IsContentLegal(@Content) = 0
     BEGIN
-        RAISERROR ('Failed to create activity.', 16, 1);
-        SELECT NULL AS ActivityId;
+        SET @ActivityId = NULL;
         RETURN;
     END
 
-    DECLARE @ActivityId UNIQUEIDENTIFIER = NEWID();
+    SET @ActivityId = NEWID();
 
-    INSERT INTO Activities (activityId, content)
+    INSERT INTO [Activities] (activityId, content)
     VALUES (@ActivityId, @Content);
 
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
-        RAISERROR ('Failed to create activity.', 16, 1);
-        SELECT NULL AS ActivityId;
+        SET @ActivityId = NULL
         RETURN;
     END
 
-    SELECT @ActivityId AS ActivityId;
 END;
 GO
 
 -- 2. Procedure to update content
 CREATE OR ALTER PROCEDURE AP_UpdateContent
 @ActivityId UNIQUEIDENTIFIER,
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0 OR
        DBO.AF_IsContentLegal(@Content) = 0
     BEGIN
-        RAISERROR ('Failed to update content.', 16, 1);
-        SELECT 0 AS ContentUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    UPDATE Activities
+    UPDATE [Activities]
     SET content = @Content
     WHERE activityId = @ActivityId;
 
-    SELECT @@ROWCOUNT AS ContentUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update all columns
 CREATE OR ALTER PROCEDURE AP_UpdateActivity
 @ActivityId UNIQUEIDENTIFIER,
-@Content NVARCHAR(MAX)
+@Content NVARCHAR(MAX),
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
-        RAISERROR ('Failed to update activity.', 16, 1);
-        SELECT 0 AS ActivityUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    EXEC AP_UpdateContent @ActivityId, @Content;
-
-    SELECT @@ROWCOUNT AS ActivityUpdated;
+    DECLARE @Temp INT;
+    EXEC AP_UpdateContent @ActivityId, @Content, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
+    
 END;
 GO
 
 -- 4. Procedure to delete activity
 CREATE OR ALTER PROCEDURE AP_DeleteActivity
-@ActivityId UNIQUEIDENTIFIER
+@ActivityId UNIQUEIDENTIFIER,
+@Result INT OUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
-        RAISERROR ('Failed to delete activity.', 16, 1);
-        SELECT 0 AS ActivityDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    DELETE FROM Activities
+    DELETE FROM [Activities]
     WHERE activityId = @ActivityId;
 
     IF DBO.AF_ActivityIdExists(@ActivityId) = 1
     BEGIN
-        RAISERROR ('Failed to delete activity.', 16, 1);
-        SELECT 0 AS ActivityDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    SELECT 1 AS ActivityDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1432,6 +1512,8 @@ CREATE OR ALTER PROCEDURE AP_GetActivity
 @ActivityId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.AF_GetActivity(@ActivityId);
 END;
 GO
@@ -1441,6 +1523,8 @@ CREATE OR ALTER PROCEDURE AP_GetContent
 @ActivityId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.AF_GetContent(@ActivityId) AS Content;
 END;
 GO
@@ -1450,92 +1534,99 @@ CREATE OR ALTER PROCEDURE AP_GetDateDo
 @ActivityId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.AF_GetDateDo(@ActivityId) AS DateDo;
 END;
 GO
 
 -- 1. Procedure to create a new diary entry
 CREATE OR ALTER PROCEDURE DP_CreateDiary
+@DiaryId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
-    DECLARE @DiaryId UNIQUEIDENTIFIER = NEWID();
+    SET NOCOUNT ON;
 
-    INSERT INTO Diaries (diaryId)
+    SET @DiaryId = NEWID();
+
+    INSERT INTO [Diaries] (diaryId)
     VALUES (@DiaryId);
 
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
-        RAISERROR ('Failed to create diary entry.', 16, 1);
-        SELECT NULL AS DiaryId;
+        SET @DiaryId = NULL;
         RETURN;
     END
 
-    SELECT @DiaryId AS DiaryId;
 END;
 GO
 
 -- 2. Procedure to update dateLogged
 CREATE OR ALTER PROCEDURE DP_UpdateDateLogged
 @DiaryId UNIQUEIDENTIFIER,
-@DateLogged DATETIME
+@DateLogged DATETIME,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0 OR @DateLogged IS NULL
     BEGIN
-        RAISERROR ('Failed to update date logged.', 16, 1);
-        SELECT 0 AS DateLoggedUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    UPDATE Diaries SET dateLogged = @DateLogged WHERE diaryId = @DiaryId;
+    UPDATE [Diaries] SET dateLogged = @DateLogged WHERE diaryId = @DiaryId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DateLoggedUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update full diary row
 CREATE OR ALTER PROCEDURE DP_UpdateDiary
 @DiaryId UNIQUEIDENTIFIER,
-@DateLogged DATETIME
+@DateLogged DATETIME,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
-        RAISERROR ('Failed to update diary entry.', 16, 1);
-        SELECT 0 AS DiaryUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    EXEC DP_UpdateDateLogged @DiaryId, @DateLogged;
+    DECLARE @Temp INT;
+    EXEC DP_UpdateDateLogged @DiaryId, @DateLogged, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS DiaryUpdated;
 END;
 GO
 
 -- 4. Procedure to delete a diary entry
 CREATE OR ALTER PROCEDURE DP_DeleteDiary
-@DiaryId UNIQUEIDENTIFIER
+@DiaryId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
-        RAISERROR ('Failed to delete diary entry.', 16, 1);
-        SELECT 0 AS DiaryDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    DELETE FROM Diaries WHERE diaryId = @DiaryId;
+    DELETE FROM [Diaries] WHERE diaryId = @DiaryId;
 
     IF DBO.DF_DiaryIdExists(@DiaryId) = 1
     BEGIN
-        RAISERROR ('Failed to delete diary entry.', 16, 1);
-        SELECT 0 AS DiaryDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    SELECT 1 AS DiaryDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1544,6 +1635,8 @@ CREATE OR ALTER PROCEDURE DP_GetDiary
 @DiaryId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.DF_GetDiary(@DiaryId);
 END;
 GO
@@ -1553,101 +1646,108 @@ CREATE OR ALTER PROCEDURE DP_GetDateLogged
 @DiaryId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.DF_GetDateLogged(@DiaryId) AS DateLogged;
 END;
 GO
 
 -- 1. Procedure to create a new reaction
 CREATE OR ALTER PROCEDURE RP_CreateReaction
-@ReactionType INT
+@ReactionType INT,
+@ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_IsReactionTypeLegal(@ReactionType) = 0
     BEGIN
-        RAISERROR ('Failed to create reaction.', 16, 1);
-        SELECT NULL AS ReactionId;
+        SET @ReactionId = NULL;
         RETURN;
     END
 
-    DECLARE @ReactionId UNIQUEIDENTIFIER = NEWID();
+    SET @ReactionId = NEWID();
 
-    INSERT INTO Reactions (reactionId, reactionType)
+    INSERT INTO [Reactions] (reactionId, reactionType)
     VALUES (@ReactionId, @ReactionType);
 
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
-        RAISERROR ('Failed to create reaction.', 16, 1);
-        SELECT NULL AS ReactionId;
+        SET @ReactionId = NULL;
         RETURN;
     END
 
-    SELECT @ReactionId AS ReactionId;
 END;
 GO
 
 -- 2. Procedure to update reactionType
 CREATE OR ALTER PROCEDURE RP_UpdateReactionType
 @ReactionId UNIQUEIDENTIFIER,
-@ReactionType INT
+@ReactionType INT,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+    
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0 OR
        DBO.RF_IsReactionTypeLegal(@ReactionType) = 0
     BEGIN
-        RAISERROR ('Failed to update reaction type.', 16, 1);
-        SELECT 0 AS ReactionTypeUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    UPDATE Reactions SET reactionType = @ReactionType WHERE reactionId = @ReactionId;
+    UPDATE [Reactions] SET reactionType = @ReactionType WHERE reactionId = @ReactionId;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReactionTypeUpdated;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
 -- 3. Procedure to update all columns
 CREATE OR ALTER PROCEDURE RP_UpdateReaction
 @ReactionId UNIQUEIDENTIFIER,
-@ReactionType INT
+@ReactionType INT,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
-        RAISERROR ('Failed to update reaction.', 16, 1);
-        SELECT 0 AS ReactionUpdated;
+        SET @Result = 0;
         RETURN;
     END
 
-    EXEC RP_UpdateReactionType @ReactionId, @ReactionType;
+    DECLARE @Temp INT;
+    
+    EXEC RP_UpdateReactionType @ReactionId, @ReactionType, @Result = @Temp OUTPUT;
+    SET @Result += @Temp;
 
-    DECLARE @RowsAffected INT = @@ROWCOUNT;
-    SELECT @RowsAffected AS ReactionUpdated;
 END;
 GO
 
 -- 4. Procedure to delete a reaction
 CREATE OR ALTER PROCEDURE RP_DeleteReaction
-@ReactionId UNIQUEIDENTIFIER
+@ReactionId UNIQUEIDENTIFIER,
+@Result INT OUTPUT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0
     BEGIN
-        RAISERROR ('Failed to delete reaction.', 16, 1);
-        SELECT 0 AS ReactionDeleted;
+        SET @Result = 0;
         RETURN;
     END
 
-    DELETE FROM Reactions WHERE reactionId = @ReactionId;
+    DELETE FROM [Reactions] WHERE reactionId = @ReactionId;
 
     IF DBO.RF_ReactionIdExists(@ReactionId) = 1
     BEGIN
-        RAISERROR ('Failed to delete reaction.', 16, 1);
-        SELECT 0 AS ReactionDeleted;
+        SET @Result = 0;
         RETURN;
     END
     
-    SELECT 1 AS ReactionDeleted;
+    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1656,6 +1756,8 @@ CREATE OR ALTER PROCEDURE RP_GetReaction
 @ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT * FROM DBO.RF_GetReaction(@ReactionId);
 END;
 GO
@@ -1665,6 +1767,8 @@ CREATE OR ALTER PROCEDURE RP_GetReactionType
 @ReactionId UNIQUEIDENTIFIER
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     SELECT DBO.RF_GetReactionType(@ReactionId) AS ReactionType;
 END;
 GO

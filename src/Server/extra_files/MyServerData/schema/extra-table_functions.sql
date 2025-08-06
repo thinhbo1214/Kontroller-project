@@ -109,7 +109,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM User_Diary 
+                SELECT 1 FROM [User_Diary] 
                 WHERE userId = @UserId AND diaryId = @DiaryId
             ) THEN 1 ELSE 0 
         END
@@ -131,7 +131,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM User_List 
+                SELECT 1 FROM [User_List] 
                 WHERE userId = @UserId AND listId = @ListId
             ) THEN 1 ELSE 0 
         END
@@ -151,7 +151,7 @@ BEGIN
             RETURN 0;
 
     RETURN (SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM User_User
+                    SELECT 1 FROM [User_User]
                     WHERE userFollower = @UserFollower AND userFollowing = @UserFollowing
                 ) THEN 1 ELSE 0 END);
 END;
@@ -171,7 +171,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM User_Activity
+                SELECT 1 FROM [User_Activity]
                 WHERE userId = @UserId AND activityId = @ActivityId
             ) THEN 1 ELSE 0 
         END
@@ -193,7 +193,7 @@ BEGIN
     RETURN (
         SELECT CASE
             WHEN EXISTS (
-                SELECT 1 FROM Review_User 
+                SELECT 1 FROM [Review_User] 
                 WHERE author = @Author AND reviewId = @ReviewId
             ) THEN 1 ELSE 0
         END
@@ -215,7 +215,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Review_Rate
+                SELECT 1 FROM [Review_Rate]
                 WHERE rateId = @RateId AND reviewId = @ReviewId
             ) THEN 1 ELSE 0 
         END
@@ -237,7 +237,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Review_Reaction
+                SELECT 1 FROM [Review_Reaction]
                 WHERE reactionId = @ReactionId AND reviewId = @ReviewId
             ) THEN 1 ELSE 0
         END
@@ -259,7 +259,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Game_Review 
+                SELECT 1 FROM [Game_Review] 
                 WHERE gameId = @GameId AND reviewId = @ReviewId
             ) THEN 1 ELSE 0 
         END
@@ -281,7 +281,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Reaction_User 
+                SELECT 1 FROM [Reaction_User] 
                 WHERE reactionId = @ReactionId AND author = @Author
             ) THEN 1 ELSE 0 
         END
@@ -303,7 +303,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Rate_User 
+                SELECT 1 FROM [Rate_User] 
                 WHERE rateId = @RateId AND rater = @Rater
             ) THEN 1 ELSE 0 
         END
@@ -325,7 +325,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Rate_Game 
+                SELECT 1 FROM [Rate_Game] 
                 WHERE rateId = @RateId AND targetGame = @TargetGame
             ) THEN 1 ELSE 0 
         END
@@ -347,7 +347,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM List_ListItem 
+                SELECT 1 FROM [List_ListItem] 
                 WHERE listId = @ListId AND listItemId = @ListItemId
             ) THEN 1 ELSE 0 
         END
@@ -369,7 +369,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM ListItem_Game 
+                SELECT 1 FROM [ListItem_Game] 
                 WHERE listItemId = @ListItemId AND targetGame = @TargetGame
             ) THEN 1 ELSE 0 
         END
@@ -391,7 +391,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Comment_User 
+                SELECT 1 FROM [Comment_User] 
                 WHERE commentId = @CommentId AND author = @Author
             ) THEN 1 ELSE 0 
         END
@@ -413,7 +413,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Comment_Reaction 
+                SELECT 1 FROM [Comment_Reaction] 
                 WHERE commentId = @CommentId AND reactionId = @ReactionId
             ) THEN 1 ELSE 0 
         END
@@ -435,7 +435,7 @@ BEGIN
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM Comment_Review 
+                SELECT 1 FROM [Comment_Review] 
                 WHERE commentId = @CommentId AND reviewId = @ReviewId
             ) THEN 1 ELSE 0 
         END
