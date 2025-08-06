@@ -25,6 +25,7 @@ BEGIN
     /* Insert game-service pair */
     INSERT INTO [Game_Service] (gameId, serviceName)
     VALUES (@GameId, @ServiceName);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 0
@@ -33,7 +34,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -63,6 +63,7 @@ BEGIN
 
     /* Delete game-service pair */
     DELETE FROM [Game_Service] WHERE gameId = @GameId AND serviceName = @ServiceName;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 1
@@ -71,7 +72,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -150,6 +150,7 @@ BEGIN
     /* Insert user-diary pair */
     INSERT INTO [User_Diary] (userId, diaryId)
     VALUES (@UserId, @DiaryId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 0
@@ -158,7 +159,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -188,6 +188,7 @@ BEGIN
 
     /* Delete user-diary pair */
     DELETE FROM [User_Diary] WHERE userId = @UserId AND diaryId = @DiaryId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.UDF_UserDiaryExists(@UserId, @DiaryId) = 1
@@ -196,7 +197,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -293,6 +293,7 @@ BEGIN
     /* Insert user-list pair */
     INSERT INTO [User_List] (userId, listId)
     VALUES (@UserId, @ListId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 0
@@ -301,7 +302,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -331,6 +331,7 @@ BEGIN
 
     /* Delete user-list pair */
     DELETE FROM [User_List] WHERE userId = @UserId AND listId = @ListId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.ULF_UserListExists(@UserId, @ListId) = 1
@@ -339,7 +340,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -437,6 +437,7 @@ BEGIN
     /* Insert follower-following pair */
     INSERT INTO [User_User] (userFollower, userFollowing)
     VALUES (@UserFollower, @UserFollowing);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 0
@@ -445,7 +446,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -476,6 +476,7 @@ BEGIN
     /* Delete follower-following pair */
     DELETE FROM [User_User]
     WHERE userFollower = @UserFollower AND userFollowing = @UserFollowing;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.UUF_UserUserExists(@UserFollower, @UserFollowing) = 1
@@ -484,7 +485,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -569,6 +569,7 @@ BEGIN
     /* Insert user-activity pair */
     INSERT INTO [User_Activity] (userId, activityId)
     VALUES (@UserId, @ActivityId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 0
@@ -577,7 +578,6 @@ BEGIN
         RETURN;
     END;
             
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -608,6 +608,7 @@ BEGIN
     /* Delete user-activity pair */
     DELETE FROM [User_Activity]
     WHERE userId = @UserId AND activityId = @ActivityId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.UAF_UserActivityExists(@UserId, @ActivityId) = 1
@@ -616,7 +617,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -715,6 +715,7 @@ BEGIN
     /* Insert review-author pair */
     INSERT INTO [Review_User] (author, reviewId)
     VALUES (@Author, @ReviewId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 0
@@ -723,7 +724,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -754,6 +754,7 @@ BEGIN
     /* Delete review-author pair */
     DELETE FROM [Review_User]
     WHERE author = @Author AND reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 1
@@ -762,7 +763,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -863,6 +863,7 @@ BEGIN
     /* Insert rate-review pair */
     INSERT INTO [Review_Rate] (rateId, reviewId)
     VALUES (@RateId, @ReviewId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 0
@@ -871,7 +872,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -901,6 +901,7 @@ BEGIN
 
     /* Delete rate-review pair */
     DELETE FROM [Review_Rate] WHERE rateId = @RateId AND reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.RRF_ReviewRateExists(@RateId, @ReviewId) = 1
@@ -909,7 +910,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1006,6 +1006,7 @@ BEGIN
     /* Insert reaction-review pair */
     INSERT INTO [Review_Reaction] (reactionId, reviewId)
     VALUES (@ReactionId, @ReviewId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 0
@@ -1014,7 +1015,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1045,6 +1045,7 @@ BEGIN
     /* Delete reaction-review pair */
     DELETE FROM [Review_Reaction]
     WHERE reactionId = @ReactionId AND reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.RRF_ReviewReactionExists(@ReactionId, @ReviewId) = 1
@@ -1053,7 +1054,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1152,6 +1152,7 @@ BEGIN
     /* Insert game-review pair */
     INSERT INTO [Game_Review] (gameId, reviewId)
     VALUES (@GameId, @ReviewId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 0
@@ -1160,7 +1161,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1190,6 +1190,7 @@ BEGIN
 
     /* Delete game-review pair */
     DELETE FROM [Game_Review] WHERE gameId = @GameId AND reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
@@ -1198,7 +1199,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1295,6 +1295,7 @@ BEGIN
     /* Insert reaction-author pair */
     INSERT INTO [Reaction_User] (reactionId, author)
     VALUES (@ReactionId, @Author);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 0
@@ -1303,7 +1304,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1333,6 +1333,7 @@ BEGIN
 
     /* Delete reaction-author pair */
     DELETE FROM [Reaction_User] WHERE reactionId = @ReactionId AND author = @Author;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.RUF_ReactionUserExists(@ReactionId, @Author) = 1
@@ -1341,7 +1342,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1438,6 +1438,7 @@ BEGIN
     /* Insert rate-rater pair */
     INSERT INTO [Rate_User] (rateId, rater)
     VALUES (@RateId, @Rater);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.RUF_RateUserExists(@RateId, @Rater) = 0
@@ -1446,7 +1447,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1581,6 +1581,7 @@ BEGIN
     /* Insert rate-game pair */
     INSERT INTO [Rate_Game] (rateId, targetGame)
     VALUES (@RateId, @TargetGame);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 0
@@ -1589,7 +1590,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1619,6 +1619,7 @@ BEGIN
 
     /* Delete rate-game pair */
     DELETE FROM [Rate_Game] WHERE rateId = @RateId AND targetGame = @TargetGame;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.RGF_RateGameExists(@RateId, @TargetGame) = 1
@@ -1627,7 +1628,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1724,6 +1724,7 @@ BEGIN
     /* Insert list-list item pair */
     INSERT INTO [List_ListItem] (listId, listItemId)
     VALUES (@ListId, @ListItemId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
@@ -1732,7 +1733,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1762,6 +1762,7 @@ BEGIN
 
     /* Delete list-list item pair */
     DELETE FROM [List_ListItem] WHERE listId = @ListId AND listItemId = @ListItemId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
@@ -1770,7 +1771,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1867,6 +1867,7 @@ BEGIN
     /* Insert list item-game pair */
     INSERT INTO [ListItem_Game] (listItemId, targetGame)
     VALUES (@ListItemId, @TargetGame);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
@@ -1875,7 +1876,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1905,6 +1905,7 @@ BEGIN
 
     /* Delete list item-game pair */
     DELETE FROM [ListItem_Game] WHERE listItemId = @ListItemId AND targetGame = @TargetGame;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
@@ -1913,7 +1914,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2010,6 +2010,7 @@ BEGIN
     /* Insert comment-author pair */
     INSERT INTO [Comment_User] (commentId, author)
     VALUES (@CommentId, @Author);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 0
@@ -2018,7 +2019,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2048,6 +2048,7 @@ BEGIN
 
     /* Delete comment-author pair */
     DELETE FROM [Comment_User] WHERE commentId = @CommentId AND author = @Author;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
@@ -2056,7 +2057,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2153,6 +2153,7 @@ BEGIN
     /* Insert comment-reaction pair */
     INSERT INTO [Comment_Reaction] (commentId, reactionId)
     VALUES (@CommentId, @ReactionId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 0
@@ -2161,7 +2162,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2191,6 +2191,7 @@ BEGIN
 
     /* Delete comment-reaction pair */
     DELETE FROM [Comment_Reaction] WHERE commentId = @CommentId AND reactionId = @ReactionId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.CRF_CommentReactionExists(@CommentId, @ReactionId) = 1
@@ -2199,7 +2200,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2296,6 +2296,7 @@ BEGIN
     /* Insert comment-review pair */
     INSERT INTO [Comment_Review] (commentId, reviewId)
     VALUES (@CommentId, @ReviewId);
+    SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 0
@@ -2304,7 +2305,6 @@ BEGIN
         RETURN;
     END;
 
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2334,6 +2334,7 @@ BEGIN
 
     /* Delete comment-review pair */
     DELETE FROM [Comment_Review] WHERE commentId = @CommentId AND reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
@@ -2342,7 +2343,6 @@ BEGIN
         RETURN;
     END;
     
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 

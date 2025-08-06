@@ -351,6 +351,9 @@ BEGIN
 
     /* Delete user */
     DELETE FROM [Users] WHERE UserId = @UserId;
+
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
     
     /* Verify deletion success */
     IF DBO.UF_UserIdExists(@UserId) = 1
@@ -358,9 +361,6 @@ BEGIN
         SET @Result = 0;
         RETURN;
     END;
-
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -982,6 +982,9 @@ BEGIN
     /* Delete game */
     DELETE FROM [Games] WHERE gameId = @GameId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.GF_GameIdExists(@GameId) = 1
     BEGIN
@@ -989,8 +992,6 @@ BEGIN
         RETURN;
     END;
     
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -1296,6 +1297,9 @@ BEGIN
     /* Delete review */
     DELETE FROM [Reviews] WHERE reviewId = @ReviewId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 1
     BEGIN
@@ -1303,8 +1307,7 @@ BEGIN
         RETURN;
     END;
 
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
+
 END;
 GO
 
@@ -1482,6 +1485,9 @@ BEGIN
     /* Delete comment */
     DELETE FROM [Comments] WHERE commentId = @CommentId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.CF_CommentIdExists(@CommentId) = 1
     BEGIN
@@ -1489,8 +1495,7 @@ BEGIN
         RETURN;
     END;
 
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
+
 END;
 GO
 
@@ -1872,6 +1877,9 @@ BEGIN
     /* Delete list */
     DELETE FROM [Lists] WHERE listId = @ListId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.LF_ListIdExists(@ListId) = 1
     BEGIN
@@ -1879,8 +1887,6 @@ BEGIN
         RETURN;
     END;
 
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2092,6 +2098,9 @@ BEGIN
     /* Delete list item */
     DELETE FROM [List_items] WHERE listItemId = @ListItemId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.LIF_ListItemIdExists(@ListItemId) = 1
     BEGIN
@@ -2099,8 +2108,6 @@ BEGIN
         RETURN;
     END
 
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2276,6 +2283,9 @@ BEGIN
     DELETE FROM [Activities]
     WHERE activityId = @ActivityId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.AF_ActivityIdExists(@ActivityId) = 1
     BEGIN
@@ -2283,8 +2293,6 @@ BEGIN
         RETURN;
     END
 
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2466,6 +2474,9 @@ BEGIN
     /* Delete diary entry */
     DELETE FROM [Diaries] WHERE diaryId = @DiaryId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.DF_DiaryIdExists(@DiaryId) = 1
     BEGIN
@@ -2473,8 +2484,6 @@ BEGIN
         RETURN;
     END
 
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
@@ -2648,6 +2657,9 @@ BEGIN
     /* Delete reaction */
     DELETE FROM [Reactions] WHERE reactionId = @ReactionId;
 
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+
     /* Verify deletion success */
     IF DBO.RF_ReactionIdExists(@ReactionId) = 1
     BEGIN
@@ -2655,8 +2667,6 @@ BEGIN
         RETURN;
     END
     
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
 END;
 GO
 
