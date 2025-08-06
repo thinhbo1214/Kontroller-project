@@ -1,6 +1,6 @@
 -- Function helpers
 -- 1. Check URL legality
-CREATE OR ALTER FUNCTION F_IsUrlLegal (
+CREATE OR ALTER FUNCTION HF_IsUrlLegal (
     @Url VARCHAR(255)
 )
 RETURNS BIT
@@ -229,13 +229,7 @@ CREATE OR ALTER FUNCTION UF_UsernameExists (
 RETURNS BIT
 AS
 BEGIN
-    DECLARE @Exists BIT;
-
-    SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM [Users]
-    WHERE username = @Username;
-
-    RETURN @Exists;
+    RETURN CASE WHEN EXISTS (SELECT 1 FROM [Users] WHERE username = @Username) THEN 1 ELSE 0 END;
 END;
 GO
 
@@ -1042,14 +1036,13 @@ CREATE OR ALTER FUNCTION LIF_ListItemIdExists (
 RETURNS BIT
 AS
 BEGIN
-    IF @ListItemId IS NULL RETURN 0;
-
-    DECLARE @Exists BIT;
-    SELECT @Exists = CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM [List_items]
-    WHERE listItemId = @ListItemId;
-
-    RETURN @Exists;
+    RETURN CASE 
+               WHEN EXISTS (SELECT 1 
+                            FROM [List_items] 
+                            WHERE listItemId = @ListItemId) 
+               THEN 1 
+               ELSE 0 
+           END;
 END;
 GO
 

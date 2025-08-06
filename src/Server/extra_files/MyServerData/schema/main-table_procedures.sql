@@ -1,5 +1,5 @@
 ﻿-- #Procedure helper
-CREATE OR ALTER PROCEDURE SP_GenerateStrongPassword
+CREATE OR ALTER PROCEDURE HP_GenerateStrongPassword
     @Length INT = 12,
     @Password VARCHAR(100) OUTPUT
 AS
