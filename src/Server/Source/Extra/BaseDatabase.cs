@@ -44,6 +44,8 @@ namespace Server.Source.Database
 
             var list = ExecuteQuery<T, IdParams>(sqlPath, param);
 
+            //ObjectHelper.LogObjectProperties(list.FirstOrDefault());
+
             return list.FirstOrDefault();
         }
 
@@ -56,8 +58,8 @@ namespace Server.Source.Database
         {
             var sqlPath = $"{TableName}/delete_{TableName.ToLower()}";
 
-            var result = ExecuteQuery<T, DeleteBaseParams>(sqlPath, data);
-
+            var result = ExecuteScalar<DeleteBaseParams>(sqlPath, data);
+            
             return DatabaseHelper.GetScalarValue<int>(result);
         }
 
@@ -76,6 +78,7 @@ namespace Server.Source.Database
             db.OpenConnection();
 
             var param = DatabaseHelper.ToDictionary(model);
+            //ObjectHelper.LogObjectProperties(param);
             var result = db.ExecuteScalar(sqlPath, param);
 
             db.CloseConnection();
@@ -93,17 +96,13 @@ namespace Server.Source.Database
         /// <returns>Danh sách bản ghi kết quả hoặc danh sách rỗng nếu sai kiểu.</returns>
         protected List<T> ExecuteQuery<T, TParam>(string sqlPath, object data) where T : new()
         {
-            Simulation.GetModel<LogManager>().Log(sqlPath);
             if (data is not TParam model)
                 return new List<T>();
-
             var db = Simulation.GetModel<DatabaseManager>();
             db.OpenConnection();
-
             var param = DatabaseHelper.ToDictionary(model);
             var dt = db.ExecuteQuery(sqlPath, param);
             db.CloseConnection();
-
             return DatabaseHelper.MapToList<T>(dt);
         }
     }

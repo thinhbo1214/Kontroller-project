@@ -9,7 +9,7 @@
         /// Unique identifier for the user.
         /// </summary>
         /// <example>'001'</example>
-        public Guid? UserId { get; set; }
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// Account credentials used for authentication (e.g., login form).
@@ -37,10 +37,10 @@
 
         public User()
         {
-            UserId = null; // Có thể gán null
-            Username = null;
-            Email = null;
-            Avatar = null;
+            UserId = Guid.Empty; // Có thể gán null
+            Username = "";
+            Email = "";
+            Avatar = "";
             IsLoggedIn = false;
 
         }

@@ -54,12 +54,14 @@ namespace Server.Source.Helper
         /// <summary>
         /// Xóa dữ liệu từ database theo id và kiểu dữ liệu
         /// </summary>
-        public static void DeleteData<T>(object data)
+        public static int DeleteData<T>(object data)
         {
             if (databaseMap.TryGetValue(typeof(T), out var database))
             {
-                database.Delete(data);
+                return database.Delete(data);
             }
+
+            return 0;
         }
 
         /// <summary>

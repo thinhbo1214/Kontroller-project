@@ -28,12 +28,13 @@ namespace Server.Source.Handler
         /// </summary>
         public APIUserHandler()
         {
-            GetRoutes["/api/user"] = GetHandle;
-            PostRoutes["/api/user"] = PostHandle;
+            GetRoutes[Type] = GetHandle;
+            PostRoutes[Type] = PostHandle;
             PutRoutes["/api/user/email"] = PutUserEmail;
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
             PutRoutes["/api/user/username"] = PutUserUsername;
             PutRoutes["/api/user/password"] = PutUserPassword;
+            DeleteRoutes[Type] = DeleteHandle;
         }
 
         /// <summary>
@@ -184,18 +185,20 @@ namespace Server.Source.Handler
             var sessionManager = Simulation.GetModel<SessionManager>();
             if (!sessionManager.Authorization(request, out string userId, session))
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Chưa đăng nhập, không thể xoá tài khoản!");
                 return;
             }
 
             var data = JsonHelper.Deserialize<DeleteAccountParams>(request.Body);
-            if (AccountDatabase.Instance.Delete(data) == 1)
+            data.UserId = userId;
+
+            if (DatabaseHelper.DeleteData<Account>(data) == 1)
             {
-                OkHandle(session);
+                OkHandle(session, "Đã xoá tài khoản thành công!");
                 return;
             }
 
-            ErrorHandle(session);
+            ErrorHandle(session, "Xoá tài khoản không thành công!");
         }
     }
 }
