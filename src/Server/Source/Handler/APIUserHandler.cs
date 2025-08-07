@@ -93,22 +93,6 @@ namespace Server.Source.Handler
             ErrorHandle(session);
 
         }
-
-        /// <summary>
-        /// Xử lý PUT để cập nhật thông tin người dùng qua các route được đăng ký.
-        /// </summary>
-        public override void PutHandle(HttpRequest request, HttpsSession session)
-        {
-            if (PutRoutes.TryGetValue(request.Url, out var handler))
-            {
-                handler.Invoke(request, session);
-            }
-            else
-            {
-                ErrorHandle(session);
-            }
-        }
-
         /// <summary>
         /// Hàm tiện ích dùng chung cho các phương thức PUT để xác thực và gán thêm trường UserId.
         /// </summary>

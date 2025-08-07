@@ -1,4 +1,11 @@
-﻿/* 
+﻿/*
+    Database: KontrollerDB
+    Description: Database for a game management system, storing information about users, games, reviews, comments, ratings, lists, activities, diaries, and their relationships.
+*/
+USE KontrollerDB;
+GO
+
+/* 
     Procedure: HP_GenerateStrongPassword
     Description: Generates a strong random password with specified length, ensuring at least one uppercase, lowercase, digit, and special character.
     Parameters:
@@ -1553,154 +1560,6 @@ BEGIN
 
     /* Return comment creation date */
     SELECT DBO.CF_GetCreatedAt(@CommentId) AS CreatedAt;
-END;
-GO
-
-/* 
-    Procedure: RP_CreateRate
-    Description: Creates a new rate with specified value.
-    Parameters:
-        @RateValue (INT): Rate value.
-        @RateId (UNIQUEIDENTIFIER OUTPUT): Generated ID for the new rate.
-    Returns:
-        @RateId: The ID of the created rate or NULL if creation fails.
-*/
-CREATE OR ALTER PROCEDURE RP_CreateRate
-    @RateValue INT,
-    @RateId UNIQUEIDENTIFIER OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Validate rate value */
-    IF DBO.RF_IsRateLegal(@RateValue) = 0
-    BEGIN
-        SET @RateId = NULL;
-        RETURN;
-    END;
-
-    /* Generate new rate ID */
-    SET @RateId = NEWID();
-
-    /* Insert rate data */
-    INSERT INTO [Rates] (rateId, rateValue)
-    VALUES (@RateId, @RateValue);
-
-    /* Verify insertion success */
-    IF DBO.RF_RateIdExists(@RateId) = 0
-    BEGIN
-        SET @RateId = NULL;
-        RETURN;
-    END;
-END;
-GO
-
-/* 
-    Procedure: RP_UpdateRateValue
-    Description: Updates the value of an existing rate.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to update.
-        @RateValue (INT): New rate value.
-        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
-    Returns:
-        @Result: Indicates success (1) or failure (0).
-*/
-CREATE OR ALTER PROCEDURE RP_UpdateRateValue
-    @RateId UNIQUEIDENTIFIER,
-    @RateValue INT,
-    @Result INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Validate new rate value */
-    IF DBO.RF_IsRateLegal(@RateValue) = 0
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Update rate value */
-    UPDATE [Rates] SET rateValue = @RateValue WHERE rateId = @RateId;
-
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
-END;
-GO
-
-/* 
-    Procedure: RP_DeleteRate
-    Description: Deletes a rate by its ID.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to delete.
-        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
-    Returns:
-        @Result: Indicates success (1) or failure (0).
-*/
-CREATE OR ALTER PROCEDURE RP_DeleteRate
-    @RateId UNIQUEIDENTIFIER,
-    @Result INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Verify rate existence */
-    IF DBO.RF_RateIdExists(@RateId) = 0
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Delete rate */
-    DELETE FROM [Rates] WHERE rateId = @RateId;
-
-    /* Verify deletion success */
-    IF DBO.RF_RateIdExists(@RateId) = 1
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Return number of rows affected */
-    SET @Result = @@ROWCOUNT;
-END;
-GO
-
-/* 
-    Procedure: RP_GetRateDetails
-    Description: Retrieves all details for a specified rate.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to query.
-    Returns:
-        TABLE: All columns from RF_GetRate function.
-*/
-CREATE OR ALTER PROCEDURE RP_GetRateDetails
-    @RateId UNIQUEIDENTIFIER
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Return rate details */
-    SELECT * FROM DBO.RF_GetRate(@RateId);
-END;
-GO
-
-/* 
-    Procedure: RP_GetRateValue
-    Description: Retrieves the value of a specified rate.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to query.
-    Returns:
-        INT: Rate value or NULL if not found.
-*/
-CREATE OR ALTER PROCEDURE RP_GetRateValue
-    @RateId UNIQUEIDENTIFIER
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Return rate value */
-    SELECT DBO.RF_GetValue(@RateId) AS RateValue;
 END;
 GO
 
