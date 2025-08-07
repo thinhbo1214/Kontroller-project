@@ -53,12 +53,12 @@ GO
 CREATE TABLE [Games] (
     gameId UNIQUEIDENTIFIER DEFAULT NEWID(),
     title NVARCHAR(100) NOT NULL,
-    descriptions NVARCHAR(MAX) NOT NULL,
+    descriptions NVARCHAR(4000) NOT NULL,
     genre NVARCHAR(100) NOT NULL,
     avgRating DECIMAL(4,2) DEFAULT 0.00,
     poster VARCHAR(255),
     backdrop VARCHAR(255),
-    details NVARCHAR(MAX) NOT NULL,
+    details NVARCHAR(4000) NOT NULL,
     PRIMARY KEY (gameId)
 );
 GO
@@ -115,28 +115,12 @@ GO
 */
 CREATE TABLE [Comments] (
     commentId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    content NVARCHAR(MAX) NOT NULL,
+    content NVARCHAR(4000) NOT NULL,
     created_at DATETIME DEFAULT GETDATE(),
     PRIMARY KEY (commentId)
 );
 GO
 
-/*
-    Table: Rates
-    Description: Stores rating scores for games or reviews.
-    Columns:
-        - rateId: Unique identifier for the rate.
-        - rateValue: Rating value (1-10).
-    Constraints:
-        - PRIMARY KEY: rateId
-        - CHECK: rateValue between 1 and 10
-*/
-CREATE TABLE [Rates] (
-    rateId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    rateValue INT NOT NULL,
-    PRIMARY KEY (rateId)
-);
-GO
 
 /*
     Table: Lists
@@ -189,7 +173,7 @@ GO
 */
 CREATE TABLE [Activities] (
     activityId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    content NVARCHAR(MAX) NOT NULL,
+    content NVARCHAR(4000) NOT NULL,
     dateDo DATETIME DEFAULT GETDATE(),
     PRIMARY KEY (activityId)
 );
@@ -327,25 +311,6 @@ CREATE TABLE [Review_User] (
 GO
 
 /*
-    Table: Review_Rate
-    Description: Links reviews to their ratings.
-    Columns:
-        - rateId: Foreign key referencing Rates.
-        - reviewId: Foreign key referencing Reviews.
-    Constraints:
-        - PRIMARY KEY: (rateId, reviewId)
-        - FOREIGN KEY: rateId, reviewId
-*/
-CREATE TABLE [Review_Rate] (
-    rateId UNIQUEIDENTIFIER NOT NULL,
-    reviewId UNIQUEIDENTIFIER NOT NULL,
-    PRIMARY KEY (rateId, reviewId),
-    FOREIGN KEY (rateId) REFERENCES Rates(rateId),
-    FOREIGN KEY (reviewId) REFERENCES Reviews(reviewId)
-);
-GO
-
-/*
     Table: Review_Reaction
     Description: Links reviews to user reactions.
     Columns:
@@ -399,44 +364,6 @@ CREATE TABLE [Reaction_User] (
     PRIMARY KEY (reactionId, author),
     FOREIGN KEY (reactionId) REFERENCES Reactions(reactionId),
     FOREIGN KEY (author) REFERENCES Users(userId)
-);
-GO
-
-/*
-    Table: Rate_User
-    Description: Links ratings to their authors.
-    Columns:
-        - rateId: Foreign key referencing Rates.
-        - rater: Foreign key referencing Users.
-    Constraints:
-        - PRIMARY KEY: (rateId, rater)
-        - FOREIGN KEY: rateId, rater
-*/
-CREATE TABLE [Rate_User] (
-    rateId UNIQUEIDENTIFIER NOT NULL,
-    rater UNIQUEIDENTIFIER NOT NULL,
-    PRIMARY KEY (rateId, rater),
-    FOREIGN KEY (rateId) REFERENCES Rates(rateId),
-    FOREIGN KEY (rater) REFERENCES Users(userId)
-);
-GO
-
-/*
-    Table: Rate_Game
-    Description: Links ratings to their target games.
-    Columns:
-        - rateId: Foreign key referencing Rates.
-        - targetGame: Foreign key referencing Games.
-    Constraints:
-        - PRIMARY KEY: (rateId, targetGame)
-        - FOREIGN KEY: rateId, targetGame
-*/
-CREATE TABLE [Rate_Game] (
-    rateId UNIQUEIDENTIFIER NOT NULL,
-    targetGame UNIQUEIDENTIFIER NOT NULL,
-    PRIMARY KEY (rateId, targetGame),
-    FOREIGN KEY (rateId) REFERENCES Rates(rateId),
-    FOREIGN KEY (targetGame) REFERENCES Games(gameId)
 );
 GO
 
@@ -535,7 +462,6 @@ CREATE TABLE [Comment_Review] (
 );
 GO
 
-
 ALTER TABLE [Users]
 ADD CONSTRAINT C_USER_EMAIL
 CHECK (email LIKE '%_@__%.__%');
@@ -559,10 +485,6 @@ CHECK (serviceName NOT LIKE '%[^a-zA-Z0-9._-]%');
 ALTER TABLE [Reviews]
 ADD CONSTRAINT C_REVIEW_RATING
 CHECK (rating BETWEEN 1 AND 10);
-
-ALTER TABLE [Rates]
-ADD CONSTRAINT C_RATE_VALUE
-CHECK (rateValue BETWEEN 1 AND 10);
 
 ALTER TABLE [Reactions]
 ADD CONSTRAINT C_REACTION_TYPE
