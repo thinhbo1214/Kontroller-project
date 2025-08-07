@@ -9,37 +9,37 @@
         /// Unique identifier for the comment.
         /// </summary>
         /// <example>'001'</example>
-        public string commentId;
+        public Guid CommentId { get; set; }
 
         /// <summary>
         /// The content of the comment.
         /// </summary>
         /// <example>'This is a comment.'</example>
-        public string content;
+        public string Content { get; set; }
 
         /// <summary>
         /// The user who created the comment.
         /// </summary>
-        public User author;
+        public Guid Author { get; set; }
 
         /// <summary>
         /// The date the comment was created, in YYYY-MM-DD format.
         /// </summary>
         /// <example>'2023-10-01'</example>
-        public string dateCreated;
+        public string DateCreated { get; set; }
 
         /// <summary>
         /// Number of reactions the comment received from other users.
         /// </summary>
-        public List<Reaction> reactions;
+        public List<Guid> Reactions { get; set; }
 
         public Comment() 
         {
-            commentId = "";
-            content = "";
-            author = new User();
-            dateCreated = "";
-            reactions = new List<Reaction>();
+            CommentId = Guid.Empty;
+            Content = "";
+            Author = Guid.Empty;
+            DateCreated = "";
+            Reactions = new List<Guid>();
         }
     }
 }

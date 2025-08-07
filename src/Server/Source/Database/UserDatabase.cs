@@ -41,7 +41,7 @@ namespace Server.Source.Database
         public virtual int ChangeEmail(object data)
         {
             var sqlPath = $"{TableName}/change_email";
-            var result = ExecuteScalar<ParamsChangeEmail>(sqlPath, data);
+            var result = ExecuteScalar<ChangeEmailParams>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }
@@ -54,7 +54,7 @@ namespace Server.Source.Database
         public virtual int ChangeAvatar(object data)
         {
             var sqlPath = $"{TableName}/change_avatar";
-            var result = ExecuteScalar<ParamsChangeAvatar>(sqlPath, data);
+            var result = ExecuteScalar<ChangeAvatarParams>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }

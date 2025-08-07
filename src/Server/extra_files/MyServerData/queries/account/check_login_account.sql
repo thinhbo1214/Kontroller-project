@@ -1,9 +1,21 @@
--- DECLARE @Username varchar(100) = 'admin1'
--- DECLARE @Password varchar(100) = '}qW9v9Aoe!X+'
+﻿--DECLARE @Username varchar(100) = 'admin1'
+--DECLARE @Password varchar(100) = 'Admin1@123'
+DECLARE @UserId UNIQUEIDENTIFIER;
 
 BEGIN TRY
-       EXEC DBO.UP_CheckLoginAccount @Username, @Password; -- Check if the account exists and return UsedId if success
+    BEGIN TRANSACTION
+
+        EXEC DBO.UP_CheckLoginAccount @Username, @Password, @UserId = @UserId OUTPUT; -- Check if the account exists and return UsedId if success
+  
+        IF @UserId IS NULL
+            RAISERROR('Đăng nhập không thành công!',16,1); 
+    COMMIT TRANSACTION
 END TRY
 BEGIN CATCH
-    SELECT NULL AS UserID;
+    IF @@TRANCOUNT > 0 
+        ROLLBACK TRANSACTION;
+
+    SET @UserId = NULL
 END CATCH
+
+SELECT @UserId;

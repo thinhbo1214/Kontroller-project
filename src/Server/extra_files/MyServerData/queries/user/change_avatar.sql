@@ -1,15 +1,22 @@
--- DECLARE @UserId UNIQUEIDENTIFIER = 'B570F1D1-B092-4A16-BD0F-F73837A5F3DF';
--- DECLARE @Avatar varchar(100) = 'https://drive.google.com/file/d/1vqINurv3bx5mZOfC4zsQyHoIwM0SC_nj/view?usp=drive_link'
+﻿--DECLARE @UserId UNIQUEIDENTIFIER = '838844B4-24CC-44B6-A990-3D01B6B5F3DD';
+--DECLARE @Avatar varchar(255) = 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png'
+DECLARE @Result INT;
 
 BEGIN TRY
     BEGIN TRANSACTION;
 
-        EXEC DBO.UP_UpdateUserAvatar @UserId, @Avatar;
+        EXEC DBO.UP_UpdateUserAvatar @UserId, @Avatar, @Result = @Result OUTPUT;
+
+        IF @Result = 0
+            RAISERROR('Cập nhật avatar không thành công!', 16, 1);
 
     COMMIT TRANSACTION;
 END TRY
 BEGIN CATCH
-    ROLLBACK TRANSACTION;
-    SELECT -1 ERROR_CODE;
+    IF @@TRANCOUNT > 0 
+        ROLLBACK TRANSACTION;
+
+    SET @Result = 0;
 END CATCH
 
+SELECT @Result;

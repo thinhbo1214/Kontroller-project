@@ -28,11 +28,13 @@ namespace Server.Source.Handler
         /// </summary>
         public APIUserHandler()
         {
-            PostRoutes["/api/user"] = PostHandle;
+            GetRoutes[Type] = GetHandle;
+            PostRoutes[Type] = PostHandle;
             PutRoutes["/api/user/email"] = PutUserEmail;
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
             PutRoutes["/api/user/username"] = PutUserUsername;
             PutRoutes["/api/user/password"] = PutUserPassword;
+            DeleteRoutes[Type] = DeleteHandle;
         }
 
         /// <summary>
@@ -41,7 +43,6 @@ namespace Server.Source.Handler
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
-
             if (string.IsNullOrEmpty(userId))
             {
                 string token = TokenHelper.GetToken(request);
@@ -50,10 +51,9 @@ namespace Server.Source.Handler
                     userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
                 }
             }
-
             if (string.IsNullOrEmpty(userId))
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Không tìm thấy thông tin user!");
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Server.Source.Handler
         }
 
         /// <summary>
-        /// Xử lý POST cho việc đăng nhập hoặc đăng ký tài khoản người dùng.
+        /// Xử lý POST cho việc đăng ký tài khoản người dùng.
         /// </summary>
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
@@ -93,22 +93,6 @@ namespace Server.Source.Handler
             ErrorHandle(session);
 
         }
-
-        /// <summary>
-        /// Xử lý PUT để cập nhật thông tin người dùng qua các route được đăng ký.
-        /// </summary>
-        public override void PutHandle(HttpRequest request, HttpsSession session)
-        {
-            if (PutRoutes.TryGetValue(request.Url, out var handler))
-            {
-                handler.Invoke(request, session);
-            }
-            else
-            {
-                ErrorHandle(session);
-            }
-        }
-
         /// <summary>
         /// Hàm tiện ích dùng chung cho các phương thức PUT để xác thực và gán thêm trường UserId.
         /// </summary>
@@ -120,6 +104,7 @@ namespace Server.Source.Handler
                 return default;
             }
             // Deserialize trực tiếp trước (để giữ nguyên casing từ JSON)
+            Simulation.GetModel<LogManager>().Log(request.Body);
             var data = JsonHelper.Deserialize<T>(request.Body);
             if (data == null)
                 return default;
@@ -131,49 +116,49 @@ namespace Server.Source.Handler
         /// <summary>Cập nhật email người dùng.</summary>
         private void PutUserEmail(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangeEmailParams>(request, session);
             if (data == null || UserDatabase.Instance.ChangeEmail(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi email không thành công");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi email thành công");
         }
 
         /// <summary>Cập nhật avatar người dùng.</summary>
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangeAvatarParams>(request, session);
             if (data == null || UserDatabase.Instance.ChangeAvatar(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi avatar không thành công");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi avatar thành công");
         }
 
         /// <summary>Cập nhật username người dùng.</summary>
         private void PutUserUsername(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangeUsernameParams>(request, session);
             if (data == null || AccountDatabase.Instance.ChangeUsername(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi username không thành công!");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi username thành công");
         }
 
         /// <summary>Cập nhật password người dùng.</summary>
         private void PutUserPassword(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangePasswordParams>(request, session);
             if (data == null || AccountDatabase.Instance.ChangePassword(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi mật khẩu không thành công!");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi mật khẩu thành công!");
         }
 
         /// <summary>
@@ -184,18 +169,20 @@ namespace Server.Source.Handler
             var sessionManager = Simulation.GetModel<SessionManager>();
             if (!sessionManager.Authorization(request, out string userId, session))
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Chưa đăng nhập, không thể xoá tài khoản!");
                 return;
             }
 
-            var data = JsonHelper.Deserialize<DeleteAccountRequest>(request.Body);
-            if (AccountDatabase.Instance.Delete(data) == 1)
+            var data = JsonHelper.Deserialize<DeleteAccountParams>(request.Body);
+            data.UserId = userId;
+
+            if (DatabaseHelper.DeleteData<Account>(data) == 1)
             {
-                OkHandle(session);
+                OkHandle(session, "Đã xoá tài khoản thành công!");
                 return;
             }
 
-            ErrorHandle(session);
+            ErrorHandle(session, "Xoá tài khoản không thành công!");
         }
     }
 }

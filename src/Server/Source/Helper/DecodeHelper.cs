@@ -5,6 +5,21 @@
     /// </summary>
     public static class DecodeHelper
     {
+
+        /// <summary>
+        /// Lấy đường dẫn gốc từ URL (loại bỏ query string).
+        /// </summary>
+        /// <param name="url">Chuỗi URL có thể chứa query string.</param>
+        /// <returns>Đường dẫn không có query string.</returns>
+        public static string GetBasePath(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
+
+            var parts = url.Split('?', 2);
+            return parts[0];
+        }
+
         /// <summary>
         /// Phân tích URL và trả về các cặp tham số truy vấn dưới dạng Dictionary.
         /// </summary>

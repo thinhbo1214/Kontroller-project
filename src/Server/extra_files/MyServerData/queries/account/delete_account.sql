@@ -1,0 +1,22 @@
+﻿--DECLARE @UserId UNIQUEIDENTIFIER = 'E4C7B7E5-0173-459B-AD6B-63FA5855E0CA';
+--DECLARE @Password VARCHAR(100) = 'Admin1@123';
+DECLARE @Result INT;
+BEGIN TRY
+    BEGIN TRANSACTION;
+
+        EXEC DBO.UP_DeleteUser @UserId, @Password, @Result = @Result OUTPUT;
+
+        IF @Result < 1
+            RAISERROR('Xoá tài khoản không thành công!',16,1); 
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 
+        ROLLBACK TRANSACTION;
+
+    SET @Result = 0;
+END CATCH
+
+SELECT @Result;
+

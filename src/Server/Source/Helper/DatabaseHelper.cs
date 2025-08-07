@@ -54,21 +54,32 @@ namespace Server.Source.Helper
         /// <summary>
         /// Xóa dữ liệu từ database theo id và kiểu dữ liệu
         /// </summary>
-        public static void DeleteData<T>(string id)
+        public static int DeleteData<T>(object data)
         {
             if (databaseMap.TryGetValue(typeof(T), out var database))
             {
-                database.Delete(id);
+                return database.Delete(data);
             }
+
+            return 0;
         }
 
         /// <summary>
         /// Chuyển object thành Dictionary với tên cột và giá trị (hỗ trợ prefix @ cho tên)
         /// </summary>
+        //public static Dictionary<string, object> ToDictionary<T>(T obj)
+        //{
+        //    var dict = new Dictionary<string, object>();
+        //    foreach (var prop in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        //    {
+        //        dict[prop.Name.StartsWith("@") ? prop.Name : "@" + prop.Name] = prop.GetValue(obj) ?? DBNull.Value;
+        //    }
+        //    return dict;
+        //}
         public static Dictionary<string, object> ToDictionary<T>(T obj)
         {
             var dict = new Dictionary<string, object>();
-            foreach (var prop in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var prop in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 dict[prop.Name.StartsWith("@") ? prop.Name : "@" + prop.Name] = prop.GetValue(obj) ?? DBNull.Value;
             }

@@ -9,25 +9,25 @@
         /// Unique identifier for the review.
         /// </summary>
         /// <example>'001'</example>
-        public string reviewId;
+        public Guid ReviewId { get; set; }
 
         /// <summary>
         /// The main body of the review written by the user.
         /// </summary>
         /// <example>'This is a review.'</example>
-        public string content;
+        public string Content { get; set; }
 
         /// <summary>
         /// The date the review was created, in YYYY-MM-DD format.
         /// </summary>
         /// <example>'2023-10-01'</example>
         /// 
-        public string dateCreated;
+        public string DateCreated { get; set; }
         public Review()
         {
-            reviewId = "";
-            content = "";
-            dateCreated = "";
+            ReviewId = Guid.Empty;
+            Content = "";
+            DateCreated = "";
         }
     }
 }

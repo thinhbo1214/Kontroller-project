@@ -2,13 +2,13 @@
 {
     public class BaseResponse
     {
-        public bool success;
-        public string message;
+        public bool Success { get; set; }
+        public string Message { get; set; }
 
         public BaseResponse()
         {
-            success = true;
-            message = "";
+            Success = true;
+            Message = "";
 
         }
     }

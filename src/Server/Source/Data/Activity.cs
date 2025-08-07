@@ -9,25 +9,25 @@
         /// Unique identifier for the activity.
         /// </summary>
         /// <example>'001'</example>
-        public string activityId;
+        public Guid ActivityId { get; set; }
 
         /// <summary>
         /// Description or content of the activity performed by the user.
         /// </summary>
         /// <example>'This is an activity.'</example>    
-        public string content;
+        public string Content { get; set; }
 
         /// <summary>
         /// The date the activity was performed, in YYYY-MM-DD format.
         /// </summary>
         /// <example>''2023-10-01''</example>    
-        public string dateDo;
+        public string DateDo { get; set; }
 
         public Activity()
         {
-            activityId = "";
-            content = "";
-            dateDo = "";
+            ActivityId = Guid.Empty;
+            Content = "";
+            DateDo = "";
         }
 
     }

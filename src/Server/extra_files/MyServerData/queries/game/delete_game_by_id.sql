@@ -1,1 +1,0 @@
-DELETE FROM games WHERE game_id = @GameId;

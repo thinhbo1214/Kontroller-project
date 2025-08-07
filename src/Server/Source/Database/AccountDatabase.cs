@@ -67,7 +67,7 @@ namespace Server.Source.Database
         public virtual int ChangeUsername(object data)
         {
             var sqlPath = $"{TableName}/change_username";
-            var result = ExecuteScalar<ParamsChangeUsername>(sqlPath, data);
+            var result = ExecuteScalar<ChangeUsernameParams>(sqlPath, data);
             return DatabaseHelper.GetScalarValue<int>(result);
         }
 
@@ -79,7 +79,7 @@ namespace Server.Source.Database
         public virtual int ChangePassword(object data)
         {
             var sqlPath = $"{TableName}/change_password";
-            var result = ExecuteScalar<ParamsChangePassword>(sqlPath, data);
+            var result = ExecuteScalar<ChangePasswordParams>(sqlPath, data);
             return DatabaseHelper.GetScalarValue<int>(result);
         }
 
@@ -91,7 +91,7 @@ namespace Server.Source.Database
         public virtual string ForgetPassword(object data)
         {
             var sqlPath = $"{TableName}/forget_password";
-            var result = ExecuteScalar<ForgetPasswordRequest>(sqlPath, data);
+            var result = ExecuteScalar<ForgetPasswordParams>(sqlPath, data);
             return DatabaseHelper.GetScalarValue<string>(result);
         }
     }

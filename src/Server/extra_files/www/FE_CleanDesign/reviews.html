@@ -90,7 +90,7 @@
         <div class="mb-8 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold mb-2">My Reviews</h1>
-                <p class="text-gray-400" id="reviewStats">Total: <span id="totalReviews">0</span> reviews • Average rating: <span id="avgRating">0.0</span> ★</p>
+                <p class="text-gray-400" id="reviewStats">Total: <span id="totalReviews">0</span> reviews </p>
             </div>
             <button id="addReviewBtn" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium flex items-center transition-colors">
                 <i class="fas fa-plus mr-2"></i>Add Review
@@ -292,7 +292,6 @@
         const reviewForm = document.getElementById('reviewForm');
         const noResults = document.getElementById('noResults');
         const totalReviews = document.getElementById('totalReviews');
-        const avgRating = document.getElementById('avgRating');
         const showingCount = document.getElementById('showingCount');
         const totalCount = document.getElementById('totalCount');
 
@@ -786,10 +785,7 @@
         // Update statistics
         function updateStats() {
             const total = reviews.length;
-            const average = total > 0 ? (reviews.reduce((sum, review) => sum + review.rating, 0) / total).toFixed(1) : '0.0';
-            
             totalReviews.textContent = total;
-            avgRating.textContent = average;
         }
 
         // Update filter statistics

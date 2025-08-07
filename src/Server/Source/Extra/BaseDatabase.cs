@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.VisualBasic.Logging;
+using Newtonsoft.Json.Linq;
 using Server.Source.Core;
+using Server.Source.Extra;
 using Server.Source.Helper;
 using Server.Source.Interface;
 using Server.Source.Manager;
-using Server.Source.Extra;
 
 namespace Server.Source.Database
 {
@@ -23,6 +24,13 @@ namespace Server.Source.Database
         /// </summary>
         public IDatabase GetInstance() => this;
 
+        private static readonly Dictionary<string, Func<string, IdParams>> TableIdParamFactory = new()
+        {
+            ["user"] = id => new UserIdParams(id),
+            ["review"] = id => new ReviewIdParams(id),
+            ["game"] = id => new GameIdParams(id),
+            ["reaction"] = id => new ReactionIdParams(id),
+        };
         /// <summary>
         /// Lấy bản ghi từ database theo ID.
         /// </summary>
@@ -30,10 +38,13 @@ namespace Server.Source.Database
         /// <returns>Bản ghi đầu tiên tìm được, hoặc null nếu không có.</returns>
         public virtual object Get(string id)
         {
-            ParamsId obj = new ParamsId { Id = id };
+            var param = TableIdParamFactory[TableName](id);
+
             var sqlPath = $"{TableName}/get_{TableName.ToLower()}";
 
-            var list = ExecuteQuery<T, ParamsId>(sqlPath, obj);
+            var list = ExecuteQuery<T, IdParams>(sqlPath, param);
+
+            //ObjectHelper.LogObjectProperties(list.FirstOrDefault());
 
             return list.FirstOrDefault();
         }
@@ -47,8 +58,8 @@ namespace Server.Source.Database
         {
             var sqlPath = $"{TableName}/delete_{TableName.ToLower()}";
 
-            var result = ExecuteQuery<T, DeleteRequestBase>(sqlPath, data);
-
+            var result = ExecuteScalar<DeleteBaseParams>(sqlPath, data);
+            
             return DatabaseHelper.GetScalarValue<int>(result);
         }
 
@@ -67,6 +78,7 @@ namespace Server.Source.Database
             db.OpenConnection();
 
             var param = DatabaseHelper.ToDictionary(model);
+            //ObjectHelper.LogObjectProperties(param);
             var result = db.ExecuteScalar(sqlPath, param);
 
             db.CloseConnection();
@@ -86,15 +98,11 @@ namespace Server.Source.Database
         {
             if (data is not TParam model)
                 return new List<T>();
-
             var db = Simulation.GetModel<DatabaseManager>();
             db.OpenConnection();
-
             var param = DatabaseHelper.ToDictionary(model);
             var dt = db.ExecuteQuery(sqlPath, param);
-
             db.CloseConnection();
-
             return DatabaseHelper.MapToList<T>(dt);
         }
     }

@@ -1,4 +1,4 @@
-IF EXISTS (SELECT 1 FROM games WHERE game_id = @GameId)
+F EXISTS (SELECT 1 FROM games WHERE game_id = @GameId)
 BEGIN
     -- Nếu tồn tại: Cập nhật các trường có giá trị mới
     UPDATE games

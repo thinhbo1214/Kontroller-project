@@ -3,7 +3,7 @@
     /// <summary>
     /// Lớp cơ sở cho các yêu cầu xóa, chứa UserId của người gửi yêu cầu.
     /// </summary>
-    public class DeleteRequestBase
+    public class DeleteBaseParams
     {
         public string UserId { get; set; }
     }
@@ -11,7 +11,7 @@
     /// <summary>
     /// Yêu cầu xóa tài khoản, bao gồm UserId và mật khẩu xác minh.
     /// </summary>
-    public class DeleteAccountRequest : DeleteRequestBase
+    public class DeleteAccountParams : DeleteBaseParams
     {
         public string Password { get; set; }
     }
@@ -19,7 +19,7 @@
     /// <summary>
     /// Yêu cầu xóa một mục tiêu cụ thể (ví dụ bài viết, bình luận,...), bao gồm UserId và TargetId.
     /// </summary>
-    public class DeleteTargetRequest : DeleteRequestBase
+    public class DeleteTargetParams : DeleteBaseParams
     {
         public string TargetId { get; set; }
     }
@@ -27,15 +27,48 @@
     /// <summary>
     /// Đối tượng mang theo một giá trị Id đơn giản.
     /// </summary>
-    public class ParamsId
+    public class IdParams { }
+
+    public class UserIdParams : IdParams
     {
-        public string Id { get; set; }
+        public UserIdParams(string userId)
+        {
+            UserId = userId;
+        }
+        public string UserId { get; set; }
+    }
+
+    public class ReviewIdParams : IdParams
+    {
+        public ReviewIdParams(string reviewId)
+        {
+            ReviewId = reviewId;
+        }
+        public string ReviewId { get; set; }
+    }
+
+    public class GameIdParams : IdParams
+    {
+        public GameIdParams(string gameId)
+        {
+            GameId = gameId;
+        }
+        public string GameId { get; set; }
+    }
+
+    public class ReactionIdParams : IdParams
+    {
+        public ReactionIdParams(string reactionId)
+        {
+            ReactionId = reactionId;
+        }
+        public string ReactionId { get; set; }
     }
 
     /// <summary>
     /// Yêu cầu thay đổi mật khẩu, bao gồm mật khẩu cũ và mật khẩu mới.
     /// </summary>
-    public class ParamsChangePassword
+    public class ChangePasswordParams
     {
         public string UserId { get; set; }
         public string OldPassword { get; set; }
@@ -45,46 +78,38 @@
     /// <summary>
     /// Yêu cầu thay đổi tên người dùng (username).
     /// </summary>
-    public class ParamsChangeUsername
+    public class ChangeUsernameParams
     {
         public string UserId { get; set; }
         public string Username { get; set; }
     }
 
     /// <summary>
-    /// Yêu cầu quên mật khẩu, cần xác minh UserId và Email.
+    /// Yêu cầu khôi phục mật khẩu chỉ dựa trên email.
     /// </summary>
-    public class ParamsForgetPassword
+    public class ForgetPasswordParams
     {
-        public string UserId { get; set; }
         public string Email { get; set; }
     }
 
     /// <summary>
     /// Yêu cầu thay đổi địa chỉ email.
     /// </summary>
-    public class ParamsChangeEmail
+    public class ChangeEmailParams
     {
         public string UserId { get; set; }
-        public string Email { get; set; }
+        public string NewEmail { get; set; }
     }
 
     /// <summary>
     /// Yêu cầu thay đổi ảnh đại diện (avatar).
     /// </summary>
-    public class ParamsChangeAvatar
+    public class ChangeAvatarParams
     {
         public string UserId { get; set; }
         public string Avatar { get; set; }
     }
 
-    /// <summary>
-    /// Yêu cầu khôi phục mật khẩu chỉ dựa trên email.
-    /// </summary>
-    public class ForgetPasswordRequest
-    {
-        public string Email { get; set; }
-    }
 
     /// <summary>
     /// Yêu cầu gửi email, chứa đầy đủ thông tin người gửi, người nhận và nội dung.
