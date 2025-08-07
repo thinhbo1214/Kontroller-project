@@ -49,7 +49,7 @@ namespace Server.Source.Extra
         /// <param name="session">Phiên kết nối hiện tại.</param>
         public virtual void Handle(HttpRequest request, HttpsSession session)
         {
-            string path = request.Url;
+            string path = DecodeHelper.GetBasePath(request.Url);
 
             Dictionary<string, Action<HttpRequest, HttpsSession>>? routes = request.Method.ToUpper() switch
             {

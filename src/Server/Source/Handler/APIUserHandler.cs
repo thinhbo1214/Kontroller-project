@@ -28,6 +28,7 @@ namespace Server.Source.Handler
         /// </summary>
         public APIUserHandler()
         {
+            GetRoutes["/api/user"] = GetHandle;
             PostRoutes["/api/user"] = PostHandle;
             PutRoutes["/api/user/email"] = PutUserEmail;
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
@@ -41,7 +42,7 @@ namespace Server.Source.Handler
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
-
+            Simulation.GetModel<LogManager>().Log($"[APIUserHandler] decode helper returned: [{userId}] (len={(userId == null ? 0 : userId.Length)})");
             if (string.IsNullOrEmpty(userId))
             {
                 string token = TokenHelper.GetToken(request);
@@ -50,10 +51,9 @@ namespace Server.Source.Handler
                     userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
                 }
             }
-
             if (string.IsNullOrEmpty(userId))
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Không tìm thấy thông tin user!");
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Server.Source.Handler
         }
 
         /// <summary>
-        /// Xử lý POST cho việc đăng nhập hoặc đăng ký tài khoản người dùng.
+        /// Xử lý POST cho việc đăng ký tài khoản người dùng.
         /// </summary>
         public override void PostHandle(HttpRequest request, HttpsSession session)
         {
@@ -120,6 +120,7 @@ namespace Server.Source.Handler
                 return default;
             }
             // Deserialize trực tiếp trước (để giữ nguyên casing từ JSON)
+            Simulation.GetModel<LogManager>().Log(request.Body);
             var data = JsonHelper.Deserialize<T>(request.Body);
             if (data == null)
                 return default;
@@ -131,49 +132,49 @@ namespace Server.Source.Handler
         /// <summary>Cập nhật email người dùng.</summary>
         private void PutUserEmail(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangeEmailParams>(request, session);
             if (data == null || UserDatabase.Instance.ChangeEmail(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi email không thành công");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi email thành công");
         }
 
         /// <summary>Cập nhật avatar người dùng.</summary>
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangeAvatarParams>(request, session);
             if (data == null || UserDatabase.Instance.ChangeAvatar(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi avatar không thành công");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi avatar thành công");
         }
 
         /// <summary>Cập nhật username người dùng.</summary>
         private void PutUserUsername(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangeUsernameParams>(request, session);
             if (data == null || AccountDatabase.Instance.ChangeUsername(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi username không thành công!");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi username thành công");
         }
 
         /// <summary>Cập nhật password người dùng.</summary>
         private void PutUserPassword(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<object>(request, session);
+            var data = PutBase<ChangePasswordParams>(request, session);
             if (data == null || AccountDatabase.Instance.ChangePassword(data) != 1)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Đổi mật khẩu không thành công!");
                 return;
             }
-            OkHandle(session);
+            OkHandle(session, "Đổi mật khẩu thành công!");
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace Server.Source.Handler
                 return;
             }
 
-            var data = JsonHelper.Deserialize<DeleteAccountRequest>(request.Body);
+            var data = JsonHelper.Deserialize<DeleteAccountParams>(request.Body);
             if (AccountDatabase.Instance.Delete(data) == 1)
             {
                 OkHandle(session);

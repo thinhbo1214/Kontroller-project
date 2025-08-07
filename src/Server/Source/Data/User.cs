@@ -14,7 +14,7 @@
         /// <summary>
         /// Account credentials used for authentication (e.g., login form).
         /// </summary>
-        public Account Account;
+        public string Username;
 
         /// <summary>
         /// Email address associated with the user. Optional:only visible to owner or admin.
@@ -32,16 +32,16 @@
         /// Indicates whether the user is currently logged in.
         /// </summary>
         /// <example>true</example>
-        public bool isLoggedIn;
+        public bool IsLoggedIn;
 
 
         public User()
         {
-            UserId = "";
-            Account = new Account();
+            UserId = null;
+            Username = null;
             Email = null;
             Avatar = null;
-            isLoggedIn = false;
+            IsLoggedIn = false;
 
         }
     }

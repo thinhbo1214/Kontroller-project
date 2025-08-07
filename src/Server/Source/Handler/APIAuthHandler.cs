@@ -91,7 +91,7 @@ namespace Server.Source.Handler
                 return;
             }
 
-            var data = JsonHelper.Deserialize<ForgetPasswordRequest>(request.Body);
+            var data = JsonHelper.Deserialize<ForgetPasswordParams>(request.Body);
             
             if (data == null)
             {

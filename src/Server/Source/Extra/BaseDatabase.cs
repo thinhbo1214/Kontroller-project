@@ -30,10 +30,10 @@ namespace Server.Source.Database
         /// <returns>Bản ghi đầu tiên tìm được, hoặc null nếu không có.</returns>
         public virtual object Get(string id)
         {
-            ParamsId obj = new ParamsId { Id = id };
+            IdParams obj = new IdParams { Id = id };
             var sqlPath = $"{TableName}/get_{TableName.ToLower()}";
 
-            var list = ExecuteQuery<T, ParamsId>(sqlPath, obj);
+            var list = ExecuteQuery<T, IdParams>(sqlPath, obj);
 
             return list.FirstOrDefault();
         }
@@ -47,7 +47,7 @@ namespace Server.Source.Database
         {
             var sqlPath = $"{TableName}/delete_{TableName.ToLower()}";
 
-            var result = ExecuteQuery<T, DeleteRequestBase>(sqlPath, data);
+            var result = ExecuteQuery<T, DeleteAccountParams>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }
