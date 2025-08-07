@@ -1,6 +1,6 @@
 screens
 
-### 1. Profile Screen Backend Handling Description
+### 1. Profile Screen 
 
 **Interactive Features:**
 - **Show and Store**: Displays and allows storage of username, avatar, bio, external links, 5 favorite game posters, and 3 currently playing games.
@@ -142,7 +142,7 @@ screens
 
 
 
-### 4. Lists Screen Backend Handling Description
+### 4. Lists Screen
 
 **Interactive Features:**
 - **Show**: Displays a grid of user-created lists, each with a title, description, total number of games, creation date, and like count (heart icon).
@@ -481,3 +481,86 @@ screens
 
 - **`ui.js`**:
   - Add methods: Render review details, comments, handle like button, and manage comment posting dynamically.
+
+### 11. Reviews Screen
+
+**Interactive Features:**
+- **Show**: Displays a list of user reviews with titles, ratings, dates, likes, content, tags, and action buttons (Edit, Delete, Share).
+- **Show**: Provides filter options by genre and platform.
+- **Show**: Offers sort options (Date, Rating, Likes, Title).
+- **Show**: Includes a search functionality to filter reviews by title, content, or tags.
+- **Show**: Allows adding new reviews via a modal with title, rating (star-based), review text, and tags.
+- **Show**: Supports editing existing reviews with the same modal fields.
+- **Show**: Enables deleting reviews with confirmation.
+- **Show**: Supports sharing reviews via native share API or clipboard.
+- **Show**: Features a "Load More" button for pagination.
+- **Show**: Displays a "No Results" message when filters yield no matches.
+
+**Backend/Database Interaction:**
+
+- **Endpoints:**
+  - `GET /api/reviews/{userId}`: Fetches all reviews for the user.
+  - `GET /api/reviews/filtered/{userId}`: Fetches filtered and sorted reviews based on genre, platform, search term, and sort criteria.
+  - `POST /api/reviews/{userId}`: Adds a new review.
+  - `PUT /api/reviews/{userId}/{reviewId}`: Updates an existing review.
+  - `DELETE /api/reviews/{userId}/{reviewId}`: Deletes a review.
+  - `POST /api/reviews/like/{userId}/{reviewId}`: Increments the like count for a review.
+
+- **Database:**
+  - `reviews`: Contains columns: `id` (unique identifier), `user_id`, `title`, `rating`, `date`, `likes`, `content`, `tags` (JSON array), `genre`, `platform`, `poster_url`.
+
+- **Process:**
+  1. The client sends a request with a valid authentication token to `GET /api/reviews/{userId}` to fetch initial reviews.
+  2. The server queries the `reviews` table for records matching `user_id`.
+  3. For filtered views, the client sends a request to `GET /api/reviews/filtered/{userId}` with query parameters (genre, platform, search, sort).
+  4. The server applies filters and sorting, returning a paginated JSON list.
+  5. For adding/updating/deleting, the client sends `POST`, `PUT`, or `DELETE` requests with review data, and the server updates the `reviews` table accordingly.
+  6. For likes, the client sends a `POST` to `POST /api/reviews/like/{userId}/{reviewId}`, and the server increments the `likes` column.
+  7. The server returns success responses or updated data, which the client renders or updates in the UI.
+
+**Files to Update:**
+
+- **`reviews.html`**:
+  - Update the reviews list container with ID `reviewsList`, filter dropdowns with IDs `genreFilter`, `platformFilter`, sort selector with ID `sortFilter`, search input with ID `searchInput`, "Load More" button with ID `loadMoreBtn`, "No Results" message with ID `noResults`, and modal with ID `addReviewModal` for adding/editing reviews.
+
+- **`api.js`**:
+  - Enhance `GameAPI` with: 
+    - `GetReviews(userId)`: Fetches all reviews.
+    - `GetFilteredReviews(userId, filters, sort)`: Fetches filtered and sorted reviews.
+    - `PostReview(userId, reviewData)`: Adds a new review.
+    - `PutReview(userId, reviewId, reviewData)`: Updates an existing review.
+    - `DeleteReview(userId, reviewId)`: Deletes a review.
+    - `PostReviewLike(userId, reviewId)`: Increments the like count.
+
+- **`handle.js`**:
+  - Add: 
+    - `handleReviewsFetch(userId)`: Fetches and initializes reviews.
+    - `handleFilterReviews(filters)`: Applies filters to reviews.
+    - `handleSortReviews(sort)`: Applies sorting to reviews.
+    - `handleAddReview(userId, reviewData)`: Submits a new review.
+    - `handleUpdateReview(userId, reviewId, reviewData)`: Updates an existing review.
+    - `handleDeleteReview(userId, reviewId)`: Deletes a review.
+    - `handleLikeReview(userId, reviewId)`: Toggles the like count.
+
+- **`event.js`**:
+  - Add handlers: 
+    - `reviewsFetch` in `DOMContentLoaded` to initialize reviews.
+    - `filterReviews` for `change` events on `genreFilter`, `platformFilter`, `sortFilter`.
+    - `searchReviews` for `input` event on `searchInput`.
+    - `loadMoreReviews` for `click` event on `loadMoreBtn`.
+    - `addReview` for `click` on `addReviewBtn`.
+    - `editReview` for `click` on `.edit-review-btn`.
+    - `deleteReview` for `click` on `.delete-review-btn`.
+    - `shareReview` for `click` on `.share-review-btn`.
+    - `likeReview` for `click` on `.like-btn`.
+
+- **`ui.js`**:
+  - Add methods: 
+    - `renderReviews(reviews)`: Renders the review list in `reviewsList`.
+    - `updateReviewStats(total)`: Updates the total reviews count.
+    - `showNoResults()`: Displays the "No Results" message.
+    - `showLoading()`: Shows the loading spinner on `loadMoreBtn`.
+    - `hideLoading()`: Hides the loading spinner.
+    - `openModal(reviewData)`: Populates and opens the `addReviewModal` for adding/editing.
+    - `closeModal()`: Closes the modal and resets it.
+    - `updateLikeCount(reviewId, likes)`: Updates the like count display for a review.

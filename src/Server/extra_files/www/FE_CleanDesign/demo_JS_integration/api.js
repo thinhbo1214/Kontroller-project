@@ -1,3 +1,4 @@
+// Game screen demo
 class GameAPI {
   static async GetProfileGames(userId) {
     const token = API.getToken();
@@ -48,3 +49,61 @@ API.fetchData = async function(url, options = {}) {
 
 API.setToken = function(token) { localStorage.setItem('token', token); };
 API.getToken = function() { return localStorage.getItem('token'); };
+
+// Reviews screen demo
+class API {
+    static getToken() {
+        // Mock token for now; replace with actual token retrieval
+        return "mock-token-123";
+    }
+
+    static async fetchData(url, options = {}) {
+        const token = API.getToken();
+        const headers = { ...options.headers, 'X_Token_Authorization': `Bearer ${token}` };
+        const response = await fetch(url, { ...options, headers });
+        if (!response.ok) throw new Error("API request failed");
+        return response.json();
+    }
+}
+
+class GameAPI {
+    static async GetReviews(userId) {
+        return await API.fetchData(`/api/reviews/${userId}`);
+    }
+
+    static async GetFilteredReviews(userId, filters, sort) {
+        const query = new URLSearchParams({
+            ...filters,
+            sort: sort
+        }).toString();
+        return await API.fetchData(`/api/reviews/filtered/${userId}?${query}`);
+    }
+
+    static async PostReview(userId, reviewData) {
+        return await API.fetchData(`/api/reviews/${userId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reviewData)
+        });
+    }
+
+    static async PutReview(userId, reviewId, reviewData) {
+        return await API.fetchData(`/api/reviews/${userId}/${reviewId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reviewData)
+        });
+    }
+
+    static async DeleteReview(userId, reviewId) {
+        return await API.fetchData(`/api/reviews/${userId}/${reviewId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    static async PostReviewLike(userId, reviewId) {
+        return await API.fetchData(`/api/reviews/like/${userId}/${reviewId}`, {
+            method: 'POST'
+        });
+    }
+}

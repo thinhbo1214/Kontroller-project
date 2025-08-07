@@ -1,3 +1,4 @@
+// Game screen demo
 class Handle {
   static async handleProfileGamesFetch(userId) {
     UI.showLoading();
@@ -38,4 +39,123 @@ class Handle {
       UI.hideLoading();
     }
   }
+}
+
+//Reviews screen demo
+class Handle {
+    static async handleReviewsFetch(userId) {
+        UI.showLoading();
+        try {
+            const data = await GameAPI.GetReviews(userId);
+            reviews = data; // Assume reviews is globally available as in the HTML
+            filteredReviews = [...reviews];
+            UI.renderReviews(displayedReviews);
+            UI.updateReviewStats(reviews.length);
+        } catch (error) {
+            UI.showNotification('Failed to load reviews', 'error');
+        } finally {
+            UI.hideLoading();
+        }
+    }
+
+    static async handleFilterReviews(filters) {
+        UI.showLoading();
+        try {
+            const data = await GameAPI.GetFilteredReviews('mockUserId', filters, sortFilter.value);
+            filteredReviews = data;
+            currentPage = 1;
+            UI.renderReviews(displayedReviews);
+            UI.updateFilterStats();
+        } catch (error) {
+            UI.showNotification('Failed to filter reviews', 'error');
+        } finally {
+            UI.hideLoading();
+        }
+    }
+
+    static async handleSortReviews(sort) {
+        UI.showLoading();
+        try {
+            const filters = {
+                genre: genreFilter.value,
+                platform: platformFilter.value,
+                search: searchInput.value.toLowerCase()
+            };
+            const data = await GameAPI.GetFilteredReviews('mockUserId', filters, sort);
+            filteredReviews = data;
+            currentPage = 1;
+            UI.renderReviews(displayedReviews);
+            UI.updateFilterStats();
+        } catch (error) {
+            UI.showNotification('Failed to sort reviews', 'error');
+        } finally {
+            UI.hideLoading();
+        }
+    }
+
+    static async handleAddReview(userId, reviewData) {
+        UI.showLoading();
+        try {
+            const data = await GameAPI.PostReview(userId, reviewData);
+            reviews.unshift(data);
+            filteredReviews = [...reviews];
+            UI.renderReviews(displayedReviews);
+            UI.updateReviewStats(reviews.length);
+            UI.showNotification('Review added successfully!', 'success');
+        } catch (error) {
+            UI.showNotification('Failed to add review', 'error');
+        } finally {
+            UI.hideLoading();
+            UI.closeModal();
+        }
+    }
+
+    static async handleUpdateReview(userId, reviewId, reviewData) {
+        UI.showLoading();
+        try {
+            const data = await GameAPI.PutReview(userId, reviewId, reviewData);
+            const index = reviews.findIndex(r => r.id === reviewId);
+            if (index !== -1) reviews[index] = data;
+            filteredReviews = [...reviews];
+            UI.renderReviews(displayedReviews);
+            UI.updateReviewStats(reviews.length);
+            UI.showNotification('Review updated successfully!', 'success');
+        } catch (error) {
+            UI.showNotification('Failed to update review', 'error');
+        } finally {
+            UI.hideLoading();
+            UI.closeModal();
+        }
+    }
+
+    static async handleDeleteReview(userId, reviewId) {
+        UI.showLoading();
+        try {
+            await GameAPI.DeleteReview(userId, reviewId);
+            reviews = reviews.filter(r => r.id !== reviewId);
+            filteredReviews = [...reviews];
+            UI.renderReviews(displayedReviews);
+            UI.updateReviewStats(reviews.length);
+            UI.showNotification('Review deleted successfully!', 'success');
+        } catch (error) {
+            UI.showNotification('Failed to delete review', 'error');
+        } finally {
+            UI.hideLoading();
+        }
+    }
+
+    static async handleLikeReview(userId, reviewId) {
+        UI.showLoading();
+        try {
+            const data = await GameAPI.PostReviewLike(userId, reviewId);
+            const review = reviews.find(r => r.id === reviewId);
+            if (review) review.likes += 1;
+            UI.updateLikeCount(reviewId, review.likes);
+            UI.showNotification('Review liked!', 'success');
+        } catch (error) {
+            UI.showNotification('Failed to like review', 'error');
+        } finally {
+            UI.hideLoading();
+        }
+    }
 }
