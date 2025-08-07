@@ -9,24 +9,24 @@
         /// Unique identifier for the diary entry.
         /// </summary>
         /// <example>'001'</example>
-        public string diaryId;
+        public Guid DiaryId { get; set; }
 
         /// <summary>
         /// List of games associated with this diary entry.
         /// </summary>
-        public List<Game> gameLogged;
+        public List<Guid> GameLogged { get; set; }
 
         /// <summary>
         /// The date the diary entry was created or updated, in YYYY-MM-DD format.
         /// </summary>
         /// <example>'2023-10-01'</example>
-        public string dateLogged;
+        public string DateLogged { get; set; }
 
         public Diary() 
         {
-            diaryId = "";
-            gameLogged = new List<Game>();
-            dateLogged = "";
+            DiaryId = Guid.Empty;
+            GameLogged = new List<Guid>();
+            DateLogged = "";
         }
     }
 }

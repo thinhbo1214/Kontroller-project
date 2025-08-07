@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.VisualBasic.Logging;
+using Newtonsoft.Json.Linq;
 using Server.Source.Core;
+using Server.Source.Extra;
 using Server.Source.Helper;
 using Server.Source.Interface;
 using Server.Source.Manager;
-using Server.Source.Extra;
 
 namespace Server.Source.Database
 {
@@ -23,6 +24,13 @@ namespace Server.Source.Database
         /// </summary>
         public IDatabase GetInstance() => this;
 
+        private static readonly Dictionary<string, Func<string, IdParams>> TableIdParamFactory = new()
+        {
+            ["user"] = id => new UserIdParams(id),
+            ["review"] = id => new ReviewIdParams(id),
+            ["game"] = id => new GameIdParams(id),
+            ["reaction"] = id => new ReactionIdParams(id),
+        };
         /// <summary>
         /// Lấy bản ghi từ database theo ID.
         /// </summary>
@@ -30,10 +38,11 @@ namespace Server.Source.Database
         /// <returns>Bản ghi đầu tiên tìm được, hoặc null nếu không có.</returns>
         public virtual object Get(string id)
         {
-            IdParams obj = new IdParams { Id = id };
+            var param = TableIdParamFactory[TableName](id);
+
             var sqlPath = $"{TableName}/get_{TableName.ToLower()}";
 
-            var list = ExecuteQuery<T, IdParams>(sqlPath, obj);
+            var list = ExecuteQuery<T, IdParams>(sqlPath, param);
 
             return list.FirstOrDefault();
         }
@@ -47,7 +56,7 @@ namespace Server.Source.Database
         {
             var sqlPath = $"{TableName}/delete_{TableName.ToLower()}";
 
-            var result = ExecuteQuery<T, DeleteAccountParams>(sqlPath, data);
+            var result = ExecuteQuery<T, DeleteBaseParams>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }
@@ -84,6 +93,7 @@ namespace Server.Source.Database
         /// <returns>Danh sách bản ghi kết quả hoặc danh sách rỗng nếu sai kiểu.</returns>
         protected List<T> ExecuteQuery<T, TParam>(string sqlPath, object data) where T : new()
         {
+            Simulation.GetModel<LogManager>().Log(sqlPath);
             if (data is not TParam model)
                 return new List<T>();
 
@@ -92,7 +102,6 @@ namespace Server.Source.Database
 
             var param = DatabaseHelper.ToDictionary(model);
             var dt = db.ExecuteQuery(sqlPath, param);
-
             db.CloseConnection();
 
             return DatabaseHelper.MapToList<T>(dt);

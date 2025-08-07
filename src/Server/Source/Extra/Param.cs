@@ -27,9 +27,42 @@
     /// <summary>
     /// Đối tượng mang theo một giá trị Id đơn giản.
     /// </summary>
-    public class IdParams
+    public class IdParams { }
+
+    public class UserIdParams : IdParams
     {
-        public string Id { get; set; }
+        public UserIdParams(string userId)
+        {
+            UserId = userId;
+        }
+        public string UserId { get; set; }
+    }
+
+    public class ReviewIdParams : IdParams
+    {
+        public ReviewIdParams(string reviewId)
+        {
+            ReviewId = reviewId;
+        }
+        public string ReviewId { get; set; }
+    }
+
+    public class GameIdParams : IdParams
+    {
+        public GameIdParams(string gameId)
+        {
+            GameId = gameId;
+        }
+        public string GameId { get; set; }
+    }
+
+    public class ReactionIdParams : IdParams
+    {
+        public ReactionIdParams(string reactionId)
+        {
+            ReactionId = reactionId;
+        }
+        public string ReactionId { get; set; }
     }
 
     /// <summary>
@@ -76,9 +109,6 @@
         public string UserId { get; set; }
         public string Avatar { get; set; }
     }
-
-
-
 
 
     /// <summary>

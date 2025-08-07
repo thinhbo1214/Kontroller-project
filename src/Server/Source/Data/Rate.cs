@@ -9,30 +9,30 @@
         /// Unique identifier for the rating.
         /// </summary>
         /// <example>'001'</example>
-        public string rateId;
+        public Guid RateId { get; set; }
 
         /// <summary>
         /// Numeric score representing the user's rating of the game (1 to 10).
         /// </summary>
         /// <example>8</example>
-        public int value;
+        public int Value { get; set; }
 
         /// <summary>
         /// The user who submitted the rating.
         /// </summary>
-        public User rater;
+        public Guid Rater { get; set; }
 
         /// <summary>
         /// The game that is being rated.
         /// </summary>
-        public Game target;
+        public Guid Target { get; set; }
 
         public Rate()
         {
-            rateId = "";
-            value = 0;
-            rater = new User();
-            target = new Game();
+            RateId = Guid.Empty;
+            Value = 0;
+            Rater = Guid.Empty;
+            Target = Guid.Empty;
         }
     }
 }

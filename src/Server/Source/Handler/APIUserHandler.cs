@@ -42,7 +42,6 @@ namespace Server.Source.Handler
         public override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
-            Simulation.GetModel<LogManager>().Log($"[APIUserHandler] decode helper returned: [{userId}] (len={(userId == null ? 0 : userId.Length)})");
             if (string.IsNullOrEmpty(userId))
             {
                 string token = TokenHelper.GetToken(request);
