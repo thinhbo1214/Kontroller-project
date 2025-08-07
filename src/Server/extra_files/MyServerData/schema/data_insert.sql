@@ -201,6 +201,286 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'Studio: 11 bit studios, Publisher: 11 bit studios, Release Date: 2025-07-25, Country: Poland, Languages: English, Polish'
 );
 
+('A1B2C3D4-E5F6-7G8H-9I0J-K1L2M3N4O5P'
+, 'Phantom Horizon'
+, 'A futuristic racing game set in a dystopian galaxy, blending high-speed chases with strategic combat.'
+, 'Racing, Action, Sci-Fi'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Horizon Games, Publisher: Indie Publisher, Release Date: 2025-09-15, Country: UK, Languages: English, French'
+)
+,
+('B2C3D4E5-F6G7-8H9I-0J1K-L2M3N4O5P6Q'
+, 'Echoes of Eternity'
+, 'A narrative-driven adventure exploring time travel and ancient mysteries in a richly detailed world.'
+, 'Adventure, Narrative, Puzzle'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/zsfr5oevm1umycmuudcp.webp
+, https://d19y2ttatozxjp.cloudfront.net/wp-content/uploads/2020/01/15224421/EchoesofEternity_LargeHero-1024x584.png
+, 'Studio: Eternal Studios, Publisher: Independent, Release Date: 2025-10-10, Country: Canada, Languages: English, Spanish'
+)
+,
+('C3D4E5F6-G7H8-9I0J-1K2L-M3N4O5P6Q7R'
+, 'Shadow Realm'
+, 'A dark fantasy RPG with a focus on stealth and intricate lore set in a cursed kingdom.'
+, 'RPG, Stealth, Dark Fantasy'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/e6lkj8r168e9pr5pc0vf.webp
+, https://oyster.ignimgs.com/mediawiki/apis.ign.com/shadow-realms/9/93/Realms2.jpg?width=640
+, 'Studio: Shadow Craft, Publisher: Bandai Namco Entertainment, Release Date: 2025-11-05, Country: Japan, Languages: English, Japanese'
+)
+,
+('D4E5F6G7-H8I9-0J1K-2L3M-N4O5P6Q7R8S'
+, 'Neon Blitz'
+, 'A fast-paced multiplayer shooter set in a cyberpunk city with vibrant neon aesthetics.'
+, 'Shooter, Multiplayer, Cyberpunk'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co8m6k.webp
+, https://img.freepik.com/free-vector/abstract-glowing-led-lines-modern-wallpaper-design_1017-55438.jpg?semt=ais_hybrid&w=740&q=80
+, 'Studio: Neon Games, Publisher: Electronic Arts, Release Date: 2025-12-01, Country: USA, Languages: English, German'
+)
+,
+('E5F6G7H8-I9J0-1K2L-3M4N-O5P6Q7R8S9T'
+, 'Crystal Kingdom'
+, 'A family-friendly platformer featuring magical crystals and cooperative multiplayer modes.'
+, 'Platformer, Family, Multiplayer'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/ksl8fbzknwchlaqpoxk8.webp
+, https://png.pngtree.com/thumb_back/fh260/background/20241007/pngtree-the-portrayal-of-a-crystal-kingdom-background-wallpaper-gorgeous-with-shimmering-image_16292289.jpg
+, 'Studio: Crystal Studios, Publisher: Nintendo, Release Date: 2025-09-20, Country: Japan, Languages: English, Japanese'
+)
+,
+('F6G7H8I9-J0K1-2L3M-4N5O-P6Q7R8S9T0U'
+, 'Voidwalker'
+, 'A survival horror game set in deep space, where players must escape a derelict spaceship.'
+, 'Survival Horror, Sci-Fi, Adventure'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co7f84.webp
+, https://fc07.deviantart.net/fs70/f/2014/280/e/4/destiny___voidwalker_by_morningwar-d81xcek.png
+, 'Studio: Void Games, Publisher: Independent, Release Date: 2025-10-25, Country: USA, Languages: English'
+)
+,
+('G7H8I9J0-K1L2-3M4N-5O6P-Q7R8S9T0U1V'
+, 'Rune Masters'
+, 'A tactical RPG with turn-based combat and a rich mythology inspired by Norse legends.'
+, 'RPG, Tactical, Fantasy'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co2ibb.webp
+, https://images.alphacoders.com/532/532506.png
+, 'Studio: Rune Studios, Publisher: Square Enix, Release Date: 2025-11-15, Country: Sweden, Languages: English, Swedish'
+)
+,
+('H8I9J0K1-L2M3-4N5O-6P7Q-R8S9T0U1V2W'
+, 'Drift Legends'
+, 'A realistic driving simulator focused on drift racing with customizable cars and tracks.'
+, 'Simulation, Racing, Sports'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co57f0.webp
+, https://play-lh.googleusercontent.com/dXpBGlzU0i2Xhtx2S0JwVm5izCvpxcKehX4PvsoYaJJdfMsyQyYwi9CaYv3UYFhgrw=w526-h296-rw
+, 'Studio: Drift Dynamics, Publisher: Indie Publisher, Release Date: 2025-12-10, Country: Germany, Languages: English, German'
+)
+,
+('I9J0K1L2-M3N4-5O6P-7Q8R-S9T0U1V2W3X'
+, 'Skyforge Chronicles'
+, 'An open-world action game where players build and defend floating islands in the sky.'
+, 'Action, Open World, Fantasy'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co3wf8.webp
+, https://o.aolcdn.com/hss/storage/midas/df5962578926a9f87f8d4e667844092c/201187297/sf_celestial_fortress_art_001.jpg
+, 'Studio: Skyforge Studios, Publisher: Ubisoft, Release Date: 2025-09-30, Country: France, Languages: English, French'
+)
+,
+('J0K1L2M3-N4O5-6P7Q-8R9S-T0U1V2W3X4Y'
+, 'Inferno Rising'
+, 'A challenging platformer set in a volcanic world with intense heat-based puzzles.'
+, 'Platformer, Puzzle, Adventure'
+, 0.00
+, https://dyn.media.forbiddenplanet.com/i78_QTOhlhznAiYjWJS11nGK9tk=/fit-in/1500x1500/https://media.forbiddenplanet.com/products/59/71/2e0758c5c1d8c3d515c9e8909801b8e0db0b.jpg
+, https://png.pngtree.com/thumb_back/fh260/background/20250401/pngtree-chaotic-inferno-scene-blazing-flames-rising-from-rocky-ground-with-glowing-image_17163939.jpg
+, 'Studio: Inferno Games, Publisher: Independent, Release Date: 2025-10-15, Country: Italy, Languages: English, Italian'
+)
+,
+('K1L2M3N4-O5P6-7Q8R-9S0T-U1V2W3X4Y5Z'
+, 'Galactic Wars'
+, 'A strategy game where players command fleets in epic space battles across the galaxy.'
+, 'Strategy, Sci-Fi, Multiplayer'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/mdzv2492wi4srs2jxntt.webp
+, https://media.istockphoto.com/id/1195199589/photo/dark-blue-spaceship-futuristic-interior-with-window-view-on-planet-earth-3d-rendering.jpg?s=612x612&w=0&k=20&c=H0_qt9Ry98ksk32RKqUBXlyWbnXtGlAt9ulqzq_UWl8=
+, 'Studio: Galactic Studios, Publisher: Sega, Release Date: 2025-11-20, Country: Japan, Languages: English, Japanese'
+)
+,
+('L2M3N4O5-P6Q7-8R9S-0T1U-V2W3X4Y5Z6A'
+, 'Mystic Forest'
+, 'A serene exploration game with magical creatures and environmental puzzles.'
+, 'Exploration, Puzzle, Fantasy'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co5sui.webp
+, https://wallpapers.com/images/hd/mystical-forest-1920-x-1080-qf4vghj9i70zl6yq.jpg
+, 'Studio: Mystic Games, Publisher: Indie Publisher, Release Date: 2025-12-05, Country: Australia, Languages: English'
+)
+,
+('M3N4O5P6-Q7R8-9S0T-1U2V-W3X4Y5Z6A7B'
+, 'Steel Frontier'
+, 'A post-apocalyptic shooter with vehicular combat and open-world survival elements.'
+, 'Shooter, Open World, Post-Apocalyptic'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Steel Games, Publisher: Bethesda Softworks, Release Date: 2025-09-25, Country: USA, Languages: English, Spanish'
+)
+,
+('N4O5P6Q7-R8S9-0T1U-2V3W-X4Y5Z6A7B8C'
+, 'Harmony Quest'
+, 'A rhythm-based adventure game with musical challenges and vibrant visuals.'
+, 'Rhythm, Adventure, Family'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co7oph.webp
+, https://cdn.soft112.com/my-little-pony-harmony-quest-ios/00/00/0G/5S/00000G5S7T/pad_screenshot_3A6F3X6V5E.png
+, 'Studio: Harmony Studios, Publisher: Nintendo, Release Date: 2025-10-30, Country: Japan, Languages: English, Japanese'
+)
+,
+('O5P6Q7R8-S9T0-1U2V-3W4X-Y5Z6A7B8C9D'
+, 'Dark Horizon'
+, 'A stealth-action game set in a noir-inspired city with deep character customization.'
+, 'Stealth, Action, Noir'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co9nhj.webp
+, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcdDogepxuzQXh8gwTygYuaKWgLnI9QTOU8d4SVgy7y5Nk4tukgQ4SkP7M5OW7GMZHjlg&usqp=CAU
+, 'Studio: Dark Games, Publisher: Warner Bros. Interactive, Release Date: 2025-11-10, Country: USA, Languages: English, French'
+)
+,
+('P6Q7R8S9-T0U1-2V3W-4X5Y-Z6A7B8C9D0E'
+, 'Lunar Colony'
+, 'A simulation game where players build and manage a sustainable colony on the moon.'
+, 'Simulation, Strategy, Sci-Fi'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Lunar Labs, Publisher: Indie Publisher, Release Date: 2025-12-15, Country: Russia, Languages: English, Russian'
+)
+,
+('Q7R8S9T0-U1V2-3W4X-5Y6Z-A7B8C9D0E1F'
+, 'Blaze Runner'
+, 'A high-octane racing game with futuristic vehicles and competitive online modes.'
+, 'Racing, Multiplayer, Sci-Fi'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Blaze Games, Publisher: Electronic Arts, Release Date: 2025-09-10, Country: USA, Languages: English, German'
+)
+,
+('R8S9T0U1-V2W3-4X5Y-6Z7A-B8C9D0E1F2G'
+, 'Echoes of War'
+, 'A historical strategy game recreating epic battles from various eras.'
+, 'Strategy, Historical, Tactical'
+, 0.00
+, https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1704462892i/202012592.jpg
+, https://w0.peakpx.com/wallpaper/280/850/HD-wallpaper-the-dark-horizon-clouds-moon-horizon-sky-night-mountains.jpg
+, 'Studio: War Echoes, Publisher: Paradox Interactive, Release Date: 2025-10-20, Country: Sweden, Languages: English, Swedish'
+)
+,
+('S9T0U1V2-W3X4-5Y6Z-7A8B-C9D0E1F2G3H'
+, 'Crystal Caverns'
+, 'A puzzle adventure game set in underground caves filled with crystalline puzzles.'
+, 'Puzzle, Adventure, Fantasy'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co9naa.webp
+, https://i.pinimg.com/736x/9a/de/d5/9aded51ff2b9d681341b3b6b6585af82.jpg
+, 'Studio: Cavern Games, Publisher: Indie Publisher, Release Date: 2025-11-25, Country: Spain, Languages: English, Spanish'
+)
+,
+('T0U1V2W3-X4Y5-6Z7A-8B9C-D0E1F2G3H4I'
+, 'Solar Strike'
+, 'A space combat simulator with intense dogfights and planetary exploration.'
+, 'Simulation, Shooter, Sci-Fi'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co9i99.webp
+, https://cdn.mos.cms.futurecdn.net/ecAJ5nfpHLWxUC2Xd7RGbW-1200-80.jpg
+, 'Studio: Solar Games, Publisher: Ubisoft, Release Date: 2025-12-20, Country: France, Languages: English, French'
+)
+,
+('U1V2W3X4-Y5Z6-7A8B-9C0D-E1F2G3H4I5J'
+, 'Twilight Realm'
+, 'A dark fantasy RPG with a focus on magic and cooperative multiplayer campaigns.'
+, 'RPG, Fantasy, Multiplayer'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co5ubz.webp
+, https://www.architectureofzelda.com/uploads/3/7/1/2/37126503/published/wvw69kiqsacqwhbwmh.jpg?1490155642
+, 'Studio: Twilight Studios, Publisher: Bandai Namco Entertainment, Release Date: 2025-09-05, Country: Japan, Languages: English, Japanese'
+)
+,
+('V2W3X4Y5-Z6A7-8B9C-0D1E-F2G3H4I5J6K'
+, 'Drift Kings'
+, 'A competitive drifting game with realistic physics and global leaderboards.'
+, 'Racing, Sports, Simulation'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co3oz2.webp
+, https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1469690/capsule_616x353.jpg?t=1750717020
+, 'Studio: Drift Kings Games, Publisher: Indie Publisher, Release Date: 2025-10-15, Country: Germany, Languages: English, German'
+)
+,
+('W3X4Y5Z6-A7B8-9C0D-1E2F-G3H4I5J6K7L'
+, 'Starfall Legends'
+, 'An action-adventure game set in a universe where stars hold ancient secrets.'
+, 'Action, Adventure, Sci-Fi'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Starfall Games, Publisher: Square Enix, Release Date: 2025-11-30, Country: UK, Languages: English, French'
+)
+,
+('X4Y5Z6A7-B8C9-0D1E-2F3G-H4I5J6K7L8M'
+, 'Frostbite Survival'
+, 'A survival game set in an icy wilderness with dynamic weather and wildlife.'
+, 'Survival, Adventure, Simulation'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Frostbite Games, Publisher: 11 bit studios, Release Date: 2025-12-10, Country: Poland, Languages: English, Polish'
+)
+,
+('Y5Z6A7B8-C9D0-1E2F-3G4H-I5J6K7L8M9N'
+, 'Cyber Nexus'
+, 'A hacking simulator with real-time strategy elements in a digital world.'
+, 'Simulation, Strategy, Cyberpunk'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co6vue.webp
+, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9Kq16JMSEbJfTqlryXPHqHTYKeYwvrcCh9Q&s
+, 'Studio: Nexus Games, Publisher: Independent, Release Date: 2025-09-25, Country: USA, Languages: English'
+)
+,
+('Z6A7B8C9-D0E1-2F3G-4H5I-J6K7L8M9N0O'
+, 'Mythic Quest'
+, 'A turn-based RPG with a deep narrative set in a world of ancient myths.'
+, 'RPG, Turn-Based, Fantasy'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Mythic Studios, Publisher: Indie Publisher, Release Date: 2025-10-10, Country: Greece, Languages: English, Greek'
+)
+,
+('A7B8C9D0-E1F2-3G4H-5I6J-K7L8M9N0O1P'
+, 'Rogue Waves'
+, 'A naval combat game with strategic depth and historical naval battles.'
+, 'Strategy, Simulation, Historical'
+, 0.00
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co2nve.webp
+, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGPsY5FeaYT6vGN1MrQHhtCVlvgrmnhnVWBvIh_RBTyhANu1OT-L9Pt54JmV1DtbcyAAM&usqp=CAU
+, 'Studio: Wave Games, Publisher: Sega, Release Date: 2025-11-15, Country: Japan, Languages: English, Japanese'
+)
+,
+('B8C9D0E1-F2G3-4H5I-6J7K-L8M9N0O1P2Q'
+, 'Eternal Sands'
+, 'An open-world survival game set in a desert with ancient ruins to explore.'
+, 'Survival, Open World, Adventure'
+, 0.00
+, NULL
+, NULL
+, 'Studio: Sand Studios, Publisher: Ubisoft, Release Date: 2025-12-05, Country: Egypt, Languages: English, Arabic'
+);
+
 -- Insert data into Game_Service table
 INSERT INTO Game_Service (gameId, serviceName) VALUES
 ('F4E1D2C3-B5A6-4D7E-8F9G-0H1I2J3K4L5M'
