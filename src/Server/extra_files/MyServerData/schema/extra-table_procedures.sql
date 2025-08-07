@@ -1,3 +1,10 @@
+/*
+    Database: KontrollerDB
+    Description: Database for a game management system, storing information about users, games, reviews, comments, ratings, lists, activities, diaries, and their relationships.
+*/
+USE KontrollerDB;
+GO
+
 /* 
     Procedure: GSP_AddGameToService
     Description: Adds a game to a specified service in the Game_Service table.
@@ -75,7 +82,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE GSP_RemoveAllServiceByGame
+CREATE OR ALTER PROCEDURE GSP_RemoveServiceByGame
     @GameId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
 AS
@@ -571,7 +578,6 @@ BEGIN
     
 END;
 GO
-
 
 CREATE OR ALTER PROCEDURE UUP_RemoveFollowingUser
     @UserFollower UNIQUEIDENTIFIER,
@@ -1115,6 +1121,35 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE RRP_DeleteReactionByReview
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if reaction-review pair exists */
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete reaction-review pair */
+    DELETE FROM [Review_Reaction]
+    WHERE reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+END;
+GO
+
 /* 
     Procedure: RRP_GetAllReviewReactions
     Description: Retrieves all reaction-review associations from the Review_Reaction table.
@@ -1252,6 +1287,34 @@ BEGIN
 
     /* Verify deletion */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+    
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GRP_DeleteReviewByGame
+    @GameId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if game-review pair exists */
+    IF DBO.GF_GameIdExists(@GameId) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete game-review pair */
+    DELETE FROM [Game_Review] WHERE gameId = @GameId;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.GF_GameIdExists(@GameId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1403,6 +1466,34 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE RUP_DeleteReactionByUser
+    @Author UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if reaction-author pair exists */
+    IF DBO.UF_UserIdExists(@Author) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete reaction-author pair */
+    DELETE FROM [Reaction_User] WHERE author = @Author;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.UF_UserIdExists(@Author) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+    
+END;
+GO
+
 /* 
     Procedure: RUP_GetAllReactionUser
     Description: Retrieves all reaction-author associations from the Reaction_User table.
@@ -1538,6 +1629,34 @@ BEGIN
 
     /* Verify deletion */
     IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+    
+END;
+GO
+
+CREATE OR ALTER PROCEDURE LLP_DeleteListItemByList
+    @ListId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if list-list item pair exists */
+    IF DBO.LF_ListIdExists(@ListId) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete list-list item pair */
+    DELETE FROM [List_ListItem] WHERE listId = @ListId;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.LF_ListIdExists(@ListId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1689,6 +1808,62 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE LIGP_DeleteGameByListItem
+    @ListItemId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if list item-game pair exists */
+    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete list item-game pair */
+    DELETE FROM [ListItem_Game] WHERE listItemId = @ListItemId;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.LIF_ListItemIdExists(@ListItemId) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+END;
+GO
+
+CREATE OR ALTER PROCEDURE LIGP_DeleteListItemByGame
+    @TargetGame UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if list item-game pair exists */
+    IF DBO.GF_GameIdExists(@TargetGame) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete list item-game pair */
+    DELETE FROM [ListItem_Game] WHERE targetGame = @TargetGame;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.GF_GameIdExists(@TargetGame) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+END;
+GO
+
 /* 
     Procedure: LIGP_GetAllListItemGame
     Description: Retrieves all list item-game associations from the ListItem_Game table.
@@ -1824,6 +1999,34 @@ BEGIN
 
     /* Verify deletion */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+    
+END;
+GO
+
+CREATE OR ALTER PROCEDURE CUP_DeleteCommentByUser
+    @Author UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if comment-author pair exists */
+    IF DBO.UF_UserIdExists(@Author) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete comment-author pair */
+    DELETE FROM [Comment_User] WHERE author = @Author;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.UF_UserIdExists(@Author) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1975,6 +2178,34 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE CRP_DeleteReactionByComment
+    @CommentId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if comment-reaction pair exists */
+    IF DBO.CF_CommentIdExists(@CommentId) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete comment-reaction pair */
+    DELETE FROM [Comment_Reaction] WHERE commentId = @CommentId;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.CF_CommentIdExists(@CommentId) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+    
+END;
+GO
+
 /* 
     Procedure: CRP_GetAllCommentReaction
     Description: Retrieves all comment-reaction associations from the Comment_Reaction table.
@@ -2110,6 +2341,34 @@ BEGIN
 
     /* Verify deletion */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 1
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+    
+END;
+GO
+
+CREATE OR ALTER PROCEDURE CRP_DeleteCommentByReview
+    @ReviewId UNIQUEIDENTIFIER,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Check if comment-review pair exists */
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END;
+
+    /* Delete comment-review pair */
+    DELETE FROM [Comment_Review] WHERE reviewId = @ReviewId;
+    SET @Result = @@ROWCOUNT;
+
+    /* Verify deletion */
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;

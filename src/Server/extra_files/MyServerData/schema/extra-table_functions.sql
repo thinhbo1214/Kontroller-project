@@ -1,3 +1,10 @@
+/*
+    Database: KontrollerDB
+    Description: Database for a game management system, storing information about users, games, reviews, comments, ratings, lists, activities, diaries, and their relationships.
+*/
+USE KontrollerDB;
+GO
+
 /* 
     Function: GSF_GameServiceExists
     Description: Checks if a specified game ID and service name pair exists in the Game_Service table.
@@ -300,38 +307,6 @@ END;
 GO
 
 /* 
-    Function: RRF_ReviewRateExists
-    Description: Checks if a specified rate ID and review ID pair exists in the Review_Rate table.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to check.
-        @ReviewId (UNIQUEIDENTIFIER): ID of the review to check.
-    Returns:
-        BIT: 1 if the rate-review pair exists, 0 otherwise.
-*/
-CREATE OR ALTER FUNCTION RRF_ReviewRateExists (
-    @RateId UNIQUEIDENTIFIER,
-    @ReviewId UNIQUEIDENTIFIER
-)
-RETURNS BIT
-AS
-BEGIN
-    /* Validate rate and review existence */
-    IF DBO.RF_RateIdExists(@RateId) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
-        RETURN 0;
-
-    /* Check for existence of rate-review pair */
-    RETURN (
-        SELECT CASE 
-            WHEN EXISTS (
-                SELECT 1 FROM [Review_Rate]
-                WHERE rateId = @RateId AND reviewId = @ReviewId
-            ) THEN 1 ELSE 0 
-        END
-    );
-END;
-GO
-
-/* 
     Function: RRF_ReviewReactionExists
     Description: Checks if a specified reaction ID and review ID pair exists in the Review_Reaction table.
     Parameters:
@@ -421,70 +396,6 @@ BEGIN
             WHEN EXISTS (
                 SELECT 1 FROM [Reaction_User] 
                 WHERE reactionId = @ReactionId AND author = @Author
-            ) THEN 1 ELSE 0 
-        END
-    );
-END;
-GO
-
-/* 
-    Function: RUF_RateUserExists
-    Description: Checks if a specified rate ID and rater ID pair exists in the Rate_User table.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to check.
-        @Rater (UNIQUEIDENTIFIER): ID of the user who rated.
-    Returns:
-        BIT: 1 if the rate-rater pair exists, 0 otherwise.
-*/
-CREATE OR ALTER FUNCTION RUF_RateUserExists (
-    @RateId UNIQUEIDENTIFIER,
-    @Rater UNIQUEIDENTIFIER
-)
-RETURNS BIT
-AS
-BEGIN
-    /* Validate rate and rater existence */
-    IF DBO.UF_UserIdExists(@Rater) = 0 OR DBO.RF_RateIdExists(@RateId) = 0
-        RETURN 0;
-
-    /* Check for existence of rate-rater pair */
-    RETURN (
-        SELECT CASE 
-            WHEN EXISTS (
-                SELECT 1 FROM [Rate_User] 
-                WHERE rateId = @RateId AND rater = @Rater
-            ) THEN 1 ELSE 0 
-        END
-    );
-END;
-GO
-
-/* 
-    Function: RGF_RateGameExists
-    Description: Checks if a specified rate ID and game ID pair exists in the Rate_Game table.
-    Parameters:
-        @RateId (UNIQUEIDENTIFIER): ID of the rate to check.
-        @TargetGame (UNIQUEIDENTIFIER): ID of the game being rated.
-    Returns:
-        BIT: 1 if the rate-game pair exists, 0 otherwise.
-*/
-CREATE OR ALTER FUNCTION RGF_RateGameExists (
-    @RateId UNIQUEIDENTIFIER,
-    @TargetGame UNIQUEIDENTIFIER
-)
-RETURNS BIT
-AS
-BEGIN
-    /* Validate rate and game existence */
-    IF DBO.RF_RateIdExists(@RateId) = 0 OR DBO.GF_GameIdExists(@TargetGame) = 0
-        RETURN 0;
-
-    /* Check for existence of rate-game pair */
-    RETURN (
-        SELECT CASE 
-            WHEN EXISTS (
-                SELECT 1 FROM [Rate_Game] 
-                WHERE rateId = @RateId AND targetGame = @TargetGame
             ) THEN 1 ELSE 0 
         END
     );
