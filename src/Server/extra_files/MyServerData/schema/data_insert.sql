@@ -216,8 +216,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A narrative-driven adventure exploring time travel and ancient mysteries in a richly detailed world.'
 , 'Adventure, Narrative, Puzzle'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/zsfr5oevm1umycmuudcp.webp
+, https://d19y2ttatozxjp.cloudfront.net/wp-content/uploads/2020/01/15224421/EchoesofEternity_LargeHero-1024x584.png
 , 'Studio: Eternal Studios, Publisher: Independent, Release Date: 2025-10-10, Country: Canada, Languages: English, Spanish'
 )
 ,
@@ -226,8 +226,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A dark fantasy RPG with a focus on stealth and intricate lore set in a cursed kingdom.'
 , 'RPG, Stealth, Dark Fantasy'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/e6lkj8r168e9pr5pc0vf.webp
+, https://oyster.ignimgs.com/mediawiki/apis.ign.com/shadow-realms/9/93/Realms2.jpg?width=640
 , 'Studio: Shadow Craft, Publisher: Bandai Namco Entertainment, Release Date: 2025-11-05, Country: Japan, Languages: English, Japanese'
 )
 ,
@@ -236,8 +236,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A fast-paced multiplayer shooter set in a cyberpunk city with vibrant neon aesthetics.'
 , 'Shooter, Multiplayer, Cyberpunk'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co8m6k.webp
+, https://img.freepik.com/free-vector/abstract-glowing-led-lines-modern-wallpaper-design_1017-55438.jpg?semt=ais_hybrid&w=740&q=80
 , 'Studio: Neon Games, Publisher: Electronic Arts, Release Date: 2025-12-01, Country: USA, Languages: English, German'
 )
 ,
@@ -246,8 +246,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A family-friendly platformer featuring magical crystals and cooperative multiplayer modes.'
 , 'Platformer, Family, Multiplayer'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/ksl8fbzknwchlaqpoxk8.webp
+, https://png.pngtree.com/thumb_back/fh260/background/20241007/pngtree-the-portrayal-of-a-crystal-kingdom-background-wallpaper-gorgeous-with-shimmering-image_16292289.jpg
 , 'Studio: Crystal Studios, Publisher: Nintendo, Release Date: 2025-09-20, Country: Japan, Languages: English, Japanese'
 )
 ,
@@ -256,8 +256,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A survival horror game set in deep space, where players must escape a derelict spaceship.'
 , 'Survival Horror, Sci-Fi, Adventure'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co7f84.webp
+, https://fc07.deviantart.net/fs70/f/2014/280/e/4/destiny___voidwalker_by_morningwar-d81xcek.png
 , 'Studio: Void Games, Publisher: Independent, Release Date: 2025-10-25, Country: USA, Languages: English'
 )
 ,
@@ -266,8 +266,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A tactical RPG with turn-based combat and a rich mythology inspired by Norse legends.'
 , 'RPG, Tactical, Fantasy'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co2ibb.webp
+, https://images.alphacoders.com/532/532506.png
 , 'Studio: Rune Studios, Publisher: Square Enix, Release Date: 2025-11-15, Country: Sweden, Languages: English, Swedish'
 )
 ,
@@ -276,8 +276,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A realistic driving simulator focused on drift racing with customizable cars and tracks.'
 , 'Simulation, Racing, Sports'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co57f0.webp
+, https://play-lh.googleusercontent.com/dXpBGlzU0i2Xhtx2S0JwVm5izCvpxcKehX4PvsoYaJJdfMsyQyYwi9CaYv3UYFhgrw=w526-h296-rw
 , 'Studio: Drift Dynamics, Publisher: Indie Publisher, Release Date: 2025-12-10, Country: Germany, Languages: English, German'
 )
 ,
@@ -286,8 +286,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'An open-world action game where players build and defend floating islands in the sky.'
 , 'Action, Open World, Fantasy'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co3wf8.webp
+, https://o.aolcdn.com/hss/storage/midas/df5962578926a9f87f8d4e667844092c/201187297/sf_celestial_fortress_art_001.jpg
 , 'Studio: Skyforge Studios, Publisher: Ubisoft, Release Date: 2025-09-30, Country: France, Languages: English, French'
 )
 ,
@@ -296,8 +296,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A challenging platformer set in a volcanic world with intense heat-based puzzles.'
 , 'Platformer, Puzzle, Adventure'
 , 0.00
-, NULL
-, NULL
+, https://dyn.media.forbiddenplanet.com/i78_QTOhlhznAiYjWJS11nGK9tk=/fit-in/1500x1500/https://media.forbiddenplanet.com/products/59/71/2e0758c5c1d8c3d515c9e8909801b8e0db0b.jpg
+, https://png.pngtree.com/thumb_back/fh260/background/20250401/pngtree-chaotic-inferno-scene-blazing-flames-rising-from-rocky-ground-with-glowing-image_17163939.jpg
 , 'Studio: Inferno Games, Publisher: Independent, Release Date: 2025-10-15, Country: Italy, Languages: English, Italian'
 )
 ,
@@ -306,8 +306,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A strategy game where players command fleets in epic space battles across the galaxy.'
 , 'Strategy, Sci-Fi, Multiplayer'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/mdzv2492wi4srs2jxntt.webp
+, https://media.istockphoto.com/id/1195199589/photo/dark-blue-spaceship-futuristic-interior-with-window-view-on-planet-earth-3d-rendering.jpg?s=612x612&w=0&k=20&c=H0_qt9Ry98ksk32RKqUBXlyWbnXtGlAt9ulqzq_UWl8=
 , 'Studio: Galactic Studios, Publisher: Sega, Release Date: 2025-11-20, Country: Japan, Languages: English, Japanese'
 )
 ,
@@ -316,8 +316,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A serene exploration game with magical creatures and environmental puzzles.'
 , 'Exploration, Puzzle, Fantasy'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co5sui.webp
+, https://wallpapers.com/images/hd/mystical-forest-1920-x-1080-qf4vghj9i70zl6yq.jpg
 , 'Studio: Mystic Games, Publisher: Indie Publisher, Release Date: 2025-12-05, Country: Australia, Languages: English'
 )
 ,
@@ -336,8 +336,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A rhythm-based adventure game with musical challenges and vibrant visuals.'
 , 'Rhythm, Adventure, Family'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co7oph.webp
+, https://cdn.soft112.com/my-little-pony-harmony-quest-ios/00/00/0G/5S/00000G5S7T/pad_screenshot_3A6F3X6V5E.png
 , 'Studio: Harmony Studios, Publisher: Nintendo, Release Date: 2025-10-30, Country: Japan, Languages: English, Japanese'
 )
 ,
@@ -346,8 +346,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A stealth-action game set in a noir-inspired city with deep character customization.'
 , 'Stealth, Action, Noir'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co9nhj.webp
+, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcdDogepxuzQXh8gwTygYuaKWgLnI9QTOU8d4SVgy7y5Nk4tukgQ4SkP7M5OW7GMZHjlg&usqp=CAU
 , 'Studio: Dark Games, Publisher: Warner Bros. Interactive, Release Date: 2025-11-10, Country: USA, Languages: English, French'
 )
 ,
@@ -376,8 +376,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A historical strategy game recreating epic battles from various eras.'
 , 'Strategy, Historical, Tactical'
 , 0.00
-, NULL
-, NULL
+, https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1704462892i/202012592.jpg
+, https://w0.peakpx.com/wallpaper/280/850/HD-wallpaper-the-dark-horizon-clouds-moon-horizon-sky-night-mountains.jpg
 , 'Studio: War Echoes, Publisher: Paradox Interactive, Release Date: 2025-10-20, Country: Sweden, Languages: English, Swedish'
 )
 ,
@@ -386,8 +386,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A puzzle adventure game set in underground caves filled with crystalline puzzles.'
 , 'Puzzle, Adventure, Fantasy'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co9naa.webp
+, https://i.pinimg.com/736x/9a/de/d5/9aded51ff2b9d681341b3b6b6585af82.jpg
 , 'Studio: Cavern Games, Publisher: Indie Publisher, Release Date: 2025-11-25, Country: Spain, Languages: English, Spanish'
 )
 ,
@@ -396,8 +396,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A space combat simulator with intense dogfights and planetary exploration.'
 , 'Simulation, Shooter, Sci-Fi'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co9i99.webp
+, https://cdn.mos.cms.futurecdn.net/ecAJ5nfpHLWxUC2Xd7RGbW-1200-80.jpg
 , 'Studio: Solar Games, Publisher: Ubisoft, Release Date: 2025-12-20, Country: France, Languages: English, French'
 )
 ,
@@ -406,8 +406,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A dark fantasy RPG with a focus on magic and cooperative multiplayer campaigns.'
 , 'RPG, Fantasy, Multiplayer'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co5ubz.webp
+, https://www.architectureofzelda.com/uploads/3/7/1/2/37126503/published/wvw69kiqsacqwhbwmh.jpg?1490155642
 , 'Studio: Twilight Studios, Publisher: Bandai Namco Entertainment, Release Date: 2025-09-05, Country: Japan, Languages: English, Japanese'
 )
 ,
@@ -416,8 +416,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A competitive drifting game with realistic physics and global leaderboards.'
 , 'Racing, Sports, Simulation'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co3oz2.webp
+, https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1469690/capsule_616x353.jpg?t=1750717020
 , 'Studio: Drift Kings Games, Publisher: Indie Publisher, Release Date: 2025-10-15, Country: Germany, Languages: English, German'
 )
 ,
@@ -446,8 +446,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A hacking simulator with real-time strategy elements in a digital world.'
 , 'Simulation, Strategy, Cyberpunk'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co6vue.webp
+, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9Kq16JMSEbJfTqlryXPHqHTYKeYwvrcCh9Q&s
 , 'Studio: Nexus Games, Publisher: Independent, Release Date: 2025-09-25, Country: USA, Languages: English'
 )
 ,
@@ -466,8 +466,8 @@ INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdr
 , 'A naval combat game with strategic depth and historical naval battles.'
 , 'Strategy, Simulation, Historical'
 , 0.00
-, NULL
-, NULL
+, https://images.igdb.com/igdb/image/upload/t_cover_big/co2nve.webp
+, https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGPsY5FeaYT6vGN1MrQHhtCVlvgrmnhnVWBvIh_RBTyhANu1OT-L9Pt54JmV1DtbcyAAM&usqp=CAU
 , 'Studio: Wave Games, Publisher: Sega, Release Date: 2025-11-15, Country: Japan, Languages: English, Japanese'
 )
 ,
