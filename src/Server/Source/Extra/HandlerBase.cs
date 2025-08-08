@@ -15,6 +15,12 @@ namespace Server.Source.Extra
         /// </summary>
         public abstract string Type { get; }
 
+
+        /// <summary>
+        /// Các route xử lý HEAD request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> HeadRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>
         /// Các route xử lý GET request.
         /// </summary>
@@ -36,6 +42,29 @@ namespace Server.Source.Extra
         protected Dictionary<string, Action<HttpRequest, HttpsSession>> DeleteRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
+        /// Các route xử lý OPTION request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> OptionsRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Các route xử lý TRACE request.
+        /// </summary>
+        protected Dictionary<string, Action<HttpRequest, HttpsSession>> TraceRoutes { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+
+        protected HandlerBase()
+        {
+            HeadRoutes[Type] = HeadHandle;
+            OptionsRoutes[Type] = OptionsHandle;
+            TraceRoutes[Type] = TraceHandle;
+            GetRoutes[Type] = GetHandle;
+            PostRoutes[Type] = PostHandle;
+            PutRoutes[Type] = PutHandle;
+            DeleteRoutes[Type] = DeleteHandle;
+
+        }
+
+        /// <summary>
         /// Kiểm tra xem handler này có thể xử lý path đã cho hay không.
         /// </summary>
         /// <param name="path">Đường dẫn URL được yêu cầu.</param>
@@ -53,10 +82,13 @@ namespace Server.Source.Extra
 
             Dictionary<string, Action<HttpRequest, HttpsSession>>? routes = request.Method.ToUpper() switch
             {
+                "HEAD" => HeadRoutes,
                 "GET" => GetRoutes,
                 "POST" => PostRoutes,
                 "PUT" => PutRoutes,
                 "DELETE" => DeleteRoutes,
+                "TRACE" => TraceRoutes,
+                "OPTIONS" => OptionsRoutes,
                 _ => null
             };
 
@@ -74,7 +106,7 @@ namespace Server.Source.Extra
         /// Xử lý HTTP HEAD request. Trả về header mà không có nội dung.
         /// </summary>
         /// <param name="session">Phiên kết nối hiện tại.</param>
-        public virtual void HeadHandle(HttpsSession session)
+        protected virtual void HeadHandle(HttpRequest request, HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeHeadResponse());
         }
@@ -82,27 +114,39 @@ namespace Server.Source.Extra
         /// <summary>
         /// Xử lý HTTP GET request. Ghi đè nếu cần custom riêng.
         /// </summary>
-        public virtual void GetHandle(HttpRequest request, HttpsSession session) { }
+        protected virtual void GetHandle(HttpRequest request, HttpsSession session)
+        {
+            ErrorHandle(session, "Method GET chưa được triển khai cho endpoint này!");
+        }
 
         /// <summary>
         /// Xử lý HTTP POST request. Ghi đè nếu cần custom riêng.
         /// </summary>
-        public virtual void PostHandle(HttpRequest request, HttpsSession session) { }
+        protected virtual void PostHandle(HttpRequest request, HttpsSession session)
+        {
+            ErrorHandle(session, "Method POST chưa được triển khai cho endpoint này!");
+        }
 
         /// <summary>
         /// Xử lý HTTP PUT request. Ghi đè nếu cần custom riêng.
         /// </summary>
-        public virtual void PutHandle(HttpRequest request, HttpsSession session) { }
+        protected virtual void PutHandle(HttpRequest request, HttpsSession session)
+        {
+            ErrorHandle(session, "Method PUT chưa được triển khai cho endpoint này!");
+        }
 
         /// <summary>
         /// Xử lý HTTP DELETE request. Ghi đè nếu cần custom riêng.
         /// </summary>
-        public virtual void DeleteHandle(HttpRequest request, HttpsSession session) { }
+        protected virtual void DeleteHandle(HttpRequest request, HttpsSession session)
+        {
+            ErrorHandle(session, "Method DELETE chưa được triển khai cho endpoint này!");
+        }
 
         /// <summary>
         /// Xử lý HTTP OPTIONS request. Trả về các phương thức được hỗ trợ.
         /// </summary>
-        public virtual void OptionsHandle(HttpRequest request, HttpsSession session)
+        protected virtual void OptionsHandle(HttpRequest request, HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeOptionsResponse());
         }
@@ -110,7 +154,7 @@ namespace Server.Source.Extra
         /// <summary>
         /// Xử lý HTTP TRACE request. Trả về nội dung của chính request gửi lên.
         /// </summary>
-        public virtual void TraceHandle(HttpRequest request, HttpsSession session)
+        protected virtual void TraceHandle(HttpRequest request, HttpsSession session)
         {
             session.SendResponseAsync(session.Response.MakeTraceResponse(request));
         }

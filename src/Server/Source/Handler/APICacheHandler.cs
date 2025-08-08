@@ -8,7 +8,7 @@ namespace Server.Source.Handler
     {
         public override string Type => "/api/cache";
 
-        public override void GetHandle(HttpRequest request, HttpsSession session)
+        protected override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var key = DecodeHelper.GetParamWithURL("key", request.Url);
 
@@ -33,7 +33,7 @@ namespace Server.Source.Handler
                 session.SendResponseAsync(session.Response.MakeErrorResponse(404, "Required cache value was not found for the key: " + key));
 
         }
-        public override void PostHandle(HttpRequest request, HttpsSession session)
+        protected override void PostHandle(HttpRequest request, HttpsSession session)
         {
             var key = DecodeHelper.GetParamWithURL("key", request.Url);
 
@@ -48,7 +48,7 @@ namespace Server.Source.Handler
             // Response with the cache value
             session.SendResponseAsync(session.Response.MakeOkResponse());
         }
-        public override void PutHandle(HttpRequest request, HttpsSession session)
+        protected override void PutHandle(HttpRequest request, HttpsSession session)
         {
             var key = DecodeHelper.GetParamWithURL("key", request.Url);
             var value = request.Body;
@@ -62,7 +62,7 @@ namespace Server.Source.Handler
             // Response with the cache value
             session.SendResponseAsync(session.Response.MakeOkResponse());
         }
-        public override void DeleteHandle(HttpRequest request, HttpsSession session)
+        protected override void DeleteHandle(HttpRequest request, HttpsSession session)
         {
             var key = DecodeHelper.GetParamWithURL("key", request.Url);
 

@@ -21,17 +21,6 @@ namespace Server.Source.Handler
             PostRoutes["/api/auth/logout"] = PostLogout;
             PostRoutes["/api/auth/forgetpassword"] = PostForgetPassword;
         }
-        public override void PostHandle(HttpRequest request, HttpsSession session)
-        {
-            if (PostRoutes.TryGetValue(request.Url, out var handler))
-            {
-                handler.Invoke(request, session);
-            }
-            else
-            {
-                ErrorHandle(session, "Không hỗ trợ: " + request.Url);
-            }
-        }
         private void PostLogin(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();

@@ -28,19 +28,16 @@ namespace Server.Source.Handler
         /// </summary>
         public APIUserHandler()
         {
-            GetRoutes[Type] = GetHandle;
-            PostRoutes[Type] = PostHandle;
             PutRoutes["/api/user/email"] = PutUserEmail;
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
             PutRoutes["/api/user/username"] = PutUserUsername;
             PutRoutes["/api/user/password"] = PutUserPassword;
-            DeleteRoutes[Type] = DeleteHandle;
         }
 
         /// <summary>
         /// Xử lý yêu cầu GET để lấy thông tin người dùng theo userId hoặc token.
         /// </summary>
-        public override void GetHandle(HttpRequest request, HttpsSession session)
+        protected override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
             if (string.IsNullOrEmpty(userId))
@@ -64,7 +61,7 @@ namespace Server.Source.Handler
         /// <summary>
         /// Xử lý POST cho việc đăng ký tài khoản người dùng.
         /// </summary>
-        public override void PostHandle(HttpRequest request, HttpsSession session)
+        protected override void PostHandle(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
 
@@ -164,7 +161,7 @@ namespace Server.Source.Handler
         /// <summary>
         /// Xử lý xóa tài khoản người dùng.
         /// </summary>
-        public override void DeleteHandle(HttpRequest request, HttpsSession session)
+        protected override void DeleteHandle(HttpRequest request, HttpsSession session)
         {
             var sessionManager = Simulation.GetModel<SessionManager>();
             if (!sessionManager.Authorization(request, out string userId, session))
