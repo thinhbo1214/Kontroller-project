@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diary - Kontroller</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <!-- Header -->
+  <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+          <div>
+            <h2 class="text-lg font-bold text-white">Username</h2>
+            <div class="flex items-center space-x-2 text-sm text-gray-300">
+              <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+              <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+            <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+          <a href="friends.html" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium flex items-center">
+            <i class="fas fa-users mr-2"></i>Friends and People
+          </a>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+        <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+        <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+        <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+        <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+        <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Diary</a>
+        <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+        <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Diary</h1>
+
+  <div class="space-y-10">
+
+    <!-- July 2025 -->
+    <div>
+      <div class="bg-gray-800 p-3 rounded-lg mb-4">
+        <h2 class="text-xl font-semibold text-white uppercase">July 2025</h2>
+      </div>
+      <div class="space-y-6">
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-gray-700 border border-gray-600 rounded-md flex items-center justify-center text-xl font-bold text-white">
+            17
+          </div>
+          <div class="flex-1 flex gap-4 items-center">
+            <img src="https://via.placeholder.com/40x60" class="rounded shadow">
+            <div>
+              <div class="font-bold text-white">The Witcher 3: Wild Hunt <span class="text-sm text-gray-400">2015</span></div>
+              <div class="text-green-400">
+                ★★★★½ 
+                <span class="text-gray-400 ml-2">❤️
+                  <i class="fas fa-layer-group text-blue-400 text-sm ml-1"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-gray-700 border border-gray-600 rounded-md flex items-center justify-center text-xl font-bold text-white">
+            12
+          </div>
+          <div class="flex-1 flex gap-4 items-center">
+            <img src="https://via.placeholder.com/40x60" class="rounded shadow">
+            <div>
+              <div class="font-bold text-white">Hades <span class="text-sm text-gray-400">2020</span></div>
+              <div class="text-green-400">
+                ★★★★ 
+                <span class="text-gray-400 ml-2">
+                  🔁 
+                  <i class="fas fa-layer-group text-gray-600 text-sm ml-1"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- June 2025 -->
+    <div>
+      <div class="bg-gray-800 p-3 rounded-lg mb-4">
+        <h2 class="text-xl font-semibold text-white uppercase">June 2025</h2>
+      </div>
+      <div class="space-y-6">
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-gray-700 border border-gray-600 rounded-md flex items-center justify-center text-xl font-bold text-white">
+            28
+          </div>
+          <div class="flex-1 flex gap-4 items-center">
+            <img src="https://via.placeholder.com/40x60" class="rounded shadow">
+            <div>
+              <div class="font-bold text-white">Stardew Valley <span class="text-sm text-gray-400">2016</span></div>
+              <div class="text-green-400">
+                ★★★½ 
+                <span class="text-gray-400 ml-2">❤️
+                  <i class="fas fa-layer-group text-blue-400 text-sm ml-1"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-gray-700 border border-gray-600 rounded-md flex items-center justify-center text-xl font-bold text-white">
+            21
+          </div>
+          <div class="flex-1 flex gap-4 items-center">
+            <img src="https://via.placeholder.com/40x60" class="rounded shadow">
+            <div>
+              <div class="font-bold text-white">Elden Ring <span class="text-sm text-gray-400">2022</span></div>
+              <div class="text-green-400">
+                ★★★★★ 
+                <span class="text-gray-400 ml-2">👾 ❤️
+                  <i class="fas fa-layer-group text-blue-400 text-sm ml-1"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+</body>
+</html>

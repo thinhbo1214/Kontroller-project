@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends & People - Kontroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .scroll-container {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .game-grid {
+            display: flex;
+            gap: 1rem;
+            padding: 0 1rem;
+            min-width: fit-content;
+        }
+        .game-item {
+            flex-shrink: 0;
+            width: 150px;
+        }
+        .game-poster {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        .game-poster:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header with Avatar, Username and Main Toolbar -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <!-- Top Bar with Avatar, Username and Search -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Left side: Avatar and Username -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Username</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-300">
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side: Search and Friends button -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-medium">
+                        <i class="fas fa-users mr-2"></i>Friends and People
+                    </button>
+                    
+                </div>
+            </div>
+                
+                <!-- Main Navigation -->
+                <nav class="flex space-x-4">
+                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                    <a href="activity.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Activity</a>
+                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                    <a href="lists.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Lists</a>
+                    <a href="diary.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Diary</a>
+                    <a href="likes.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Likes</a>
+                    <a href="playlaterlist.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">PlayLaterList</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold mb-2">Friends & People</h1>
+            <p class="text-gray-400">Discover what's trending and see what your friends are playing</p>
+        </div>
+
+        <!-- Popular Section -->
+        <section class="mb-12">
+            <div class="bg-blue-900 text-white py-3 px-6 rounded-t-lg">
+                <h2 class="text-xl font-bold">Popular</h2>
+            </div>
+            <div class="bg-gray-800 rounded-b-lg py-6">
+                <div class="scroll-container">
+                    <div class="game-grid">
+                        <!-- Game Item 1 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop" 
+                                     alt="Elden Ring" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Elden Ring</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 2 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop" 
+                                     alt="The Witcher 3" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">The Witcher 3</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 3 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop" 
+                                     alt="Cyberpunk 2077" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Cyberpunk 2077</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 4 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop" 
+                                     alt="Baldur's Gate 3" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Baldur's Gate 3</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 5 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop" 
+                                     alt="God of War" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">God of War</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 6 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop" 
+                                     alt="Horizon Zero Dawn" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Horizon Zero Dawn</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 7 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop" 
+                                     alt="Spider-Man" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Spider-Man</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 8 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop" 
+                                     alt="Red Dead Redemption 2" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Red Dead Redemption 2</h3>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Friend Activities Section -->
+        <section class="mb-12">
+            <div class="bg-blue-900 text-white py-3 px-6 rounded-t-lg">
+                <h2 class="text-xl font-bold">Friend Activities</h2>
+            </div>
+            <div class="bg-gray-800 rounded-b-lg py-6">
+                <div class="scroll-container">
+                    <div class="game-grid">
+                        <!-- Game Item 1 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop" 
+                                     alt="Elden Ring" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Elden Ring</h3>
+                                <div class="text-center mt-1">
+                                    <span class="text-green-400">★★★★★</span>
+                                    <i class="fas fa-heart text-red-500 text-sm ml-1"></i>
+                                    <i class="fas fa-layer-group text-blue-400 text-sm ml-1"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 2 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop" 
+                                     alt="Baldur's Gate 3" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Baldur's Gate 3</h3>
+                                <div class="text-center mt-1">
+                                    <span class="text-green-400">★★★★★</span>
+                                    <i class="fas fa-heart text-red-500 text-sm ml-1"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 3 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop" 
+                                     alt="God of War" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">God of War</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 4 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop" 
+                                     alt="Horizon Zero Dawn" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Horizon Zero Dawn</h3>
+                                <div class="text-center mt-1">
+                                    <span class="text-green-400">★★★★</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 5 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop" 
+                                     alt="Cyberpunk 2077" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Cyberpunk 2077</h3>
+                                <div class="text-center mt-1">
+                                    <span class="text-green-400">★★★½</span>
+                                    <i class="fas fa-layer-group text-blue-400 text-sm ml-1"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 6 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop" 
+                                     alt="Spider-Man" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Spider-Man</h3>
+                                <div class="text-center mt-1">
+                                    <span class="text-green-400">★★★★</span>
+                                    <i class="fas fa-heart text-red-500 text-sm ml-1"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 7 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop" 
+                                     alt="The Witcher 3" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">The Witcher 3</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 8 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop" 
+                                     alt="Red Dead Redemption 2" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Red Dead Redemption 2</h3>
+                                <div class="text-center mt-1">
+                                    <span class="text-green-400">★★★★½</span>
+                                    <i class="fas fa-heart text-red-500 text-sm ml-1"></i>
+                                    <i class="fas fa-layer-group text-blue-400 text-sm ml-1"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular with Friends Section -->
+        <section class="mb-12">
+            <div class="bg-blue-900 text-white py-3 px-6 rounded-t-lg">
+                <h2 class="text-xl font-bold">Popular with Friends</h2>
+            </div>
+            <div class="bg-gray-800 rounded-b-lg py-6">
+                <div class="scroll-container">
+                    <div class="game-grid">
+                        <!-- Game Item 1 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop" 
+                                     alt="God of War" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">God of War</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 2 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop" 
+                                     alt="Elden Ring" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Elden Ring</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 3 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop" 
+                                     alt="The Witcher 3" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">The Witcher 3</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 4 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop" 
+                                     alt="Baldur's Gate 3" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Baldur's Gate 3</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 5 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop" 
+                                     alt="Horizon Zero Dawn" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Horizon Zero Dawn</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 6 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop" 
+                                     alt="Red Dead Redemption 2" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Red Dead Redemption 2</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 7 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop" 
+                                     alt="Spider-Man" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Spider-Man</h3>
+                            </a>
+                        </div>
+
+                        <!-- Game Item 8 -->
+                        <div class="game-item">
+                            <a href="game-detail.html" class="block">
+                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop" 
+                                     alt="Cyberpunk 2077" class="game-poster">
+                                <h3 class="text-sm font-medium mt-2 text-center">Cyberpunk 2077</h3>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Friends List Section -->
+        <section class="mb-12">
+            <div class="bg-gray-800 rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-6">Your Friends</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Friend Card 1 -->
+                    <div class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" 
+                             alt="Sarah Wilson" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <h3 class="font-semibold">Sarah Wilson</h3>
+                            <p class="text-sm text-gray-400">Playing Baldur's Gate 3</p>
+                        </div>
+                        <button class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-user-friends"></i>
+                        </button>
+                    </div>
+
+                    <!-- Friend Card 2 -->
+                    <div class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" 
+                             alt="Mike Chen" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <h3 class="font-semibold">Mike Chen</h3>
+                            <p class="text-sm text-gray-400">Recently played Elden Ring</p>
+                        </div>
+                        <button class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-user-friends"></i>
+                        </button>
+                    </div>
+
+                    <!-- Friend Card 3 -->
+                    <div class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face" 
+                             alt="Emma Davis" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <h3 class="font-semibold">Emma Davis</h3>
+                            <p class="text-sm text-gray-400">Playing God of War</p>
+                        </div>
+                        <button class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-user-friends"></i>
+                        </button>
+                    </div>
+
+                    <!-- Friend Card 4 -->
+                    <div class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" 
+                             alt="John Doe" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <h3 class="font-semibold">John Doe</h3>
+                            <p class="text-sm text-gray-400">Recently reviewed Elden Ring</p>
+                        </div>
+                        <button class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-user-friends"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
