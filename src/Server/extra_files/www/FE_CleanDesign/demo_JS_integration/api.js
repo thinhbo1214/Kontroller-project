@@ -1,3 +1,35 @@
+// Profile screen demo
+// Add this to the existing APIUser class in api.js
+export class APIUser extends API {
+  static baseUrl = '/api/user';
+
+  // Update user profile (password, email, avatar, username)
+  async UpdateProfile(username, password, email, avatar) {
+    const formData = new FormData();
+    formData.append('username', username || '');
+    formData.append('password', password || '');
+    formData.append('email', email || '');
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+
+    const res = await this.POST('/profile', {
+      headers: {
+        'Accept': 'application/json'
+      },
+      body: formData
+    });
+
+    return res;
+  }
+
+  // Get user profile
+  async GetProfile() {
+    const res = await this.GET('/profile');
+    return res;
+  }
+}
+
 // Game screen demo
 class GameAPI {
   static async GetProfileGames(userId) {

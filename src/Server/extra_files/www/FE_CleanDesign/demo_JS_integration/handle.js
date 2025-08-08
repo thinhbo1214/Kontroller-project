@@ -1,3 +1,41 @@
+// Profile screen demo
+import { APIAuth, APIUser } from './api.js';
+import { Pages, UIManager } from './ui.js';
+
+// Initialize and export
+const UI = new UIManager();
+
+export class Handle {
+    static async Login(username, password) {
+        // Existing Login method remains unchanged...
+    }
+
+    static async Register(username, password, email) {
+        // Existing Register method remains unchanged...
+    }
+
+    static async UpdateProfile(username, password, email, avatar) {
+        const api = new APIUser();
+        const res = await api.UpdateProfile(username, password, email, avatar);
+        if (res.ok) {
+            UI.updateAvatarPreview(avatar); // Update preview if avatar changed
+            return true;
+        }
+        return false;
+    }
+
+    static async LoadProfile() {
+        const api = new APIUser();
+        const res = await api.GetProfile();
+        if (res.ok && res.data) {
+            UI.updateProfileDisplay(res.data);
+            return true;
+        }
+        UI.showError('Failed to load profile.');
+        return false;
+    }
+}
+
 // Game screen demo
 class Handle {
   static async handleProfileGamesFetch(userId) {
