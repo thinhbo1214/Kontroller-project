@@ -50,8 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Thêm các listener khác tùy bạn
 
     //-----------------------------------------------//
+
+    //lấy token load page (tạm thời mới chỉ load đc profile)
     listenWindow('load', () => {
-        UI.showLoading();
-        setTimeout(() => UI.hideLoading(), 500);
-    });
+            const path = window.location.pathname;
+            let fileName = path.substring(path.lastIndexOf('/') + 1);
+            const token1 = localStorage.getItem('token' )
+            if (token1 != null && (fileName == Pages.INDEX || fileName == Pages.AUTH || fileName == Pages.Register )){
+                
+                UI.goTo(Pages.PROFILE)
+            }
+            UI.showLoading();
+            setTimeout(() => UI.hideLoading(), 500);
+        })
 });
