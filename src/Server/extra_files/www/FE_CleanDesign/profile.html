@@ -80,7 +80,7 @@
                     <div>
                         <div class="flex items-center space-x-2">
                             <h2 id="usernameDisplay" class="text-lg font-bold text-white">Username</h2>
-                            <button id="editButton" class="text-blue-400 hover:text-blue-300 text-sm">Edit</button>
+                            <button id="editButton" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium text-white">Edit</button>
                         </div>
                         <!-- Edit Mode -->
                         <div id="editMode" class="hidden absolute bg-gray-800 p-4 rounded-lg shadow-lg mt-2 w-80 z-50">
@@ -89,6 +89,24 @@
                                 <button id="saveEdit" class="text-green-400 hover:text-green-300">Save</button>
                             </div>
                             <div class="space-y-4">
+                                <!-- Edit Avatar -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Change Avatar</label>
+                                    <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-600 cursor-pointer">
+                                        <input type="file" id="editAvatar" class="hidden" accept="image/*">
+                                        <img id="avatarPreview" src="https://via.placeholder.com/50x50" alt="Avatar Preview" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <!-- Edit Password -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Change Password</label>
+                                    <input id="editPassword" type="password" placeholder="Enter new password" class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <!-- Edit Email -->
+                                <div>
+                                    <label class="block text-sm text-gray-400">Change Email</label>
+                                    <input id="editEmail" type="email" placeholder="Enter new email" class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
+                                </div>
                                 <!-- Edit Name -->
                                 <div>
                                     <label class="block text-sm text-gray-400">Name</label>
@@ -387,11 +405,16 @@
         const searchInput = document.getElementById('searchInput');
         const closeSearchPopup = document.getElementById('closeSearchPopup');
         let activePosterIndex = null;
+        const editAvatar = document.getElementById('editAvatar');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const editPassword = document.getElementById('editPassword');
+        const editEmail = document.getElementById('editEmail');
 
         editButton.addEventListener('click', () => {
             editMode.classList.remove('hidden');
             editName.value = usernameDisplay.textContent;
             editBio.value = bioDisplay.textContent;
+            avatarPreview.src = document.querySelector('header img').src; // Sync with header avatar
             const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
             const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
             displayPosters.forEach((dp, i) => {
@@ -423,10 +446,31 @@
                 displayPosters[i].src = ep.src;
                 displayPosters[i].alt = ep.alt;
             });
+            if (editAvatar.files && editAvatar.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelector('header img').src = e.target.result;
+                    avatarPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(editAvatar.files[0]);
+            }
             editMode.classList.add('hidden');
             searchPopup.classList.remove('active');
             activePosterIndex = null;
         });
+
+        // Avatar Upload
+        editAvatar.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        avatarPreview.addEventListener('click', () => editAvatar.click());
 
         // Favorite Games Poster Editing
         const posters = favoriteGamesEdit.querySelectorAll('.editable-poster');
