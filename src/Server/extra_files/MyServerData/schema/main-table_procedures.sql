@@ -1,6 +1,6 @@
 ﻿/*
     Database: KontrollerDB
-    Description: Database for a game management system, storing information about users, games, reviews, comments, ratings, lists, activities, diaries, and their relationships.
+    Description: Database for a game management system, storing information about users, games, reviews, comments, reactions, lists, activities, diaries, and their relationships.
 */
 USE KontrollerDB;
 GO
@@ -93,7 +93,7 @@ BEGIN
     BEGIN
         SET @NewUserId = NULL;
         RETURN;
-    END;
+    END
 
     /* Generate new user ID */
     SET @NewUserId = NEWID();
@@ -107,12 +107,12 @@ BEGIN
     BEGIN
         SET @NewUserId = NULL;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
-    Procedure: UP_UpdateUsername
+    Procedure: UP_UpdateUserUsername
     Description: Updates the username of an existing user.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): ID of the user to update.
@@ -134,14 +134,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update username */
     UPDATE [Users] SET username = @NewUsername WHERE UserId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -167,14 +167,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update email */
     UPDATE [Users] SET email = @NewEmail WHERE UserId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -200,14 +200,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update avatar */
     UPDATE [Users] SET avatar = @NewAvatar WHERE UserId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -233,18 +233,18 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update login status */
     UPDATE [Users] SET isLoggedIn = @IsLoggedIn WHERE UserId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
-    Procedure: UP_UpdatePassword
+    Procedure: UP_UpdateUserPassword
     Description: Updates the password of an existing user.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): ID of the user to update.
@@ -266,16 +266,25 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update password with hashed value */
     UPDATE [Users] SET password_hash = HASHBYTES('SHA2_256', @NewPassword) WHERE UserId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_UpdateUserIncreaseFollowing
+    Description: Increments the number of users the specified user is following.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE UP_UpdateUserIncreaseFollowing
     @UserId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -283,19 +292,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberFollowing */
     UPDATE [Users] SET numberFollowing += 1 WHERE userId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_UpdateUserDecreaseFollowing
+    Description: Decrements the number of users the specified user is following.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE UP_UpdateUserDecreaseFollowing
     @UserId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -303,19 +323,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberFollowing */
     UPDATE [Users] SET numberFollowing -= 1 WHERE userId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_UpdateUserIncreaseFollower
+    Description: Increments the number of followers for the specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE UP_UpdateUserIncreaseFollower
     @UserId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -323,19 +354,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberFollower */
     UPDATE [Users] SET numberFollower += 1 WHERE userId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_UpdateUserDecreaseFollower
+    Description: Decrements the number of followers for the specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE UP_UpdateUserDecreaseFollower
     @UserId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -343,19 +385,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberFollower */
     UPDATE [Users] SET numberFollower -= 1 WHERE userId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_UpdateUserIncreaseList
+    Description: Increments the number of lists owned by the specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE UP_UpdateUserIncreaseList
     @UserId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -363,19 +416,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberList */
     UPDATE [Users] SET numberList += 1 WHERE userId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_UpdateUserDecreaseList
+    Description: Decrements the number of lists owned by the specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE UP_UpdateUserDecreaseList
     @UserId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -383,21 +447,23 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberList */
     UPDATE [Users] SET numberList -= 1 WHERE userId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
-    Procedure: UP_UpdateUserDetails
+    Procedure: UP_UpdateUserAll
     Description: Updates multiple user details (username, password, email, avatar, login status) in a single call.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): ID of the user to update.
@@ -422,33 +488,53 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Initialize result */
+    SET @Result = 0;
+
     /* Validate user ID */
     IF DBO.UF_UserIdExists(@UserId) = 0
     BEGIN
+        SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    DECLARE @TEMP INT = 0;
+    DECLARE @Temp INT = 0;
+
     /* Update username if provided */
-    EXEC DBO.UP_UpdateUserUsername @UserId, @Username, @Result = @TEMP OUTPUT;
-    SET @Result += @TEMP;
-    
+    IF @Username IS NOT NULL
+    BEGIN
+        EXEC DBO.UP_UpdateUserUsername @UserId, @Username, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
+
     /* Update password if provided */
-    EXEC DBO.UP_UpdateUserPassword @UserId, @Password, @Result = @TEMP OUTPUT;
-    SET @Result += @TEMP;
+    IF @Password IS NOT NULL
+    BEGIN
+        EXEC DBO.UP_UpdateUserPassword @UserId, @Password, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update email if provided */
-    EXEC DBO.UP_UpdateUserEmail @UserId, @Email, @Result = @TEMP OUTPUT;
-    SET @Result += @TEMP;
+    IF @Email IS NOT NULL
+    BEGIN
+        EXEC DBO.UP_UpdateUserEmail @UserId, @Email, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update avatar if provided */
-    EXEC DBO.UP_UpdateUserAvatar @UserId, @Avatar, @Result = @TEMP OUTPUT;
-    SET @Result += @TEMP;
+    IF @Avatar IS NOT NULL
+    BEGIN
+        EXEC DBO.UP_UpdateUserAvatar @UserId, @Avatar, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update login status if provided */
-    EXEC DBO.UP_UpdateUserLoginStatus @UserId, @IsUserLoggedIn, @Result = @TEMP OUTPUT;
-    SET @Result += @TEMP;
-END;
+    IF @IsUserLoggedIn IS NOT NULL
+    BEGIN
+        EXEC DBO.UP_UpdateUserLoginStatus @UserId, @IsUserLoggedIn, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
+END
 GO
 
 /* 
@@ -474,21 +560,21 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Delete user */
     DELETE FROM [Users] WHERE UserId = @UserId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-    
+
     /* Verify deletion success */
     IF DBO.UF_UserIdExists(@UserId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
@@ -507,16 +593,16 @@ BEGIN
 
     /* Return login status */
     SELECT DBO.UF_IsUserLoggedIn(@UserId) AS IsUserLoggedIn;
-END;
+END
 GO
 
 /* 
-    Procedure: UP_GetUserDetails
+    Procedure: UP_GetUserAll
     Description: Retrieves all details for a specified user.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): ID of the user to query.
     Returns:
-        TABLE: All columns from UF_GetUserDetails function.
+        TABLE: All columns from UF_GetUserAll function.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserAll
     @UserId UNIQUEIDENTIFIER
@@ -525,8 +611,8 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Return user details */
-    SELECT * FROM UF_GetUserAll(@UserId);
-END;
+    SELECT * FROM DBO.UF_GetUserAll(@UserId);
+END
 GO
 
 /* 
@@ -545,7 +631,7 @@ BEGIN
 
     /* Return avatar and username */
     SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar, DBO.UF_GetUsername(@UserId) AS Username;
-END;   
+END
 GO
 
 /* 
@@ -564,7 +650,7 @@ BEGIN
 
     /* Return email */
     SELECT DBO.UF_GetUserEmail(@UserId) AS Email;
-END;
+END
 GO
 
 /* 
@@ -583,7 +669,7 @@ BEGIN
 
     /* Return username */
     SELECT DBO.UF_GetUserUsername(@UserId) AS Username;
-END;
+END
 GO
 
 /* 
@@ -602,7 +688,7 @@ BEGIN
 
     /* Return avatar */
     SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar;
-END;
+END
 GO
 
 /* 
@@ -621,40 +707,64 @@ BEGIN
 
     /* Return login status */
     SELECT DBO.UF_IsUserLoggedIn(@UserId) AS IsLoggedIn;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_GetUserNumberFollower
+    Description: Retrieves the number of followers for a specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns:
+        INT: Number of followers or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE UP_GetUserNumberFollower
     @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return username */
+    /* Return number of followers */
     SELECT DBO.UF_GetUserNumberFollower(@UserId) AS NumberFollower;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_GetUserNumberFollowing
+    Description: Retrieves the number of users the specified user is following.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns:
+        INT: Number of users being followed or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE UP_GetUserNumberFollowing
     @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return username */
+    /* Return number of users being followed */
     SELECT DBO.UF_GetUserNumberFollowing(@UserId) AS NumberFollowing;
-END;
+END
 GO
 
+/* 
+    Procedure: UP_GetUserNumberList
+    Description: Retrieves the number of lists owned by the specified user.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): ID of the user to query.
+    Returns:
+        INT: Number of lists or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE UP_GetUserNumberList
     @UserId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return username */
+    /* Return number of lists */
     SELECT DBO.UF_GetUserNumberList(@UserId) AS NumberList;
-END;
+END
 GO
 
 /* 
@@ -673,7 +783,7 @@ BEGIN
 
     /* Return existence status */
     SELECT DBO.UF_UserIdExists(@UserId) AS UserIdExists;
-END;
+END
 GO
 
 /* 
@@ -701,7 +811,7 @@ BEGIN
     BEGIN
         SET @UserId = NULL;
         RETURN;
-    END;
+    END
 
     /* Retrieve user ID */
     SELECT @UserId = userId FROM [Users] WHERE username = @Username;
@@ -711,8 +821,8 @@ BEGIN
     BEGIN
         SET @UserId = NULL;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
@@ -755,7 +865,7 @@ BEGIN
         SET @NewPassword = NULL;
         RETURN;
     END
-END;
+END
 GO
 
 /* 
@@ -805,7 +915,7 @@ BEGIN
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -838,7 +948,7 @@ BEGIN
     BEGIN
         SET @GameId = NULL;
         RETURN;
-    END;
+    END
 
     /* Generate new game ID */
     SET @GameId = NEWID();
@@ -852,8 +962,8 @@ BEGIN
     BEGIN
         SET @GameId = NULL;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
@@ -879,14 +989,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update game title */
     UPDATE [Games] SET title = @NewTitle WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -912,14 +1022,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update game genre */
     UPDATE [Games] SET genre = @NewGenre WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -945,14 +1055,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update game description */
     UPDATE [Games] SET descriptions = @NewDescription WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -978,14 +1088,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update game details */
     UPDATE [Games] SET details = @NewDetails WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -1011,14 +1121,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update game poster */
     UPDATE [Games] SET poster = @NewPoster WHERE gameId = @GameId;
-    
+
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -1044,18 +1154,18 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update game backdrop */
     UPDATE [Games] SET backdrop = @NewBackdrop WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
-    Procedure: GP_UpdateGameAllInfo
+    Procedure: GP_UpdateGameAll
     Description: Updates multiple game attributes (title, genre, description, details, poster, backdrop) in a single call.
     Parameters:
         @GameId (UNIQUEIDENTIFIER): ID of the game to update.
@@ -1082,40 +1192,71 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Initialize result */
+    SET @Result = 0;
+
     /* Validate game ID */
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
+        SET @Result = 0;
         RETURN;
-    END;
+    END
 
     DECLARE @Temp INT;
 
     /* Update title if provided */
-    EXEC DBO.GP_UpdateGameTitle @GameId, @Title, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    IF @Title IS NOT NULL
+    BEGIN
+        EXEC DBO.GP_UpdateGameTitle @GameId, @Title, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update genre if provided */
-    EXEC DBO.GP_UpdateGameGenre @GameId, @Genre, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    IF @Genre IS NOT NULL
+    BEGIN
+        EXEC DBO.GP_UpdateGameGenre @GameId, @Genre, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update description if provided */
-    EXEC DBO.GP_UpdateGameDescription @GameId, @Descriptions, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    IF @Descriptions IS NOT NULL
+    BEGIN
+        EXEC DBO.GP_UpdateGameDescription @GameId, @Descriptions, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update details if provided */
-    EXEC DBO.GP_UpdateGameDetails @GameId, @Details, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    IF @Details IS NOT NULL
+    BEGIN
+        EXEC DBO.GP_UpdateGameDetails @GameId, @Details, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update poster if provided */
-    EXEC DBO.GP_UpdateGamePoster @GameId, @Poster, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    IF @Poster IS NOT NULL
+    BEGIN
+        EXEC DBO.GP_UpdateGamePoster @GameId, @Poster, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
     /* Update backdrop if provided */
-    EXEC DBO.GP_UpdateGameBackdrop @GameId, @Backdrop, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
-END;
+    IF @Backdrop IS NOT NULL
+    BEGIN
+        EXEC DBO.GP_UpdateGameBackdrop @GameId, @Backdrop, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
+END
 GO
 
+/* 
+    Procedure: GP_UpdateGameIncreaseReview
+    Description: Increments the number of reviews for the specified game.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE GP_UpdateGameIncreaseReview
     @GameId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1123,19 +1264,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate game ID */
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberReview */
     UPDATE [Games] SET numberReview += 1 WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: GP_UpdateGameDecreaseReview
+    Description: Decrements the number of reviews for the specified game.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE GP_UpdateGameDecreaseReview
     @GameId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1143,17 +1295,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate game ID */
     IF DBO.GF_GameIdExists(@GameId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberReview */
     UPDATE [Games] SET numberReview -= 1 WHERE gameId = @GameId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -1177,7 +1331,7 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Delete game */
     DELETE FROM [Games] WHERE gameId = @GameId;
@@ -1190,18 +1344,17 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
-    
-END;
+    END
+END
 GO
 
 /* 
-    Procedure: GP_GetGameAllInfo
+    Procedure: GP_GetGameAll
     Description: Retrieves all information for a specified game.
     Parameters:
         @GameId (UNIQUEIDENTIFIER): ID of the game to query.
     Returns:
-        TABLE: All columns from GF_GetGameAllInfo function.
+        TABLE: All columns from GF_GetGameAll function.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameAll
     @GameId UNIQUEIDENTIFIER
@@ -1210,8 +1363,8 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Return game details */
-    SELECT * FROM GF_GetGameAll(@GameId);
-END;
+    SELECT * FROM DBO.GF_GetGameAll(@GameId);
+END
 GO
 
 /* 
@@ -1230,7 +1383,7 @@ BEGIN
 
     /* Return game title */
     SELECT DBO.GF_GetGameTitle(@GameId) AS Title;
-END;
+END
 GO
 
 /* 
@@ -1249,7 +1402,7 @@ BEGIN
 
     /* Return game genre */
     SELECT DBO.GF_GetGameGenre(@GameId) AS Genre;
-END;
+END
 GO
 
 /* 
@@ -1268,7 +1421,7 @@ BEGIN
 
     /* Return game description */
     SELECT DBO.GF_GetGameDescription(@GameId) AS Description;
-END;
+END
 GO
 
 /* 
@@ -1287,7 +1440,7 @@ BEGIN
 
     /* Return game details */
     SELECT DBO.GF_GetGameDetails(@GameId) AS Details;
-END;
+END
 GO
 
 /* 
@@ -1306,7 +1459,7 @@ BEGIN
 
     /* Return game poster */
     SELECT DBO.GF_GetGamePoster(@GameId) AS Poster;
-END;
+END
 GO
 
 /* 
@@ -1325,18 +1478,26 @@ BEGIN
 
     /* Return game backdrop */
     SELECT DBO.GF_GetGameBackdrop(@GameId) AS Backdrop;
-END;
+END
 GO
 
+/* 
+    Procedure: GP_GetGameNumberReview
+    Description: Retrieves the number of reviews for a specified game.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): ID of the game to query.
+    Returns:
+        INT: Number of reviews or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE GP_GetGameNumberReview
     @GameId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return game backdrop */
+    /* Return number of reviews */
     SELECT DBO.GF_GetGameNumberReview(@GameId) AS NumberReview;
-END;
+END
 GO
 
 /* 
@@ -1360,7 +1521,7 @@ BEGIN
     BEGIN
         SET @ReviewId = NULL;
         RETURN;
-    END;
+    END
 
     /* Generate new review ID */
     SET @ReviewId = NEWID();
@@ -1374,8 +1535,8 @@ BEGIN
     BEGIN
         SET @ReviewId = NULL;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
@@ -1401,14 +1562,14 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update review content */
     UPDATE [Reviews] SET content = @Content WHERE reviewId = @ReviewId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -1434,18 +1595,18 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update review rating */
     UPDATE [Reviews] SET rating = @Rating WHERE reviewId = @ReviewId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
-    Procedure: RP_UpdateReviewDetails
+    Procedure: RP_UpdateReviewAll
     Description: Updates both content and rating of an existing review.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): ID of the review to update.
@@ -1464,24 +1625,43 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Initialize result */
+    SET @Result = 0;
+
     /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     DECLARE @Temp INT;
-    /* Update content */
-    EXEC RP_UpdateReviewContent @ReviewId, @Content, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
 
-    /* Update rating */
-    EXEC RP_UpdateReviewRating @ReviewId, @Rating, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
-END;
+    /* Update content if provided */
+    IF @Content IS NOT NULL
+    BEGIN
+        EXEC RP_UpdateReviewContent @ReviewId, @Content, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
+
+    /* Update rating if provided */
+    IF @Rating IS NOT NULL
+    BEGIN
+        EXEC RP_UpdateReviewRating @ReviewId, @Rating, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
+END
 GO
 
+/* 
+    Procedure: RP_UpdateReviewIncreaseReaction
+    Description: Increments the number of reactions for the specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE RP_UpdateReviewIncreaseReaction
     @ReviewId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1489,21 +1669,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Validate new password */
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Update password with hashed value */
+    /* Increment numberReaction */
     UPDATE [Reviews] SET numberReaction += 1 WHERE reviewId = @ReviewId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: RP_UpdateReviewDecreaseReaction
+    Description: Decrements the number of reactions for the specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE RP_UpdateReviewDecreaseReaction
     @ReviewId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1511,21 +1700,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Validate new password */
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Update password with hashed value */
+    /* Decrement numberReaction */
     UPDATE [Reviews] SET numberReaction -= 1 WHERE reviewId = @ReviewId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: RP_UpdateReviewIncreaseComment
+    Description: Increments the number of comments for the specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE RP_UpdateReviewIncreaseComment
     @ReviewId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1533,19 +1731,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberComment */
     UPDATE [Reviews] SET numberComment += 1 WHERE reviewId = @ReviewId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: RP_UpdateReviewDecreaseComment
+    Description: Decrements the number of comments for the specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE RP_UpdateReviewDecreaseComment
     @ReviewId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1553,17 +1762,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate review ID */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberComment */
     UPDATE [Reviews] SET numberComment -= 1 WHERE reviewId = @ReviewId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -1587,7 +1798,7 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Delete review */
     DELETE FROM [Reviews] WHERE reviewId = @ReviewId;
@@ -1600,19 +1811,17 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
-
-
-END;
+    END
+END
 GO
 
 /* 
-    Procedure: RP_GetReviewDetails
+    Procedure: RP_GetReviewAll
     Description: Retrieves all details for a specified review.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
     Returns:
-        TABLE: All columns from RF_GetReview function.
+        TABLE: All columns from RF_GetReviewAll function.
 */
 CREATE OR ALTER PROCEDURE RP_GetReviewAll
     @ReviewId UNIQUEIDENTIFIER
@@ -1622,7 +1831,7 @@ BEGIN
 
     /* Return review details */
     SELECT * FROM DBO.RF_GetReviewAll(@ReviewId);
-END;
+END
 GO
 
 /* 
@@ -1641,7 +1850,7 @@ BEGIN
 
     /* Return review content */
     SELECT DBO.RF_GetReviewContent(@ReviewId) AS Content;
-END;
+END
 GO
 
 /* 
@@ -1660,11 +1869,11 @@ BEGIN
 
     /* Return review rating */
     SELECT DBO.RF_GetReviewRating(@ReviewId) AS Rating;
-END;
+END
 GO
 
 /* 
-    Procedure: RP_GetReviewDate
+    Procedure: RP_GetReviewDateCreated
     Description: Retrieves the creation date of a specified review.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
@@ -1679,29 +1888,45 @@ BEGIN
 
     /* Return review creation date */
     SELECT DBO.RF_GetReviewDateCreated(@ReviewId) AS Date;
-END;
+END
 GO
 
+/* 
+    Procedure: RP_GetReviewNumberReaction
+    Description: Retrieves the number of reactions for a specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns:
+        INT: Number of reactions or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE RP_GetReviewNumberReaction
     @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return review creation date */
+    /* Return number of reactions */
     SELECT DBO.RF_GetReviewNumberReaction(@ReviewId) AS NumberReaction;
-END;
+END
 GO
 
+/* 
+    Procedure: RP_GetReviewNumberComment
+    Description: Retrieves the number of comments for a specified review.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): ID of the review to query.
+    Returns:
+        INT: Number of comments or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE RP_GetReviewNumberComment
     @ReviewId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return review creation date */
+    /* Return number of comments */
     SELECT DBO.RF_GetReviewNumberComment(@ReviewId) AS NumberComment;
-END;
+END
 GO
 
 /* 
@@ -1725,7 +1950,7 @@ BEGIN
     BEGIN
         SET @CommentId = NULL;
         RETURN;
-    END;
+    END
 
     /* Generate new comment ID */
     SET @CommentId = NEWID();
@@ -1739,8 +1964,8 @@ BEGIN
     BEGIN
         SET @CommentId = NULL;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
@@ -1766,16 +1991,25 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update comment content */
     UPDATE [Comments] SET content = @Content WHERE commentId = @CommentId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: CP_UpdateCommentIncreaseReaction
+    Description: Increments the number of reactions for the specified comment.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE CP_UpdateCommentIncreaseReaction
     @CommentId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1783,21 +2017,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Validate new password */
+    /* Validate comment ID */
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Update password with hashed value */
+    /* Increment numberReaction */
     UPDATE [Comments] SET numberReaction += 1 WHERE commentId = @CommentId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: CP_UpdateCommentDecreaseReaction
+    Description: Decrements the number of reactions for the specified comment.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE CP_UpdateCommentDecreaseReaction
     @CommentId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -1805,19 +2048,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Validate new password */
+    /* Validate comment ID */
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Update password with hashed value */
+    /* Decrement numberReaction */
     UPDATE [Comments] SET numberReaction -= 1 WHERE commentId = @CommentId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -1841,7 +2084,7 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Delete comment */
     DELETE FROM [Comments] WHERE commentId = @CommentId;
@@ -1854,19 +2097,17 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
-
-
-END;
+    END
+END
 GO
 
 /* 
-    Procedure: CP_GetCommentDetails
+    Procedure: CP_GetCommentAll
     Description: Retrieves all details for a specified comment.
     Parameters:
         @CommentId (UNIQUEIDENTIFIER): ID of the comment to query.
     Returns:
-        TABLE: All columns from CF_GetComment function.
+        TABLE: All columns from CF_GetCommentAll function.
 */
 CREATE OR ALTER PROCEDURE CP_GetCommentAll
     @CommentId UNIQUEIDENTIFIER
@@ -1876,7 +2117,7 @@ BEGIN
 
     /* Return comment details */
     SELECT * FROM DBO.CF_GetCommentAll(@CommentId);
-END;
+END
 GO
 
 /* 
@@ -1895,11 +2136,11 @@ BEGIN
 
     /* Return comment content */
     SELECT DBO.CF_GetCommentContent(@CommentId) AS Content;
-END;
+END
 GO
 
 /* 
-    Procedure: CP_GetCommentCreatedDate
+    Procedure: CP_GetCommentCreatedAt
     Description: Retrieves the creation date of a specified comment.
     Parameters:
         @CommentId (UNIQUEIDENTIFIER): ID of the comment to query.
@@ -1914,25 +2155,33 @@ BEGIN
 
     /* Return comment creation date */
     SELECT DBO.CF_GetCommentCreatedAt(@CommentId) AS CreatedAt;
-END;
+END
 GO
 
+/* 
+    Procedure: CP_GetCommentNumberReaction
+    Description: Retrieves the number of reactions for a specified comment.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): ID of the comment to query.
+    Returns:
+        INT: Number of reactions or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE CP_GetCommentNumberReaction
     @CommentId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return review creation date */
+    /* Return number of reactions */
     SELECT DBO.CF_GetCommentNumberReaction(@CommentId) AS NumberReaction;
-END;
+END
 GO
 
 /* 
     Procedure: LP_CreateList
-    Description: Creates a new list with specified name and optional description.
+    Description: Creates a new list with specified title and optional description.
     Parameters:
-        @Name (NVARCHAR(100)): List name.
+        @Title (NVARCHAR(100)): List title.
         @Descriptions (NVARCHAR(MAX)): List description (optional).
         @ListId (UNIQUEIDENTIFIER OUTPUT): Generated ID for the new list.
     Returns:
@@ -1946,13 +2195,13 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Validate list name and description */
+    /* Validate list title and description */
     IF DBO.LF_IsTitleLegal(@Title) = 0 OR
         DBO.LF_IsDescriptionLegal(@Descriptions) = 0
     BEGIN
         SET @ListId = NULL;
         RETURN;
-    END;
+    END
 
     /* Generate new list ID */
     SET @ListId = NEWID();
@@ -1966,16 +2215,16 @@ BEGIN
     BEGIN
         SET @ListId = NULL;
         RETURN;
-    END;
-END;
+    END
+END
 GO
 
 /* 
-    Procedure: LP_UpdateListName
-    Description: Updates the name of an existing list.
+    Procedure: LP_UpdateListTitle
+    Description: Updates the title of an existing list.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): ID of the list to update.
-        @Name (NVARCHAR(100)): New list name.
+        @Title (NVARCHAR(100)): New list title.
         @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
     Returns:
         @Result: Indicates success (1) or failure (0).
@@ -1988,19 +2237,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Validate new list name */
+    /* Validate new list title */
     IF DBO.LF_IsTitleLegal(@Title) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Update list name */
+    /* Update list title */
     UPDATE [Lists] SET title = @Title WHERE listId = @ListId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -2026,26 +2275,26 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Update list description */
     UPDATE [Lists] SET descriptions = @Descriptions WHERE listId = @ListId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
-    Procedure: LP_UpdateListDetails
-    Description: Updates both name and description of an existing list.
+    Procedure: LP_UpdateListAll
+    Description: Updates both title and description of an existing list.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): ID of the list to update.
-        @Name (NVARCHAR(100)): New list name.
+        @Title (NVARCHAR(100)): New list title.
         @Descriptions (NVARCHAR(MAX)): New list description.
         @Result (INT OUTPUT): Total number of rows affected by updates.
     Returns:
-        @Result: Sum of rows affected by name and description updates.
+        @Result: Sum of rows affected by title and description updates.
 */
 CREATE OR ALTER PROCEDURE LP_UpdateListAll
     @ListId UNIQUEIDENTIFIER,
@@ -2056,25 +2305,43 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Initialize result */
+    SET @Result = 0;
+
     /* Validate list ID */
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     DECLARE @Temp INT;
 
-    /* Update list name */
-    EXEC LP_UpdateListTitle @ListId, @Title, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    /* Update list title if provided */
+    IF @Title IS NOT NULL
+    BEGIN
+        EXEC LP_UpdateListTitle @ListId, @Title, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
 
-    /* Update list description */
-    EXEC LP_UpdateListDescriptions @ListId, @Descriptions, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
-END;
+    /* Update list description if provided */
+    IF @Descriptions IS NOT NULL
+    BEGIN
+        EXEC LP_UpdateListDescriptions @ListId, @Descriptions, @Result = @Temp OUTPUT;
+        SET @Result += @Temp;
+    END
+END
 GO
 
+/* 
+    Procedure: LP_UpdateListIncreaseGame
+    Description: Increments the number of games in the specified list.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE LP_UpdateListIncreaseGame
     @ListId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -2082,19 +2349,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate list ID */
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberGame */
     UPDATE [Lists] SET numberGame += 1 WHERE listId = @ListId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
+/* 
+    Procedure: LP_UpdateListDecreaseGame
+    Description: Decrements the number of games in the specified list.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE LP_UpdateListDecreaseGame
     @ListId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -2102,17 +2380,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate list ID */
     IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberGame */
     UPDATE [Lists] SET numberGame -= 1 WHERE listId = @ListId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
-END;
+END
 GO
 
 /* 
@@ -2136,7 +2416,7 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
     /* Delete list */
     DELETE FROM [Lists] WHERE listId = @ListId;
@@ -2149,18 +2429,17 @@ BEGIN
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
-
-END;
+    END
+END
 GO
 
 /* 
-    Procedure: LP_GetListDetails
+    Procedure: LP_GetListAll
     Description: Retrieves all details for a specified list.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): ID of the list to query.
     Returns:
-        TABLE: All columns from LF_GetList function.
+        TABLE: All columns from LF_GetListAll function.
 */
 CREATE OR ALTER PROCEDURE LP_GetListAll
     @ListId UNIQUEIDENTIFIER
@@ -2174,12 +2453,12 @@ END;
 GO
 
 /* 
-    Procedure: LP_GetListName
-    Description: Retrieves the name of a specified list.
+    Procedure: LP_GetListTitle
+    Description: Retrieves the title of a specified list.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): ID of the list to query.
     Returns:
-        NVARCHAR(100): List name or NULL if not found.
+        NVARCHAR(100): List title or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE LP_GetListTitle
     @ListId UNIQUEIDENTIFIER
@@ -2187,7 +2466,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return list name */
+    /* Return list title */
     SELECT DBO.LF_GetListTitle(@ListId) AS Title;
 END;
 GO
@@ -2212,7 +2491,7 @@ END;
 GO
 
 /* 
-    Procedure: LP_GetListCreatedDate
+    Procedure: LP_GetListCreatedAt
     Description: Retrieves the creation date of a specified list.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): ID of the list to query.
@@ -2230,13 +2509,21 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: LP_GetListNumberGame
+    Description: Retrieves the number of games in a specified list.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): ID of the list to query.
+    Returns:
+        INT: Number of games or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE LP_GetListNumberGame
     @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return review creation date */
+    /* Return number of games */
     SELECT DBO.LF_GetListNumberGame(@ListId) AS NumberGame;
 END;
 GO
@@ -2274,14 +2561,14 @@ BEGIN
     /* Verify insertion success */
     IF DBO.AF_ActivityIdExists(@ActivityId) = 0
     BEGIN
-        SET @ActivityId = NULL
+        SET @ActivityId = NULL;
         RETURN;
     END
 END;
 GO
 
 /* 
-    Procedure: AP_UpdateContent
+    Procedure: AP_UpdateActivityContent
     Description: Updates the content of an existing activity.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): ID of the activity to update.
@@ -2317,8 +2604,8 @@ END;
 GO
 
 /* 
-    Procedure: AP_UpdateActivity
-    Description: Updates all columns of an existing activity.
+    Procedure: AP_UpdateActivityAll
+    Description: Updates all attributes of an existing activity.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): ID of the activity to update.
         @Content (NVARCHAR(MAX)): New activity content.
@@ -2342,9 +2629,10 @@ BEGIN
     END
 
     DECLARE @Temp INT;
+
     /* Update activity content */
     EXEC AP_UpdateActivityContent @ActivityId, @Content, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    SET @Result = @Temp;
 END;
 GO
 
@@ -2384,17 +2672,16 @@ BEGIN
         SET @Result = 0;
         RETURN;
     END
-
 END;
 GO
 
 /* 
-    Procedure: AP_GetActivity
+    Procedure: AP_GetActivityAll
     Description: Retrieves all details for a specified activity.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): ID of the activity to query.
     Returns:
-        TABLE: All columns from AF_GetActivity function.
+        TABLE: All columns from AF_GetActivityAll function.
 */
 CREATE OR ALTER PROCEDURE AP_GetActivityAll
     @ActivityId UNIQUEIDENTIFIER
@@ -2408,7 +2695,7 @@ END;
 GO
 
 /* 
-    Procedure: AP_GetContent
+    Procedure: AP_GetActivityContent
     Description: Retrieves the content of a specified activity.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): ID of the activity to query.
@@ -2427,7 +2714,7 @@ END;
 GO
 
 /* 
-    Procedure: AP_GetDateDo
+    Procedure: AP_GetActivityDateDo
     Description: Retrieves the date performed for a specified activity.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): ID of the activity to query.
@@ -2476,7 +2763,7 @@ END;
 GO
 
 /* 
-    Procedure: DP_UpdateDateLogged
+    Procedure: DP_UpdateDiaryDateLogged
     Description: Updates the logged date of an existing diary entry.
     Parameters:
         @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to update.
@@ -2510,7 +2797,7 @@ GO
 
 /* 
     Procedure: DP_UpdateDiary
-    Description: Updates all columns of an existing diary entry.
+    Description: Updates all attributes of an existing diary entry.
     Parameters:
         @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to update.
         @DateLogged (DATETIME): New logged date.
@@ -2534,12 +2821,22 @@ BEGIN
     END
 
     DECLARE @Temp INT;
+
     /* Update logged date */
     EXEC DP_UpdateDiaryDateLogged @DiaryId, @DateLogged, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    SET @Result = @Temp;
 END;
 GO
 
+/* 
+    Procedure: DP_UpdateDiaryIncreaseGameLogged
+    Description: Increments the number of games logged in the specified diary entry.
+    Parameters:
+        @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE DP_UpdateDiaryIncreaseGameLogged
     @DiaryId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -2547,18 +2844,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate diary ID */
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Increment numberGameLogged */
     UPDATE [Diaries] SET numberGameLogged += 1 WHERE diaryId = @DiaryId;
 
     /* Return number of rows affected */
     SET @Result = @@ROWCOUNT;
 END;
 GO
+
+/* 
+    Procedure: DP_UpdateDiaryDecreaseGameLogged
+    Description: Decrements the number of games logged in the specified diary entry.
+    Parameters:
+        @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to update.
+        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
+    Returns:
+        @Result: Indicates success (1) or failure (0).
+*/
 CREATE OR ALTER PROCEDURE DP_UpdateDiaryDecreaseGameLogged
     @DiaryId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
@@ -2566,12 +2875,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* Validate diary ID */
     IF DBO.DF_DiaryIdExists(@DiaryId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
+    /* Decrement numberGameLogged */
     UPDATE [Diaries] SET numberGameLogged -= 1 WHERE diaryId = @DiaryId;
 
     /* Return number of rows affected */
@@ -2614,17 +2925,16 @@ BEGIN
         SET @Result = 0;
         RETURN;
     END
-
 END;
 GO
 
 /* 
-    Procedure: DP_GetDiary
+    Procedure: DP_GetDiaryAll
     Description: Retrieves all details for a specified diary entry.
     Parameters:
         @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to query.
     Returns:
-        TABLE: All columns from DF_GetDiary function.
+        TABLE: All columns from DF_GetDiaryAll function.
 */
 CREATE OR ALTER PROCEDURE DP_GetDiaryAll
     @DiaryId UNIQUEIDENTIFIER
@@ -2638,7 +2948,7 @@ END;
 GO
 
 /* 
-    Procedure: DP_GetDateLogged
+    Procedure: DP_GetDiaryDateLogged
     Description: Retrieves the logged date of a specified diary entry.
     Parameters:
         @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to query.
@@ -2656,13 +2966,21 @@ BEGIN
 END;
 GO
 
+/* 
+    Procedure: DP_GetDiaryNumberGameLogged
+    Description: Retrieves the number of games logged in a specified diary entry.
+    Parameters:
+        @DiaryId (UNIQUEIDENTIFIER): ID of the diary entry to query.
+    Returns:
+        INT: Number of games logged or NULL if not found.
+*/
 CREATE OR ALTER PROCEDURE DP_GetDiaryNumberGameLogged
     @DiaryId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Return review creation date */
+    /* Return number of games logged */
     SELECT DBO.DF_GetDiaryNumberGameLogged(@DiaryId) AS NumberGameLogged;
 END;
 GO
@@ -2723,7 +3041,7 @@ CREATE OR ALTER PROCEDURE RP_UpdateReactionType
 AS
 BEGIN
     SET NOCOUNT ON;
-    
+
     /* Validate reaction ID and type */
     IF DBO.RF_ReactionIdExists(@ReactionId) = 0 OR
        DBO.RF_IsReactionTypeLegal(@ReactionType) = 0
@@ -2742,7 +3060,7 @@ GO
 
 /* 
     Procedure: RP_UpdateReaction
-    Description: Updates all columns of an existing reaction.
+    Description: Updates all attributes of an existing reaction.
     Parameters:
         @ReactionId (UNIQUEIDENTIFIER): ID of the reaction to update.
         @ReactionType (INT): New reaction type.
@@ -2766,10 +3084,10 @@ BEGIN
     END
 
     DECLARE @Temp INT;
-    
+
     /* Update reaction type */
     EXEC RP_UpdateReactionType @ReactionId, @ReactionType, @Result = @Temp OUTPUT;
-    SET @Result += @Temp;
+    SET @Result = @Temp;
 END;
 GO
 
@@ -2808,17 +3126,16 @@ BEGIN
         SET @Result = 0;
         RETURN;
     END
-    
 END;
 GO
 
 /* 
-    Procedure: RP_GetReaction
+    Procedure: RP_GetReactionAll
     Description: Retrieves all details for a specified reaction.
     Parameters:
         @ReactionId (UNIQUEIDENTIFIER): ID of the reaction to query.
     Returns:
-        TABLE: All columns from RF_GetReaction function.
+        TABLE: All columns from RF_GetReactionAll function.
 */
 CREATE OR ALTER PROCEDURE RP_GetReactionAll
     @ReactionId UNIQUEIDENTIFIER

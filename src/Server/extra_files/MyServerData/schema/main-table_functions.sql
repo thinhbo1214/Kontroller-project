@@ -63,12 +63,12 @@ END;
 GO
 
 /* 
-    Function: UF_GetUserDetails
+    Function: UF_GetUserAll
     Description: Retrieves all details for a user based on their userId.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): The user ID to query.
     Returns:
-        TABLE: A table containing userId, username, email, avatar, and isLoggedIn.
+        TABLE: A table containing userId, username, email, avatar, isLoggedIn, numberFollower, numberFollowing, numberList.
 */
 CREATE OR ALTER FUNCTION UF_GetUserAll (
     @UserId UNIQUEIDENTIFIER
@@ -78,20 +78,20 @@ AS
 RETURN 
 (
     SELECT userId AS UserId,
-    username AS Username,
-    email AS Email,
-    avatar AS Avatar,
-    isLoggedIn AS IsLoggedIn,
-    numberFollower AS NumberFollower,
-    numberFollowing AS NumberFollowing,
-    numberList AS NumberList
+           username AS Username,
+           email AS Email,
+           avatar AS Avatar,
+           isLoggedIn AS IsLoggedIn,
+           numberFollower AS NumberFollower,
+           numberFollowing AS NumberFollowing,
+           numberList AS NumberList
     FROM [Users]
     WHERE userId = @UserId
 );
 GO
 
 /* 
-    Function: UF_GetUsername
+    Function: UF_GetUserUsername
     Description: Retrieves the username for a given userId.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): The user ID to query.
@@ -114,7 +114,7 @@ END;
 GO
 
 /* 
-    Function: UF_GetEmail
+    Function: UF_GetUserEmail
     Description: Retrieves the email for a given userId.
     Parameters:
         @UserId (UNIQUEIDENTIFIER): The user ID to query.
@@ -159,7 +159,14 @@ BEGIN
 END;
 GO
 
-
+/* 
+    Function: UF_GetUserNumberFollower
+    Description: Retrieves the number of followers for a given userId.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): The user ID to query.
+    Returns:
+        INT: The number of followers if the user exists, 0 otherwise.
+*/
 CREATE OR ALTER FUNCTION UF_GetUserNumberFollower (
     @UserId UNIQUEIDENTIFIER
 )
@@ -169,13 +176,20 @@ BEGIN
     IF DBO.UF_UserIdExists(@UserId) = 0
         RETURN 0; 
 
-    DECLARE @NumberFollower INT
+    DECLARE @NumberFollower INT;
     SELECT @NumberFollower = numberFollower FROM [Users] WHERE userId = @UserId; 
-    
     RETURN @NumberFollower; 
 END;
 GO
 
+/* 
+    Function: UF_GetUserNumberFollowing
+    Description: Retrieves the number of users followed by a given userId.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): The user ID to query.
+    Returns:
+        INT: The number of users followed if the user exists, 0 otherwise.
+*/
 CREATE OR ALTER FUNCTION UF_GetUserNumberFollowing (
     @UserId UNIQUEIDENTIFIER
 )
@@ -187,11 +201,18 @@ BEGIN
 
     DECLARE @NumberFollowing INT;
     SELECT @NumberFollowing = numberFollowing FROM [Users] WHERE userId = @UserId; 
-    
     RETURN @NumberFollowing; 
 END;
 GO
 
+/* 
+    Function: UF_GetUserNumberList
+    Description: Retrieves the number of lists created by a given userId.
+    Parameters:
+        @UserId (UNIQUEIDENTIFIER): The user ID to query.
+    Returns:
+        INT: The number of lists if the user exists, 0 otherwise.
+*/
 CREATE OR ALTER FUNCTION UF_GetUserNumberList (
     @UserId UNIQUEIDENTIFIER
 )
@@ -203,7 +224,6 @@ BEGIN
 
     DECLARE @NumberList INT;
     SELECT @NumberList = numberList FROM [Users] WHERE userId = @UserId; 
-    
     RETURN @NumberList; 
 END;
 GO
@@ -465,7 +485,6 @@ BEGIN
 END;
 GO
 
-
 /* 
     Section: Games Table Functions
 */
@@ -494,12 +513,12 @@ END;
 GO
 
 /* 
-    Function: GF_GetGameAllInfo
+    Function: GF_GetGameAll
     Description: Retrieves all details for a game based on its gameId.
     Parameters:
         @GameId (UNIQUEIDENTIFIER): The game ID to query.
     Returns:
-        TABLE: A table containing gameId, title, descriptions, genre, avgRating, poster, backdrop, and details.
+        TABLE: A table containing gameId, title, descriptions, genre, avgRating, poster, backdrop, details, numberReview.
 */
 CREATE OR ALTER FUNCTION GF_GetGameAll (
     @GameId UNIQUEIDENTIFIER
@@ -509,14 +528,14 @@ AS
 RETURN
 (
     SELECT gameId AS GameId,
-    title AS Title,
-    descriptions AS Descriptions,
-    genre AS Genre, 
-    avgRating AS AvgRating,
-    poster AS Poster,
-    backdrop AS Backdrop,
-    details AS Details,
-    numberReview AS NumberReview
+           title AS Title,
+           descriptions AS Descriptions,
+           genre AS Genre, 
+           avgRating AS AvgRating,
+           poster AS Poster,
+           backdrop AS Backdrop,
+           details AS Details,
+           numberReview AS NumberReview
     FROM [Games]
     WHERE gameId = @GameId
 );
@@ -704,6 +723,14 @@ RETURN
 );
 GO
 
+/* 
+    Function: GF_GetGameNumberReview
+    Description: Retrieves the number of reviews for a given gameId.
+    Parameters:
+        @GameId (UNIQUEIDENTIFIER): The game ID to query.
+    Returns:
+        INT: The number of reviews if the game exists, NULL otherwise.
+*/
 CREATE OR ALTER FUNCTION GF_GetGameNumberReview (
     @GameId UNIQUEIDENTIFIER
 )
@@ -896,7 +923,6 @@ BEGIN
 END;
 GO
 
-
 /* 
     Section: Review Table Functions
 */
@@ -925,12 +951,12 @@ END;
 GO
 
 /* 
-    Function: RF_GetReview
+    Function: RF_GetReviewAll
     Description: Retrieves all details for a review based on its reviewId.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): The review ID to query.
     Returns:
-        TABLE: A table containing all columns from the Reviews table.
+        TABLE: A table containing reviewId, content, rating, dateCreated, numberReaction, numberComment.
 */
 CREATE OR ALTER FUNCTION RF_GetReviewAll (
     @ReviewId UNIQUEIDENTIFIER
@@ -939,17 +965,18 @@ RETURNS TABLE
 AS
 RETURN (
     SELECT reviewId AS ReviewId,
-    content AS Content,
-    rating AS Rating,
-    dateCreated AS DateCreated,
-    numberReaction AS NumberReaction,
-    numberComment AS NumberComment
-    FROM [Reviews] WHERE reviewId = @ReviewId
+           content AS Content,
+           rating AS Rating,
+           dateCreated AS DateCreated,
+           numberReaction AS NumberReaction,
+           numberComment AS NumberComment
+    FROM [Reviews] 
+    WHERE reviewId = @ReviewId
 );
 GO
 
 /* 
-    Function: RF_GetContent
+    Function: RF_GetReviewContent
     Description: Retrieves the content for a given reviewId.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): The review ID to query.
@@ -972,7 +999,7 @@ END;
 GO
 
 /* 
-    Function: RF_GetRating
+    Function: RF_GetReviewRating
     Description: Retrieves the rating for a given reviewId.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): The review ID to query.
@@ -995,7 +1022,7 @@ END;
 GO
 
 /* 
-    Function: RF_GetDateCreated
+    Function: RF_GetReviewDateCreated
     Description: Retrieves the creation date for a given reviewId.
     Parameters:
         @ReviewId (UNIQUEIDENTIFIER): The review ID to query.
@@ -1017,6 +1044,14 @@ BEGIN
 END;
 GO
 
+/* 
+    Function: RF_GetReviewNumberReaction
+    Description: Retrieves the number of reactions for a given reviewId.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): The review ID to query.
+    Returns:
+        INT: The number of reactions if the review exists, NULL otherwise.
+*/
 CREATE OR ALTER FUNCTION RF_GetReviewNumberReaction (
     @ReviewId UNIQUEIDENTIFIER
 )
@@ -1032,6 +1067,14 @@ BEGIN
 END;
 GO
 
+/* 
+    Function: RF_GetReviewNumberComment
+    Description: Retrieves the number of comments for a given reviewId.
+    Parameters:
+        @ReviewId (UNIQUEIDENTIFIER): The review ID to query.
+    Returns:
+        INT: The number of comments if the review exists, NULL otherwise.
+*/
 CREATE OR ALTER FUNCTION RF_GetReviewNumberComment (
     @ReviewId UNIQUEIDENTIFIER
 )
@@ -1047,16 +1090,15 @@ BEGIN
 END;
 GO
 
-
 /* 
-    Function: RF_IsContentLegality
+    Function: RF_IsContentLegal
     Description: Checks if review content is valid (1-4000 characters).
     Parameters:
         @Content (NVARCHAR(MAX)): The review content to validate.
     Returns:
         BIT: 1 if the content is valid, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION RF_IsContentLegality (
+CREATE OR ALTER FUNCTION RF_IsContentLegal (
     @Content NVARCHAR(MAX)
 )
 RETURNS BIT
@@ -1075,14 +1117,14 @@ END;
 GO
 
 /* 
-    Function: RF_IsRatingLegality
+    Function: RF_IsRatingLegal
     Description: Checks if a review rating is valid (0-10).
     Parameters:
         @Rating (DECIMAL(4,2)): The rating to validate.
     Returns:
         BIT: 1 if the rating is valid, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION RF_IsRatingLegality (
+CREATE OR ALTER FUNCTION RF_IsRatingLegal (
     @Rating DECIMAL(4,2)
 )
 RETURNS BIT
@@ -1123,12 +1165,12 @@ END;
 GO
 
 /* 
-    Function: CF_GetComment
+    Function: CF_GetCommentAll
     Description: Retrieves all details for a comment based on its commentId.
     Parameters:
         @CommentId (UNIQUEIDENTIFIER): The comment ID to query.
     Returns:
-        TABLE: A table containing all columns from the Comments table.
+        TABLE: A table containing commentId, content, created_at, numberReaction.
 */
 CREATE OR ALTER FUNCTION CF_GetCommentAll (
     @CommentId UNIQUEIDENTIFIER
@@ -1137,16 +1179,16 @@ RETURNS TABLE
 AS
 RETURN (
     SELECT commentId AS CommentId,
-    content AS Content,
-    created_at AS CreatedAt,
-    numberReaction AS NumberReaction
+           content AS Content,
+           created_at AS CreatedAt,
+           numberReaction AS NumberReaction
     FROM [Comments] 
     WHERE commentId = @CommentId
 );
 GO
 
 /* 
-    Function: CF_GetContent
+    Function: CF_GetCommentContent
     Description: Retrieves the content for a given commentId.
     Parameters:
         @CommentId (UNIQUEIDENTIFIER): The comment ID to query.
@@ -1169,7 +1211,7 @@ END;
 GO
 
 /* 
-    Function: CF_GetCreatedAt
+    Function: CF_GetCommentCreatedAt
     Description: Retrieves the creation date for a given commentId.
     Parameters:
         @CommentId (UNIQUEIDENTIFIER): The comment ID to query.
@@ -1191,6 +1233,14 @@ BEGIN
 END;
 GO
 
+/* 
+    Function: CF_GetCommentNumberReaction
+    Description: Retrieves the number of reactions for a given commentId.
+    Parameters:
+        @CommentId (UNIQUEIDENTIFIER): The comment ID to query.
+    Returns:
+        INT: The number of reactions if the comment exists, NULL otherwise.
+*/
 CREATE OR ALTER FUNCTION CF_GetCommentNumberReaction (
     @CommentId UNIQUEIDENTIFIER
 )
@@ -1207,14 +1257,14 @@ END;
 GO
 
 /* 
-    Function: CF_IsContentLegality
+    Function: CF_IsContentLegal
     Description: Checks if comment content is valid (1-4000 characters).
     Parameters:
         @Content (NVARCHAR(MAX)): The comment content to validate.
     Returns:
         BIT: 1 if the content is valid, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION CF_IsContentLegality (
+CREATE OR ALTER FUNCTION CF_IsContentLegal (
     @Content NVARCHAR(MAX)
 )
 RETURNS BIT
@@ -1260,12 +1310,12 @@ END;
 GO
 
 /* 
-    Function: LF_GetList
+    Function: LF_GetListAll
     Description: Retrieves all details for a list based on its listId.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): The list ID to query.
     Returns:
-        TABLE: A table containing all columns from the Lists table.
+        TABLE: A table containing listId, title, descriptions, created_at, numberGame.
 */
 CREATE OR ALTER FUNCTION LF_GetListAll (
     @ListId UNIQUEIDENTIFIER
@@ -1274,22 +1324,22 @@ RETURNS TABLE
 AS
 RETURN (
     SELECT listId AS ListId,
-    title AS Title,
-    descriptions AS Descriptions,
-    created_at AS CreatedAt,
-    numberGame AS NumberGame
+           title AS Title,
+           descriptions AS Descriptions,
+           created_at AS CreatedAt,
+           numberGame AS NumberGame
     FROM [Lists] 
     WHERE listId = @ListId
 );
 GO
 
 /* 
-    Function: LF_GetName
-    Description: Retrieves the name for a given listId.
+    Function: LF_GetListTitle
+    Description: Retrieves the title for a given listId.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): The list ID to query.
     Returns:
-        NVARCHAR(100): The list name if the list exists, NULL otherwise.
+        NVARCHAR(100): The list title if the list exists, NULL otherwise.
 */
 CREATE OR ALTER FUNCTION LF_GetListTitle (
     @ListId UNIQUEIDENTIFIER
@@ -1307,7 +1357,7 @@ END;
 GO
 
 /* 
-    Function: LF_GetDescriptions
+    Function: LF_GetListDescriptions
     Description: Retrieves the description for a given listId.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): The list ID to query.
@@ -1330,7 +1380,7 @@ END;
 GO
 
 /* 
-    Function: LF_GetCreatedAt
+    Function: LF_GetListCreatedAt
     Description: Retrieves the creation date for a given listId.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): The list ID to query.
@@ -1352,6 +1402,14 @@ BEGIN
 END;
 GO
 
+/* 
+    Function: LF_GetListNumberGame
+    Description: Retrieves the number of games in a given listId.
+    Parameters:
+        @ListId (UNIQUEIDENTIFIER): The list ID to query.
+    Returns:
+        INT: The number of games if the list exists, NULL otherwise.
+*/
 CREATE OR ALTER FUNCTION LF_GetListNumberGame (
     @ListId UNIQUEIDENTIFIER
 )
@@ -1368,14 +1426,14 @@ END;
 GO
 
 /* 
-    Function: LF_IsNameLegal
-    Description: Checks if a list name is valid (non-empty).
+    Function: LF_IsListTitleLegal
+    Description: Checks if a list title is valid (1-100 characters, alphanumeric with _-).
     Parameters:
-        @Name (NVARCHAR(100)): The list name to validate.
+        @Title (NVARCHAR(100)): The list title to validate.
     Returns:
-        BIT: 1 if the name is valid, 0 otherwise.
+        BIT: 1 if the title is valid, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION LF_IsTitleLegal (
+CREATE OR ALTER FUNCTION LF_IsListTitleLegal (
     @Title NVARCHAR(100)
 )
 RETURNS BIT
@@ -1384,19 +1442,25 @@ BEGIN
     IF @Title IS NULL OR @Title = ''
         RETURN 0;
 
-    RETURN 1;
+    DECLARE @IsLegal BIT;
+    SELECT @IsLegal = CASE 
+        WHEN LEN(@Title) < 1 OR LEN(@Title) > 100 THEN 0
+        WHEN @Title LIKE '%[^a-zA-Z0-9_-]%' THEN 0
+        ELSE 1
+    END;
+    RETURN @IsLegal;
 END;
 GO
 
 /* 
-    Function: LF_IsDescriptionLegal
+    Function: LF_IsListDescriptionLegal
     Description: Checks if a list description is valid (1-4000 characters).
     Parameters:
         @Description (NVARCHAR(MAX)): The list description to validate.
     Returns:
         BIT: 1 if the description is valid, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION LF_IsDescriptionLegal (
+CREATE OR ALTER FUNCTION LF_IsListDescriptionLegal (
     @Description NVARCHAR(MAX)
 )
 RETURNS BIT
@@ -1411,6 +1475,30 @@ BEGIN
         ELSE 1
     END;
     RETURN @IsLegal;
+END;
+GO
+
+/* 
+    Function: LF_IsListInputValid
+    Description: Checks if list inputs (title, description) are valid.
+    Parameters:
+        @Title (NVARCHAR(100)): The list title to validate.
+        @Description (NVARCHAR(MAX)): The list description to validate.
+    Returns:
+        BIT: 1 if all inputs are valid, 0 otherwise.
+*/
+CREATE OR ALTER FUNCTION LF_IsListInputValid (
+    @Title NVARCHAR(100),
+    @Description NVARCHAR(MAX)
+)
+RETURNS BIT
+AS
+BEGIN
+    IF DBO.LF_IsListTitleLegal(@Title) = 0 OR 
+       DBO.LF_IsListDescriptionLegal(@Description) = 0
+        RETURN 0; -- Return 0 if any input is invalid
+
+    RETURN 1; -- Return 1 if all inputs are valid
 END;
 GO
 
@@ -1442,12 +1530,12 @@ END;
 GO
 
 /* 
-    Function: AF_GetActivity
+    Function: AF_GetActivityAll
     Description: Retrieves all details for an activity based on its activityId.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): The activity ID to query.
     Returns:
-        TABLE: A table containing all columns from the Activities table.
+        TABLE: A table containing activityId, content, dateDo.
 */
 CREATE OR ALTER FUNCTION AF_GetActivityAll (
     @ActivityId UNIQUEIDENTIFIER
@@ -1456,14 +1544,14 @@ RETURNS TABLE
 AS
 RETURN
     SELECT activityId AS ActivityId,
-    content AS Content,
-    dateDo AS DateDo
+           content AS Content,
+           dateDo AS DateDo
     FROM [Activities] 
     WHERE activityId = @ActivityId;
 GO
 
 /* 
-    Function: AF_GetContent
+    Function: AF_GetActivityContent
     Description: Retrieves the content for a given activityId.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): The activity ID to query.
@@ -1486,7 +1574,7 @@ END;
 GO
 
 /* 
-    Function: AF_GetDateDo
+    Function: AF_GetActivityDateDo
     Description: Retrieves the date performed for a given activityId.
     Parameters:
         @ActivityId (UNIQUEIDENTIFIER): The activity ID to query.
@@ -1562,12 +1650,12 @@ END;
 GO
 
 /* 
-    Function: DF_GetDiary
+    Function: DF_GetDiaryAll
     Description: Retrieves all details for a diary entry based on its diaryId.
     Parameters:
         @DiaryId (UNIQUEIDENTIFIER): The diary ID to query.
     Returns:
-        TABLE: A table containing all columns from the Diaries table.
+        TABLE: A table containing diaryId, dateLogged, numberGameLogged.
 */
 CREATE OR ALTER FUNCTION DF_GetDiaryAll (
     @DiaryId UNIQUEIDENTIFIER
@@ -1575,15 +1663,15 @@ CREATE OR ALTER FUNCTION DF_GetDiaryAll (
 RETURNS TABLE
 AS
 RETURN
-    SELECT diaryId AS diaryId,
-    dateLogged AS dateLogged,
-    numberGameLogged AS NumberGameLogged
+    SELECT diaryId AS DiaryId,
+           dateLogged AS DateLogged,
+           numberGameLogged AS NumberGameLogged
     FROM [Diaries] 
     WHERE diaryId = @DiaryId;
 GO
 
 /* 
-    Function: DF_GetDateLogged
+    Function: DF_GetDiaryDateLogged
     Description: Retrieves the logged date for a given diaryId.
     Parameters:
         @DiaryId (UNIQUEIDENTIFIER): The diary ID to query.
@@ -1605,6 +1693,14 @@ BEGIN
 END;
 GO
 
+/* 
+    Function: DF_GetDiaryNumberGameLogged
+    Description: Retrieves the number of games logged for a given diaryId.
+    Parameters:
+        @DiaryId (UNIQUEIDENTIFIER): The diary ID to query.
+    Returns:
+        INT: The number of games logged if the diary exists, NULL otherwise.
+*/
 CREATE OR ALTER FUNCTION DF_GetDiaryNumberGameLogged (
     @DiaryId UNIQUEIDENTIFIER
 )
@@ -1674,12 +1770,12 @@ END;
 GO
 
 /* 
-    Function: RF_GetReaction
+    Function: RF_GetReactionAll
     Description: Retrieves all details for a reaction based on its reactionId.
     Parameters:
         @ReactionId (UNIQUEIDENTIFIER): The reaction ID to query.
     Returns:
-        TABLE: A table containing all columns from the Reactions table.
+        TABLE: A table containing reactionId, reactionType, dateDo.
 */
 CREATE OR ALTER FUNCTION RF_GetReactionAll (
     @ReactionId UNIQUEIDENTIFIER
@@ -1688,8 +1784,8 @@ RETURNS TABLE
 AS
 RETURN (
     SELECT reactionId AS ReactionId,
-    reactionType AS ReactionType,
-    dateDo AS DateDo
+           reactionType AS ReactionType,
+           dateDo AS DateDo
     FROM [Reactions] 
     WHERE reactionId = @ReactionId
 );
@@ -1719,7 +1815,7 @@ END;
 GO
 
 /* 
-    Function: RF_GetDateDo
+    Function: RF_GetReactionDateDo
     Description: Retrieves the date performed for a given reactionId.
     Parameters:
         @ReactionId (UNIQUEIDENTIFIER): The reaction ID to query.

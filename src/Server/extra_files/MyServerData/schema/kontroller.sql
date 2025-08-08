@@ -359,16 +359,18 @@ CREATE TABLE [Reaction_User] (
 );
 GO
 
+
 /*
-    Table: ListItem_Game
-    Description: Links list items to their target games.
+    Table: List_Game
+    Description: Represents the many-to-many relationship between Lists and Games.
     Columns:
         - listId: Foreign key referencing Lists.
         - targetGame: Foreign key referencing Games.
     Constraints:
         - PRIMARY KEY: (listId, targetGame)
-        - FOREIGN KEY: listId, targetGame
-*/
+        - FOREIGN KEY: listId references Lists(listId)
+        - FOREIGN KEY: targetGame references Games(gameId)
+*/ 
 CREATE TABLE [List_Game] (
     listId UNIQUEIDENTIFIER NOT NULL,
     targetGame UNIQUEIDENTIFIER NOT NULL,

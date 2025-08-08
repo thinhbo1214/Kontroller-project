@@ -6,6 +6,10 @@ USE KontrollerDB;
 GO
 
 /* 
+    Section: Game_Service Table Functions
+*/
+
+/* 
     Function: GSF_GameServiceExists
     Description: Checks if a specified game ID and service name pair exists in the Game_Service table.
     Parameters:
@@ -23,9 +27,7 @@ AS
 BEGIN
     /* Validate input parameters */
     IF @GameId IS NULL OR @ServiceName IS NULL
-    BEGIN
         RETURN 0; -- Return 0 if either parameter is NULL
-    END;
 
     /* Check for existence of game-service pair */
     IF EXISTS (
@@ -33,9 +35,7 @@ BEGIN
         FROM [Game_Service] 
         WHERE gameId = @GameId AND serviceName = @ServiceName
     )
-    BEGIN
         RETURN 1; -- Return 1 if GameId and ServiceName pair exists
-    END;
 
     RETURN 0; -- Return 0 if GameId and ServiceName pair does not exist
 END;
@@ -99,14 +99,17 @@ CREATE OR ALTER FUNCTION GSF_IsServiceNameLegal (
 RETURNS BIT
 AS
 BEGIN
+    /* Validate input parameter */
     IF @ServiceName IS NULL
-    BEGIN
-        RETURN 0;
-    END;
-    RETURN CASE 
+        RETURN 0; -- Return 0 if ServiceName is NULL
+
+    /* Check length constraints */
+    DECLARE @IsLegal BIT;
+    SELECT @IsLegal = CASE 
         WHEN LEN(@ServiceName) < 1 OR LEN(@ServiceName) > 30 THEN 0
         ELSE 1
     END;
+    RETURN @IsLegal;
 END;
 GO
 
@@ -130,13 +133,15 @@ BEGIN
     IF DBO.GF_GameIdExists(@GameId) = 0 OR 
        DBO.GSF_IsServiceNameLegal(@ServiceName) = 0 OR 
        DBO.GSF_GameServiceExists(@GameId, @ServiceName) = 1
-    BEGIN
         RETURN 0; -- Return 0 if any condition is not met
-    END;
 
     RETURN 1; -- Return 1 if GameId and ServiceName can be used
 END;
 GO
+
+/* 
+    Section: User_Diary Table Functions
+*/
 
 /* 
     Function: UDF_UserDiaryExists
@@ -154,9 +159,6 @@ CREATE OR ALTER FUNCTION UDF_UserDiaryExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate user and diary existence */
-    IF DBO.UF_UserIdExists(@UserId) = 0 OR DBO.DF_DiaryIdExists(@DiaryId) = 0
-        RETURN 0;
 
     /* Check for existence of user-diary pair */
     RETURN (
@@ -169,6 +171,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: User_List Table Functions
+*/
 
 /* 
     Function: ULF_UserListExists
@@ -186,9 +192,6 @@ CREATE OR ALTER FUNCTION ULF_UserListExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate user and list existence */
-    IF DBO.UF_UserIdExists(@UserId) = 0 OR DBO.LF_ListIdExists(@ListId) = 0
-        RETURN 0;
 
     /* Check for existence of user-list pair */
     RETURN (
@@ -203,6 +206,10 @@ END;
 GO
 
 /* 
+    Section: User_User Table Functions
+*/
+
+/* 
     Function: UUF_UserUserExists
     Description: Checks if a follower-following user pair exists in the User_User table.
     Parameters:
@@ -211,16 +218,13 @@ GO
     Returns:
         BIT: 1 if the follower-following pair exists, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION DBO.UUF_UserUserExists (
+CREATE OR ALTER FUNCTION UUF_UserUserExists (
     @UserFollower UNIQUEIDENTIFIER,
     @UserFollowing UNIQUEIDENTIFIER
 )
 RETURNS BIT
 AS
 BEGIN
-    /* Validate both user IDs */
-    IF DBO.UF_UserIdExists(@UserFollower) = 0 OR DBO.UF_UserIdExists(@UserFollowing) = 0
-        RETURN 0;
 
     /* Check for existence of follower-following pair */
     RETURN (
@@ -233,6 +237,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: User_Activity Table Functions
+*/
 
 /* 
     Function: UAF_UserActivityExists
@@ -250,9 +258,6 @@ CREATE OR ALTER FUNCTION UAF_UserActivityExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate user and activity existence */
-    IF DBO.UF_UserIdExists(@UserId) = 0 OR DBO.AF_ActivityIdExists(@ActivityId) = 0
-        RETURN 0;
 
     /* Check for existence of user-activity pair */
     RETURN (
@@ -265,6 +270,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: Review_User Table Functions
+*/
 
 /* 
     Function: RUF_ReviewUserExists
@@ -282,9 +291,6 @@ CREATE OR ALTER FUNCTION RUF_ReviewUserExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate author and review existence */
-    IF DBO.UF_UserIdExists(@Author) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
-        RETURN 0;
 
     /* Check for existence of author-review pair */
     RETURN (
@@ -297,6 +303,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: Review_Reaction Table Functions
+*/
 
 /* 
     Function: RRF_ReviewReactionExists
@@ -314,9 +324,6 @@ CREATE OR ALTER FUNCTION RRF_ReviewReactionExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate reaction and review existence */
-    IF DBO.RF_ReactionIdExists(@ReactionId) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
-        RETURN 0;
 
     /* Check for existence of reaction-review pair */
     RETURN (
@@ -329,6 +336,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: Game_Review Table Functions
+*/
 
 /* 
     Function: GRF_GameReviewExists
@@ -346,9 +357,6 @@ CREATE OR ALTER FUNCTION GRF_GameReviewExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate game and review existence */
-    IF DBO.GF_GameIdExists(@GameId) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
-        RETURN 0;
 
     /* Check for existence of game-review pair */
     RETURN (
@@ -361,6 +369,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: Reaction_User Table Functions
+*/
 
 /* 
     Function: RUF_ReactionUserExists
@@ -378,9 +390,6 @@ CREATE OR ALTER FUNCTION RUF_ReactionUserExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate reaction and author existence */
-    IF DBO.UF_UserIdExists(@Author) = 0 OR DBO.RF_ReactionIdExists(@ReactionId) = 0
-        RETURN 0;
 
     /* Check for existence of reaction-author pair */
     RETURN (
@@ -395,36 +404,41 @@ END;
 GO
 
 /* 
+    Section: List_Game Table Functions
+*/
+
+/* 
     Function: LGF_ListGameExists
-    Description: Checks if a specified list item ID and game ID pair exists in the ListItem_Game table.
+    Description: Checks if a specified list ID and game ID pair exists in the List_Game table.
     Parameters:
-        @ListItemId (UNIQUEIDENTIFIER): ID of the list item to check.
-        @TargetGame (UNIQUEIDENTIFIER): ID of the game to check.
+        @ListId (UNIQUEIDENTIFIER): ID of the list to check.
+        @GameId (UNIQUEIDENTIFIER): ID of the game to check.
     Returns:
-        BIT: 1 if the list item-game pair exists, 0 otherwise.
+        BIT: 1 if the list-game pair exists, 0 otherwise.
 */
 CREATE OR ALTER FUNCTION LGF_ListGameExists (
     @ListId UNIQUEIDENTIFIER,
-    @TargetGame UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER
 )
 RETURNS BIT
 AS
 BEGIN
-    /* Validate list item and game existence */
-    IF DBO.LIF_ListIdExists(@ListId) = 0 OR DBO.GF_GameIdExists(@TargetGame) = 0
-        RETURN 0;
 
-    /* Check for existence of list item-game pair */
+    /* Check for existence of list-game pair */
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
                 SELECT 1 FROM [List_Game] 
-                WHERE listId = @ListId AND targetGame = @TargetGame
+                WHERE listId = @ListId AND targetGame = @GameId
             ) THEN 1 ELSE 0 
         END
     );
 END;
 GO
+
+/* 
+    Section: Comment_User Table Functions
+*/
 
 /* 
     Function: CUF_CommentUserExists
@@ -442,9 +456,6 @@ CREATE OR ALTER FUNCTION CUF_CommentUserExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate comment and author existence */
-    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR DBO.UF_UserIdExists(@Author) = 0
-        RETURN 0;
 
     /* Check for existence of comment-author pair */
     RETURN (
@@ -457,6 +468,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: Comment_Reaction Table Functions
+*/
 
 /* 
     Function: CRF_CommentReactionExists
@@ -474,9 +489,6 @@ CREATE OR ALTER FUNCTION CRF_CommentReactionExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate comment and reaction existence */
-    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR DBO.RF_ReactionIdExists(@ReactionId) = 0
-        RETURN 0;
 
     /* Check for existence of comment-reaction pair */
     RETURN (
@@ -489,6 +501,10 @@ BEGIN
     );
 END;
 GO
+
+/* 
+    Section: Comment_Review Table Functions
+*/
 
 /* 
     Function: CRF_CommentReviewExists
@@ -506,9 +522,6 @@ CREATE OR ALTER FUNCTION CRF_CommentReviewExists (
 RETURNS BIT
 AS
 BEGIN
-    /* Validate comment and review existence */
-    IF DBO.CF_CommentIdExists(@CommentId) = 0 OR DBO.RF_ReviewIdExists(@ReviewId) = 0
-        RETURN 0;
 
     /* Check for existence of comment-review pair */
     RETURN (
