@@ -99,22 +99,14 @@ CREATE OR ALTER FUNCTION GSF_IsServiceNameLegal (
 RETURNS BIT
 AS
 BEGIN
-    /* Check for NULL service name */
     IF @ServiceName IS NULL
     BEGIN
-        RETURN 0; -- Return 0 if ServiceName is NULL
+        RETURN 0;
     END;
-
-    DECLARE @IsLegal BIT;
-
-    /* Validate service name length and characters */
-    SELECT @IsLegal = CASE 
+    RETURN CASE 
         WHEN LEN(@ServiceName) < 1 OR LEN(@ServiceName) > 30 THEN 0
-        WHEN @ServiceName LIKE '%[^a-zA-Z0-9._-]%' THEN 0
         ELSE 1
     END;
-
-    RETURN @IsLegal;
 END;
 GO
 
@@ -403,39 +395,7 @@ END;
 GO
 
 /* 
-    Function: LLF_ListListItemExists
-    Description: Checks if a specified list ID and list item ID pair exists in the List_ListItem table.
-    Parameters:
-        @ListId (UNIQUEIDENTIFIER): ID of the list to check.
-        @ListItemId (UNIQUEIDENTIFIER): ID of the list item to check.
-    Returns:
-        BIT: 1 if the list-list item pair exists, 0 otherwise.
-*/
-CREATE OR ALTER FUNCTION LLF_ListListItemExists (
-    @ListId UNIQUEIDENTIFIER,
-    @ListItemId UNIQUEIDENTIFIER
-)
-RETURNS BIT
-AS
-BEGIN
-    /* Validate list and list item existence */
-    IF DBO.LF_ListIdExists(@ListId) = 0 OR DBO.LIF_ListItemIdExists(@ListItemId) = 0
-        RETURN 0;
-
-    /* Check for existence of list-list item pair */
-    RETURN (
-        SELECT CASE 
-            WHEN EXISTS (
-                SELECT 1 FROM [List_ListItem] 
-                WHERE listId = @ListId AND listItemId = @ListItemId
-            ) THEN 1 ELSE 0 
-        END
-    );
-END;
-GO
-
-/* 
-    Function: LIGF_ListItemGameExists
+    Function: LGF_ListGameExists
     Description: Checks if a specified list item ID and game ID pair exists in the ListItem_Game table.
     Parameters:
         @ListItemId (UNIQUEIDENTIFIER): ID of the list item to check.
@@ -443,23 +403,23 @@ GO
     Returns:
         BIT: 1 if the list item-game pair exists, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION LIGF_ListItemGameExists (
-    @ListItemId UNIQUEIDENTIFIER,
+CREATE OR ALTER FUNCTION LGF_ListGameExists (
+    @ListId UNIQUEIDENTIFIER,
     @TargetGame UNIQUEIDENTIFIER
 )
 RETURNS BIT
 AS
 BEGIN
     /* Validate list item and game existence */
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0 OR DBO.GF_GameIdExists(@TargetGame) = 0
+    IF DBO.LIF_ListIdExists(@ListId) = 0 OR DBO.GF_GameIdExists(@TargetGame) = 0
         RETURN 0;
 
     /* Check for existence of list item-game pair */
     RETURN (
         SELECT CASE 
             WHEN EXISTS (
-                SELECT 1 FROM [ListItem_Game] 
-                WHERE listItemId = @ListItemId AND targetGame = @TargetGame
+                SELECT 1 FROM [List_Game] 
+                WHERE listId = @ListId AND targetGame = @TargetGame
             ) THEN 1 ELSE 0 
         END
     );

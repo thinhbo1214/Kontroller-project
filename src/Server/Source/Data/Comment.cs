@@ -33,13 +33,22 @@
         /// </summary>
         public List<Guid> Reactions { get; set; }
 
+        public int NumberReaction { get; set; }
+
+        public Guid ReviewId { get; set; }
+
         public Comment() 
         {
             CommentId = Guid.Empty;
             Content = "";
             Author = Guid.Empty;
             DateCreated = "";
+            NumberReaction = 0;
+
+            ReviewId = Guid.Empty;
             Reactions = new List<Guid>();
+            
+
         }
     }
 }

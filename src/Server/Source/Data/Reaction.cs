@@ -9,13 +9,13 @@
         /// Unique identifier for the reaction.
         /// </summary>
         /// <example>'001'</example>
-        public string ReactId { get; set; }
+        public string ReactionId { get; set; }
 
         /// <summary>
         /// URL of the reaction type, such as an emoji or icon representing the reaction.
         /// </summary>
-        /// <example>'https://example.com/reaction.png'</example>
-        public string ReactionType { get; set; }
+        /// <example>0-4</example>
+        public int ReactionType { get; set; }
 
         /// <summary>
         /// The user who performed the reaction.
@@ -30,8 +30,8 @@
 
         public Reaction()
         {
-            ReactId = "";
-            ReactionType = "";
+            ReactionId = "";
+            ReactionType = 0;
             Author = Guid.Empty;
             DateDo = "";
         }

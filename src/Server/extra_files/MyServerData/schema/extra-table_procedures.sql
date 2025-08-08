@@ -1560,188 +1560,18 @@ BEGIN
 END;
 GO
 
+
 /* 
-    Procedure: LLP_AddListListItem
-    Description: Adds a list-list item association to the List_ListItem table.
+    Procedure: LGP_AddListGame
+    Description: Adds a list-game association to the List_Game table.
     Parameters:
         @ListId (UNIQUEIDENTIFIER): ID of the list.
-        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
-        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
-    Returns: None (sets @Result to indicate success or failure).
-*/
-CREATE OR ALTER PROCEDURE LLP_AddListListItem
-    @ListId UNIQUEIDENTIFIER,
-    @ListItemId UNIQUEIDENTIFIER,
-    @Result INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Check if list-list item pair already exists */
-    IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Insert list-list item pair */
-    INSERT INTO [List_ListItem] (listId, listItemId)
-    VALUES (@ListId, @ListItemId);
-    SET @Result = @@ROWCOUNT;
-
-    /* Verify insertion */
-    IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-END;
-GO
-
-/* 
-    Procedure: LLP_DeleteListListItem
-    Description: Removes a list-list item association from the List_ListItem table.
-    Parameters:
-        @ListId (UNIQUEIDENTIFIER): ID of the list.
-        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
-        @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
-    Returns: None (sets @Result to indicate success or failure).
-*/
-CREATE OR ALTER PROCEDURE LLP_DeleteListListItem
-    @ListId UNIQUEIDENTIFIER,
-    @ListItemId UNIQUEIDENTIFIER,
-    @Result INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Check if list-list item pair exists */
-    IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 0
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Delete list-list item pair */
-    DELETE FROM [List_ListItem] WHERE listId = @ListId AND listItemId = @ListItemId;
-    SET @Result = @@ROWCOUNT;
-
-    /* Verify deletion */
-    IF DBO.LLF_ListListItemExists(@ListId, @ListItemId) = 1
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-    
-END;
-GO
-
-CREATE OR ALTER PROCEDURE LLP_DeleteListItemByList
-    @ListId UNIQUEIDENTIFIER,
-    @Result INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Check if list-list item pair exists */
-    IF DBO.LF_ListIdExists(@ListId) = 0
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Delete list-list item pair */
-    DELETE FROM [List_ListItem] WHERE listId = @ListId;
-    SET @Result = @@ROWCOUNT;
-
-    /* Verify deletion */
-    IF DBO.LF_ListIdExists(@ListId) = 1
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-    
-END;
-GO
-
-/* 
-    Procedure: LLP_GetAllListListItem
-    Description: Retrieves all list-list item associations from the List_ListItem table.
-    Parameters: None
-    Returns: Result set containing all list-list item pairs.
-*/
-CREATE OR ALTER PROCEDURE LLP_GetAllListListItem
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Select all list-list item pairs */
-    SELECT * FROM [List_ListItem];
-END;
-GO
-
-/* 
-    Procedure: LLP_GetListItemsOfList
-    Description: Retrieves all list item IDs associated with a specified list.
-    Parameters:
-        @ListId (UNIQUEIDENTIFIER): ID of the list to query.
-    Returns: Result set containing list item IDs for the specified list, or NULL if list does not exist.
-*/
-CREATE OR ALTER PROCEDURE LLP_GetListItemsOfList
-    @ListId UNIQUEIDENTIFIER
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Validate list ID */
-    IF DBO.LF_ListIdExists(@ListId) = 0
-    BEGIN
-        SELECT NULL AS ListItemId;
-        RETURN;
-    END;
-
-    /* Select list item IDs for the list */
-    SELECT listItemId FROM [List_ListItem] WHERE listId = @ListId;
-END;
-GO
-
-/* 
-    Procedure: LLP_GetListsOfListItem
-    Description: Retrieves all list IDs associated with a specified list item.
-    Parameters:
-        @ListItemId (UNIQUEIDENTIFIER): ID of the list item to query.
-    Returns: Result set containing list IDs for the specified list item, or NULL if list item does not exist.
-*/
-CREATE OR ALTER PROCEDURE LLP_GetListsOfListItem
-    @ListItemId UNIQUEIDENTIFIER
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Validate list item ID */
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
-    BEGIN
-        SELECT NULL AS ListId;
-        RETURN;
-    END;
-
-    /* Select list IDs for the list item */
-    SELECT listId FROM [List_ListItem] WHERE listItemId = @ListItemId;
-END;
-GO
-
-/* 
-    Procedure: LIGP_AddListItemGame
-    Description: Adds a list item-game association to the ListItem_Game table.
-    Parameters:
-        @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
         @TargetGame (UNIQUEIDENTIFIER): ID of the game.
         @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
     Returns: None (sets @Result to indicate success or failure).
 */
-CREATE OR ALTER PROCEDURE LIGP_AddListItemGame
-    @ListItemId UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE LGP_AddListGame
+    @ListId UNIQUEIDENTIFIER,
     @TargetGame UNIQUEIDENTIFIER,
     @Result INT OUTPUT
 AS
@@ -1749,19 +1579,19 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Check if list item-game pair already exists */
-    IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
+    IF DBO.LGF_ListGameExists(@ListId, @TargetGame) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
     /* Insert list item-game pair */
-    INSERT INTO [ListItem_Game] (listItemId, targetGame)
-    VALUES (@ListItemId, @TargetGame);
+    INSERT INTO [List_Game] (listId, targetGame)
+    VALUES (@ListId, @TargetGame);
     SET @Result = @@ROWCOUNT;
 
     /* Verify insertion */
-    IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
+    IF DBO.LGF_ListGameExists(@ListId, @TargetGame) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1771,7 +1601,7 @@ END;
 GO
 
 /* 
-    Procedure: LIGP_DeleteListItemGame
+    Procedure: LGP_DeleteListItemGame
     Description: Removes a list item-game association from the ListItem_Game table.
     Parameters:
         @ListItemId (UNIQUEIDENTIFIER): ID of the list item.
@@ -1779,8 +1609,8 @@ GO
         @Result (INT OUTPUT): Number of rows affected (1 for success, 0 for failure).
     Returns: None (sets @Result to indicate success or failure).
 */
-CREATE OR ALTER PROCEDURE LIGP_DeleteListItemGame
-    @ListItemId UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE LGP_DeleteListItemGame
+    @ListId UNIQUEIDENTIFIER,
     @TargetGame UNIQUEIDENTIFIER,
     @Result INT OUTPUT
 AS
@@ -1788,18 +1618,18 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Check if list item-game pair exists */
-    IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 0
+    IF DBO.LGF_ListGameExists(@ListId, @TargetGame) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
     /* Delete list item-game pair */
-    DELETE FROM [ListItem_Game] WHERE listItemId = @ListItemId AND targetGame = @TargetGame;
+    DELETE FROM [List_Game] WHERE listId = @ListId AND targetGame = @TargetGame;
     SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
-    IF DBO.LIGF_ListItemGameExists(@ListItemId, @TargetGame) = 1
+    IF DBO.LGF_ListGameExists(@ListId, @TargetGame) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1808,54 +1638,26 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE LIGP_DeleteGameByListItem
-    @ListItemId UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE LGP_DeleteGameByListItem
+    @ListId UNIQUEIDENTIFIER,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Check if list item-game pair exists */
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
+    IF DBO.LF_ListIdExists(@ListId) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
     END;
 
     /* Delete list item-game pair */
-    DELETE FROM [ListItem_Game] WHERE listItemId = @ListItemId;
+    DELETE FROM [List_Game] WHERE listId = @ListId;
     SET @Result = @@ROWCOUNT;
 
     /* Verify deletion */
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 1
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-END;
-GO
-
-CREATE OR ALTER PROCEDURE LIGP_DeleteListItemByGame
-    @TargetGame UNIQUEIDENTIFIER,
-    @Result INT OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    /* Check if list item-game pair exists */
-    IF DBO.GF_GameIdExists(@TargetGame) = 0
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END;
-
-    /* Delete list item-game pair */
-    DELETE FROM [ListItem_Game] WHERE targetGame = @TargetGame;
-    SET @Result = @@ROWCOUNT;
-
-    /* Verify deletion */
-    IF DBO.GF_GameIdExists(@TargetGame) = 1
+    IF DBO.LF_ListIdExists(@ListId) = 1
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1870,13 +1672,13 @@ GO
     Parameters: None
     Returns: Result set containing all list item-game pairs.
 */
-CREATE OR ALTER PROCEDURE LIGP_GetAllListItemGame
+CREATE OR ALTER PROCEDURE LGP_GetAllListGame
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Select all list item-game pairs */
-    SELECT * FROM [ListItem_Game];
+    SELECT * FROM [List_Game];
 END;
 GO
 
@@ -1887,32 +1689,32 @@ GO
         @ListItemId (UNIQUEIDENTIFIER): ID of the list item to query.
     Returns: Result set containing game IDs for the specified list item, or NULL if list item does not exist.
 */
-CREATE OR ALTER PROCEDURE LIGP_GetGamesOfListItem
-    @ListItemId UNIQUEIDENTIFIER
+CREATE OR ALTER PROCEDURE LGP_GetGamesOfListItem
+    @ListId UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Validate list item ID */
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
+    IF DBO.LF_ListIdExists(@ListId)= 0
     BEGIN
         SELECT NULL AS TargetGame;
         RETURN;
     END;
 
     /* Select game IDs for the list item */
-    SELECT targetGame FROM [ListItem_Game] WHERE listItemId = @ListItemId;
+    SELECT targetGame FROM [List_Game] WHERE listId = @ListId;
 END;
 GO
 
 /* 
-    Procedure: LIGP_GetListItemsOfGame
+    Procedure: LGP_GetListItemsOfGame
     Description: Retrieves all list item IDs associated with a specified game.
     Parameters:
         @TargetGame (UNIQUEIDENTIFIER): ID of the game to query.
     Returns: Result set containing list item IDs for the specified game, or NULL if game does not exist.
 */
-CREATE OR ALTER PROCEDURE LIGP_GetListItemsOfGame
+CREATE OR ALTER PROCEDURE LGP_GetListItemsOfGame
     @TargetGame UNIQUEIDENTIFIER
 AS
 BEGIN
@@ -1926,7 +1728,7 @@ BEGIN
     END;
 
     /* Select list item IDs for the game */
-    SELECT listItemId FROM [ListItem_Game] WHERE targetGame = @TargetGame;
+    SELECT listId FROM [List_Game] WHERE targetGame = @TargetGame;
 END;
 GO
 

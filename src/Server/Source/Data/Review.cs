@@ -17,17 +17,36 @@
         /// <example>'This is a review.'</example>
         public string Content { get; set; }
 
+        public int Rating { get; set; }
+
         /// <summary>
         /// The date the review was created, in YYYY-MM-DD format.
         /// </summary>
         /// <example>'2023-10-01'</example>
         /// 
         public string DateCreated { get; set; }
+
+        public Guid Author { get; set; }
+
+        public List<Guid> CommentId { get; set; }
+        public int NumberComment { get; set; }
+
+        public List<Guid> ReactionId { get; set; }
+
+        public int NumberReaction { get; set; }
+
         public Review()
         {
             ReviewId = Guid.Empty;
             Content = "";
+            Rating = 0;
             DateCreated = "";
+            Author = Guid.Empty;
+            NumberReaction = 0;
+            NumberComment = 0;
+
+            ReactionId = new List<Guid>();
+            CommentId = new List<Guid>();
         }
     }
 }

@@ -70,14 +70,21 @@ GO
     Returns:
         TABLE: A table containing userId, username, email, avatar, and isLoggedIn.
 */
-CREATE OR ALTER FUNCTION UF_GetUserDetails (
+CREATE OR ALTER FUNCTION UF_GetUserAll (
     @UserId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN 
 (
-    SELECT userId AS UserId, username AS Username, email AS Email, avatar AS Avatar, isLoggedIn AS IsLoggedIn
+    SELECT userId AS UserId,
+    username AS Username,
+    email AS Email,
+    avatar AS Avatar,
+    isLoggedIn AS IsLoggedIn,
+    numberFollower AS NumberFollower,
+    numberFollowing AS NumberFollowing,
+    numberList AS NumberList
     FROM [Users]
     WHERE userId = @UserId
 );
@@ -91,7 +98,7 @@ GO
     Returns:
         VARCHAR(100): The username if the user exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION UF_GetUsername (
+CREATE OR ALTER FUNCTION UF_GetUserUsername (
     @UserId UNIQUEIDENTIFIER
 )
 RETURNS VARCHAR(100)
@@ -114,7 +121,7 @@ GO
     Returns:
         VARCHAR(100): The email if the user exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION UF_GetEmail (
+CREATE OR ALTER FUNCTION UF_GetUserEmail (
     @UserId UNIQUEIDENTIFIER
 )
 RETURNS VARCHAR(100)
@@ -149,6 +156,55 @@ BEGIN
     DECLARE @Avatar VARCHAR(255);
     SELECT @Avatar = avatar FROM [Users] WHERE userId = @UserId;
     RETURN @Avatar;
+END;
+GO
+
+
+CREATE OR ALTER FUNCTION UF_GetUserNumberFollower (
+    @UserId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.UF_UserIdExists(@UserId) = 0
+        RETURN 0; 
+
+    DECLARE @NumberFollower INT
+    SELECT @NumberFollower = numberFollower FROM [Users] WHERE userId = @UserId; 
+    
+    RETURN @NumberFollower; 
+END;
+GO
+
+CREATE OR ALTER FUNCTION UF_GetUserNumberFollowing (
+    @UserId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.UF_UserIdExists(@UserId) = 0
+        RETURN 0; 
+
+    DECLARE @NumberFollowing INT;
+    SELECT @NumberFollowing = numberFollowing FROM [Users] WHERE userId = @UserId; 
+    
+    RETURN @NumberFollowing; 
+END;
+GO
+
+CREATE OR ALTER FUNCTION UF_GetUserNumberList (
+    @UserId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.UF_UserIdExists(@UserId) = 0
+        RETURN 0; 
+
+    DECLARE @NumberList INT;
+    SELECT @NumberList = numberList FROM [Users] WHERE userId = @UserId; 
+    
+    RETURN @NumberList; 
 END;
 GO
 
@@ -409,6 +465,7 @@ BEGIN
 END;
 GO
 
+
 /* 
     Section: Games Table Functions
 */
@@ -444,15 +501,22 @@ GO
     Returns:
         TABLE: A table containing gameId, title, descriptions, genre, avgRating, poster, backdrop, and details.
 */
-CREATE OR ALTER FUNCTION GF_GetGameAllInfo (
+CREATE OR ALTER FUNCTION GF_GetGameAll (
     @GameId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN
 (
-    SELECT gameId AS GameId, title AS Title, descriptions AS Descriptions, genre AS Genre, 
-           avgRating AS AvgRating, poster AS Poster, backdrop AS Backdrop, details AS Details
+    SELECT gameId AS GameId,
+    title AS Title,
+    descriptions AS Descriptions,
+    genre AS Genre, 
+    avgRating AS AvgRating,
+    poster AS Poster,
+    backdrop AS Backdrop,
+    details AS Details,
+    numberReview AS NumberReview
     FROM [Games]
     WHERE gameId = @GameId
 );
@@ -640,6 +704,21 @@ RETURN
 );
 GO
 
+CREATE OR ALTER FUNCTION GF_GetGameNumberReview (
+    @GameId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.GF_GameIdExists(@GameId) = 0
+        RETURN NULL; -- Return NULL if GameId does not exist
+
+    DECLARE @NumberReview INT;
+    SELECT @NumberReview = numberReview FROM [Games] WHERE gameId = @GameId;
+    RETURN @NumberReview;
+END;
+GO
+
 /* 
     Function: GF_IsGameTitleLegal
     Description: Checks if a game title is valid (1-100 characters, alphanumeric with ._-).
@@ -817,6 +896,7 @@ BEGIN
 END;
 GO
 
+
 /* 
     Section: Review Table Functions
 */
@@ -852,13 +932,19 @@ GO
     Returns:
         TABLE: A table containing all columns from the Reviews table.
 */
-CREATE OR ALTER FUNCTION RF_GetReview (
+CREATE OR ALTER FUNCTION RF_GetReviewAll (
     @ReviewId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM [Reviews] WHERE reviewId = @ReviewId
+    SELECT reviewId AS ReviewId,
+    content AS Content,
+    rating AS Rating,
+    dateCreated AS DateCreated,
+    numberReaction AS NumberReaction,
+    numberComment AS NumberComment
+    FROM [Reviews] WHERE reviewId = @ReviewId
 );
 GO
 
@@ -870,7 +956,7 @@ GO
     Returns:
         NVARCHAR(MAX): The review content if the review exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION RF_GetContent (
+CREATE OR ALTER FUNCTION RF_GetReviewContent (
     @ReviewId UNIQUEIDENTIFIER
 )
 RETURNS NVARCHAR(MAX)
@@ -893,7 +979,7 @@ GO
     Returns:
         DECIMAL(4,2): The review rating if the review exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION RF_GetRating (
+CREATE OR ALTER FUNCTION RF_GetReviewRating (
     @ReviewId UNIQUEIDENTIFIER
 )
 RETURNS DECIMAL(4,2)
@@ -916,7 +1002,7 @@ GO
     Returns:
         DATETIME: The review creation date if the review exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION RF_GetDateCreated (
+CREATE OR ALTER FUNCTION RF_GetReviewDateCreated (
     @ReviewId UNIQUEIDENTIFIER
 )
 RETURNS DATETIME
@@ -930,6 +1016,37 @@ BEGIN
     RETURN @DateCreated;
 END;
 GO
+
+CREATE OR ALTER FUNCTION RF_GetReviewNumberReaction (
+    @ReviewId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
+        RETURN NULL; -- Return NULL if ReviewId does not exist
+
+    DECLARE @NumberReaction INT;
+    SELECT @NumberReaction = numberReaction FROM [Reviews] WHERE reviewId = @ReviewId;
+    RETURN @NumberReaction;
+END;
+GO
+
+CREATE OR ALTER FUNCTION RF_GetReviewNumberComment (
+    @ReviewId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
+        RETURN NULL; -- Return NULL if ReviewId does not exist
+
+    DECLARE @NumberComment INT;
+    SELECT @NumberComment = numberComment FROM [Reviews] WHERE reviewId = @ReviewId;
+    RETURN @NumberComment;
+END;
+GO
+
 
 /* 
     Function: RF_IsContentLegality
@@ -1013,13 +1130,18 @@ GO
     Returns:
         TABLE: A table containing all columns from the Comments table.
 */
-CREATE OR ALTER FUNCTION CF_GetComment (
+CREATE OR ALTER FUNCTION CF_GetCommentAll (
     @CommentId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM [Comments] WHERE commentId = @CommentId
+    SELECT commentId AS CommentId,
+    content AS Content,
+    created_at AS CreatedAt,
+    numberReaction AS NumberReaction
+    FROM [Comments] 
+    WHERE commentId = @CommentId
 );
 GO
 
@@ -1031,7 +1153,7 @@ GO
     Returns:
         NVARCHAR(MAX): The comment content if the comment exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION CF_GetContent (
+CREATE OR ALTER FUNCTION CF_GetCommentContent (
     @CommentId UNIQUEIDENTIFIER
 )
 RETURNS NVARCHAR(MAX)
@@ -1054,7 +1176,7 @@ GO
     Returns:
         DATETIME: The comment creation date if the comment exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION CF_GetCreatedAt (
+CREATE OR ALTER FUNCTION CF_GetCommentCreatedAt (
     @CommentId UNIQUEIDENTIFIER
 )
 RETURNS DATETIME
@@ -1066,6 +1188,21 @@ BEGIN
     DECLARE @CreatedAt DATETIME;
     SELECT @CreatedAt = created_at FROM [Comments] WHERE commentId = @CommentId;
     RETURN @CreatedAt;
+END;
+GO
+
+CREATE OR ALTER FUNCTION CF_GetCommentNumberReaction (
+    @CommentId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.CF_CommentIdExists(@CommentId) = 0
+        RETURN NULL;
+
+    DECLARE @NumberReaction INT;
+    SELECT @NumberReaction = numberReaction FROM [Comments] WHERE commentId = @CommentId;
+    RETURN @NumberReaction;
 END;
 GO
 
@@ -1130,13 +1267,19 @@ GO
     Returns:
         TABLE: A table containing all columns from the Lists table.
 */
-CREATE OR ALTER FUNCTION LF_GetList (
+CREATE OR ALTER FUNCTION LF_GetListAll (
     @ListId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM [Lists] WHERE listId = @ListId
+    SELECT listId AS ListId,
+    title AS Title,
+    descriptions AS Descriptions,
+    created_at AS CreatedAt,
+    numberGame AS NumberGame
+    FROM [Lists] 
+    WHERE listId = @ListId
 );
 GO
 
@@ -1148,7 +1291,7 @@ GO
     Returns:
         NVARCHAR(100): The list name if the list exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION LF_GetName (
+CREATE OR ALTER FUNCTION LF_GetListTitle (
     @ListId UNIQUEIDENTIFIER
 )
 RETURNS NVARCHAR(100)
@@ -1157,9 +1300,9 @@ BEGIN
     IF DBO.LF_ListIdExists(@ListId) = 0
         RETURN NULL;
 
-    DECLARE @_Name NVARCHAR(100);
-    SELECT @_Name = _name FROM [Lists] WHERE listId = @ListId;
-    RETURN @_Name;
+    DECLARE @Title NVARCHAR(100);
+    SELECT @Title = title FROM [Lists] WHERE listId = @ListId;
+    RETURN @Title;
 END;
 GO
 
@@ -1171,7 +1314,7 @@ GO
     Returns:
         NVARCHAR(MAX): The list description if the list exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION LF_GetDescriptions (
+CREATE OR ALTER FUNCTION LF_GetListDescriptions (
     @ListId UNIQUEIDENTIFIER
 )
 RETURNS NVARCHAR(MAX)
@@ -1194,7 +1337,7 @@ GO
     Returns:
         DATETIME: The list creation date if the list exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION LF_GetCreatedAt (
+CREATE OR ALTER FUNCTION LF_GetListCreatedAt (
     @ListId UNIQUEIDENTIFIER
 )
 RETURNS DATETIME
@@ -1209,6 +1352,21 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER FUNCTION LF_GetListNumberGame (
+    @ListId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.LF_ListIdExists(@ListId) = 0
+        RETURN NULL;
+
+    DECLARE @NumberGame INT;
+    SELECT @NumberGame = numberGame FROM [Lists] WHERE listId = @ListId;
+    RETURN @NumberGame;
+END;
+GO
+
 /* 
     Function: LF_IsNameLegal
     Description: Checks if a list name is valid (non-empty).
@@ -1217,13 +1375,13 @@ GO
     Returns:
         BIT: 1 if the name is valid, 0 otherwise.
 */
-CREATE OR ALTER FUNCTION LF_IsNameLegal (
-    @Name NVARCHAR(100)
+CREATE OR ALTER FUNCTION LF_IsTitleLegal (
+    @Title NVARCHAR(100)
 )
 RETURNS BIT
 AS
 BEGIN
-    IF @Name IS NULL OR @Name = ''
+    IF @Title IS NULL OR @Title = ''
         RETURN 0;
 
     RETURN 1;
@@ -1253,93 +1411,6 @@ BEGIN
         ELSE 1
     END;
     RETURN @IsLegal;
-END;
-GO
-
-/* 
-    Section: List Item Table Functions
-*/
-
-/* 
-    Function: LIF_ListItemIdExists
-    Description: Checks if a list item exists based on its listItemId.
-    Parameters:
-        @ListItemId (UNIQUEIDENTIFIER): The list item ID to check.
-    Returns:
-        BIT: 1 if the list item exists, 0 otherwise.
-*/
-CREATE OR ALTER FUNCTION LIF_ListItemIdExists (
-    @ListItemId UNIQUEIDENTIFIER
-)
-RETURNS BIT
-AS
-BEGIN
-    RETURN CASE 
-               WHEN EXISTS (SELECT 1 FROM [List_items] WHERE listItemId = @ListItemId) 
-               THEN 1 
-               ELSE 0 
-           END;
-END;
-GO
-
-/* 
-    Function: LIF_GetListItem
-    Description: Retrieves all details for a list item based on its listItemId.
-    Parameters:
-        @ListItemId (UNIQUEIDENTIFIER): The list item ID to query.
-    Returns:
-        TABLE: A table containing all columns from the List_items table.
-*/
-CREATE OR ALTER FUNCTION LIF_GetListItem (
-    @ListItemId UNIQUEIDENTIFIER
-)
-RETURNS TABLE
-AS
-RETURN (
-    SELECT * FROM [List_items] WHERE listItemId = @ListItemId
-);
-GO
-
-/* 
-    Function: LIF_GetTitle
-    Description: Retrieves the title for a given listItemId.
-    Parameters:
-        @ListItemId (UNIQUEIDENTIFIER): The list item ID to query.
-    Returns:
-        NVARCHAR(100): The list item title if the list item exists, NULL otherwise.
-*/
-CREATE OR ALTER FUNCTION LIF_GetTitle (
-    @ListItemId UNIQUEIDENTIFIER
-)
-RETURNS NVARCHAR(100)
-AS
-BEGIN
-    IF DBO.LIF_ListItemIdExists(@ListItemId) = 0
-        RETURN NULL;
-
-    DECLARE @Result NVARCHAR(100);
-    SELECT @Result = title FROM [List_items] WHERE listItemId = @ListItemId;
-    RETURN @Result;
-END;
-GO
-
-/* 
-    Function: LIF_IsTitleLegal
-    Description: Checks if a list item title is valid (non-empty).
-    Parameters:
-        @Title (NVARCHAR(100)): The list item title to validate.
-    Returns:
-        BIT: 1 if the title is valid, 0 otherwise.
-*/
-CREATE OR ALTER FUNCTION LIF_IsTitleLegal (
-    @Title NVARCHAR(100)
-)
-RETURNS BIT
-AS
-BEGIN
-    IF @Title IS NULL OR LEN(@Title) = 0
-        RETURN 0;
-    RETURN 1;
 END;
 GO
 
@@ -1378,13 +1449,17 @@ GO
     Returns:
         TABLE: A table containing all columns from the Activities table.
 */
-CREATE OR ALTER FUNCTION AF_GetActivity (
+CREATE OR ALTER FUNCTION AF_GetActivityAll (
     @ActivityId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN
-    SELECT * FROM [Activities] WHERE activityId = @ActivityId;
+    SELECT activityId AS ActivityId,
+    content AS Content,
+    dateDo AS DateDo
+    FROM [Activities] 
+    WHERE activityId = @ActivityId;
 GO
 
 /* 
@@ -1395,7 +1470,7 @@ GO
     Returns:
         NVARCHAR(MAX): The activity content if the activity exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION AF_GetContent (
+CREATE OR ALTER FUNCTION AF_GetActivityContent (
     @ActivityId UNIQUEIDENTIFIER
 )
 RETURNS NVARCHAR(MAX)
@@ -1418,7 +1493,7 @@ GO
     Returns:
         DATETIME: The activity date if the activity exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION AF_GetDateDo (
+CREATE OR ALTER FUNCTION AF_GetActivityDateDo (
     @ActivityId UNIQUEIDENTIFIER
 )
 RETURNS DATETIME
@@ -1494,13 +1569,17 @@ GO
     Returns:
         TABLE: A table containing all columns from the Diaries table.
 */
-CREATE OR ALTER FUNCTION DF_GetDiary (
+CREATE OR ALTER FUNCTION DF_GetDiaryAll (
     @DiaryId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN
-    SELECT * FROM [Diaries] WHERE diaryId = @DiaryId;
+    SELECT diaryId AS diaryId,
+    dateLogged AS dateLogged,
+    numberGameLogged AS NumberGameLogged
+    FROM [Diaries] 
+    WHERE diaryId = @DiaryId;
 GO
 
 /* 
@@ -1511,7 +1590,7 @@ GO
     Returns:
         DATETIME: The diary logged date if the diary exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION DF_GetDateLogged (
+CREATE OR ALTER FUNCTION DF_GetDiaryDateLogged (
     @DiaryId UNIQUEIDENTIFIER
 )
 RETURNS DATETIME
@@ -1523,6 +1602,21 @@ BEGIN
     DECLARE @Date DATETIME;
     SELECT @Date = dateLogged FROM [Diaries] WHERE diaryId = @DiaryId;
     RETURN @Date;
+END;
+GO
+
+CREATE OR ALTER FUNCTION DF_GetDiaryNumberGameLogged (
+    @DiaryId UNIQUEIDENTIFIER
+)
+RETURNS INT
+AS
+BEGIN
+    IF DBO.DF_DiaryIdExists(@DiaryId) = 0
+        RETURN NULL;
+
+    DECLARE @NumberGameLogged INT;
+    SELECT @NumberGameLogged = numberGameLogged FROM [Diaries] WHERE diaryId = @DiaryId;
+    RETURN @NumberGameLogged;
 END;
 GO
 
@@ -1587,13 +1681,17 @@ GO
     Returns:
         TABLE: A table containing all columns from the Reactions table.
 */
-CREATE OR ALTER FUNCTION RF_GetReaction (
+CREATE OR ALTER FUNCTION RF_GetReactionAll (
     @ReactionId UNIQUEIDENTIFIER
 )
 RETURNS TABLE
 AS
 RETURN (
-    SELECT * FROM [Reactions] WHERE reactionId = @ReactionId
+    SELECT reactionId AS ReactionId,
+    reactionType AS ReactionType,
+    dateDo AS DateDo
+    FROM [Reactions] 
+    WHERE reactionId = @ReactionId
 );
 GO
 
@@ -1628,7 +1726,7 @@ GO
     Returns:
         DATETIME: The reaction date if the reaction exists, NULL otherwise.
 */
-CREATE OR ALTER FUNCTION RF_GetDateDo (
+CREATE OR ALTER FUNCTION RF_GetReactionDateDo (
     @ReactionId UNIQUEIDENTIFIER
 )
 RETURNS DATETIME

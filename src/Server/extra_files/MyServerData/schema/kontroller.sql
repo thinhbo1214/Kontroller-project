@@ -28,8 +28,11 @@ CREATE TABLE [Users] (
     username VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARBINARY(128) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    avatar VARCHAR(255),
+    avatar VARCHAR(255) DEFAULT 'https://cdn2.fptshop.com.vn/small/avatar_trang_1_cd729c335b.jpg',
     isLoggedIn BIT DEFAULT 0,
+    numberFollower INT DEFAULT 0,
+    numberFollowing INT DEFAULT 0,
+    numberList INT DEFAULT 0,
     PRIMARY KEY (userId)
 );
 GO
@@ -59,6 +62,7 @@ CREATE TABLE [Games] (
     poster VARCHAR(255),
     backdrop VARCHAR(255),
     details NVARCHAR(4000) NOT NULL,
+    numberReview INT DEFAULT 0,
     PRIMARY KEY (gameId)
 );
 GO
@@ -99,6 +103,8 @@ CREATE TABLE [Reviews] (
     content NVARCHAR(MAX) NOT NULL,
     rating DECIMAL(4,2) NOT NULL DEFAULT 0,
     dateCreated DATETIME DEFAULT GETDATE(),
+    numberReaction INT DEFAULT 0,
+    numberComment INT DEFAULT 0,
     PRIMARY KEY (reviewId)
 );
 GO
@@ -117,6 +123,7 @@ CREATE TABLE [Comments] (
     commentId UNIQUEIDENTIFIER DEFAULT NEWID(),
     content NVARCHAR(4000) NOT NULL,
     created_at DATETIME DEFAULT GETDATE(),
+    numberReaction INT DEFAULT 0,
     PRIMARY KEY (commentId)
 );
 GO
@@ -136,27 +143,11 @@ GO
 */
 CREATE TABLE [Lists] (
     listId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    _name NVARCHAR(100) NOT NULL,
+    title NVARCHAR(100) NOT NULL,
     descriptions NVARCHAR(MAX),
     created_at DATETIME DEFAULT GETDATE(),
+    numberGame INT DEFAULT 0,
     PRIMARY KEY (listId)
-);
-GO
-
-/*
-    Table: List_items
-    Description: Stores individual items within lists.
-    Columns:
-        - listItemId: Unique identifier for the list item.
-        - title: Item title (alphanumeric with ._-).
-    Constraints:
-        - PRIMARY KEY: listItemId
-        - CHECK: Valid title characters
-*/
-CREATE TABLE [List_items] (
-    listItemId UNIQUEIDENTIFIER DEFAULT NEWID(),
-    title NVARCHAR(100) NOT NULL,
-    PRIMARY KEY (listItemId)
 );
 GO
 
@@ -192,6 +183,7 @@ GO
 CREATE TABLE [Diaries] (
     diaryId UNIQUEIDENTIFIER DEFAULT NEWID(),
     dateLogged DATETIME DEFAULT GETDATE(),
+    numberGameLogged INT DEFAULT 0,
     PRIMARY KEY (diaryId)
 );
 GO
@@ -368,39 +360,20 @@ CREATE TABLE [Reaction_User] (
 GO
 
 /*
-    Table: List_ListItem
-    Description: Links lists to their items.
-    Columns:
-        - listId: Foreign key referencing Lists.
-        - listItemId: Foreign key referencing List_items.
-    Constraints:
-        - PRIMARY KEY: (listId, listItemId)
-        - FOREIGN KEY: listId, listItemId
-*/
-CREATE TABLE [List_ListItem] (
-    listId UNIQUEIDENTIFIER NOT NULL,
-    listItemId UNIQUEIDENTIFIER NOT NULL,
-    PRIMARY KEY (listId, listItemId),
-    FOREIGN KEY (listId) REFERENCES Lists(listId),
-    FOREIGN KEY (listItemId) REFERENCES List_items(listItemId)
-);
-GO
-
-/*
     Table: ListItem_Game
     Description: Links list items to their target games.
     Columns:
-        - listItemId: Foreign key referencing List_items.
+        - listId: Foreign key referencing Lists.
         - targetGame: Foreign key referencing Games.
     Constraints:
-        - PRIMARY KEY: (listItemId, targetGame)
-        - FOREIGN KEY: listItemId, targetGame
+        - PRIMARY KEY: (listId, targetGame)
+        - FOREIGN KEY: listId, targetGame
 */
-CREATE TABLE [ListItem_Game] (
-    listItemId UNIQUEIDENTIFIER NOT NULL,
+CREATE TABLE [List_Game] (
+    listId UNIQUEIDENTIFIER NOT NULL,
     targetGame UNIQUEIDENTIFIER NOT NULL,
-    PRIMARY KEY (listItemId, targetGame),
-    FOREIGN KEY (listItemId) REFERENCES List_items(listItemId),
+    PRIMARY KEY (listId, targetGame),
+    FOREIGN KEY (listId) REFERENCES Lists(listId),
     FOREIGN KEY (targetGame) REFERENCES Games(gameId)
 );
 GO 
@@ -484,23 +457,19 @@ CHECK (serviceName NOT LIKE '%[^a-zA-Z0-9._-]%');
 
 ALTER TABLE [Reviews]
 ADD CONSTRAINT C_REVIEW_RATING
-CHECK (rating BETWEEN 1 AND 10);
+CHECK (rating BETWEEN 0 AND 10);
 
 ALTER TABLE [Reactions]
 ADD CONSTRAINT C_REACTION_TYPE
 CHECK (reactionType IN (0, 1, 2, 3)); -- 0: Like, 1: Dislike, 2: Love, 3: Angry
 
 ALTER TABLE [Lists]
-ADD CONSTRAINT C_LIST_NAME
-CHECK (LEN(_name) > 0 AND LEN(_name) <= 100);
-
-ALTER TABLE [List_items]
 ADD CONSTRAINT C_LIST_ITEM_TITLE
 CHECK (title NOT LIKE '%[^a-zA-Z0-9._-]%');
 
 ALTER TABLE [Activities]
 ADD CONSTRAINT C_ACTIVITY_CONTENT
-CHECK (LEN(content) > 0 AND LEN(content) <= 1000);
+CHECK (LEN(content) > 0 AND LEN(content) <= 4000);
 
 ALTER TABLE [Diaries]
 ADD CONSTRAINT C_DIARY_DATE

@@ -21,7 +21,7 @@
         /// A brief summary of the game's content, genre, or storyline.
         /// </summary>
         /// <example>'A sandbox video game developed by Mojang Studios.'</example>
-        public string Description { get; set; }
+        public string Descriptions { get; set; }
 
         /// <summary>
         /// The genre or category of the game (e.g., Adventure, RPG, Action).
@@ -33,6 +33,8 @@
         /// List of reviews written by users about this game.
         /// </summary>
         public List<Guid> Review { get; set; }
+
+        public int NumberReview { get; set; }
 
         /// <summary>
         /// The average rating score for the game based on user reviews (scale 1-10).
@@ -68,13 +70,15 @@
         {
             GameId = Guid.Empty;
             Title = "";
-            Description = "";
+            Descriptions = "";
             Genre = "";
-            Review = new List<Guid>();
+            NumberReview = 0;
             AvgRating = 0;
             Poster = "";
             Backdrop = "";
             Details = "";
+
+            Review = new List<Guid>();
             Services = new List<string>();
         }
     }

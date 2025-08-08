@@ -28,7 +28,6 @@ namespace Server.Source.Helper
             { typeof(Diary), DiaryDatabase.Instance },
             { typeof(Game), GameDatabase.Instance },
             { typeof(List), ListDatabase.Instance },
-            { typeof(Rate), RateDatabase.Instance },
             { typeof(Reaction), ReactionDatabase.Instance },
             { typeof(Review), ReviewDatabase.Instance },
             { typeof(User), UserDatabase.Instance },
@@ -83,6 +82,16 @@ namespace Server.Source.Helper
             {
                 dict[prop.Name.StartsWith("@") ? prop.Name : "@" + prop.Name] = prop.GetValue(obj) ?? DBNull.Value;
             }
+            return dict;
+        }
+
+        /// <summary>
+        /// Chuyển JSON thành Dictionary với tên cột có prefix @ và xử lý null
+        /// </summary>
+        public static Dictionary<string, object> JsonToParameterDictionary(string json, string parameterName = "@JsonData")
+        {
+            var dict = new Dictionary<string, object>();
+            dict[parameterName] = string.IsNullOrEmpty(json) ? DBNull.Value : json;
             return dict;
         }
 
@@ -162,6 +171,19 @@ namespace Server.Source.Helper
         public static T? MapToSingle<T>(DataTable dt) where T : new()
         {
             return MapToList<T>(dt).FirstOrDefault();
+        }
+
+        public static List<T> MapPrimitiveList<T>(DataTable table)
+        {
+            List<T> list = new List<T>();
+            foreach (DataRow row in table.Rows)
+            {
+                if (row[0] != DBNull.Value)
+                {
+                    list.Add((T)Convert.ChangeType(row[0], typeof(T)));
+                }
+            }
+            return list;
         }
     }
 }

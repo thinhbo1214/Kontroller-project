@@ -16,6 +16,8 @@
         /// </summary>
         public List<Guid> GameLogged { get; set; }
 
+        public int NumberGameLogged { get; set; }
+
         /// <summary>
         /// The date the diary entry was created or updated, in YYYY-MM-DD format.
         /// </summary>
@@ -25,8 +27,10 @@
         public Diary() 
         {
             DiaryId = Guid.Empty;
-            GameLogged = new List<Guid>();
             DateLogged = "";
+            NumberGameLogged = 0;
+
+            GameLogged = new List<Guid>();
         }
     }
 }
