@@ -1,5 +1,5 @@
-﻿--DECLARE @Username varchar(100) = 'admin1'
---DECLARE @Password varchar(100) = 'Admin1@123'
+﻿-- DECLARE @Username varchar(100) = 'admin1'
+-- DECLARE @Password varchar(100) = 'Admin1@123'
 DECLARE @UserId UNIQUEIDENTIFIER;
 
 BEGIN TRY

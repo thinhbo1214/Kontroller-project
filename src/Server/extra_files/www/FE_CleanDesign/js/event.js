@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Đăng ký
-    listenIfExists('#button-register', 'click', () => {
+    listenIfExists('#signupBtn', 'click', () => {
         const username = document.getElementById('signupUsername')?.value || '';
         const password = document.getElementById('signupPassword')?.value || '';
         const email = document.getElementById('signupEmail')?.value || '';
@@ -52,6 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //-----------------------------------------------//
     listenWindow('load', () => {
         UI.showLoading();
-        setTimeout(() => UI.hideLoading(), 2000);
+        setTimeout(() => UI.hideLoading(), 500);
     });
 });

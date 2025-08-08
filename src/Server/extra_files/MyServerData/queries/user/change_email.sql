@@ -1,5 +1,5 @@
-﻿--DECLARE @UserId UNIQUEIDENTIFIER = '838844B4-24CC-44B6-A990-3D01B6B5F3DD';
---DECLARE @NewEmail varchar(100) = 'admin1@gmail.com';
+﻿-- DECLARE @UserId UNIQUEIDENTIFIER = '2d1f1b33-8d1e-4722-b566-125fca142750';
+-- DECLARE @NewEmail varchar(100) = 'kingnemacc1@gmail.com';
 DECLARE @Result INT;
 
 BEGIN TRY

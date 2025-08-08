@@ -1,5 +1,5 @@
-﻿--DECLARE @UserId UNIQUEIDENTIFIER = '838844B4-24CC-44B6-A990-3D01B6B5F3DD';
---DECLARE @Avatar varchar(255) = 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png'
+﻿-- DECLARE @UserId UNIQUEIDENTIFIER = '2d1f1b33-8d1e-4722-b566-125fca142750';
+-- DECLARE @Avatar varchar(255) = 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png'
 DECLARE @Result INT;
 
 BEGIN TRY
