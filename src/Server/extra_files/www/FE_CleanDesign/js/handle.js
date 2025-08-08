@@ -17,13 +17,14 @@ export class Handle {
         const res = await api.PostLogin(username, password);
         UI.hideLoading();
 
+
         if (!res.ok) {
             UI.showWarning("Tài khoản hoặc mật khẩu không đúng!");
             return false;
         }
 
         UI.showSuccess("Đăng nhập thành công!");
-        UI.goTo(Pages.PROFILE);
+        UI.goTo(Pages.AUTH);
         return true;
     }
     static async Register(username, password, email) {
@@ -35,15 +36,16 @@ export class Handle {
         const api = new APIUser();
         UI.showLoading();
         const res = await api.PostUser(username, password, email);
+        UI.hideLoading();
 
-        if (res.ok) {
-            UI.showSuccess("Đăng ký thành công");
-            UI.goTo(Pages.AUTH);
-        } else {
+        if (!res.ok) {
             UI.showWarning("Thông tin đăng ký không hợp lệ");
+            return false;
         }
 
-        UI.hideLoading();
+        UI.showSuccess("Đăng ký thành công");
+        UI.goTo(Pages.PROFILE);
+        return true;
     }
-    
+
 }
