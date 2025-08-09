@@ -1595,7 +1595,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate review content */
-    IF DBO.RF_IsContentLegality(@Content) = 0
+    IF DBO.RF_IsContentLegal(@Content) = 0
     BEGIN
         SET @ReviewId = NULL;
         RETURN;
@@ -2024,7 +2024,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate comment content */
-    IF DBO.CF_IsContentLegality(@Content) = 0
+    IF DBO.CF_IsContentLegal(@Content) = 0
     BEGIN
         SET @CommentId = NULL;
         RETURN;
@@ -2065,7 +2065,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate new content */
-    IF DBO.CF_IsContentLegality(@Content) = 0
+    IF DBO.CF_IsContentLegal(@Content) = 0
     BEGIN
         SET @Result = 0;
         RETURN;

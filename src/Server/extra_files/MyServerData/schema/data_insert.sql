@@ -1,28 +1,88 @@
+Use KontrollerDB;
+Go
+
 -- Declare variable for gameId
 DECLARE @gameId UNIQUEIDENTIFIER;
 DECLARE @userId UNIQUEIDENTIFIER;
 DECLARE @commentId UNIQUEIDENTIFIER;
 DECLARE @reviewId UNIQUEIDENTIFIER;
 DECLARE @reactionId UNIQUEIDENTIFIER;
+DECLARE @result INT;
 
 -- Insert data into Games table for Doom: The Dark Ages
-SET @gameId = NEWID();
-INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdrop, details) VALUES
-(@gameId,
- 'Doom: The Dark Ages',
- 'A medieval-inspired installment in the Doom series featuring the Doom Slayer battling demons with new weapons like a flail and a dragon mount.',
- 'First-Person Shooter, Action, Medieval Fantasy',
- 0.00,
- 'https://images.igdb.com/igdb/image/upload/t_cover_big/co9b3o.webp',
- 'https://substackcdn.com/image/fetch/$s_!kfzv!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F164d2f62-6e5e-4e46-905e-4ee8f392c057_3840x2160.jpeg',
- 'Studio: id Software, Publisher: Bethesda Softworks, Release Date: 2025-07-01, Country: USA, Languages: English, Spanish, French, German'
-);
-INSERT INTO Game_Service (gameId, serviceName) VALUES
-(@gameId, 'PC'),
-(@gameId, 'PlayStation'),
-(@gameId, 'Xbox');
-EXEC DBO.UP_CreateUser @Username = 'user001', @Password = 'User@001', @Email = 'user001@gmail.com', @NewUserId = @userId OUTPUT;
-EXEC DBO.RP_CreateReview @Content = N'Rất ok', @Rating = 8.5, @ReviewId = @reviewId OUTPUT;
+BEGIN TRY
+    BEGIN TRANSACTION
+        SET @gameId = NEWID();
+        INSERT INTO Games (gameId, title, descriptions, genre, avgRating, poster, backdrop, details) VALUES
+        (@gameId,
+        'Doom: The Dark Ages',
+        'A medieval-inspired installment in the Doom series featuring the Doom Slayer battling demons with new weapons like a flail and a dragon mount.',
+        'First-Person Shooter, Action, Medieval Fantasy',
+        0.00,
+        'https://images.igdb.com/igdb/image/upload/t_cover_big/co9b3o.webp',
+        'https://substackcdn.com/image/fetch/$s_!kfzv!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F164d2f62-6e5e-4e46-905e-4ee8f392c057_3840x2160.jpeg',
+        'Studio: id Software, Publisher: Bethesda Softworks, Release Date: 2025-07-01, Country: USA, Languages: English, Spanish, French, German'
+        );
+
+        INSERT INTO Game_Service (gameId, serviceName) VALUES
+        (@gameId, 'PC'),
+        (@gameId, 'PlayStation'),
+        (@gameId, 'Xbox');
+
+        SET @result = 1;
+        DECLARE @Temp INT = 1;
+
+        -- Thêm người dùng mới (Đổi lại mỗi lần cho username, password, email)
+        EXEC DBO.UP_CreateUser @Username = 'user001', @Password = 'User@001', @Email = 'user001@gmail.com', @NewUserId = @userId OUTPUT;
+
+        -- Thêm review bởi người dùng (Có thể đổi hoặc ko cho content và rating)
+        EXEC DBO.RP_CreateReview @Content = N'Game rất hay', @Rating = 8.5, @ReviewId = @reviewId OUTPUT;
+
+        -- Thêm liên kết review với game được review (giữ nguyên)
+        EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Tạo comment (có thể đổi hoặc ko comment)
+        EXEC DBO.CP_CreateComment @Content = N'Đúng rồi', @CommentId = @commentId OUTPUT;
+
+        -- Thêm Liên kết comment với review
+        EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Reaction cho comment
+        EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
+
+        -- Liên kết reaction với comment
+        EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+            -- Reaction cho review
+        EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
+
+        -- Liên kết reaction với review
+        EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+            
+        -- Thêm thất bại thì huỷ mọi thao tác
+        IF @Temp = 0
+        BEGIN
+            ROLLBACK TRANSACTION;
+        END
+        ELSE IF @@TRANCOUNT > 0
+        BEGIN
+            COMMIT TRANSACTION;
+        END
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION
+
+    SELECT 
+        ERROR_NUMBER() AS ErrorNumber,
+        ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+
 
 
 -- Insert data into Games table for Cabernet
