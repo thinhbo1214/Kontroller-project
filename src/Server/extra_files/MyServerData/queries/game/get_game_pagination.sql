@@ -1,9 +1,9 @@
---DECLARE @GameId UNIQUEIDENTIFIER;
+-- DECLARE @Page INT = 1;
+-- DECLARE @Limit INT = 10;
 
 BEGIN TRY
 	BEGIN TRANSACTION
-		EXEC HP_PaginateTable @tableName = 'Games', @orderColumn = 'gameId', @page = 1, @limit = 10,
-        @columns = "gameId AS GameId";
+		EXEC GP_GetGamePaginate @Page = @Page, @Limit = @Limit;
 	COMMIT TRANSACTION
 END TRY
 BEGIN CATCH

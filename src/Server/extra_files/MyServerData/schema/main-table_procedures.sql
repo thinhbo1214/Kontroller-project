@@ -68,6 +68,56 @@ BEGIN
 END
 GO
 
+/*
+Example usage:
+    EXEC HP_PaginateQuery
+        @fromClause = 'Games',
+        @orderColumn = 'gameId',
+        @page = 1,
+        @limit = 10,
+        @columns = '*';
+
+Example Full usage:
+    EXEC HP_PaginateQuery
+    @fromClause = 'Review_Comment rc JOIN Comments c ON rc.commentId = c.commentId',
+    @orderColumn = 'c.commentId',
+    @page = 1,
+    @limit = 10,
+    @columns = 'c.commentId AS CommentID, c.content AS Content, c.dateCreated' AS DateCreated,
+    @filterColumn = 'rc.reviewId',
+    @filterValue = '5509ae55-bdee-46bf-8e8a-0efac4fbd524';
+*/
+CREATE OR ALTER PROCEDURE HP_PaginateQuery
+    @fromClause NVARCHAR(MAX),
+    @orderColumn NVARCHAR(MAX),
+    @page INT,
+    @limit INT,
+    @columns NVARCHAR(MAX),
+    @filterColumn NVARCHAR(MAX) = NULL,
+    @filterValue NVARCHAR(MAX) = NULL
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(MAX);
+    DECLARE @offset INT = (@page - 1) * @limit;
+
+    SET @sql = N'
+        SELECT ' + @columns + '
+        FROM ' + @fromClause + '
+        ' + CASE 
+                WHEN @filterColumn IS NOT NULL AND @filterValue IS NOT NULL
+                THEN 'WHERE ' + @filterColumn + ' = @filterValue'
+                ELSE ''
+            END + '
+        ORDER BY ' + @orderColumn + '
+        OFFSET ' + CAST(@offset AS NVARCHAR) + ' ROWS
+        FETCH NEXT ' + CAST(@limit AS NVARCHAR) + ' ROWS ONLY;
+    ';
+
+    EXEC sp_executesql @sql, N'@filterValue NVARCHAR(MAX)', @filterValue=@filterValue;
+END
+GO
+
+
 /* 
     Procedure: UP_CreateUser
     Description: Creates a new user with a unique ID, username, hashed password, and email.
@@ -1500,6 +1550,33 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE GP_GetGamePaginate
+    @Page INT = 1,
+    @Limit INT = 10
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @Page < 1 SET @Page = 1;
+    IF @Limit < 1 SET @Limit = 10;
+
+    EXEC DBO.HP_PaginateQuery 
+    @fromClause = 'Games', 
+    @orderColumn = 'gameId',
+    @page = @Page, 
+    @limit = @Limit, 
+    @columns = 'gameId AS GameId,title AS Title,
+    descriptions AS Descriptions,
+    genre AS Genre, 
+    avgRating AS AvgRating,
+    poster AS Poster,
+    backdrop AS Backdrop,
+    details AS Details,
+    numberReview AS NumberReview';
+    
+END
+GO
+
 /* 
     Procedure: RP_CreateReview
     Description: Creates a new review with specified content.
@@ -1527,7 +1604,7 @@ BEGIN
     SET @ReviewId = NEWID();
 
     /* Insert review data */
-    INSERT INTO [Reviews] (reviewId, content)
+    INSERT INTO [Reviews] (reviewId, content, rating)
     VALUES (@ReviewId, @Content);
 
     /* Verify insertion success */
