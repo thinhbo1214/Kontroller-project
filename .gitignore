@@ -16,3 +16,4 @@ docker-ci.yml
 winforms-ci.yml
 metrics
 FE_Tung
+data_insert.sql
