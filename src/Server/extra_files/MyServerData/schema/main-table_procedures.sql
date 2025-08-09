@@ -1588,6 +1588,7 @@ GO
 */
 CREATE OR ALTER PROCEDURE RP_CreateReview
     @Content NVARCHAR(MAX),
+	@Rating DECIMAL(4,2),
     @ReviewId UNIQUEIDENTIFIER OUTPUT
 AS
 BEGIN
@@ -1605,7 +1606,7 @@ BEGIN
 
     /* Insert review data */
     INSERT INTO [Reviews] (reviewId, content, rating)
-    VALUES (@ReviewId, @Content);
+    VALUES (@ReviewId, @Content, @Rating);
 
     /* Verify insertion success */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0

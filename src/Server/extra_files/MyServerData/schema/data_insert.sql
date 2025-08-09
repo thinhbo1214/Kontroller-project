@@ -1,5 +1,9 @@
 -- Declare variable for gameId
 DECLARE @gameId UNIQUEIDENTIFIER;
+DECLARE @userId UNIQUEIDENTIFIER;
+DECLARE @commentId UNIQUEIDENTIFIER;
+DECLARE @reviewId UNIQUEIDENTIFIER;
+DECLARE @reactionId UNIQUEIDENTIFIER;
 
 -- Insert data into Games table for Doom: The Dark Ages
 SET @gameId = NEWID();
@@ -17,6 +21,9 @@ INSERT INTO Game_Service (gameId, serviceName) VALUES
 (@gameId, 'PC'),
 (@gameId, 'PlayStation'),
 (@gameId, 'Xbox');
+EXEC DBO.UP_CreateUser @Username = 'user001', @Password = 'User@001', @Email = 'user001@gmail.com', @NewUserId = @userId OUTPUT;
+EXEC DBO.RP_CreateReview @Content = N'Rất ok', @Rating = 8.5, @ReviewId = @reviewId OUTPUT;
+
 
 -- Insert data into Games table for Cabernet
 SET @gameId = NEWID();
