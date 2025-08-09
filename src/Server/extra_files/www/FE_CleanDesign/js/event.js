@@ -44,6 +44,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
        
     });
+
+    // hienej thi thong tin 
+    listenIfExists('#BioShow','click',() =>{
+        const EditBtn = document.getElementById('BioShow')?.value || '';
+        const userID = document.getElementById('')
+        Handle.ShowEdit(userID)
+    });
+    // xóa tài khoản 
+    listenIfExists('#deleteAccount','click',() =>{
+        Handle.DeleteAcc();
+    })
+
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Handle.Logout();

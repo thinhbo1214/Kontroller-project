@@ -66,4 +66,38 @@ export class Handle {
         UI.goTo(Pages.AUTH);
         return true;
     }
+    static async ShowEdit(userId){
+        
+
+        const api = new APIUser();
+        UI.showLoading();
+
+        const res = await api.GetUser(userId);
+        UI.showLoading();
+        if (!res.ok){
+            UI.showWarning("Lỗi xảy ra")
+            return false;
+        }
+
+        UI.showSuccess("Mở bio thành công")
+        return true;
+    }
+
+    static async DeleteAcc(){
+    
+        const api = new APIUser();
+        UI.showLoading();
+
+        const res = await api.DeleteUser()
+        UI.showLoading();
+
+        if (!res.ok){
+            UI.showWarning("Xóa tài khoản không thành công")
+            return false;
+        }
+
+        UI.showSuccess("Xóa tài khoản thành công")
+        UI.goTo(Pages.INDEX)
+        return true;
+    }
 }
