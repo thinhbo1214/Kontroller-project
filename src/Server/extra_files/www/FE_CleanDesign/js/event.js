@@ -35,7 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('signupEmail')?.value || '';
         Handle.Register(username, password, email);
     });
-
+    // Quen mat khua 
+    listenIfExists('#forgotBtn','click', () =>{
+        const email = prompt('Please enter your email address:');
+            if (email) {
+                alert('Password reset link will be sent to your email.');
+                Handle.Forgot(email)
+            }
+       
+    });
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Handle.Logout();

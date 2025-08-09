@@ -100,20 +100,14 @@
                                 class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-white/50 pr-12"
                                 placeholder="Enter your password"
                             />
-                            <button
-                                type="button"
-                                class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80"
-                                onclick="togglePassword('loginPassword', this)"
-                            >
-                                <i data-lucide="eye" class="w-5 h-5"></i>
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="flex items-center justify-between">
                         <button
                             type="button"
                             class="text-blue-400 hover:text-blue-300 text-sm font-medium"
-                            onclick="showForgotPassword()"
+                            id = "forgotBtn"
                         >
                             Forgot?
                         </button>
@@ -143,74 +137,7 @@
             <p class="text-white">Processing...</p>
         </div>
     </div>
-    <script>
-        lucide.createIcons();
-
-        function togglePassword(inputId, button) {
-            const input = document.getElementById(inputId);
-            const icon = button.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.setAttribute('data-lucide', 'eye-off');
-            } else {
-                input.type = 'password';
-                icon.setAttribute('data-lucide', 'eye');
-            }
-            lucide.createIcons();
-        }
-        function showLoading() {
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-        }
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }
-        async function handleLogin() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            if (!username || !password) {
-                alert('Please fill in all fields');
-                return;
-            }
-            showLoading();
-            try {
-                // Replace with actual API call
-                const response = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    window.location.href = 'profile.html';
-                } else {
-                    const error = await response.json();
-                    alert(error.message || 'Login failed');
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('Login failed. Please try again.');
-            } finally {
-                hideLoading();
-            }
-        }
-        function showForgotPassword() {
-            const email = prompt('Please enter your email address:');
-            if (email) {
-                alert('Password reset link will be sent to your email.');
-                // Implement forgot password logic
-            }
-        }
-        // Enter key for login
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && document.activeElement &&
-                (document.activeElement.id === 'loginUsername' || document.activeElement.id === 'loginPassword')
-            ) {
-                handleLogin();
-            }
-        });
-    </script>
+    
     <script type="module" src="./js/event.js"></script>
 </body>
 </html>

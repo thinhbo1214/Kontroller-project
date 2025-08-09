@@ -47,5 +47,23 @@ export class Handle {
         UI.goTo(Pages.PROFILE);
         return true;
     }
+    static async Forgot( email) {
+        if (email == null){
+            UI.showWarning("Vui lòng nhập đầy đủ thông tin!")
+            return false;
+        }
+        const api = new APIUser();
+        UI.showLoading();
 
+        const res = await api.PostForgetPassword(email);
+        UI.hideLoading();
+        if (!res.ok){
+            UI.showWarning("Email chưa được đăng ký")
+            return false;
+        }
+
+        UI.showSuccess("Gửi mã thiết lập lại mật khẩu thành công")
+        UI.goTo(Pages.AUTH);
+        return true;
+    }
 }
