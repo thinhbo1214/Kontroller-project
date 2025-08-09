@@ -1,4 +1,4 @@
--- DECLARE @UserId UNIQUEIDENTIFIER = '2d1f1b33-8d1e-4722-b566-125fca142750';
+-- DECLARE @UserId UNIQUEIDENTIFIER = '7eabbddb-3dd5-4fac-a97e-00a3a561de9d';
 
 SELECT G.gameId AS GameId,
 		G.title AS Title,

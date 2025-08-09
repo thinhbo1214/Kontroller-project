@@ -44,11 +44,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Đồng ý, cốt truyện rất sâu sắc!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -58,11 +66,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -83,6 +99,7 @@ BEGIN CATCH
         ERROR_NUMBER() AS ErrorNumber,
         ERROR_MESSAGE() AS ErrorMessage;
 END CATCH
+
 
 -- Insert data into Games table for Blue Prince
 BEGIN TRY
@@ -117,11 +134,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Đúng vậy, rất thử thách!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -131,11 +156,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -190,11 +223,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Đồng ý, rất giống soulslike!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -204,11 +245,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -263,11 +312,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Parry heavy, giống Sekiro lắm!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -277,11 +334,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -335,11 +400,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Nhân vật mới rất thú vị!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -349,11 +422,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -408,11 +489,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Class-based builds rất thú vị!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -422,11 +511,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -481,11 +578,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Fairy gameplay rất vui!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -495,11 +600,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -552,11 +665,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Immersive sim hay đấy!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -566,11 +687,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -625,11 +754,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Bối cảnh Southern U.S. rất chân thực!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -639,11 +776,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -698,11 +843,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'The Island feature mới mẻ lắm!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -712,11 +865,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -771,11 +932,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Belle Époque-inspired world đẹp!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -785,11 +954,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -844,11 +1021,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Bối cảnh Sicily 1900s chân thực!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -858,11 +1043,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -917,11 +1110,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Kyle Crane trở lại, tuyệt!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -931,11 +1132,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -990,11 +1199,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Stealth gameplay đỉnh cao!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1004,11 +1221,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1063,11 +1288,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Cốt truyện hấp dẫn lắm!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1077,11 +1310,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1137,11 +1378,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Gameplay thử thách cao!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1151,11 +1400,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1210,11 +1467,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Multiplayer hay lắm!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1224,11 +1489,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1284,11 +1557,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Thế giới dystopian lạnh giá!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1298,11 +1579,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1357,11 +1646,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Cổ đại mysteries hấp dẫn!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1371,11 +1668,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1430,11 +1735,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Cursed kingdom hấp dẫn!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1444,11 +1757,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1503,11 +1824,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Cyberpunk city tuyệt vời!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1517,11 +1846,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1575,11 +1912,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Magical crystals vui nhộn!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1589,11 +1934,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1648,11 +2001,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Deep space đáng sợ!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1662,11 +2023,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1721,11 +2090,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Norse legends hấp dẫn!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1735,11 +2112,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1794,11 +2179,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Customizable cars hay!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1808,11 +2201,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1867,11 +2268,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Defend islands in the sky thú vị!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1881,11 +2290,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -1940,11 +2357,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Volcanic world đáng sợ!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -1954,11 +2379,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2013,11 +2446,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Epic space battles hấp dẫn!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2027,11 +2468,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2086,11 +2535,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Magical creatures dễ thương!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2100,11 +2557,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2158,11 +2623,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Vibrant visuals đẹp!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2172,11 +2645,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2231,11 +2712,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Noir-inspired city hay!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2245,11 +2734,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2304,11 +2801,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Historical strategy tuyệt vời!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2318,11 +2823,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2377,11 +2890,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Underground caves đẹp!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2391,11 +2912,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2450,11 +2979,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Space combat simulator tuyệt!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2464,11 +3001,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2523,11 +3068,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Dark fantasy RPG đỉnh cao!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2537,11 +3090,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2596,11 +3157,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Competitive drifting hay!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2610,11 +3179,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2669,11 +3246,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Digital world hấp dẫn!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2683,11 +3268,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2742,11 +3335,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Historical naval battles hay!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2756,11 +3357,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2815,11 +3424,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Hallownest haunting và intricate!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2829,11 +3446,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2888,11 +3513,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Kratos and Atreus trở lại!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2902,11 +3535,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 2, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -2961,11 +3602,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Blocky world sáng tạo!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -2975,11 +3624,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -3034,11 +3691,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Arthur Morgan và Van der Linde gang cốt truyện đỉnh!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -3048,11 +3713,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -3107,11 +3780,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Themes of grief and redemption hay!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -3121,11 +3802,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
@@ -3180,11 +3869,19 @@ BEGIN TRY
         EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Thêm liên kết review với người dùng
+        EXEC DBO.RUP_CreateReviewUser @ReviewId = @reviewId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Tạo comment
         EXEC DBO.CP_CreateComment @Content = N'Inspired by 1930s cartoons hay!', @CommentId = @commentId OUTPUT;
 
         -- Thêm Liên kết comment với review
         EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Thêm liên kết comment với user
+        EXEC DBO.CUP_AddCommentUser @CommentId = @commentId, @Author = @userId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
         -- Reaction cho comment
@@ -3194,11 +3891,19 @@ BEGIN TRY
         EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
         SET @Temp *= @result;
 
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
+        SET @Temp *= @result;
+
         -- Reaction cho review
         EXEC DBO.RP_CreateReaction @ReactionType = 3, @ReactionId = @reactionId OUTPUT;
 
         -- Liên kết reaction với review
         EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
+        SET @Temp *= @result;
+
+        -- Liên kết reaction với user
+        EXEC DBO.RUP_AddReactionUser @ReactionId = @reactionId, @Author = @userId, @Result = @result OUTPUT
         SET @Temp *= @result;
 
         -- Thêm thất bại thì huỷ mọi thao tác
