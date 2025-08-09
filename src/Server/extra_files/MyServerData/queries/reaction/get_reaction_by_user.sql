@@ -1,4 +1,4 @@
-DECLARE @UserId UNIQUEIDENTIFIER = 'b31d439e-a8f3-47c0-968c-071333d23a96';
+-- DECLARE @UserId UNIQUEIDENTIFIER = 'cc5d9511-3128-4441-b329-023be8330e6b';
 
 SELECT  R.reactionId AS ReactionId,
         R.reactionType AS ReactionType,
