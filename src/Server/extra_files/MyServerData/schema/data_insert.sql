@@ -23,7 +23,6 @@ BEGIN TRY
         'https://substackcdn.com/image/fetch/$s_!kfzv!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F164d2f62-6e5e-4e46-905e-4ee8f392c057_3840x2160.jpeg',
         'Studio: id Software, Publisher: Bethesda Softworks, Release Date: 2025-07-01, Country: USA, Languages: English, Spanish, French, German'
         );
-
         INSERT INTO Game_Service (gameId, serviceName) VALUES
         (@gameId, 'PC'),
         (@gameId, 'PlayStation'),
@@ -34,54 +33,36 @@ BEGIN TRY
 
         -- Thêm người dùng mới (Đổi lại mỗi lần cho username, password, email)
         EXEC DBO.UP_CreateUser @Username = 'user001', @Password = 'User@001', @Email = 'user001@gmail.com', @NewUserId = @userId OUTPUT;
-
         -- Thêm review bởi người dùng (Có thể đổi hoặc ko cho content và rating)
         EXEC DBO.RP_CreateReview @Content = N'Game rất hay', @Rating = 8.5, @ReviewId = @reviewId OUTPUT;
-
         -- Thêm liên kết review với game được review (giữ nguyên)
-        EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT;
-        SET @Temp *= @result;
-
+        EXEC DBO.GRP_AddGameReview @GameId = @gameId, @ReviewId = @reviewId, @Result = @result OUTPUT; SET @Temp *= @result;
         -- Tạo comment (có thể đổi hoặc ko comment)
         EXEC DBO.CP_CreateComment @Content = N'Đúng rồi', @CommentId = @commentId OUTPUT;
-
-        -- Thêm Liên kết comment với review
-        EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT;
-        SET @Temp *= @result;
-
-        -- Reaction cho comment
+        -- Thêm Liên kết comment với review (giữ nguyên)
+        EXEC DBO.CRP_AddCommentReview @ReviewId = @reviewId, @CommentId = @commentId, @Result = @result OUTPUT; SET @Temp *= @result;
+        -- Reaction cho comment (có thể đổi reactiontype)
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
-
-        -- Liên kết reaction với comment
-        EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT;
-        SET @Temp *= @result;
-
-            -- Reaction cho review
+        -- Liên kết reaction với comment (giữ nguyên)
+        EXEC DBO.CRP_AddCommentReaction @CommentId = @commentId, @ReactionId = @reactionId, @Result = @result OUTPUT; SET @Temp *= @result;
+            -- Reaction cho review  (có thể đổi reactiontype)
         EXEC DBO.RP_CreateReaction @ReactionType = 1, @ReactionId = @reactionId OUTPUT;
-
-        -- Liên kết reaction với review
-        EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT;
-        SET @Temp *= @result;
+        -- Liên kết reaction với review (giữ nguyên)
+        EXEC DBO.RRP_CreateReviewReaction @ReviewId = @reviewId, @ReactionId = @reactionId, @Result = @result OUTPUT; SET @Temp *= @result;
             
-        -- Thêm thất bại thì huỷ mọi thao tác
-        IF @Temp = 0
-        BEGIN
-            ROLLBACK TRANSACTION;
-        END
-        ELSE IF @@TRANCOUNT > 0
-        BEGIN
-            COMMIT TRANSACTION;
-        END
+        -- Thêm thất bại thì huỷ mọi thao tác (giữ nguyên)
+        IF @Temp = 0  ROLLBACK TRANSACTION;
+        ELSE IF @@TRANCOUNT > 0 COMMIT TRANSACTION;
+
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0
         ROLLBACK TRANSACTION
 
-    SELECT 
-        ERROR_NUMBER() AS ErrorNumber,
-        ERROR_MESSAGE() AS ErrorMessage;
+    SELECT ERROR_NUMBER() AS ErrorNumber,ERROR_MESSAGE() AS ErrorMessage;
 END CATCH
 
+-- 1
 
 
 
