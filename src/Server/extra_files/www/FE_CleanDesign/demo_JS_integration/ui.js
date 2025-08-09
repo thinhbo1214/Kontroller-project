@@ -1,3 +1,51 @@
+// Profile screen demo
+export class UIManager {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.createNotificationContainer();
+    }
+
+    goTo(page) {
+        window.location.href = page;
+    }
+
+    // Existing notification and loading methods remain unchanged...
+
+    // Update to handle avatar preview
+    updateAvatarPreview(file) {
+        const avatarPreview = document.getElementById('avatarPreview');
+        const headerAvatar = document.querySelector('header img');
+        if (file && avatarPreview) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                avatarPreview.src = e.target.result;
+                if (headerAvatar) headerAvatar.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Update profile display
+    updateProfileDisplay(data) {
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const bioDisplay = document.getElementById('bioDisplay');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const headerAvatar = document.querySelector('header img');
+
+        if (usernameDisplay && data.username) usernameDisplay.textContent = data.username;
+        if (bioDisplay && data.bio) bioDisplay.textContent = data.bio;
+        if (avatarPreview && data.avatar) avatarPreview.src = data.avatar;
+        if (headerAvatar && data.avatar) headerAvatar.src = data.avatar;
+    }
+
+    // Cleanup method remains unchanged...
+}
+
+// Pages object remains unchanged
+
 // Game screen demo
 class UIManager {
   static updateProfileDisplay(data, stats) {

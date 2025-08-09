@@ -35,7 +35,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('signupEmail')?.value || '';
         Handle.Register(username, password, email);
     });
+    // Quen mat khua 
+    listenIfExists('#forgotBtn','click', () =>{
+        const email = prompt('Please enter your email address:');
+            if (email) {
+                alert('Password reset link will be sent to your email.');
+                Handle.Forgot(email)
+            }
+       
+    });
 
+    // hienej thi thong tin 
+    listenIfExists('#BioShow','click',() =>{
+        const EditBtn = document.getElementById('BioShow')?.value || '';
+        const userID = document.getElementById('')
+        Handle.ShowEdit(userID)
+    });
+    // xóa tài khoản 
+    listenIfExists('#deleteAccount','click',() => {
+    const passwordInput = document.getElementById('deletePassword'); // 
+    const password = passwordInput.value;
+    
+    if (!password) {
+        UI.showWarning("Vui lòng nhập mật khẩu");
+        return;
+    }
+  
+    if (confirm("Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.")) {
+        Handle.DeleteAcc(password);
+    }
+})
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Handle.Logout();

@@ -1,3 +1,71 @@
+// Profile screen demo
+import { Handle } from './handle.js';
+import { UIManager } from './ui.js';
+
+// Initialize and export
+const UI = new UIManager();
+
+function listenIfExists(selector, event, handler) {
+    const element = document.querySelector(selector);
+    if (element) {
+        element.addEventListener(event, handler);
+    }
+}
+
+function listenWindow(event, handler) {
+    if (typeof handler === 'function') {
+        window.addEventListener(event, handler);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Existing login and signup listeners remain unchanged...
+
+    // Profile Edit Save
+    listenIfExists('#saveEdit', 'click', async () => {
+        const editName = document.getElementById('editName')?.value || '';
+        const editPassword = document.getElementById('editPassword')?.value || '';
+        const editEmail = document.getElementById('editEmail')?.value || '';
+        const editAvatar = document.getElementById('editAvatar')?.files[0];
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        UI.showLoading('Updating profile...');
+        const success = await Handle.UpdateProfile(editName, editPassword, editEmail, editAvatar);
+        UI.hideLoading();
+
+        if (success) {
+            UI.showSuccess('Profile updated successfully!');
+            if (editName) usernameDisplay.textContent = editName;
+            // Refresh profile data
+            await Handle.LoadProfile();
+        } else {
+            UI.showError('Failed to update profile.');
+        }
+    });
+
+    // Cancel Edit
+    listenIfExists('#cancelEdit', 'click', () => {
+        document.getElementById('editMode').classList.add('hidden');
+        UI.hideLoading();
+    });
+
+    // Load profile data on page load
+    listenWindow('load', async () => {
+        const path = window.location.pathname;
+        let fileName = path.substring(path.lastIndexOf('/') + 1);
+        const token = localStorage.getItem('token');
+        if (token && (fileName === Pages.INDEX || fileName === Pages.AUTH || fileName === Pages.REGISTER)) {
+            UI.goTo(Pages.PROFILE);
+        }
+        if (fileName === Pages.PROFILE) {
+            UI.showLoading('Loading profile...');
+            await Handle.LoadProfile();
+            UI.hideLoading();
+        }
+        setTimeout(() => UI.hideLoading(), 500);
+    });
+});
+
 // Game screen demo
 document.addEventListener('DOMContentLoaded', () => {
   const userId = localStorage.getItem('userId'); // Assume userId is stored
