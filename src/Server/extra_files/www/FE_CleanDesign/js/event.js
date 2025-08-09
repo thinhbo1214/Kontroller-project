@@ -52,10 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
         Handle.ShowEdit(userID)
     });
     // xóa tài khoản 
-    listenIfExists('#deleteAccount','click',() =>{
-        Handle.DeleteAcc();
-    })
-
+    listenIfExists('#deleteAccount','click',() => {
+    const passwordInput = document.getElementById('deletePassword'); // 
+    const password = passwordInput.value;
+    
+    if (!password) {
+        UI.showWarning("Vui lòng nhập mật khẩu");
+        return;
+    }
+  
+    if (confirm("Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.")) {
+        Handle.DeleteAcc(password);
+    }
+})
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Handle.Logout();

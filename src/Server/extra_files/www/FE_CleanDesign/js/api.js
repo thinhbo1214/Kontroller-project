@@ -214,9 +214,13 @@ export class APIUser extends API {
     return res;
   }
 
-  async DeleteUser() {
+  async DeleteUser(password) {
+    const payload = {password}
     const query = API.buildQuery({});
-    const res = await this.DELETE(query);
+    const res = await this.DELETE(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
     return res;
   }
 }

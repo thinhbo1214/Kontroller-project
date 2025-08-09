@@ -73,7 +73,7 @@ export class Handle {
         UI.showLoading();
 
         const res = await api.GetUser(userId);
-        UI.showLoading();
+        UI.hideLoading();
         if (!res.ok){
             UI.showWarning("Lỗi xảy ra")
             return false;
@@ -83,21 +83,20 @@ export class Handle {
         return true;
     }
 
-    static async DeleteAcc(){
-    
-        const api = new APIUser();
-        UI.showLoading();
+    static async DeleteAcc(password){
+    const api = new APIUser();
+    UI.showLoading();
 
-        const res = await api.DeleteUser()
-        UI.showLoading();
+    const res = await api.DeleteUser(password)
+    UI.hideLoading();
 
-        if (!res.ok){
-            UI.showWarning("Xóa tài khoản không thành công")
-            return false;
-        }
+    if (!res.ok){
+        UI.showWarning("Xóa tài khoản không thành công")
+        return false;
+    }
 
-        UI.showSuccess("Xóa tài khoản thành công")
-        UI.goTo(Pages.INDEX)
-        return true;
+    UI.showSuccess("Xóa tài khoản thành công")
+    UI.goTo(Pages.INDEX)
+    return true;    
     }
 }
