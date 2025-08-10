@@ -54,6 +54,16 @@ export class Handle {
             return false;
         }
 
+        if (!file.type.startsWith('image/')) {
+            UI.showWarning("Vui lòng chọn đúng định dạng ảnh");
+            return false;
+        }
+
+        if (file.size > 2 * 1024 * 1024) { // 2MB
+            UI.showWarning("Ảnh vượt quá dung lượng cho phép (2MB)");
+            return false;
+        }
+
         const api = new APIUser();
 
         UI.showLoading();
@@ -76,6 +86,7 @@ export class Handle {
         return true;
 
     }
+    
     static async Forgot(email) {
         if (email == null) {
             UI.showWarning("Vui lòng nhập đầy đủ thông tin!")
