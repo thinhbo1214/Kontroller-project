@@ -111,6 +111,18 @@
     }
 
 
+
+
+
+    public class UploadedFile
+    {
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
+
+        public string Name { get; set; } // key của input file
+    }
+
     /// <summary>
     /// Yêu cầu gửi email, chứa đầy đủ thông tin người gửi, người nhận và nội dung.
     /// </summary>

@@ -1,10 +1,22 @@
-﻿namespace Server.Source.Helper
+﻿using Server.Source.NetCoreServer;
+
+namespace Server.Source.Helper
 {
     /// <summary>
     /// Cung cấp các phương thức hỗ trợ giải mã và trích xuất tham số từ URL.
     /// </summary>
     public static class DecodeHelper
     {
+        public static string GetHeader(HttpRequest request, string name)
+        {
+            for (int i = 0; i < request.Headers; i++)
+            {
+                var (key, value) = request.Header(i);
+                if (key.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    return value;
+            }
+            return null;
+        }
 
         /// <summary>
         /// Lấy đường dẫn gốc từ URL (loại bỏ query string).

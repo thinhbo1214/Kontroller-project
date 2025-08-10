@@ -1,4 +1,4 @@
-/*
+﻿/*
     Database: KontrollerDB
     Description: Database for a game management system, storing information about users, games, reviews, comments, ratings, lists, activities, diaries, and their relationships.
 */
@@ -32,6 +32,44 @@ BEGIN
         RETURN 1; -- Return 1 if URL is valid
 
     RETURN 0; -- Return 0 if URL is invalid
+END;
+GO
+
+CREATE OR ALTER FUNCTION HF_IsImageFile (
+    @FilePath VARCHAR(255)
+)
+RETURNS BIT
+AS
+BEGIN
+    -- NULL hoặc rỗng
+    IF @FilePath IS NULL OR LTRIM(RTRIM(@FilePath)) = ''
+        RETURN 0;
+
+    -- Có khoảng trắng
+    IF CHARINDEX(' ', @FilePath) > 0
+        RETURN 0;
+
+    -- Quá dài
+    IF LEN(@FilePath) > 255
+        RETURN 0;
+
+    -- Chuyển sang chữ thường để so sánh
+    DECLARE @LowerPath VARCHAR(255) = LOWER(@FilePath);
+
+    -- Kiểm tra đuôi file
+    IF @LowerPath LIKE '%.jpg'
+       OR @LowerPath LIKE '%.jpeg'
+       OR @LowerPath LIKE '%.png'
+       OR @LowerPath LIKE '%.gif'
+       OR @LowerPath LIKE '%.bmp'
+       OR @LowerPath LIKE '%.webp'
+       OR @LowerPath LIKE '%.tiff'
+       OR @LowerPath LIKE '%.svg'
+    BEGIN
+        RETURN 1;
+    END
+
+    RETURN 0;
 END;
 GO
 
@@ -349,7 +387,7 @@ CREATE OR ALTER FUNCTION UF_IsAvatarLegal (
 RETURNS BIT
 AS
 BEGIN
-    RETURN DBO.HF_IsUrlLegal(@Avatar);
+    RETURN DBO.HF_IsImageFile(@Avatar);
 END;
 GO
 

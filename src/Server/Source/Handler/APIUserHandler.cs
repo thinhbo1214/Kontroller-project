@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Azure;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic.ApplicationServices;
 using Server.Source.Core;
 using Server.Source.Data;
@@ -125,13 +126,34 @@ namespace Server.Source.Handler
         /// <summary>Cập nhật avatar người dùng.</summary>
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
-            var data = PutBase<ChangeAvatarParams>(request, session);
-            if (data == null || UserDatabase.Instance.ChangeAvatar(data) != 1)
+            var sessionManager = Simulation.GetModel<SessionManager>();
+            if (!sessionManager.Authorization(request, out string userId, session))
             {
-                ErrorHandle(session, "Đổi avatar không thành công");
+                ErrorHandle(session, "Chưa đăng nhập!");
                 return;
             }
-            OkHandle(session, "Đổi avatar thành công");
+
+            var (success, ext, errorMsg) = FileHelper.SaveImageRequest(request, "avatar", userId);
+            if (!success)
+            {
+                ErrorHandle(session, errorMsg ?? "Đổi avatar không thành công!");
+                return;
+            }
+
+            var avatarUrl = $"/avatar/{userId}{ext}";
+
+            var data = new ChangeAvatarParams
+            {
+                UserId = userId,
+                Avatar = avatarUrl
+            };
+            if (UserDatabase.Instance.ChangeAvatar(data) != 1)
+            {
+                ErrorHandle(session, "Đổi avatar không thành công!");
+                return;
+            }
+
+            OkHandle(session, "Đổi avatar thành công!");
         }
 
         /// <summary>Cập nhật username người dùng.</summary>

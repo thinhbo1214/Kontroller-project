@@ -236,11 +236,6 @@ namespace Server.Source.NetCoreServer
                     return;
                 }
             }
-            else if (request.Method == "POST" || request.Method == "PUT")
-            {
-
-                return;
-            }
 
             // Process the request
             OnReceivedRequest(request);
