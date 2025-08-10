@@ -1,9 +1,11 @@
 import { Handle } from './handle.js';
-import { UIManager } from './ui.js';
+import { UIManager, Pages } from './ui.js';
 
 // Initialize and export
 const UI = new UIManager();
 
+// Biến để lưu file ảnh đã chọn, có thể truy cập được từ nhiều hàm
+let selectedFile = null; 
 
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
@@ -45,10 +47,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
+    // 1. Lắng nghe sự kiện "change" để xem trước ảnh
     listenIfExists('#editAvatar', 'change', (e) => {
         const file = e.target.files[0];
         const preview = document.getElementById('avatarPreview');
-        Handle.ChangeAvatar(file, preview);
+
+        if (file && file.type.startsWith('image/')) {
+            // Gán file vào biến toàn cục để có thể sử dụng sau
+            selectedFile = file;
+
+            // Tạo URL xem trước và hiển thị
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Nếu file không hợp lệ, reset biến và ảnh preview
+            selectedFile = null;
+            // Bạn có thể reset preview.src về ảnh avatar cũ ở đây
+        }
+    });
+
+    listenIfExists('#saveEdit', 'click', () => {
+        const avatar = document.getElementById('avatar');
+
+        // Kiểm tra xem có file nào đã được chọn không
+        if (selectedFile) {
+            // Gọi hàm xử lý chính với file đã được lưu
+            Handle.ChangeAvatar(selectedFile, avatar);
+        } 
     });
 
     // hienej thi thong tin 

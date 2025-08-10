@@ -70,7 +70,7 @@ export class Handle {
         return true;
     }
 
-    static async ChangeAvatar(file, preview) {
+    static async ChangeAvatar(file, avatar) {
         if (!file) {
             UI.showWarning("Vui lòng chọn ảnh");
             return false;
@@ -98,12 +98,7 @@ export class Handle {
             return false;
         }
 
-        // Preview ảnh mới
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        avatar.src = imageUrl;
 
         UI.showSuccess("Đổi avatar thành công!")
         return true;
