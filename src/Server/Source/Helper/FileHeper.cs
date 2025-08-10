@@ -1,12 +1,13 @@
-﻿using Server.Source.Core;
+﻿using HttpMultipartParser;
+using Server.Source.Core;
 using Server.Source.Extra;
 using Server.Source.Manager;
 using Server.Source.Model;
 using Server.Source.NetCoreServer;
 using System.Drawing;
-using System.IO;    
-using System.Net.Mime;
-    
+using System.IO;
+using System.Text;
+
 
 namespace Server.Source.Helper
 {
@@ -26,33 +27,40 @@ namespace Server.Source.Helper
         }
         public static (bool, string, string) SaveImageRequest(HttpRequest request, string saveDir, string newFileName)
         {
-            // Parse multipart/form-data
-            var files = MultipartHelper.ParseFiles(request);
-
-            if (files.Count == 0)
+            try
             {
-                return (false, null, "Không tìm thấy file upload!");
-            }
+                // Sử dụng hàm parse file đã được cải tiến
+                var files = MultipartHelper.ParseFiles(request);
 
-            var file = files.FirstOrDefault(f => f.Name == saveDir);
-            if (file == null)
+                if (files.Count == 0)
+                {
+                    return (false, null, "Không tìm thấy file upload!");
+                }
+
+                var file = files.FirstOrDefault(f => f.Name == "avatar"); // Giả định tên trường là "avatar"
+                if (file == null)
+                {
+                    return (false, null, "Không tìm thấy file avatar!");
+                }
+
+                // Validate ảnh
+                var (isValid, extension, error) = ImageFileHelper.Validate(file);
+                if (!isValid)
+                {
+                    return (false, null, error);
+                }
+
+                // Lưu file
+                saveDir = Path.Combine(Simulation.GetModel<ModelServer>().WWW, saveDir);
+                newFileName = $"{newFileName}{extension}";
+                SaveFile(saveDir, newFileName, file.Content);
+
+                return (true, extension, null);
+            }
+            catch (Exception ex)
             {
-                return (false, null, $"Không tìm thấy file {saveDir}!");
+                return (false, null, $"Lỗi khi xử lý request: {ex.Message}");
             }
-
-            // Validate ảnh
-            var (isValid, extension, error) = ImageFileHelper.Validate(file);
-            if (!isValid)
-            {
-                return (false, null, error);
-            }
-
-            // Lưu file
-            saveDir = Path.Combine(Simulation.GetModel<ModelServer>().WWW, saveDir);
-            newFileName = $"{newFileName}{extension}";
-            SaveFile(saveDir, newFileName, file.Content);
-
-            return (true, extension, null);
         }
     }
 

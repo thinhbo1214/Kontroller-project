@@ -28,8 +28,8 @@ public static class ImageFileHelper
             return (false, null, "Định dạng ảnh không hợp lệ!");
 
         // Kiểm tra header file
-        //if (!IsValidImage(file.Content, extension))
-        //    return (false, null, "Dữ liệu file ảnh không hợp lệ!");
+        if (!IsValidImage(file.Content, extension))
+            return (false, null, "Dữ liệu file ảnh không hợp lệ!");
 
         return (true, extension, null);
     }
