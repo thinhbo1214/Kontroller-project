@@ -126,27 +126,7 @@ namespace Server.Source.Handler
         /// <summary>Cập nhật avatar người dùng.</summary>
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
-            var sessionManager = Simulation.GetModel<SessionManager>();
-            if (!sessionManager.Authorization(request, out string userId, session))
-            {
-                ErrorHandle(session, "Chưa đăng nhập!");
-                return;
-            }
-
-            var (success, ext, errorMsg) = FileHelper.SaveImageRequest(request, "avatar", userId);
-            if (!success)
-            {
-                ErrorHandle(session, errorMsg ?? "Đổi avatar không thành công!");
-                return;
-            }
-
-            var avatarUrl = $"/avatar/{userId}{ext}";
-
-            var data = new ChangeAvatarParams
-            {
-                UserId = userId,
-                Avatar = avatarUrl
-            };
+            var data = PutBase<ChangeAvatarParams>(request, session);
             if (UserDatabase.Instance.ChangeAvatar(data) != 1)
             {
                 ErrorHandle(session, "Đổi avatar không thành công!");

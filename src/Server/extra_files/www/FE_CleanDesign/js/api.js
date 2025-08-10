@@ -169,16 +169,15 @@ export class APIUser extends API {
     });
     return res;
   }
-  async PutUserAvatar(file) {
-
-    const formData = new FormData();
-    formData.append('avatar', file);
+  async PutUserAvatar(avatar) {
+    const payload = { avatar }
 
     const query = API.buildPathWithQuery('avatar');
 
     // Không set Content-Type, fetch tự set multipart/form-data
     const res = await this.PUT(query, {
-      body: formData
+            headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
 
     return res;

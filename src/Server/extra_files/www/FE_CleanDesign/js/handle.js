@@ -1,6 +1,28 @@
 import { APIAuth, APIUser } from './api.js';
 import { Pages, UIManager } from './ui.js';
 
+const CLOUDINARY_CLOUD_NAME = 'dynmsbofr'; 
+const CLOUDINARY_UPLOAD_PRESET = 'avatar_upload'; 
+
+// Hàm upload file
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error('Upload thất bại');
+  }
+
+  const data = await response.json();
+  return data.secure_url;
+}
+
 // Initialize and export
 const UI = new UIManager();
 
@@ -64,11 +86,12 @@ export class Handle {
             return false;
         }
 
-        const api = new APIUser();
-
         UI.showLoading();
-        const res = await api.PutUserAvatar(file);
+        const imageUrl = await uploadImage(file);
+        const api = new APIUser();
+        const res = await api.PutUserAvatar(imageUrl);
         UI.hideLoading();
+
 
         if (!res.ok) {
             UI.showWarning("Đổi avatar thất bại!")
