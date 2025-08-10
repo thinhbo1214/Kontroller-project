@@ -169,14 +169,18 @@ export class APIUser extends API {
     });
     return res;
   }
-  async PutUserAvatar(avatar = '') {
-    const payload = { avatar }
+  async PutUserAvatar(file) {
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
     const query = API.buildPathWithQuery('avatar');
 
+    // Không set Content-Type, fetch tự set multipart/form-data
     const res = await this.PUT(query, {
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: formData
     });
+
     return res;
   }
   async PutUserUsername(username = '') {
@@ -215,7 +219,7 @@ export class APIUser extends API {
   }
 
   async DeleteUser(password) {
-    const payload = {password}
+    const payload = { password }
     const query = API.buildQuery({});
     const res = await this.DELETE(query, {
       headers: { 'Content-Type': 'application/json' },

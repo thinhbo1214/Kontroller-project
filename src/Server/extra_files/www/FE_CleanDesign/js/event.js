@@ -36,42 +36,48 @@ document.addEventListener('DOMContentLoaded', () => {
         Handle.Register(username, password, email);
     });
     // Quen mat khua 
-    listenIfExists('#forgotBtn','click', () =>{
+    listenIfExists('#forgotBtn', 'click', () => {
         const email = prompt('Please enter your email address:');
-            if (email) {
-                alert('Password reset link will be sent to your email.');
-                Handle.Forgot(email)
-            }
-       
+        if (email) {
+            alert('Password reset link will be sent to your email.');
+            Handle.Forgot(email)
+        }
+
+    });
+
+    listenIfExists('#editAvatar', 'change', (e) => {
+        const file = e.target.files[0];
+        const preview = document.getElementById('avatarPreview');
+        Handle.ChangeAvatar(file, preview);
     });
 
     // hienej thi thong tin 
-    listenIfExists('#BioShow','click',() =>{
+    listenIfExists('#BioShow', 'click', () => {
         const EditBtn = document.getElementById('BioShow')?.value || '';
         const userID = document.getElementById('')
         Handle.ShowEdit(userID)
     });
     // xóa tài khoản 
-    listenIfExists('#deleteAccount','click',() => {
-    const passwordInput = document.getElementById('deletePassword'); // 
-    const password = passwordInput.value;
-    
-    if (!password) {
-        UI.showWarning("Vui lòng nhập mật khẩu");
-        return;
-    }
-  
-    if (confirm("Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.")) {
-        Handle.DeleteAcc(password);
-    }
-})
+    listenIfExists('#deleteAccount', 'click', () => {
+        const passwordInput = document.getElementById('deletePassword'); // 
+        const password = passwordInput.value;
+
+        if (!password) {
+            UI.showWarning("Vui lòng nhập mật khẩu");
+            return;
+        }
+
+        if (confirm("Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.")) {
+            Handle.DeleteAcc(password);
+        }
+    })
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Handle.Logout();
     });
 
     listenIfExists('#createListBtn', 'click', () => {
-        
+
     });
 
 
@@ -82,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //lấy token load page (tạm thời mới chỉ load đc profile)
     listenWindow('load', () => {
-            const path = window.location.pathname;
-            let fileName = path.substring(path.lastIndexOf('/') + 1);
-            const token1 = localStorage.getItem('token' )
-            if (token1 != null && (fileName == Pages.INDEX || fileName == Pages.AUTH || fileName == Pages.Register )){
-                
-                UI.goTo(Pages.PROFILE)
-            }
-            UI.showLoading();
-            setTimeout(() => UI.hideLoading(), 500);
-        })
+        const path = window.location.pathname;
+        let fileName = path.substring(path.lastIndexOf('/') + 1);
+        const token1 = localStorage.getItem('token')
+        if (token1 != null && (fileName == Pages.INDEX || fileName == Pages.AUTH || fileName == Pages.Register)) {
+
+            UI.goTo(Pages.PROFILE)
+        }
+        UI.showLoading();
+        setTimeout(() => UI.hideLoading(), 500);
+    })
 });
