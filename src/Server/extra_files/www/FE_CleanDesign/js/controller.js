@@ -94,7 +94,7 @@ export class Controller {
             View.showWarning("Vui lòng nhập đầy đủ thông tin!")
             return false;
         }
-        const api = new APIUser();
+        const api = new APIAuth();
         View.showLoading();
 
         const res = await api.PostForgetPassword(email);
