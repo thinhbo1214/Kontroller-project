@@ -1,4 +1,3 @@
-// ui.js - Extended UI Manager for Lists functionality
 export class View {
     constructor() {
         this.init();
@@ -10,6 +9,10 @@ export class View {
 
     static goTo(page) {
         window.location.href = page;
+    }
+    static getPageNow(){
+        const path = window.location.pathname;
+        return path.substring(path.lastIndexOf('/') + 1);
     }
     // Existing notification methods...
     static createNotificationContainer() {

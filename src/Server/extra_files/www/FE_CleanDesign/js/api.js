@@ -36,15 +36,6 @@ class API {
     return { ok: res.ok, status: res.status, data }; // Trả về đối tượng chứa thông tin response
   }
 
-  static isTokenValid(token) {
-    try {
-      const decoded = atob(token); // base64 decode
-      const [sessionId, expire] = decoded.split(':');
-      return parseInt(expire) > Math.floor(Date.now() / 1000);
-    } catch {
-      return false;
-    }
-  }
   // Hàm để xây dựng query string từ đối tượng params
   // Ví dụ: buildQuery({ key1: 'value1', key2: 'value2' }) => '?key1=value1&key2=value2'
   static buildQuery(params = {}) {
@@ -60,12 +51,12 @@ class API {
   }
   // Hàm để lấy token từ localStorage
   static getToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem('authToken');
   }
 
   // Hàm để lưu token vào localStorage
   static setToken(token) {
-    localStorage.setItem('token', token);
+    localStorage.setItem('authToken', token);
   }
 
   // Hàm GET để lấy dữ liệu từ API
@@ -92,12 +83,6 @@ class API {
 export class APIAuth extends API {
   static baseUrl = '/api/auth';
 
-  static isLoggedIn() {
-    const token = localStorage.getItem('token');
-    return token && isTokenValid(token);
-
-
-  }
   // kiểm tra tài khoản mật khẩu trả về okay 
   async PostLogin(username, password) {
     if (!username || !password) {

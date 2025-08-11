@@ -1,8 +1,7 @@
 import { Controller } from './controller.js';
 import { View, Pages } from './view.js';
-
-// Biến để lưu file ảnh đã chọn, có thể truy cập được từ nhiều hàm
-let selectedFile = null; 
+import { Model } from './model.js';
+import { APIAuth } from './api.js';
 
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (file && file.type.startsWith('image/')) {
             // Gán file vào biến toàn cục để có thể sử dụng sau
-            selectedFile = file;
+            Model.selectedFile = file;
 
             // Tạo URL xem trước và hiển thị
             const reader = new FileReader();
@@ -61,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file);
         } else {
             // Nếu file không hợp lệ, reset biến và ảnh preview
-            selectedFile = null;
+            Model.selectedFile = null;
             // Bạn có thể reset preview.src về ảnh avatar cũ ở đây
         }
     });
@@ -70,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const avatar = document.getElementById('avatar');
 
         // Kiểm tra xem có file nào đã được chọn không
-        if (selectedFile) {
+        if (Model.selectedFile) {
             // Gọi hàm xử lý chính với file đã được lưu
-            Controller.ChangeAvatar(selectedFile, avatar);
+            Controller.ChangeAvatar(Model.selectedFile, avatar);
         } 
     });
 
@@ -113,13 +112,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //lấy token load page (tạm thời mới chỉ load đc profile)
     listenWindow('load', () => {
-        const path = window.location.pathname;
-        let fileName = path.substring(path.lastIndexOf('/') + 1);
-        const token1 = localStorage.getItem('token')
-        if (token1 != null && (fileName == Pages.INDEX || fileName == Pages.AUTH || fileName == Pages.Register)) {
-
-            View.goTo(Pages.PROFILE)
+        const page = View.getPageNow();
+        
+        const token = Model.getAuthToken();
+        if (token != null){
+            if (Model.isAuthTokenValid(token) && (page == Pages.INDEX || page == Pages.AUTH || page == Pages.Register)){
+                View.goTo(Pages.PROFILE)
+            }
+            else{
+                Model.deleteAuthToken();
+            }
         }
+
         View.showLoading();
         setTimeout(() => View.hideLoading(), 500);
     })
