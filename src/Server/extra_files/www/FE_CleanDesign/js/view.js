@@ -1,21 +1,25 @@
 export class View {
     constructor() {
-        this.init();
+        View.init();
     }
 
-    init() {
-        this.createNotificationContainer();
+    static init() {
+        View.createNotificationContainer();
     }
 
     static goTo(page) {
         window.location.href = page;
     }
-    static getPageNow(){
+    static getPageNow() {
         const path = window.location.pathname;
+        if (path === '/' || path === '') {
+            return 'index.html'; // chuẩn hóa thành index.html
+        }
+        
         return path.substring(path.lastIndexOf('/') + 1);
     }
     // Existing notification methods...
-    createNotificationContainer() {
+    static createNotificationContainer() {
         if (!document.getElementById('notificationContainer')) {
             const container = document.createElement('div');
             container.id = 'notificationContainer';
@@ -39,7 +43,7 @@ export class View {
             `;
             document.body.appendChild(overlay);
         }
-        
+
         const messageElement = overlay.querySelector('p');
         if (messageElement) {
             messageElement.textContent = message;
@@ -54,31 +58,31 @@ export class View {
         }
     }
 
-    showError(message, duration = 5000) {
-        this.showNotification(message, 'error', duration);
+    static showError(message, duration = 5000) {
+        View.showNotification(message, 'error', duration);
     }
 
-    showSuccess(message, duration = 3000) {
-        this.showNotification(message, 'success', duration);
+    static showSuccess(message, duration = 3000) {
+        View.showNotification(message, 'success', duration);
     }
 
-    showInfo(message, duration = 4000) {
-        this.showNotification(message, 'info', duration);
+    static showInfo(message, duration = 4000) {
+        View.showNotification(message, 'info', duration);
     }
 
-    showWarning(message, duration = 4000) {
-        this.showNotification(message, 'warning', duration);
+    static showWarning(message, duration = 4000) {
+        View.showNotification(message, 'warning', duration);
     }
 
-    showNotification(message, type = 'info', duration = 4000) {
+    static showNotification(message, type = 'info', duration = 4000) {
         const container = document.getElementById('notificationContainer');
         if (!container) return;
 
         const notification = document.createElement('div');
-        notification.className = `notification bg-gray-800 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0 max-w-sm border-l-4 ${this.getNotificationClasses(type)}`;
-        
-        const iconHtml = this.getNotificationIcon(type);
-        
+        notification.className = `notification bg-gray-800 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0 max-w-sm border-l-4 ${View.getNotificationClasses(type)}`;
+
+        const iconHtml = View.getNotificationIcon(type);
+
         notification.innerHTML = `
             <div class="flex items-start gap-3">
                 <div class="flex-shrink-0">
@@ -103,12 +107,12 @@ export class View {
         // Auto remove
         if (duration > 0) {
             setTimeout(() => {
-                this.removeNotification(notification);
+                View.removeNotification(notification);
             }, duration);
         }
     }
 
-    removeNotification(notification) {
+    static removeNotification(notification) {
         notification.classList.add('translate-x-full', 'opacity-0');
         setTimeout(() => {
             if (notification.parentElement) {
@@ -117,7 +121,7 @@ export class View {
         }, 300);
     }
 
-    getNotificationClasses(type) {
+    static getNotificationClasses(type) {
         switch (type) {
             case 'success':
                 return 'border-green-500 bg-green-900/20';
@@ -131,7 +135,7 @@ export class View {
         }
     }
 
-    getNotificationIcon(type) {
+    static getNotificationIcon(type) {
         switch (type) {
             case 'success':
                 return '<i class="fas fa-check-circle text-green-400"></i>';
@@ -196,7 +200,7 @@ export class View {
         if (searchInput) {
             searchInput.value = '';
         }
-        this.clearGameSearchResults();
+        View.clearGameSearchResults();
     }
 
     updateSelectedGames(selectedGames, removeCallback) {
@@ -245,11 +249,11 @@ export class View {
         if (form) {
             form.reset();
         }
-        
+
         // Clear dynamic content
-        this.updateSelectedGames([], null);
-        this.updateTagsList([], null);
-        this.clearGameSearchResults();
+        View.updateSelectedGames([], null);
+        View.updateTagsList([], null);
+        View.clearGameSearchResults();
     }
 
     showListDetailModal(list, games) {
@@ -312,7 +316,7 @@ export class View {
             }
         }
 
-        this.showModal('listDetailModal');
+        View.showModal('listDetailModal');
     }
 
     addListToPage(listData, clickCallback) {
@@ -327,10 +331,10 @@ export class View {
         listElement.setAttribute('data-likes', listData.likes);
         listElement.setAttribute('data-list-id', listData.id);
 
-        const formattedDate = listData.dateCreatedFormatted || new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+        const formattedDate = listData.dateCreatedFormatted || new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         });
 
         listElement.innerHTML = `
@@ -377,9 +381,9 @@ export class View {
         if (!container) return;
 
         const lists = Array.from(container.children);
-        
+
         lists.sort((a, b) => {
-            switch(sortBy) {
+            switch (sortBy) {
                 case 'date':
                     return new Date(b.dataset.date) - new Date(a.dataset.date);
                 case 'title':
@@ -392,7 +396,7 @@ export class View {
                     return 0;
             }
         });
-        
+
         // Re-append sorted elements
         lists.forEach(list => container.appendChild(list));
     }
@@ -415,7 +419,7 @@ export class View {
 
         // Remove existing error styling
         input.classList.remove('border-red-500', 'border-2', 'border-green-500');
-        
+
         if (errorElement) {
             errorElement.remove();
         }
@@ -423,7 +427,7 @@ export class View {
         if (!isValid && errorMessage) {
             // Add error styling
             input.classList.add('border-red-500', 'border-2');
-            
+
             // Create error message
             errorElement = document.createElement('div');
             errorElement.className = 'field-error text-red-400 text-xs mt-1';
@@ -437,7 +441,7 @@ export class View {
 
     updatePasswordStrength(passwordInput, strength) {
         let strengthIndicator = passwordInput.parentElement.querySelector('.password-strength');
-        
+
         if (!strengthIndicator) {
             strengthIndicator = document.createElement('div');
             strengthIndicator.className = 'password-strength mt-2';
@@ -446,7 +450,7 @@ export class View {
 
         const strengthLevels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
         const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500'];
-        
+
         const level = Math.min(strength, 4);
         const strengthText = strengthLevels[level] || 'Very Weak';
         const strengthColor = strengthColors[level] || 'bg-red-500';
@@ -454,7 +458,7 @@ export class View {
         strengthIndicator.innerHTML = `
             <div class="flex items-center space-x-2">
                 <div class="flex space-x-1">
-                    ${Array.from({length: 5}, (_, i) => `
+                    ${Array.from({ length: 5 }, (_, i) => `
                         <div class="w-4 h-1 rounded ${i <= level ? strengthColor : 'bg-gray-600'}"></div>
                     `).join('')}
                 </div>
@@ -468,7 +472,7 @@ export class View {
         if (!input) return;
 
         const icon = button.querySelector('i');
-        
+
         if (input.type === 'password') {
             input.type = 'text';
             icon.className = 'fas fa-eye-slash';
@@ -482,11 +486,11 @@ export class View {
     async copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            this.showSuccess('Copied to clipboard');
+            View.showSuccess('Copied to clipboard');
             return true;
         } catch (error) {
             console.error('Failed to copy text:', error);
-            this.showError('Failed to copy text');
+            View.showError('Failed to copy text');
             return false;
         }
     }
@@ -526,6 +530,6 @@ export const Pages = {
     INDEX: 'index.html',
     LIKES: 'likes.html',
     LISTS: 'lists.html',
-    REGISTER: 'rigister.html',
-    REVIEW: 'review.html' 
+    REGISTER: 'register.html',
+    REVIEW: 'review.html'
 };

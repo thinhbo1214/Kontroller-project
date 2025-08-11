@@ -1,8 +1,11 @@
 import { APIAuth, APIUser } from './api.js';
 import { Pages, View } from './view.js';
 import { uploadImage } from './externalapi.js';
+import { Model } from './model.js';
 
 export class Controller {
+
+    // ====== API method =======
     static async Login(username, password) {
         if (!username || !password) {
             View.showWarning("Vui lòng nhập đầy đủ thông tin!");
@@ -68,6 +71,11 @@ export class Controller {
         const res = await api.PutUserAvatar(imageUrl);
         View.hideLoading();
 
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.AUTH);
+            return;
+        }
 
         if (!res.ok) {
             View.showWarning("Đổi avatar thất bại!")
@@ -80,7 +88,7 @@ export class Controller {
         return true;
 
     }
-    
+
     static async Forgot(email) {
         if (email == null) {
             View.showWarning("Vui lòng nhập đầy đủ thông tin!")
@@ -124,6 +132,12 @@ export class Controller {
         const res = await api.DeleteUser(password)
         View.hideLoading();
 
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.AUTH);
+            return;
+        }
+
         if (!res.ok) {
             View.showWarning("Xóa tài khoản không thành công")
             return false;
@@ -132,5 +146,17 @@ export class Controller {
         View.showSuccess("Xóa tài khoản thành công")
         View.goTo(Pages.INDEX)
         return true;
+    }
+
+
+    // ======== Web client logic method
+
+    static resetIdleTimer() {
+        clearTimeout(Model.idleTimer);
+        Model.idleTimer = setTimeout(() => {
+            View.showWarning('Bạn đã quá thời gian chờ');
+            Model.deleteAuthToken();
+            View.goTo(Pages.AUTH);
+        }, Model.idleLimit);
     }
 }

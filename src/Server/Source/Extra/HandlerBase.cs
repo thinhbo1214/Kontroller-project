@@ -178,12 +178,12 @@ namespace Server.Source.Extra
         /// </summary>
         /// <param name="session">Phiên kết nối hiện tại.</param>
         /// <param name="data">Thông tin lỗi bổ sung (nếu có).</param>
-        public virtual void ErrorHandle(HttpsSession session, object data = null)
+        public virtual void ErrorHandle(HttpsSession session, object data = null, int status = 400)
         {
             if (data is string message)
                 data = new { message };
 
-            SendJsonResponse(session, data, 400);
+            SendJsonResponse(session, data, status);
         }
 
         /// <summary>
@@ -191,15 +191,13 @@ namespace Server.Source.Extra
         /// </summary>
         /// <param name="session">Phiên kết nối hiện tại.</param>
         /// <param name="data">Dữ liệu muốn trả về (nếu có).</param>
-        public virtual void OkHandle(HttpsSession session, object data = null)
+        public virtual void OkHandle(HttpsSession session, object data = null, int status = 200)
         {
             if (data is string message)
                 data = new { message };
 
-            SendJsonResponse(session, data, 200);
+            SendJsonResponse(session, data, status);
         }
 
     }
-
-
 }

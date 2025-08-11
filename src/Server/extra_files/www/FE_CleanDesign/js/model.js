@@ -1,10 +1,16 @@
 
-
 export class Model {
+    // ======== Data =========
     static CLOUDINARY_CLOUD_NAME = 'dynmsbofr';
     static CLOUDINARY_UPLOAD_PRESET = 'avatar_upload';
     static selectedFile = null;
 
+    // Idle detect
+    static idleTimer;
+    static idleLimit = 5 * 60 * 1000; // 5 phút
+
+
+    // ============== Method ===============
     // ===== LocalStorage =====
     static getLocalStorage(key) {
         return localStorage.getItem(key);

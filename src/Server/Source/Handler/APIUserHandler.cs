@@ -1,6 +1,4 @@
-﻿using Azure;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic.ApplicationServices;
+﻿using Microsoft.IdentityModel.Tokens;
 using Server.Source.Core;
 using Server.Source.Data;
 using Server.Source.Database;
@@ -8,7 +6,6 @@ using Server.Source.Extra;
 using Server.Source.Helper;
 using Server.Source.Manager;
 using Server.Source.NetCoreServer;
-using System.Reflection;
 
 namespace Server.Source.Handler
 {
@@ -99,6 +96,7 @@ namespace Server.Source.Handler
             var sessionManager = Simulation.GetModel<SessionManager>();
             if (!sessionManager.Authorization(request, out string userId, session))
             {
+                ErrorHandle(session, status: 401);
                 return default;
             }
             // Deserialize trực tiếp trước (để giữ nguyên casing từ JSON)
@@ -115,7 +113,13 @@ namespace Server.Source.Handler
         private void PutUserEmail(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<ChangeEmailParams>(request, session);
-            if (data == null || UserDatabase.Instance.ChangeEmail(data) != 1)
+
+            if (data == null)
+            {
+                return;
+            }
+
+            if (UserDatabase.Instance.ChangeEmail(data) != 1)
             {
                 ErrorHandle(session, "Đổi email không thành công");
                 return;
@@ -127,7 +131,7 @@ namespace Server.Source.Handler
         private void PutUserAvatar(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<ChangeAvatarParams>(request, session);
-            if (UserDatabase.Instance.ChangeAvatar(data) != 1)
+            if (data == null || UserDatabase.Instance.ChangeAvatar(data) != 1)
             {
                 ErrorHandle(session, "Đổi avatar không thành công!");
                 return;
@@ -140,7 +144,13 @@ namespace Server.Source.Handler
         private void PutUserUsername(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<ChangeUsernameParams>(request, session);
-            if (data == null || AccountDatabase.Instance.ChangeUsername(data) != 1)
+
+            if (data == null)
+            {
+                return;
+            }
+
+            if (AccountDatabase.Instance.ChangeUsername(data) != 1)
             {
                 ErrorHandle(session, "Đổi username không thành công!");
                 return;
@@ -152,7 +162,13 @@ namespace Server.Source.Handler
         private void PutUserPassword(HttpRequest request, HttpsSession session)
         {
             var data = PutBase<ChangePasswordParams>(request, session);
-            if (data == null || AccountDatabase.Instance.ChangePassword(data) != 1)
+
+            if (data == null)
+            {
+                return;
+            }
+
+            if (AccountDatabase.Instance.ChangePassword(data) != 1)
             {
                 ErrorHandle(session, "Đổi mật khẩu không thành công!");
                 return;
@@ -168,7 +184,7 @@ namespace Server.Source.Handler
             var sessionManager = Simulation.GetModel<SessionManager>();
             if (!sessionManager.Authorization(request, out string userId, session))
             {
-                ErrorHandle(session, "Chưa đăng nhập, không thể xoá tài khoản!");
+                ErrorHandle(session, "Chưa đăng nhập, không thể xoá tài khoản!", 401);
                 return;
             }
 

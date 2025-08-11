@@ -1,7 +1,8 @@
 import { Controller } from './controller.js';
 import { View, Pages } from './view.js';
 import { Model } from './model.js';
-const view = new View();
+
+
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
     const element = document.querySelector(selector);
@@ -18,6 +19,10 @@ function listenWindow(event, handler) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    View.init();
+
+    // ========== Element event ===========
+
     // Đăng nhập
     listenIfExists('#button-auth', 'click', () => {
         const username = document.getElementById('loginUsername')?.value || '';
@@ -86,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value;
 
         if (!password) {
-            view.showWarning("Vui lòng nhập mật khẩu");
+            View.showWarning("Vui lòng nhập mật khẩu");
             return;
         }
 
@@ -105,11 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Thêm các listener khác tùy bạn
 
-    //-----------------------------------------------//
-
-    //lấy token load page (tạm thời mới chỉ load đc profile)
+    // ========= Window event =========
     listenWindow('load', () => {
         const page = View.getPageNow();
 
@@ -130,33 +132,21 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => View.hideLoading(), 500);
     })
 
-    window.addEventListener('offline', () => {
-        view.showWarning('Bạn đang ngoại tuyến');
+    listenWindow('offline', () => {
+        View.showWarning('Bạn đang ngoại tuyến');
+        console.log('Offline event fired');
     });
 
-    window.addEventListener('online', () => {
-        view.showSuccess('Bạn đã kết nối lại internet');
+    listenWindow('online', () => {
+        View.showSuccess('Bạn đã kết nối lại internet');
+        console.log('Online event fired');
     });
-
-    window.addEventListener('offline', () => console.log('Offline event fired'));
-    window.addEventListener('online', () => console.log('Online event fired'));
-
-    // Idle detect
-    let idleTimer;
-    const idleLimit = 5 * 60 * 1000; // 5 phút
-
-    function resetIdleTimer() {
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-            view.showWarning('Bạn đã quá thời gian chờ');
-            Model.deleteAuthToken();
-            View.goTo(Pages.AUTH);
-        }, idleLimit);
-    }
 
     ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-        window.addEventListener(event, resetIdleTimer);
+        listenWindow(event, () => {
+            Controller.resetIdleTimer()
+        });
     });
 
-    resetIdleTimer();
+    Controller.resetIdleTimer();
 });
