@@ -129,4 +129,31 @@ document.addEventListener('DOMContentLoaded', () => {
         View.showLoading();
         setTimeout(() => View.hideLoading(), 500);
     })
+
+    window.addEventListener('offline', () => {
+        View.showWarning('Bạn đang ngoại tuyến');
+    });
+
+    window.addEventListener('online', () => {
+        View.showSuccess('Bạn đã kết nối lại internet');
+    });
+
+    // Idle detect
+    let idleTimer;
+    const idleLimit = 5 * 60 * 1000; // 5 phút
+
+    function resetIdleTimer() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+            View.showWarning('Bạn đã quá thời gian chờ');
+            Model.deleteAuthToken();
+            View.goTo(Pages.AUTH);
+        }, idleLimit);
+    }
+
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
+        window.addEventListener(event, resetIdleTimer);
+    });
+
+    resetIdleTimer();
 });
