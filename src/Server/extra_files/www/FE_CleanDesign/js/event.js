@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     listenIfExists('#forgotBtn', 'click', () => {
         const email = prompt('Please enter your email address:');
         if (email) {
-            alert('Password reset link will be sent to your email.');
             Controller.Forgot(email)
         }
 
