@@ -1,8 +1,5 @@
-import { Handle } from './handle.js';
-import { UIManager, Pages } from './ui.js';
-
-// Initialize and export
-const UI = new UIManager();
+import { Controller } from './controller.js';
+import { View, Pages } from './view.js';
 
 // Biến để lưu file ảnh đã chọn, có thể truy cập được từ nhiều hàm
 let selectedFile = null; 
@@ -27,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     listenIfExists('#button-auth', 'click', () => {
         const username = document.getElementById('loginUsername')?.value || '';
         const password = document.getElementById('loginPassword')?.value || '';
-        Handle.Login(username, password);
+        Controller.Login(username, password);
     });
 
     // Đăng ký
@@ -35,14 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('signupUsername')?.value || '';
         const password = document.getElementById('signupPassword')?.value || '';
         const email = document.getElementById('signupEmail')?.value || '';
-        Handle.Register(username, password, email);
+        Controller.Register(username, password, email);
     });
     // Quen mat khua 
     listenIfExists('#forgotBtn', 'click', () => {
         const email = prompt('Please enter your email address:');
         if (email) {
             alert('Password reset link will be sent to your email.');
-            Handle.Forgot(email)
+            Controller.Forgot(email)
         }
 
     });
@@ -75,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Kiểm tra xem có file nào đã được chọn không
         if (selectedFile) {
             // Gọi hàm xử lý chính với file đã được lưu
-            Handle.ChangeAvatar(selectedFile, avatar);
+            Controller.ChangeAvatar(selectedFile, avatar);
         } 
     });
 
@@ -83,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     listenIfExists('#BioShow', 'click', () => {
         const EditBtn = document.getElementById('BioShow')?.value || '';
         const userID = document.getElementById('')
-        Handle.ShowEdit(userID)
+        Controller.ShowEdit(userID)
     });
     // xóa tài khoản 
     listenIfExists('#deleteAccount', 'click', () => {
@@ -91,17 +88,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value;
 
         if (!password) {
-            UI.showWarning("Vui lòng nhập mật khẩu");
+            View.showWarning("Vui lòng nhập mật khẩu");
             return;
         }
 
         if (confirm("Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.")) {
-            Handle.DeleteAcc(password);
+            Controller.DeleteAcc(password);
         }
     })
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
-        Handle.Logout();
+        Controller.Logout();
     });
 
     listenIfExists('#createListBtn', 'click', () => {
@@ -121,9 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const token1 = localStorage.getItem('token')
         if (token1 != null && (fileName == Pages.INDEX || fileName == Pages.AUTH || fileName == Pages.Register)) {
 
-            UI.goTo(Pages.PROFILE)
+            View.goTo(Pages.PROFILE)
         }
-        UI.showLoading();
-        setTimeout(() => UI.hideLoading(), 500);
+        View.showLoading();
+        setTimeout(() => View.hideLoading(), 500);
     })
 });

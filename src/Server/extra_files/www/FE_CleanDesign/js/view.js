@@ -1,5 +1,5 @@
 // ui.js - Extended UI Manager for Lists functionality
-export class UIManager {
+export class View {
     constructor() {
         this.init();
     }
@@ -8,11 +8,11 @@ export class UIManager {
         this.createNotificationContainer();
     }
 
-    goTo(page) {
+    static goTo(page) {
         window.location.href = page;
     }
     // Existing notification methods...
-    createNotificationContainer() {
+    static createNotificationContainer() {
         if (!document.getElementById('notificationContainer')) {
             const container = document.createElement('div');
             container.id = 'notificationContainer';
@@ -21,7 +21,7 @@ export class UIManager {
         }
     }
 
-    showLoading(message = 'Processing...') {
+    static showLoading(message = 'Processing...') {
         // Check if loading overlay exists, if not create it
         let overlay = document.getElementById('loadingOverlay');
         if (!overlay) {
@@ -44,26 +44,26 @@ export class UIManager {
         overlay.classList.remove('hidden');
     }
 
-    hideLoading() {
+    static hideLoading() {
         const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
             overlay.classList.add('hidden');
         }
     }
 
-    showError(message, duration = 5000) {
+    static showError(message, duration = 5000) {
         this.showNotification(message, 'error', duration);
     }
 
-    showSuccess(message, duration = 3000) {
+    static showSuccess(message, duration = 3000) {
         this.showNotification(message, 'success', duration);
     }
 
-    showInfo(message, duration = 4000) {
+    static showInfo(message, duration = 4000) {
         this.showNotification(message, 'info', duration);
     }
 
-    showWarning(message, duration = 4000) {
+    static showWarning(message, duration = 4000) {
         this.showNotification(message, 'warning', duration);
     }
 

@@ -1,5 +1,5 @@
 import { APIAuth, APIUser } from './api.js';
-import { Pages, UIManager } from './ui.js';
+import { Pages, ViewServer } from './view.js';
 
 const CLOUDINARY_CLOUD_NAME = 'dynmsbofr'; 
 const CLOUDINARY_UPLOAD_PRESET = 'avatar_upload'; 
@@ -24,9 +24,9 @@ async function uploadImage(file) {
 }
 
 // Initialize and export
-const UI = new UIManager();
+const UI = new ViewServer();
 
-export class Handle {
+export class Controller {
     static async Login(username, password) {
         if (!username || !password) {
             UI.showWarning("Vui lòng nhập đầy đủ thông tin!");

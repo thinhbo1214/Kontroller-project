@@ -1,18 +1,3 @@
-function showResponse(text) {
-  const pre = document.getElementById('response');
-  pre.textContent = text;
-}
-function isTokenValid(token) {
-  try {
-    const decoded = atob(token); // base64 decode
-    const [sessionId, expire] = decoded.split(':');
-    return parseInt(expire) > Math.floor(Date.now() / 1000);
-  } catch {
-    return false;
-  }
-}
-
-
 // === Base API ===
 class API {
   static baseUrl = ''; // Override ở class con
@@ -51,6 +36,15 @@ class API {
     return { ok: res.ok, status: res.status, data }; // Trả về đối tượng chứa thông tin response
   }
 
+  static isTokenValid(token) {
+    try {
+      const decoded = atob(token); // base64 decode
+      const [sessionId, expire] = decoded.split(':');
+      return parseInt(expire) > Math.floor(Date.now() / 1000);
+    } catch {
+      return false;
+    }
+  }
   // Hàm để xây dựng query string từ đối tượng params
   // Ví dụ: buildQuery({ key1: 'value1', key2: 'value2' }) => '?key1=value1&key2=value2'
   static buildQuery(params = {}) {
@@ -176,7 +170,7 @@ export class APIUser extends API {
 
     // Không set Content-Type, fetch tự set multipart/form-data
     const res = await this.PUT(query, {
-            headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
