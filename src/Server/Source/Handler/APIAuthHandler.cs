@@ -88,8 +88,17 @@ namespace Server.Source.Handler
                 return;
             }
             var newPassword = AccountDatabase.Instance.ForgetPassword(data);
-            Simulation.GetModel<NotifyManager>().SendMailResetPassword(data.Email, newPassword);
-            OkHandle(session, "Mật khẩu của bạn đã reset, hãy check mail của bạn!");
+            Simulation.GetModel<LogManager>().Log(newPassword);
+
+            if (newPassword != null)
+            {
+                Simulation.GetModel<NotifyManager>().SendMailResetPassword(data.Email, newPassword);
+                OkHandle(session, "Mật khẩu của bạn đã reset, hãy check mail của bạn!");
+                return;
+            }
+
+            ErrorHandle(session, "Đổi email ko thành công!");
+
         }
 
     }

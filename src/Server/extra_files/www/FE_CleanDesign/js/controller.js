@@ -99,6 +99,7 @@ export class Controller {
 
         const res = await api.PostForgetPassword(email);
         View.hideLoading();
+        
         if (!res.ok) {
             View.showWarning("Email chưa được đăng ký")
             return false;

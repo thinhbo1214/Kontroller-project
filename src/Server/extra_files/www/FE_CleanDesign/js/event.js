@@ -2,6 +2,7 @@ import { Controller } from './controller.js';
 import { View, Pages } from './view.js';
 import { Model } from './model.js';
 
+View.init();
 
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
@@ -19,7 +20,7 @@ function listenWindow(event, handler) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    View.init();
+
 
     // ========== Element event ===========
 
