@@ -138,12 +138,16 @@ export class Controller {
             return;
         }
 
+
+
+
         if (!res.ok) {
             View.showWarning("Xóa tài khoản không thành công")
             return false;
         }
 
         View.showSuccess("Xóa tài khoản thành công")
+        Model.deleteAuthToken();
         View.goTo(Pages.INDEX)
         return true;
     }
