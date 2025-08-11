@@ -1,7 +1,7 @@
 import { Controller } from './controller.js';
 import { View, Pages } from './view.js';
 import { Model } from './model.js';
-
+const view = new View();
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
     const element = document.querySelector(selector);
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value;
 
         if (!password) {
-            View.showWarning("Vui lòng nhập mật khẩu");
+            view.showWarning("Vui lòng nhập mật khẩu");
             return;
         }
 
@@ -131,12 +131,15 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     window.addEventListener('offline', () => {
-        View.showWarning('Bạn đang ngoại tuyến');
+        view.showWarning('Bạn đang ngoại tuyến');
     });
 
     window.addEventListener('online', () => {
-        View.showSuccess('Bạn đã kết nối lại internet');
+        view.showSuccess('Bạn đã kết nối lại internet');
     });
+
+    window.addEventListener('offline', () => console.log('Offline event fired'));
+    window.addEventListener('online', () => console.log('Online event fired'));
 
     // Idle detect
     let idleTimer;
@@ -145,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetIdleTimer() {
         clearTimeout(idleTimer);
         idleTimer = setTimeout(() => {
-            View.showWarning('Bạn đã quá thời gian chờ');
+            view.showWarning('Bạn đã quá thời gian chờ');
             Model.deleteAuthToken();
             View.goTo(Pages.AUTH);
         }, idleLimit);

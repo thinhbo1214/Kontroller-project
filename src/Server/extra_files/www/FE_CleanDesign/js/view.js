@@ -15,7 +15,7 @@ export class View {
         return path.substring(path.lastIndexOf('/') + 1);
     }
     // Existing notification methods...
-    static createNotificationContainer() {
+    createNotificationContainer() {
         if (!document.getElementById('notificationContainer')) {
             const container = document.createElement('div');
             container.id = 'notificationContainer';
@@ -54,23 +54,23 @@ export class View {
         }
     }
 
-    static showError(message, duration = 5000) {
+    showError(message, duration = 5000) {
         this.showNotification(message, 'error', duration);
     }
 
-    static showSuccess(message, duration = 3000) {
+    showSuccess(message, duration = 3000) {
         this.showNotification(message, 'success', duration);
     }
 
-    static showInfo(message, duration = 4000) {
+    showInfo(message, duration = 4000) {
         this.showNotification(message, 'info', duration);
     }
 
-    static showWarning(message, duration = 4000) {
+    showWarning(message, duration = 4000) {
         this.showNotification(message, 'warning', duration);
     }
 
-    static showNotification(message, type = 'info', duration = 4000) {
+    showNotification(message, type = 'info', duration = 4000) {
         const container = document.getElementById('notificationContainer');
         if (!container) return;
 
@@ -108,7 +108,7 @@ export class View {
         }
     }
 
-    static removeNotification(notification) {
+    removeNotification(notification) {
         notification.classList.add('translate-x-full', 'opacity-0');
         setTimeout(() => {
             if (notification.parentElement) {
@@ -117,7 +117,7 @@ export class View {
         }, 300);
     }
 
-    static getNotificationClasses(type) {
+    getNotificationClasses(type) {
         switch (type) {
             case 'success':
                 return 'border-green-500 bg-green-900/20';
@@ -131,7 +131,7 @@ export class View {
         }
     }
 
-    static getNotificationIcon(type) {
+    getNotificationIcon(type) {
         switch (type) {
             case 'success':
                 return '<i class="fas fa-check-circle text-green-400"></i>';
