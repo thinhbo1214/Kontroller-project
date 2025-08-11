@@ -1,5 +1,6 @@
 import { APIAuth, APIUser } from './api.js';
 import { Pages, View } from './view.js';
+import { uploadImage } from './externalapi.js';
 
 export class Controller {
     static async Login(username, password) {

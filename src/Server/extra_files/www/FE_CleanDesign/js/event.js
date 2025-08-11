@@ -1,7 +1,6 @@
 import { Controller } from './controller.js';
 import { View, Pages } from './view.js';
 import { Model } from './model.js';
-import { APIAuth } from './api.js';
 
 // Hàm tiện ích: chỉ thêm sự kiện nếu phần tử tồn tại
 function listenIfExists(selector, event, handler) {
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (Model.selectedFile) {
             // Gọi hàm xử lý chính với file đã được lưu
             Controller.ChangeAvatar(Model.selectedFile, avatar);
-        } 
+        }
     });
 
     // hienej thi thong tin 
@@ -113,14 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
     //lấy token load page (tạm thời mới chỉ load đc profile)
     listenWindow('load', () => {
         const page = View.getPageNow();
-        
+
         const token = Model.getAuthToken();
-        if (token != null){
-            if (Model.isAuthTokenValid(token) && (page == Pages.INDEX || page == Pages.AUTH || page == Pages.Register)){
-                View.goTo(Pages.PROFILE)
-            }
-            else{
+        if (token != null) {
+            if (Model.isAuthTokenValid(token)) {
+                if (page == Pages.INDEX || page == Pages.AUTH || page == Pages.REGISTER)
+                    View.goTo(Pages.PROFILE);
+            } else {
                 Model.deleteAuthToken();
+                if (page != Pages.INDEX && page != Pages.AUTH && page != Pages.REGISTER)
+                    View.goTo(Pages.AUTH);
+
             }
         }
 

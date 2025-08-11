@@ -70,7 +70,7 @@ export class View {
         this.showNotification(message, 'warning', duration);
     }
 
-    showNotification(message, type = 'info', duration = 4000) {
+    static showNotification(message, type = 'info', duration = 4000) {
         const container = document.getElementById('notificationContainer');
         if (!container) return;
 
@@ -108,7 +108,7 @@ export class View {
         }
     }
 
-    removeNotification(notification) {
+    static removeNotification(notification) {
         notification.classList.add('translate-x-full', 'opacity-0');
         setTimeout(() => {
             if (notification.parentElement) {
@@ -117,7 +117,7 @@ export class View {
         }, 300);
     }
 
-    getNotificationClasses(type) {
+    static getNotificationClasses(type) {
         switch (type) {
             case 'success':
                 return 'border-green-500 bg-green-900/20';
@@ -131,7 +131,7 @@ export class View {
         }
     }
 
-    getNotificationIcon(type) {
+    static getNotificationIcon(type) {
         switch (type) {
             case 'success':
                 return '<i class="fas fa-check-circle text-green-400"></i>';
