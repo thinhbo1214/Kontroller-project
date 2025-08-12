@@ -85,20 +85,24 @@ namespace Server.Source.View
         /// <param name="e">Thông tin sự kiện.</param>
         private void button1_Click(object sender, EventArgs e)
         {
+            panelStatus.BackColor = Color.Orange;
             labelAppPort.Text = Simulation.GetModel<ModelServer>().Port.ToString();
             Simulation.GetModel<ModelServer>().ElapsedTime = TimeSpan.Zero;
             buttonStartApp.Enabled = false;
             OnClickedStart?.Invoke();
             buttonStopApp.Enabled = true;
             timer1.Start();
+            panelStatus.BackColor = Color.Green;
         }
 
         private void StopApp()
         {
+            panelStatus.BackColor = Color.Orange;
             OnClickedStop?.Invoke();
             buttonStopApp.Enabled = false;
             buttonStartApp.Enabled = true;
             timer1.Stop();
+            panelStatus.BackColor = Color.Red;
         }
 
         /// <summary>

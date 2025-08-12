@@ -65,6 +65,7 @@ namespace Server.Source.View
             buttonClearLogsS = new Button();
             buttonOpenLogsS = new Button();
             buttonOpenLogsU = new Button();
+            panelStatus = new Panel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -347,6 +348,7 @@ namespace Server.Source.View
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(panelStatus);
             groupBox1.Controls.Add(labelAIPort);
             groupBox1.Controls.Add(labelSQLPort);
             groupBox1.Controls.Add(labelAppPort);
@@ -563,6 +565,14 @@ namespace Server.Source.View
             buttonOpenLogsU.UseVisualStyleBackColor = false;
             buttonOpenLogsU.Click += buttonOpenLogsU_Click;
             // 
+            // panelStatus
+            // 
+            panelStatus.BackColor = Color.Red;
+            panelStatus.Location = new Point(273, 91);
+            panelStatus.Name = "panelStatus";
+            panelStatus.Size = new Size(12, 12);
+            panelStatus.TabIndex = 41;
+            // 
             // ViewServer
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -653,5 +663,6 @@ namespace Server.Source.View
         private Label labelMemoryUsage;
         private Button buttonOpenLogsS;
         private Button buttonOpenLogsU;
+        private Panel panelStatus;
     }
 }
