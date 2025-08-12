@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Followers - Username</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <!-- Header -->
+    <header class="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold">A</span>
+                    </div>
+                    <div>
+                        <span class="text-xl font-semibold">Username</span>
+                        <button class="ml-2 px-3 py-1 bg-blue-600 text-xs rounded-lg hover:bg-blue-700 transition-colors">Edit</button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search for games" 
+                               class="bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:border-blue-500">
+                        <button class="absolute right-2 top-2 text-gray-400 hover:text-white">
+                            🔍
+                        </button>
+                    </div>
+                    <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        👥 Friends and People
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-slate-800/30 border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex space-x-8">
+                <a href="profile.html" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Profile</a>
+                <a href="#" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Activity</a>
+                <a href="#" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Reviews</a>
+                <a href="#" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Games</a>
+                <a href="#" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Lists</a>
+                <a href="#" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Diary</a>
+                <a href="#" class="px-4 py-4 text-gray-400 hover:text-blue-400 border-b-2 border-transparent hover:border-blue-400 transition-all">Likes</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Page Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <button onclick="history.back()" class="text-gray-400 hover:text-white transition-colors">
+                    ← Back
+                </button>
+                <h1 class="text-3xl font-bold text-white">Followers</h1>
+                <span class="text-blue-400 text-lg font-semibold">(245)</span>
+            </div>
+            
+            <!-- Filter/Sort Options -->
+            <div class="flex items-center space-x-3">
+                <select class="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                    <option>Sort by Recent</option>
+                    <option>Sort by Name</option>
+                    <option>Sort by Games Played</option>
+                </select>
+                <div class="relative">
+                    <input type="text" placeholder="Search followers..." 
+                           class="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:border-blue-500">
+                    <span class="absolute right-2 top-2 text-gray-400">🔍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Followers Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Follower Card Template -->
+            <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-xl font-bold">
+                        JD
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-semibold text-white">JohnDoe_Gaming</h3>
+                        <p class="text-sm text-gray-400">Following since 2023</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <span>156 Games</span>
+                        <span>•</span>
+                        <span>89 Reviews</span>
+                    </div>
+                    <div class="flex space-x-2 w-full">
+                        <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                            Following
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More Follower Cards -->
+            <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center text-xl font-bold">
+                        SG
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-semibold text-white">SarahGamer</h3>
+                        <p class="text-sm text-gray-400">Following since 2024</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <span>203 Games</span>
+                        <span>•</span>
+                        <span>142 Reviews</span>
+                    </div>
+                    <div class="flex space-x-2 w-full">
+                        <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                            Following
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center text-xl font-bold">
+                        MX
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-semibold text-white">MaxPro_Player</h3>
+                        <p class="text-sm text-gray-400">Following since 2023</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <span>324 Games</span>
+                        <span>•</span>
+                        <span>67 Reviews</span>
+                    </div>
+                    <div class="flex space-x-2 w-full">
+                        <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                            Following
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center text-xl font-bold">
+                        LN
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-semibold text-white">LunaNinja</h3>
+                        <p class="text-sm text-gray-400">Following since 2024</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <span>78 Games</span>
+                        <span>•</span>
+                        <span>234 Reviews</span>
+                    </div>
+                    <div class="flex space-x-2 w-full">
+                        <button class="flex-1 bg-slate-600 hover:bg-slate-500 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                            Follow Back
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more cards by duplicating the structure above -->
+            <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center text-xl font-bold">
+                        TK
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-semibold text-white">TheKnight77</h3>
+                        <p class="text-sm text-gray-400">Following since 2022</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <span>445 Games</span>
+                        <span>•</span>
+                        <span>103 Reviews</span>
+                    </div>
+                    <div class="flex space-x-2 w-full">
+                        <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                            Following
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-xl font-bold">
+                        ZX
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-semibold text-white">ZeroXGamer</h3>
+                        <p class="text-sm text-gray-400">Following since 2024</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <span>167 Games</span>
+                        <span>•</span>
+                        <span>45 Reviews</span>
+                    </div>
+                    <div class="flex space-x-2 w-full">
+                        <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors">
+                            Following
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            💬
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button class="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+                Load More Followers
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900/50 border-t border-slate-700 mt-16">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="text-center text-gray-400 text-sm">
+                <p>&copy; 2024 Gaming Profile. Connect with gamers worldwide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Follow/Unfollow button functionality
+            const followButtons = document.querySelectorAll('button');
+            followButtons.forEach(button => {
+                if (button.textContent.includes('Following')) {
+                    button.addEventListener('click', function() {
+                        if (this.textContent === 'Following') {
+                            this.textContent = 'Follow';
+                            this.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                            this.classList.add('bg-slate-600', 'hover:bg-slate-500');
+                        } else if (this.textContent === 'Follow') {
+                            this.textContent = 'Following';
+                            this.classList.remove('bg-slate-600', 'hover:bg-slate-500');
+                            this.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                        }
+                    });
+                }
+                
+                if (button.textContent.includes('Follow Back')) {
+                    button.addEventListener('click', function() {
+                        this.textContent = 'Following';
+                        this.classList.remove('bg-slate-600', 'hover:bg-slate-500');
+                        this.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                    });
+                }
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('input[placeholder="Search followers..."]');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const followerCards = document.querySelectorAll('.grid > div');
+                
+                followerCards.forEach(card => {
+                    const username = card.querySelector('h3').textContent.toLowerCase();
+                    if (username.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
