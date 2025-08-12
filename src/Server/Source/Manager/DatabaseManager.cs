@@ -14,8 +14,8 @@ namespace Server.Source.Manager
         private readonly string _basePath; // Nơi chứa thư mục gốc chứa file sql
         private readonly string _connectionString;
         private readonly string database = "KontrollerDB";
-        private readonly string user = "sa";
-        private readonly string password = "svcntt";
+        private readonly string user = "admin";
+        private readonly string password = "Admin@123";
         private readonly string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
         public event Action FailedConnectDB;
 
