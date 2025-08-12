@@ -40,16 +40,6 @@ string GetLocalSubnet()
 
 async Task<string> TryAutoConnectAsync(string database, string user, string password, string defaultIp)
 {
-    // Thử localhost
-    string localConn = $"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;";
-    if (await TestConnectionAsync(localConn))
-        return localConn;
-
-    // Thử IP default
-    string defaultConn = $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
-    if (await TestConnectionAsync(defaultConn))
-        return defaultConn;
-
     // Quét LAN (song song)
     string baseSubnet = GetLocalSubnet();
     if (baseSubnet != null)
@@ -72,6 +62,18 @@ async Task<string> TryAutoConnectAsync(string database, string user, string pass
         }
     }
 
+    // Thử localhost
+    string localConn = $"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;";
+    if (await TestConnectionAsync(localConn))
+        return localConn;
+
+    // Thử IP default
+    string defaultConn = $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+    if (await TestConnectionAsync(defaultConn))
+        return defaultConn;
+
+
+
     return null;
 }
 async Task<(string, bool)> TestConnectionWithResultAsync(string connectionString)
@@ -86,7 +88,7 @@ async Task<bool> TestConnectionAsync(string connectionString)
     {
         var builder = new SqlConnectionStringBuilder(connectionString)
         {
-            ConnectTimeout = 1
+            ConnectTimeout = 5
         };
         using (var conn = new SqlConnection(builder.ConnectionString))
         {
@@ -103,8 +105,8 @@ async Task<bool> TestConnectionAsync(string connectionString)
 }
 
 string database = "KontrollerDB";
-string user = "admin";
-string password = "Admin@321";
+string user = "sa";
+string password = "svcntt";
 string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
 
 string _connectionString = Task.Run(() => TryAutoConnectAsync(database, user, password, defaultIp)).Result;
