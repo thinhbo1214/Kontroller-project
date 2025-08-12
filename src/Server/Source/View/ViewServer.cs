@@ -78,12 +78,7 @@ namespace Server.Source.View
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Xử lý sự kiện nhấn nút khởi động ứng dụng.
-        /// </summary>
-        /// <param name="sender">Đối tượng gửi sự kiện.</param>
-        /// <param name="e">Thông tin sự kiện.</param>
-        private void button1_Click(object sender, EventArgs e)
+        private async void StartApp()
         {
             panelStatus.BackColor = Color.Orange;
             labelAppPort.Text = Simulation.GetModel<ModelServer>().Port.ToString();
@@ -92,16 +87,27 @@ namespace Server.Source.View
             OnClickedStart?.Invoke();
             buttonStopApp.Enabled = true;
             timer1.Start();
+            await Task.Delay(1000);
             panelStatus.BackColor = Color.Green;
         }
+        /// <summary>
+        /// Xử lý sự kiện nhấn nút khởi động ứng dụng.
+        /// </summary>
+        /// <param name="sender">Đối tượng gửi sự kiện.</param>
+        /// <param name="e">Thông tin sự kiện.</param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            StartApp();
+        }
 
-        private void StopApp()
+        private async void StopApp()
         {
             panelStatus.BackColor = Color.Orange;
             OnClickedStop?.Invoke();
             buttonStopApp.Enabled = false;
             buttonStartApp.Enabled = true;
             timer1.Stop();
+            await Task.Delay(1000);
             panelStatus.BackColor = Color.Red;
         }
 
