@@ -2,6 +2,7 @@
 using Server.Source.Core;
 using Server.Source.Helper;
 using System.Data;
+using System.Net.NetworkInformation;
 
 namespace Server.Source.Manager
 {
@@ -12,6 +13,11 @@ namespace Server.Source.Manager
     {
         private readonly string _basePath; // Nơi chứa thư mục gốc chứa file sql
         private readonly string _connectionString;
+        private readonly string database = "KontrollerDB";
+        private readonly string user = "sa";
+        private readonly string password = "svcntt";
+        private readonly string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
+        public event Action FailedConnectDB;
 
         /// <summary>
         /// Bộ nhớ cache cho các câu lệnh SQL, với khóa dạng "folder/file" hoặc "file".
@@ -43,6 +49,149 @@ namespace Server.Source.Manager
             ServiceHelper.RunServiceCommand(serviceName, "stop");
         }
 
+
+        private string TryAutoConnect(string database, string user, string password, string defaultIp)
+        {
+            // 1. Thử localhost
+            if (TestConnection($"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;"))
+                return $"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;";
+
+            // 2. Thử IP default
+            if (TestConnection($"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;"))
+                return $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+
+            // 3. Quét LAN
+            string baseSubnet = GetLocalSubnet(); // ví dụ: "192.168.1"
+            if (baseSubnet != null)
+            {
+                Simulation.GetModel<LogManager>().Log($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
+
+                for (int i = 1; i <= 254; i++)
+                {
+                    string ip = $"{baseSubnet}.{i}";
+                    if (ip == defaultIp) continue;
+
+                    string conn = $"Server={ip};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+
+                    if (TestConnection(conn))
+                        return conn;
+                }
+            }
+
+
+            return null; // không tìm thấy
+        }
+
+        private bool TestConnection(string connectionString)
+        {
+            try
+            {
+                var builder = new SqlConnectionStringBuilder(connectionString)
+                {
+                    ConnectTimeout = 1
+                };
+                using (var conn = new SqlConnection(builder.ConnectionString))
+                {
+                    conn.Open();
+                }
+                Simulation.GetModel<LogManager>().Log($"✅ Thành công: {connectionString}", LogLevel.INFO, LogSource.SYSTEM);
+                return true;
+            }
+            catch
+            {
+                Simulation.GetModel<LogManager>().Log($"❌ Thất bại: {connectionString}", LogLevel.ERROR, LogSource.SYSTEM);
+                return false;
+            }
+        }
+
+        private string GetLocalSubnet()
+        {
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (ni.OperationalStatus == OperationalStatus.Up &&
+                    ni.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                {
+                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        {
+                            string[] parts = ip.Address.ToString().Split('.');
+                            if (parts.Length == 4)
+                            {
+                                return $"{parts[0]}.{parts[1]}.{parts[2]}";
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private async Task<string> TryAutoConnectAsync(string database, string user, string password, string defaultIp)
+        {
+            // Thử localhost
+            string localConn = $"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;";
+            if (await TestConnectionAsync(localConn))
+                return localConn;
+
+            // Thử IP default
+            string defaultConn = $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+            if (await TestConnectionAsync(defaultConn))
+                return defaultConn;
+
+            // Quét LAN (song song)
+            string baseSubnet = GetLocalSubnet();
+            if (baseSubnet != null)
+            {
+                Simulation.GetModel<LogManager>().Log($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
+                var tasks = new List<Task<(string, bool)>>();
+                for (int i = 1; i <= 50; i++) // Giới hạn quét
+                {
+                    string ip = $"{baseSubnet}.{i}";
+                    if (ip == defaultIp) continue;
+                    string conn = $"Server={ip};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+                    tasks.Add(TestConnectionWithResultAsync(conn));
+                }
+
+                var results = await Task.WhenAll(tasks);
+                foreach (var result in results)
+                {
+                    if (result.Item2)
+                        return result.Item1;
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<(string, bool)> TestConnectionWithResultAsync(string connectionString)
+        {
+            bool success = await TestConnectionAsync(connectionString);
+            return (connectionString, success);
+        }
+
+        private async Task<bool> TestConnectionAsync(string connectionString)
+        {
+            try
+            {
+                var builder = new SqlConnectionStringBuilder(connectionString)
+                {
+                    ConnectTimeout = 1
+                };
+                using (var conn = new SqlConnection(builder.ConnectionString))
+                {
+                    await conn.OpenAsync();
+                }
+                Simulation.GetModel<LogManager>().Log($"✅ Thành công: {connectionString}", LogLevel.INFO, LogSource.SYSTEM);
+                return true;
+            }
+            catch
+            {
+                Simulation.GetModel<LogManager>().Log($"❌ Thất bại: {connectionString}", LogLevel.ERROR, LogSource.SYSTEM);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Khởi tạo <see cref="DatabaseManager"/> với đường dẫn thư mục SQL và chuỗi kết nối.
         /// </summary>
@@ -61,7 +210,12 @@ namespace Server.Source.Manager
         public DatabaseManager()
         {
             _basePath = Path.Combine(AppContext.BaseDirectory, "extra_files", "MyServerData", "queries");
-            _connectionString = "Server=localhost;Database=KontrollerDB;Integrated Security=True;TrustServerCertificate=True;";
+            _connectionString = Task.Run(() => TryAutoConnectAsync(database, user, password, defaultIp)).Result;
+
+            if (_connectionString == null)
+            {
+                FailedConnectDB?.Invoke();
+            }
         }
 
         /// <summary>

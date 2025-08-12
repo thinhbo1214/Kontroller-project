@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using static Server.Source.Model.ModelServer;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Server.Source.View
@@ -92,6 +93,14 @@ namespace Server.Source.View
             timer1.Start();
         }
 
+        private void StopApp()
+        {
+            OnClickedStop?.Invoke();
+            buttonStopApp.Enabled = false;
+            buttonStartApp.Enabled = true;
+            timer1.Stop();
+        }
+
         /// <summary>
         /// Xử lý sự kiện nhấn nút dừng ứng dụng.
         /// </summary>
@@ -99,10 +108,16 @@ namespace Server.Source.View
         /// <param name="e">Thông tin sự kiện.</param>
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            OnClickedStop?.Invoke();
-            buttonStopApp.Enabled = false;
-            buttonStartApp.Enabled = true;
-            timer1.Stop();
+            StopApp();
+        }
+        public void ErrorToEnd()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(ErrorToEnd));
+                return;
+            }
+            StopApp();
         }
 
         /// <summary>

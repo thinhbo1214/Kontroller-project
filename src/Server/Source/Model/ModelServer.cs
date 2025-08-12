@@ -21,8 +21,25 @@ namespace Server.Source.Model
         /// <summary>
         /// Bộ đếm hiệu suất CPU để theo dõi mức sử dụng CPU của hệ thống.
         /// </summary>
-        private static readonly PerformanceCounter CpuCounter = new("Processor", "% Processor Time", "_Total");
+        private static PerformanceCounter? _cpuCounter; // Không khởi tạo ngay, dùng nullable
 
+        // Lazy init counter trong method
+        private static void InitializeCpuCounter()
+        {
+            if (_cpuCounter == null)
+            {
+                try
+                {
+                    _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi và fallback
+                    Simulation.GetModel<LogManager>().Log($"Lỗi khởi tạo CPU counter: {ex.Message}", LogLevel.ERROR, LogSource.SYSTEM);
+                    _cpuCounter = null; // Để tránh thử lại
+                }
+            }
+        }
         /// <summary>
         /// Thư mục thực thi của ứng dụng.
         /// </summary>
@@ -188,9 +205,14 @@ namespace Server.Source.Model
             /// <returns>Mức sử dụng CPU (%).</returns>
             private static async Task<float> GetCpuUsageAsync()
             {
-                CpuCounter.NextValue(); // Bỏ giá trị đầu tiên
-                await Task.Delay(500);  // Chờ
-                return CpuCounter.NextValue();
+                InitializeCpuCounter(); // Lazy init
+
+                if (_cpuCounter == null)
+                    return 0f; // Fallback nếu lỗi
+
+                _cpuCounter.NextValue(); // Bỏ giá trị đầu tiên (thường là 0)
+                await Task.Delay(500);  // Chờ để lấy giá trị chính xác
+                return _cpuCounter.NextValue();
             }
 
             /// <summary>

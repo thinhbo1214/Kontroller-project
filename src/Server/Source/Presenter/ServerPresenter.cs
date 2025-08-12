@@ -40,6 +40,9 @@ namespace Server.Source.Presenter
 
             // Lắng nghe LogManager
             Simulation.GetModel<LogManager>().OnLogPrinted += Log;
+
+            // Lắng nghe DatabaseManager
+            Simulation.GetModel<DatabaseManager>().FailedConnectDB += ErrorStop;
         }
 
         /// <summary>
@@ -107,6 +110,21 @@ namespace Server.Source.Presenter
                     Simulation.GetModel<ModelServer>().Stop();
                     Simulation.GetModel<ModelServer>().Server.Stop();
                     Simulation.GetModel<LogManager>().Log("Server stopped.", LogLevel.INFO, LogSource.SYSTEM);
+                }
+                catch (Exception ex)
+                {
+                    Simulation.GetModel<LogManager>().Log(ex);
+                }
+            });
+        }
+
+        private void ErrorStop()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    Simulation.GetModel<ViewServer>().ErrorToEnd();
                 }
                 catch (Exception ex)
                 {
