@@ -19,11 +19,6 @@ namespace Server.Source.Model
     public class ModelServer
     {
         /// <summary>
-        /// Bộ đếm hiệu suất CPU để theo dõi mức sử dụng CPU của hệ thống.
-        /// </summary>
-        private static readonly PerformanceCounter CpuCounter = new("Processor", "% Processor Time", "_Total");
-
-        /// <summary>
         /// Thư mục thực thi của ứng dụng.
         /// </summary>
         private static readonly string ExecutableDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -128,20 +123,6 @@ namespace Server.Source.Model
         /// </summary>
         public event Action<LogSource, string> OnAddedLog;
 
-        /// <summary>
-        /// Biến lưu trữ giá trị CPU usage gần nhất (cache để tránh delay mỗi lần gọi).
-        /// </summary>
-        private float _cachedCpuUsage = 0f;
-
-        /// <summary>
-        /// Tác vụ background để cập nhật CPU usage định kỳ.
-        /// </summary>
-        private Task? _cpuMonitorTask;
-
-        /// <summary>
-        /// CancellationTokenSource cho tác vụ monitor CPU.
-        /// </summary>
-        private CancellationTokenSource _cpuCts = new();
 
         /// <summary>
         /// Lớp nội bộ lưu trữ thông tin trạng thái máy chủ.
@@ -260,7 +241,6 @@ namespace Server.Source.Model
         public ModelServer()
         {
             Init();
-            StartCpuMonitor(); // Khởi động monitor CPU ngay khi khởi tạo
         }
 
         /// <summary>
@@ -278,6 +258,8 @@ namespace Server.Source.Model
             // MVP
             Simulation.SetModel<ServerPresenter>(new ServerPresenter());
             Simulation.SetModel<ViewServer>(new ViewServer());
+
+            Task.Run(() => Simulation.GetModel<DatabaseManager>().Init());
         }
 
         /// <summary>
@@ -310,7 +292,6 @@ namespace Server.Source.Model
             _logQueue.Add(logEntry);
             OnAddedLog?.Invoke(source, logEntry);
         }
-
         /// <summary>
         /// Thông báo trạng thái máy chủ đã thay đổi và cập nhật thông tin.
         /// </summary>
@@ -323,8 +304,20 @@ namespace Server.Source.Model
                 ElapsedTime,
                 NumberRequest,
                 NumberUser,
-                _cachedCpuUsage
+                5.0f
             );
+            int cpuCount = Environment.ProcessorCount; // số core CPU
+            float value = float.Parse(status.MemoryUsage.Split(" ")[0]) / cpuCount;
+
+            if (Fuzzy.ValueGreaterThan(value, status.CpuUsage))
+            {
+                status.CpuUsage = Fuzzy.Value(value, 0.75f);
+            }
+            else
+            {
+                status.CpuUsage = Fuzzy.Value(status.CpuUsage, 0.75f);
+            }
+
 
             OnChangedData?.Invoke(status);
         }
@@ -352,12 +345,10 @@ namespace Server.Source.Model
         public void Stop()
         {
             _cts.Cancel();
-            _cpuCts.Cancel(); // Dừng monitor CPU
 
             try
             {
                 _cleanerTask?.Wait();
-                _cpuMonitorTask?.Wait();
             }
             catch (AggregateException ae)
             {
@@ -389,48 +380,6 @@ namespace Server.Source.Model
                 {
                     Simulation.GetModel<LogManager>()?.Log(ex); // Ghi log lỗi nếu cần
                     await Task.Delay(1000, token);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Khởi động tác vụ background để theo dõi và cache CPU usage định kỳ.
-        /// </summary>
-        private void StartCpuMonitor()
-        {
-            if (_cpuMonitorTask != null && !_cpuMonitorTask.IsCompleted)
-                return;
-
-            if (_cpuCts.IsCancellationRequested)
-                _cpuCts = new CancellationTokenSource();
-
-            _cpuMonitorTask = Task.Run(() => MonitorCpuUsage(_cpuCts.Token));
-        }
-
-        /// <summary>
-        /// Vòng lặp background để cập nhật CPU usage mỗi 500ms (hoặc tùy chỉnh).
-        /// </summary>
-        /// <param name="token">Mã hủy cho tác vụ.</param>
-        private async Task MonitorCpuUsage(CancellationToken token)
-        {
-            // Khởi tạo giá trị đầu tiên
-            CpuCounter.NextValue();
-
-            while (!token.IsCancellationRequested)
-            {
-                try
-                {
-                    await Task.Delay(500, token); // Delay giữa các lần lấy giá trị
-                    _cachedCpuUsage = CpuCounter.NextValue();
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Simulation.GetModel<LogManager>()?.Log(ex); // Ghi log lỗi nếu cần
-                    await Task.Delay(500, token);
                 }
             }
         }

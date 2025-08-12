@@ -3,6 +3,7 @@ using Server.Source.Core;
 using Server.Source.Helper;
 using System.Data;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 
 namespace Server.Source.Manager
 {
@@ -12,11 +13,11 @@ namespace Server.Source.Manager
     public class DatabaseManager
     {
         private readonly string _basePath; // Nơi chứa thư mục gốc chứa file sql
-        private readonly string _connectionString;
         private readonly string database = "KontrollerDB";
-        private readonly string user = "admin";
+        private readonly string user = "sa";
         private readonly string password = "Admin@123";
         private readonly string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
+        private string _connectionString;
         public event Action FailedConnectDB;
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Server.Source.Manager
             {
                 var builder = new SqlConnectionStringBuilder(connectionString)
                 {
-                    ConnectTimeout = 5
+                    ConnectTimeout = 1
                 };
                 using (var conn = new SqlConnection(builder.ConnectionString))
                 {
@@ -204,18 +205,29 @@ namespace Server.Source.Manager
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
+        public async Task Init()
+        {
+            Simulation.GetModel<LogManager>().Log("DatabaseManager.Init() được gọi", LogLevel.DEBUG, LogSource.SYSTEM);
+
+            _connectionString = await TryAutoConnectAsync(database, user, password, defaultIp);
+
+            if (_connectionString == null)
+            {
+                Simulation.GetModel<LogManager>().Log("Kết nối database thất bại.", LogLevel.ERROR, LogSource.SYSTEM);
+                FailedConnectDB?.Invoke();
+            }
+            else
+            {
+                Simulation.GetModel<LogManager>().Log("Kết nối database thành công.", LogLevel.INFO, LogSource.SYSTEM);
+            }
+        }
+
         /// <summary>
         /// Khởi tạo <see cref="DatabaseManager"/> với đường dẫn mặc định và chuỗi kết nối tới cơ sở dữ liệu KontrollerDB.
         /// </summary>
         public DatabaseManager()
         {
             _basePath = Path.Combine(AppContext.BaseDirectory, "extra_files", "MyServerData", "queries");
-            _connectionString = Task.Run(() => TryAutoConnectAsync(database, user, password, defaultIp)).Result;
-
-            if (_connectionString == null)
-            {
-                FailedConnectDB?.Invoke();
-            }
         }
 
         /// <summary>
