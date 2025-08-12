@@ -80,10 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // hienej thi thong tin 
-    listenIfExists('#BioShow', 'click', () => {
-        const EditBtn = document.getElementById('BioShow')?.value || '';
+    listenIfExists('#ProBtn', 'click', () => {
         const userID = document.getElementById('')
-        Controller.ShowEdit(userID)
+        Controller.ShowUser(userID)
     });
     // xóa tài khoản 
     listenIfExists('#deleteAccount', 'click', () => {

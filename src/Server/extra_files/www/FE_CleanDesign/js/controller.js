@@ -138,10 +138,6 @@ export class Controller {
             View.goTo(Pages.AUTH);
             return;
         }
-
-
-
-
         if (!res.ok) {
             View.showWarning("Xóa tài khoản không thành công")
             return false;
@@ -153,7 +149,22 @@ export class Controller {
         return true;
     }
 
+    static async ShowUser(userID){
+        const api = new APIUser();
+        View.showLoading();
 
+        const res = await api.GetUser(userID);
+        View.hideLoading();
+
+        if (!res.ok){
+            View.showWarning('Lỗi xảy ra')
+            return false;
+        }
+
+        View.goTo(Pages.PROFILE)
+        return true;
+
+    }
     // ======== Web client logic method
 
     static resetIdleTimer() {

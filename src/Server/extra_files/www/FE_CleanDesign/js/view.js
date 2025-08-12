@@ -531,5 +531,6 @@ export const Pages = {
     LIKES: 'likes.html',
     LISTS: 'lists.html',
     REGISTER: 'register.html',
-    REVIEW: 'review.html'
+    REVIEW: 'review.html',
+    FOLLOWERS: 'followers.html'
 };
