@@ -5,66 +5,17 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
-static string TryAutoConnect(string database, string user, string password, string defaultIp)
-{
-    // 3. Quét LAN
-    string baseSubnet = GetLocalSubnet(); // ví dụ: "192.168.1"
-    if (baseSubnet != null)
-    {
-        Console.WriteLine($"🔍 Đang quét subnet {baseSubnet}.x ...");
+using Microsoft.Data.SqlClient;
+using Server.Source.Core;
+using Server.Source.Manager;
+using System;
+using System.Data;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 
-        for (int i = 1; i <= 254; i++)
-        {
-            string ip = $"{baseSubnet}.{i}";
-            if (ip == defaultIp) continue;
 
-            string conn = $"Server={ip};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
-
-            if (TestConnection(conn))
-                return conn;
-        }
-    }
-    // 1. Thử localhost
-    if (TestConnection($"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;"))
-        return $"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;";
-
-    // 2. Thử IP default
-    if (TestConnection($"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;"))
-        return $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
-
-    
-
-    return null; // không tìm thấy
-}
-
-static bool TestConnection(string connectionString)
-{
-    try
-    {
-        using (var conn = new SqlConnection(connectionString))
-        {
-            // Timeout 1 giây để test nhanh
-            conn.ConnectionTimeout.Equals(1); // thuộc tính readonly → dùng cách khác
-            var builder = new SqlConnectionStringBuilder(connectionString)
-            {
-                ConnectTimeout = 1
-            };
-            using (var testConn = new SqlConnection(builder.ConnectionString))
-            {
-                testConn.Open();
-            }
-        }
-        Console.WriteLine($"✅ Thành công: {connectionString}");
-        return true;
-    }
-    catch
-    {
-        Console.WriteLine($"❌ Thất bại: {connectionString}");
-        return false;
-    }
-}
-
-static string GetLocalSubnet()
+string GetLocalSubnet()
 {
     foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
     {
@@ -87,17 +38,82 @@ static string GetLocalSubnet()
     return null;
 }
 
+async Task<string> TryAutoConnectAsync(string database, string user, string password, string defaultIp)
+{
+    // Thử localhost
+    string localConn = $"Server=localhost;Database={database};Integrated Security=True;TrustServerCertificate=True;";
+    if (await TestConnectionAsync(localConn))
+        return localConn;
+
+    // Thử IP default
+    string defaultConn = $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+    if (await TestConnectionAsync(defaultConn))
+        return defaultConn;
+
+    // Quét LAN (song song)
+    string baseSubnet = GetLocalSubnet();
+    if (baseSubnet != null)
+    {
+        Console.WriteLine($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
+        var tasks = new List<Task<(string, bool)>>();
+        for (int i = 1; i <= 254; i++) // Giới hạn quét
+        {
+            string ip = $"{baseSubnet}.{i}";
+            if (ip == defaultIp) continue;
+            string conn = $"Server={ip};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+            tasks.Add(TestConnectionWithResultAsync(conn));
+        }
+
+        var results = await Task.WhenAll(tasks);
+        foreach (var result in results)
+        {
+            if (result.Item2)
+                return result.Item1;
+        }
+    }
+
+    return null;
+}
+async Task<(string, bool)> TestConnectionWithResultAsync(string connectionString)
+{
+    bool success = await TestConnectionAsync(connectionString);
+    return (connectionString, success);
+}
+
+async Task<bool> TestConnectionAsync(string connectionString)
+{
+    try
+    {
+        var builder = new SqlConnectionStringBuilder(connectionString)
+        {
+            ConnectTimeout = 1
+        };
+        using (var conn = new SqlConnection(builder.ConnectionString))
+        {
+            await conn.OpenAsync();
+        }
+        Console.WriteLine($"✅ Thành công: {connectionString}", LogLevel.INFO, LogSource.SYSTEM);
+        return true;
+    }
+    catch
+    {
+        Console.WriteLine($"❌ Thất bại: {connectionString}", LogLevel.ERROR, LogSource.SYSTEM);
+        return false;
+    }
+}
+
 string database = "KontrollerDB";
-string user = "sa";
-string password = "svcntt";
+string user = "admin";
+string password = "Admin@321";
 string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
 
-string connectionString = TryAutoConnect(database, user, password, defaultIp);
-if (connectionString != null)
+string _connectionString = Task.Run(() => TryAutoConnectAsync(database, user, password, defaultIp)).Result;
+
+if (_connectionString == null)
 {
-    Console.WriteLine($"✅ Kết nối thành công! Connection string: {connectionString}");
+    Console.WriteLine($"❌ Thất bại");
 }
-else
-{
-    Console.WriteLine("❌ Không tìm thấy SQL Server nào khả dụng.");
-}
+
+while (true) ;
+
+
