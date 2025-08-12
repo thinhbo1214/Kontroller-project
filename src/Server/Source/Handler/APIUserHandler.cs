@@ -44,11 +44,22 @@ namespace Server.Source.Handler
             var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
             if (string.IsNullOrEmpty(userId))
             {
-                string token = TokenHelper.GetToken(request);
-                if (TokenHelper.TryParseToken(token, out var sessionId))
+                var username = DecodeHelper.GetParamWithURL("username", request.Url);
+
+                if (!string.IsNullOrEmpty(username))
                 {
-                    userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+                    var usernameParams = new UsernameParams { Username = username };
+                    userId = UserDatabase.Instance.GetUserIdByUsername(usernameParams);
                 }
+                else
+                {
+                    string token = TokenHelper.GetToken(request);
+                    if (TokenHelper.TryParseToken(token, out var sessionId))
+                    {
+                        userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+                    }
+                }
+
             }
             if (string.IsNullOrEmpty(userId))
             {

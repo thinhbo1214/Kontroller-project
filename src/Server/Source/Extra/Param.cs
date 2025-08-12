@@ -75,6 +75,10 @@
         public string NewPassword { get; set; }
     }
 
+    public class UsernameParams
+    {
+        public string Username { get; set; }
+    }
     /// <summary>
     /// Yêu cầu thay đổi tên người dùng (username).
     /// </summary>

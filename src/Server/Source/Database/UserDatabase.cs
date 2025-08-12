@@ -38,6 +38,15 @@ namespace Server.Source.Database
         /// </summary>
         /// <param name="data">Thông tin cần thiết để thay đổi email (kiểu ParamsChangeEmail).</param>
         /// <returns>1 nếu thành công, 0 nếu thất bại.</returns>
+
+        public virtual string GetUserIdByUsername(object data)
+        {
+            var sqlPath = $"{TableName}/get_userId_by_username";
+            var result = ExecuteScalar<UsernameParams>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<string>(result);
+        }
+
         public virtual int ChangeEmail(object data)
         {
             var sqlPath = $"{TableName}/change_email";

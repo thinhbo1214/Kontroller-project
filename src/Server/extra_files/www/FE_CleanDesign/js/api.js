@@ -137,8 +137,9 @@ export class APIUser extends API {
     return res;
   }
 
-  async GetUser(userId) {
-    const query = API.buildQuery({ userId });
+  async GetUser(userId = null, username = null) {
+    const query = API.buildQuery({ userId, username });
+    
     const res = await this.GET(query);
     return res;
   }

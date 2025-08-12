@@ -79,6 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // temp
+    listenIfExists('#usernameDisplay', 'click', () => {
+        const avatar = document.getElementById('usernameDisplay');
+    });
+
     // hienej thi thong tin 
     listenIfExists('#ProBtn', 'click', () => {
         const userID = document.getElementById('')

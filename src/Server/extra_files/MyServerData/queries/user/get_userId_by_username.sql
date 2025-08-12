@@ -1,0 +1,16 @@
+-- DECLARE @Username VARCHAR(100) = 'admin';
+BEGIN TRY
+    BEGIN TRANSACTION
+
+        SELECT userId
+        FROM Users
+        WHERE username = @Username
+
+    COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 
+        ROLLBACK TRANSACTION;
+
+    SELECT  NULL AS UserInfo
+END CATCH
