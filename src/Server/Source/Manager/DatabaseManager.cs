@@ -176,7 +176,7 @@ namespace Server.Source.Manager
             {
                 var builder = new SqlConnectionStringBuilder(connectionString)
                 {
-                    ConnectTimeout = 1
+                    ConnectTimeout = 10
                 };
                 using (var conn = new SqlConnection(builder.ConnectionString))
                 {
