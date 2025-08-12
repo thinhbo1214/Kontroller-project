@@ -15,7 +15,7 @@ namespace Server.Source.Manager
         private readonly string _connectionString;
         private readonly string database = "KontrollerDB";
         private readonly string user = "admin";
-        private readonly string password = "Admin@321";
+        private readonly string password = "Admin@123";
         private readonly string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
         public event Action FailedConnectDB;
 
@@ -88,7 +88,7 @@ namespace Server.Source.Manager
             {
                 var builder = new SqlConnectionStringBuilder(connectionString)
                 {
-                    ConnectTimeout = 1
+                    ConnectTimeout = 5
                 };
                 using (var conn = new SqlConnection(builder.ConnectionString))
                 {
@@ -145,7 +145,7 @@ namespace Server.Source.Manager
             {
                 Simulation.GetModel<LogManager>().Log($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
                 var tasks = new List<Task<(string, bool)>>();
-                for (int i = 1; i <= 254; i++) // Giới hạn quét
+                for (int i = 1; i <= 10; i++) // Giới hạn quét
                 {
                     string ip = $"{baseSubnet}.{i}";
                     if (ip == defaultIp) continue;
@@ -176,7 +176,7 @@ namespace Server.Source.Manager
             {
                 var builder = new SqlConnectionStringBuilder(connectionString)
                 {
-                    ConnectTimeout = 10
+                    ConnectTimeout = 5
                 };
                 using (var conn = new SqlConnection(builder.ConnectionString))
                 {

@@ -88,7 +88,7 @@ async Task<bool> TestConnectionAsync(string connectionString)
     {
         var builder = new SqlConnectionStringBuilder(connectionString)
         {
-            ConnectTimeout = 10
+            ConnectTimeout = 5
         };
         using (var conn = new SqlConnection(builder.ConnectionString))
         {
@@ -105,8 +105,8 @@ async Task<bool> TestConnectionAsync(string connectionString)
 }
 
 string database = "KontrollerDB";
-string user = "admin";
-string password = "Admin@321";
+string user = "sa";
+string password = "Admin@123";
 string defaultIp = "192.168.1.25"; // IP default của máy SQL Server
 
 string _connectionString = Task.Run(() => TryAutoConnectAsync(database, user, password, defaultIp)).Result;
@@ -115,7 +115,11 @@ if (_connectionString == null)
 {
     Console.WriteLine($"❌ Thất bại");
 }
+else
+{
+    Console.WriteLine($"✅ Thành công: {_connectionString}", LogLevel.INFO, LogSource.SYSTEM);
+}
 
-while (true) ;
+    while (true) ;
 
 
