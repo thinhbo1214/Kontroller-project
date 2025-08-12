@@ -145,7 +145,7 @@ namespace Server.Source.Manager
             {
                 Simulation.GetModel<LogManager>().Log($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
                 var tasks = new List<Task<(string, bool)>>();
-                for (int i = 1; i <= 50; i++) // Giới hạn quét
+                for (int i = 1; i <= 254; i++) // Giới hạn quét
                 {
                     string ip = $"{baseSubnet}.{i}";
                     if (ip == defaultIp) continue;

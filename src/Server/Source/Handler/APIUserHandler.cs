@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic.ApplicationServices;
 using Server.Source.Core;
 using Server.Source.Data;
 using Server.Source.Database;
@@ -9,6 +10,7 @@ using Server.Source.NetCoreServer;
 
 namespace Server.Source.Handler
 {
+    using static System.Runtime.InteropServices.JavaScript.JSType;
     using User = Server.Source.Data.User;
 
     /// <summary>
@@ -30,6 +32,8 @@ namespace Server.Source.Handler
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
             PutRoutes["/api/user/username"] = PutUserUsername;
             PutRoutes["/api/user/password"] = PutUserPassword;
+            PostRoutes["/api/user/follow"] = PostFollowHandle;
+            DeleteRoutes["/api/user/follow"] = DeleteFollowHandle;
         }
 
         /// <summary>
@@ -88,6 +92,41 @@ namespace Server.Source.Handler
             ErrorHandle(session);
 
         }
+
+        private void PostFollowHandle(HttpRequest request, HttpsSession session)
+        {
+            var sessionManager = Simulation.GetModel<SessionManager>();
+
+            // Chưa đăng nhập
+            if (!sessionManager.Authorization(request, out string userId, session))
+            {
+                ErrorHandle(session, status: 401);
+                return;
+            }
+
+            var data = JsonHelper.Deserialize<FollowParam>(request.Body);
+            var newData = JsonHelper.AddPropertyAndDeserialize<FollowParam>(
+                JsonHelper.Serialize(data), "UserId", userId
+            );
+
+            // Validate input
+            if (newData == null || string.IsNullOrWhiteSpace(newData.Target) || newData.Target == userId)
+            {
+                ErrorHandle(session, "Dữ liệu follow không hợp lệ");
+                return;
+            }
+
+            // DB insert
+            if (UserDatabase.Instance.Follow(newData) < 1)
+            {
+                ErrorHandle(session, "Follow không thành công");
+                return;
+            }
+
+            OkHandle(session, "Follow thành công");
+        }
+
+
         /// <summary>
         /// Hàm tiện ích dùng chung cho các phương thức PUT để xác thực và gán thêm trường UserId.
         /// </summary>
@@ -100,7 +139,6 @@ namespace Server.Source.Handler
                 return default;
             }
             // Deserialize trực tiếp trước (để giữ nguyên casing từ JSON)
-            Simulation.GetModel<LogManager>().Log(request.Body);
             var data = JsonHelper.Deserialize<T>(request.Body);
             if (data == null)
                 return default;
@@ -199,6 +237,39 @@ namespace Server.Source.Handler
 
             ErrorHandle(session, "Xoá tài khoản không thành công!");
         }
+
+        private void DeleteFollowHandle(HttpRequest request, HttpsSession session)
+        {
+            var sessionManager = Simulation.GetModel<SessionManager>();
+
+            // Chưa đăng nhập
+            if (!sessionManager.Authorization(request, out string userId, session))
+            {
+                ErrorHandle(session, status: 401);
+                return;
+            }
+
+            var data = JsonHelper.Deserialize<FollowParam>(request.Body);
+            var newData = JsonHelper.AddPropertyAndDeserialize<FollowParam>(
+                JsonHelper.Serialize(data), "UserId", userId
+            );
+
+            // Validate input
+            if (newData == null || string.IsNullOrWhiteSpace(newData.Target) || newData.Target == userId)
+            {
+                ErrorHandle(session, "Dữ liệu unfollow không hợp lệ");
+                return;
+            }
+
+            if (UserDatabase.Instance.UnFollow(newData) < 1)
+            {
+                ErrorHandle(session, "UnFollow không thành công");
+                return;
+            }
+
+            OkHandle(session, "UnFollow thành công");
+        }
+
     }
 }
 

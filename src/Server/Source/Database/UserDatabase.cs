@@ -58,5 +58,20 @@ namespace Server.Source.Database
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }
+        public virtual int Follow(object data)
+        {
+            var sqlPath = $"{TableName}/follow_user";
+            var result = ExecuteScalar<FollowParam>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<int>(result);
+        }
+
+        public virtual int UnFollow(object data)
+        {
+            var sqlPath = $"{TableName}/unfollow_user";
+            var result = ExecuteScalar<FollowParam>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<int>(result);
+        }
     }
 }
