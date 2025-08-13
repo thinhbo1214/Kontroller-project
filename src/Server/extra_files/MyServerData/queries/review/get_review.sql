@@ -1,4 +1,4 @@
---  DECLARE @GameId UNIQUEIDENTIFIER = '2d1f1b33-8d1e-4722-b566-125fca142750';
+-- DECLARE @ReviewId UNIQUEIDENTIFIER = '2d1f1b33-8d1e-4722-b566-125fca142750';
 
 SELECT  R.reviewId AS ReviewId,
         R.content AS Content,
@@ -8,9 +8,7 @@ SELECT  R.reviewId AS ReviewId,
         R.numberComment AS NumberComment,
         U.username Username,
         U.avatar Avatar
-FROM [Games] G 
-	JOIN [Game_Review] GR ON G.gameId = GR.gameId
-	JOIN [Reviews] R ON  R.reviewId = GR.reviewId
-    JOIN [Review_User] RU ON R.reviewId = RU.reviewId
+FROM [Review_User] RU
+	JOIN [Reviews] R ON  R.reviewId = RU.reviewId
     JOIN [Users] U ON U.userId = RU.author
-WHERE G.gameId = @GameId;
+WHERE R.reviewId = @ReviewId;

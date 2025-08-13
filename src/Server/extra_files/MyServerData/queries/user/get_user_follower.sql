@@ -3,7 +3,7 @@
 BEGIN TRY
     BEGIN TRANSACTION
     
-        EXEC DBO.UP_GetUserAll @UserId;
+        EXEC DBO.UUP_GetUserFollowerPagination @UserId, @Page, @Limit;
 
     COMMIT TRANSACTION
 END TRY

@@ -4,5 +4,6 @@ SELECT C.commentId AS CommentId,
     C.content AS Content,
     C.created_at AS CreatedAt,
     C.numberReaction AS NumberReaction
-FROM [Comments] C JOIN [Comment_User] CU ON C.commentId = CU.commentId
+FROM [Comments] C 
+JOIN [Comment_User] CU ON C.commentId = CU.commentId
 WHERE CU.author = @UserId;
