@@ -55,7 +55,7 @@ Kontroller-project/
 
 1. **Clone repository**:
    ```bash
-   git clone https://github.com/[thinhbo1214]/Kontroller-project.git
+   git clone https://github.com/thinhbo1214/Kontroller-project.git
    cd Kontroller-project
    ```
 
