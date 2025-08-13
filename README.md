@@ -35,7 +35,12 @@ Dự án Kontroller được tổ chức theo cấu trúc thư mục sau để �
 Kontroller-project/
 │
 ├── src/
-│   ├── Server/           # [Mô tả: Chứa mã nguồn toàn bộ project]
+│   ├── Server/  # [Mô tả: Chứa mã nguồn toàn bộ project]
+│   │   ├──  Source  # [Mô tả: Chứa mã toàn bộ nguồn backend]
+│   │   └── extra_files 
+│   │        ├── MyServerData # [Mô tả: Chứa mã toàn bộ nguồn database]
+│   │        └── www # [Mô tả: Chứa mã toàn bộ nguồn frontend]
+│   │ 
 │   └── Test/             # [Mô tả: Chứa các unit test]
 │       ├── TokenHelperTests.cs
 │       ├── AnotherTests.cs
