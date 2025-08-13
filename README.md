@@ -81,7 +81,7 @@ Kontroller-project/
 Dự án sử dụng **GitHub Actions** để tự động build mỗi khi có thay đổi được push lên repository. Cấu hình workflow nằm tại:
 
 ```
-.github/workflows/winforms-ci.yml
+.github/workflows/ci.yml
 ```
 
 ### Cách Hoạt Động
