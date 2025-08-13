@@ -1893,6 +1893,42 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE RP_DeleteReviews
+    @ReviewIds IdList READONLY,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @DeletedCount INT = 0;
+
+    /* Xóa các review tồn tại */
+    DELETE FROM [Reviews]
+    WHERE reviewId IN (
+        SELECT Id 
+        FROM @ReviewIds
+        WHERE DBO.RF_ReviewIdExists(Id) = 1
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    /* Kiểm tra còn tồn tại review nào trong danh sách không */
+    IF EXISTS (
+        SELECT 1
+        FROM @ReviewIds r
+        WHERE DBO.RF_ReviewIdExists(r.Id) = 1
+    )
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END
+
+    /* Trả về số lượng xóa thành công */
+    SET @Result = @DeletedCount;
+END
+GO
+
+
 /* 
     Procedure: RP_GetReviewAll
     Description: Retrieves all details for a specified review.
@@ -2178,6 +2214,42 @@ BEGIN
     END
 END
 GO
+
+CREATE OR ALTER PROCEDURE CP_DeleteComments
+    @CommentIds IdList READONLY,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @DeletedCount INT = 0;
+
+    -- Xoá từng comment nếu tồn tại
+    DELETE FROM [Comments]
+    WHERE commentId IN (
+        SELECT Id FROM @CommentIds
+        WHERE DBO.CF_CommentIdExists(Id) = 1
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn tồn tại không
+    IF EXISTS (
+        SELECT 1
+        FROM @CommentIds c
+        WHERE DBO.CF_CommentIdExists(c.Id) = 1
+    )
+    BEGIN
+        -- Còn ít nhất 1 comment chưa bị xoá
+        SET @Result = 0;
+        RETURN;
+    END
+
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
+GO
+
 
 /* 
     Procedure: CP_GetCommentAll
@@ -3206,6 +3278,51 @@ BEGIN
     END
 END;
 GO
+
+CREATE OR ALTER PROCEDURE RP_DeleteReactions
+    @ReactionIds IdList READONLY, -- TVP chứa cột 'Id'
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Khởi tạo biến đếm
+    DECLARE @DeletedCount INT = 0;
+
+    -- Kiểm tra danh sách có rỗng không
+    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
+    BEGIN
+        SET @Result = 0;
+        RETURN;
+    END
+
+    -- Xoá các reaction tồn tại
+    DELETE FROM [Reactions]
+    WHERE reactionId IN (
+        SELECT Id FROM @ReactionIds
+        WHERE DBO.RF_ReactionIdExists(Id) = 1
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn reaction nào chưa bị xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @ReactionIds r
+        WHERE DBO.RF_ReactionIdExists(r.Id) = 1
+    )
+    BEGIN
+        -- Còn ít nhất 1 reaction chưa xoá
+        SET @Result = 0;
+        RETURN;
+    END
+
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
+GO
+
+
 
 /* 
     Procedure: RP_GetReactionAll

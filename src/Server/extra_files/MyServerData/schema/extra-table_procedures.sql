@@ -1100,33 +1100,46 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: RUP_DeleteReviewByUser
-    Description: Removes all review associations for a specified user from the Review_User table.
-    Parameters:
-        @Author (UNIQUEIDENTIFIER): ID of the user to remove reviews for.
-        @Result (INT OUTPUT): Number of rows affected (number of reviews removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE RUP_DeleteReviewByUser
-    @Author UNIQUEIDENTIFIER,
+
+-- Xoá Review User theo danh sách reviewId
+CREATE OR ALTER PROCEDURE RUP_DeleteReviews
+    @ReviewIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify user existence */
-    IF DBO.UF_UserIdExists(@Author) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    DELETE FROM [Review_User]
+    WHERE reviewId IN (
+        SELECT Id FROM @ReviewIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Review_User]
+            WHERE reviewId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn review nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @ReviewIds r
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Review_User]
+            WHERE reviewId = r.Id
+        )
+    )
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all reviews for the user */
-    DELETE FROM [Review_User]
-    WHERE author = @Author;
-    SET @Result = @@ROWCOUNT;
-END;
+    SET @Result = @DeletedCount;
+END
 GO
 
 /* 
@@ -1310,34 +1323,49 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: RRP_DeleteReactionByReview
-    Description: Removes all reaction associations for a specified review from the Review_Reaction table.
-    Parameters:
-        @ReviewId (UNIQUEIDENTIFIER): ID of the review to remove reactions for.
-        @Result (INT OUTPUT): Number of rows affected (number of reactions removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE RRP_DeleteReactionByReview
-    @ReviewId UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE RRP_DeleteReactions
+    @ReactionIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify review existence */
-    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    -- Xoá các quan hệ tồn tại
+    DELETE FROM [Review_Reaction]
+    WHERE reactionId IN (
+        SELECT Id FROM @ReactionIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Review_Reaction]
+            WHERE reactionId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn quan hệ nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @ReactionIds c
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Review_Reaction]
+            WHERE reactionId = c.Id
+        )
+    )
     BEGIN
+        -- Còn ít nhất 1 quan hệ chưa xoá
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all reactions for the review */
-    DELETE FROM [Review_Reaction]
-    WHERE reviewId = @ReviewId;
-    SET @Result = @@ROWCOUNT;
-END;
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
 GO
+
 
 /* 
     Procedure: RRP_GetAllReviewReactions
@@ -1525,33 +1553,47 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: GRP_DeleteReviewByGame
-    Description: Removes all review associations for a specified game from the Game_Review table.
-    Parameters:
-        @GameId (UNIQUEIDENTIFIER): ID of the game to remove reviews for.
-        @Result (INT OUTPUT): Number of rows affected (number of reviews removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE GRP_DeleteReviewByGame
-    @GameId UNIQUEIDENTIFIER,
+-- Xoá Game Review theo danh sách reviewId
+CREATE OR ALTER PROCEDURE GRP_DeleteReviews
+    @ReviewIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify game existence */
-    IF DBO.GF_GameIdExists(@GameId) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    DELETE FROM [Game_Review]
+    WHERE reviewId IN (
+        SELECT Id FROM @ReviewIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Game_Review]
+            WHERE reviewId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn review nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @ReviewIds r
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Game_Review]
+            WHERE reviewId = r.Id
+        )
+    )
     BEGIN
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all reviews for the game */
-    DELETE FROM [Game_Review] WHERE gameId = @GameId;
-    SET @Result = @@ROWCOUNT;
-END;
+    SET @Result = @DeletedCount;
+END
 GO
+
 
 /* 
     Procedure: GRP_GetAllGameReview
@@ -1770,33 +1812,49 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: RUP_DeleteReactionByUser
-    Description: Removes all reaction associations for a specified user from the Reaction_User table.
-    Parameters:
-        @Author (UNIQUEIDENTIFIER): ID of the user to remove reactions for.
-        @Result (INT OUTPUT): Number of rows affected (number of reactions removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE RUP_DeleteReactionByUser
-    @Author UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE RUP_DeleteReactions
+    @ReactionIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify user existence */
-    IF DBO.UF_UserIdExists(@Author) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    -- Xoá các quan hệ tồn tại
+    DELETE FROM [Reaction_User]
+    WHERE reactionId IN (
+        SELECT Id FROM @ReactionIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Reaction_User]
+            WHERE reactionId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn quan hệ nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @ReactionIds c
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Reaction_User]
+            WHERE reactionId = c.Id
+        )
+    )
     BEGIN
+        -- Còn ít nhất 1 quan hệ chưa xoá
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all reactions for the user */
-    DELETE FROM [Reaction_User] WHERE author = @Author;
-    SET @Result = @@ROWCOUNT;
-END;
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
 GO
+
 
 /* 
     Procedure: RUP_GetAllReactionUser
@@ -2206,33 +2264,50 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: CUP_DeleteCommentByUser
-    Description: Removes all comment associations for a specified user from the Comment_User table.
-    Parameters:
-        @Author (UNIQUEIDENTIFIER): ID of the user to remove comments for.
-        @Result (INT OUTPUT): Number of rows affected (number of comments removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE CUP_DeleteCommentByUser
-    @Author UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE CUP_DeleteComments
+    @CommentIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify user existence */
-    IF DBO.UF_UserIdExists(@Author) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    -- Xoá các quan hệ tồn tại
+    DELETE FROM [Comment_User]
+    WHERE commentId IN (
+        SELECT Id FROM @CommentIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Comment_User]
+            WHERE commentId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn quan hệ nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @CommentIds c
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Comment_User]
+            WHERE commentId = c.Id
+        )
+    )
     BEGIN
+        -- Còn ít nhất 1 quan hệ chưa xoá
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all comments for the user */
-    DELETE FROM [Comment_User] WHERE author = @Author;
-    SET @Result = @@ROWCOUNT;
-END;
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
 GO
+
+
 
 /* 
     Procedure: CUP_GetAllCommentUser
@@ -2410,33 +2485,49 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: CRP_DeleteReactionByComment
-    Description: Removes all reaction associations for a specified comment from the Comment_Reaction table.
-    Parameters:
-        @CommentId (UNIQUEIDENTIFIER): ID of the comment to remove reactions for.
-        @Result (INT OUTPUT): Number of rows affected (number of reactions removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE CRP_DeleteReactionByComment
-    @CommentId UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE CRP_DeleteReactions
+    @ReactionIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify comment existence */
-    IF DBO.CF_CommentIdExists(@CommentId) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    -- Xoá các quan hệ tồn tại
+    DELETE FROM [Comment_Reaction]
+    WHERE reactionId IN (
+        SELECT Id FROM @ReactionIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Comment_Reaction]
+            WHERE reactionId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn quan hệ nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @ReactionIds c
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Comment_Reaction]
+            WHERE reactionId = c.Id
+        )
+    )
     BEGIN
+        -- Còn ít nhất 1 quan hệ chưa xoá
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all reactions for the comment */
-    DELETE FROM [Comment_Reaction] WHERE commentId = @CommentId;
-    SET @Result = @@ROWCOUNT;
-END;
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
 GO
+
 
 /* 
     Procedure: CRP_GetAllCommentReaction
@@ -2614,33 +2705,49 @@ BEGIN
 END;
 GO
 
-/* 
-    Procedure: CRP_DeleteCommentByReview
-    Description: Removes all comment associations for a specified review from the Comment_Review table.
-    Parameters:
-        @ReviewId (UNIQUEIDENTIFIER): ID of the review to remove comments for.
-        @Result (INT OUTPUT): Number of rows affected (number of comments removed, 0 for failure).
-    Returns: None (sets @Result to indicate number of rows affected).
-*/
-CREATE OR ALTER PROCEDURE CRP_DeleteCommentByReview
-    @ReviewId UNIQUEIDENTIFIER,
+CREATE OR ALTER PROCEDURE CRP_DeleteComments
+    @CommentIds IdList READONLY,
     @Result INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* Verify review existence */
-    IF DBO.RF_ReviewIdExists(@ReviewId) = 0
+    DECLARE @DeletedCount INT = 0;
+
+    -- Xoá các quan hệ tồn tại
+    DELETE FROM [Comment_Review]
+    WHERE commentId IN (
+        SELECT Id FROM @CommentIds
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Comment_Review]
+            WHERE commentId = Id
+        )
+    );
+
+    SET @DeletedCount = @@ROWCOUNT;
+
+    -- Kiểm tra còn quan hệ nào chưa xoá không
+    IF EXISTS (
+        SELECT 1
+        FROM @CommentIds c
+        WHERE EXISTS (
+            SELECT 1
+            FROM [Comment_Review]
+            WHERE commentId = c.Id
+        )
+    )
     BEGIN
+        -- Còn ít nhất 1 quan hệ chưa xoá
         SET @Result = 0;
         RETURN;
-    END;
+    END
 
-    /* Delete all comments for the review */
-    DELETE FROM [Comment_Review] WHERE reviewId = @ReviewId;
-    SET @Result = @@ROWCOUNT;
-END;
+    -- Tất cả đã xoá thành công
+    SET @Result = @DeletedCount;
+END
 GO
+
 
 /* 
     Procedure: CRP_GetAllCommentReview
