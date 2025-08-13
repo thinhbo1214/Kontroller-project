@@ -1,8 +1,7 @@
-
 -- DECLARE @UserId UNIQUEIDENTIFIER;
 -- DECLARE @GameId UNIQUEIDENTIFIER;
 -- DECLARE @Content NVARCHAR(MAX);
--- DECLARE @Rating FLOAT;
+-- DECLARE @Rating INT;
 DECLARE @ReviewId UNIQUEIDENTIFIER;
 DECLARE @Result INT = 1;
 DECLARE @Temp INT = 1;
@@ -16,19 +15,28 @@ BEGIN TRY
             @ReviewId = @reviewId OUTPUT;
 
         EXEC DBO.GRP_AddGameReview 
-            @GameId = @gameId, 
-            @ReviewId = @reviewId, 
+            @GameId = @GameId, 
+            @ReviewId = @ReviewId, 
             @Result = @Temp OUTPUT;
         SET @Result *= @Temp;  
 
+        DECLARE @CurrentAvgRate DECIMAL(4,2);
+        DECLARE @CurrentNumberReview INT;
+        EXEC DBO.GP_GetGameAvgRating @GameId, @AvgRating = @CurrentAvgRate OUTPUT;
+        EXEC DBO.GP_GetGameNumberReview @GameId, @NumberReview = @CurrentNumberReview OUTPUT;
+        DECLARE @NewAvgRating DECIMAL(4,2) = (@CurrentAvgRate * @CurrentNumberReview + @Rating) / (@CurrentNumberReview + 1)
+
+        EXEC DBO.GP_UpdateGameAvgRating @GameId, @NewAvgRating, @Result = @Temp OUTPUT;
+        SET @Result *= @Temp; 
+
         EXEC DBO.GP_UpdateGameIncreaseReview
-            @GameId = @gameId, 
+            @GameId = @GameId, 
             @Result = @Temp OUTPUT;
         SET @Result *= @Temp;  
 
         EXEC DBO.RUP_CreateReviewUser 
             @ReviewId = @reviewId, 
-            @Author = @userId, 
+            @Author = @UserId, 
             @Result = @Temp OUTPUT;
         SET @Result *= @Temp;         
 

@@ -693,13 +693,14 @@ GO
         VARCHAR(100): User's email address or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserEmail
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @Email VARCHAR(255) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return email */
-    SELECT DBO.UF_GetUserEmail(@UserId) AS Email;
+    SET @Email = DBO.UF_GetUserEmail(@UserId);
 END
 GO
 
@@ -712,13 +713,14 @@ GO
         VARCHAR(100): User's username or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserUsername
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @Username VARCHAR(255) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return username */
-    SELECT DBO.UF_GetUserUsername(@UserId) AS Username;
+    SET @Username = DBO.UF_GetUserUsername(@UserId);
 END
 GO
 
@@ -731,13 +733,14 @@ GO
         VARCHAR(255): User's avatar URL or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserAvatar
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @Avatar VARCHAR(255) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return avatar */
-    SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar;
+    SET @Avatar = DBO.UF_GetUserAvatar(@UserId);
 END
 GO
 
@@ -750,13 +753,14 @@ GO
         BIT: 1 if user is logged in, 0 otherwise.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserLoginStatus
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @IsLoggedIn BIT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return login status */
-    SELECT DBO.UF_IsUserLoggedIn(@UserId) AS IsLoggedIn;
+    SET @IsLoggedIn = DBO.UF_IsUserLoggedIn(@UserId);
 END
 GO
 
@@ -769,13 +773,14 @@ GO
         INT: Number of followers or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserNumberFollower
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @NumberFollower INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of followers */
-    SELECT DBO.UF_GetUserNumberFollower(@UserId) AS NumberFollower;
+    SET @NumberFollower =  DBO.UF_GetUserNumberFollower(@UserId);
 END
 GO
 
@@ -788,13 +793,14 @@ GO
         INT: Number of users being followed or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserNumberFollowing
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @NumberFollowing INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of users being followed */
-    SELECT DBO.UF_GetUserNumberFollowing(@UserId) AS NumberFollowing;
+    SET @NumberFollowing = DBO.UF_GetUserNumberFollowing(@UserId);
 END
 GO
 
@@ -807,13 +813,14 @@ GO
         INT: Number of lists or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE UP_GetUserNumberList
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @NumberList INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of lists */
-    SELECT DBO.UF_GetUserNumberList(@UserId) AS NumberList;
+    SET @NumberList = DBO.UF_GetUserNumberList(@UserId);
 END
 GO
 
@@ -826,13 +833,14 @@ GO
         BIT: 1 if user exists, 0 otherwise.
 */
 CREATE OR ALTER PROCEDURE UP_CheckUserExists
-    @UserId UNIQUEIDENTIFIER
+    @UserId UNIQUEIDENTIFIER,
+    @UserIdExists BIT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return existence status */
-    SELECT DBO.UF_UserIdExists(@UserId) AS UserIdExists;
+    SET @UserIdExists = DBO.UF_UserIdExists(@UserId);
 END
 GO
 
@@ -1214,6 +1222,22 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE GP_UpdateGameAvgRating
+    @GameId UNIQUEIDENTIFIER,
+    @NewAvgRating DECIMAL(4,2),
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Update game backdrop */
+    UPDATE [Games] SET avgRating = @NewAvgRating WHERE gameId = @GameId;
+
+    /* Return number of rows affected */
+    SET @Result = @@ROWCOUNT;
+END
+GO
+
 /* 
     Procedure: GP_UpdateGameAll
     Description: Updates multiple game attributes (title, genre, description, details, poster, backdrop) in a single call.
@@ -1426,13 +1450,14 @@ GO
         NVARCHAR(100): Game title or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameTitle
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @Title NVARCHAR(100) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return game title */
-    SELECT DBO.GF_GetGameTitle(@GameId) AS Title;
+    SET @Title =  DBO.GF_GetGameTitle(@GameId);
 END
 GO
 
@@ -1445,13 +1470,14 @@ GO
         NVARCHAR(100): Game genre or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameGenre
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @Genre NVARCHAR(100) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return game genre */
-    SELECT DBO.GF_GetGameGenre(@GameId) AS Genre;
+    SET @Genre =  DBO.GF_GetGameGenre(@GameId);
 END
 GO
 
@@ -1464,13 +1490,14 @@ GO
         NVARCHAR(MAX): Game description or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameDescription
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @Description NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return game description */
-    SELECT DBO.GF_GetGameDescription(@GameId) AS Description;
+    SET @Description = DBO.GF_GetGameDescription(@GameId);
 END
 GO
 
@@ -1483,13 +1510,14 @@ GO
         NVARCHAR(MAX): Game details or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameDetails
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @Details NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return game details */
-    SELECT DBO.GF_GetGameDetails(@GameId) AS Details;
+    SET @Details =  DBO.GF_GetGameDetails(@GameId);
 END
 GO
 
@@ -1502,13 +1530,14 @@ GO
         VARCHAR(255): Game poster URL or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGamePoster
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @Poster VARCHAR(255) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return game poster */
-    SELECT DBO.GF_GetGamePoster(@GameId) AS Poster;
+    SET @Poster = DBO.GF_GetGamePoster(@GameId);
 END
 GO
 
@@ -1521,15 +1550,30 @@ GO
         VARCHAR(255): Game backdrop URL or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameBackdrop
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @Backdrop VARCHAR(255) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return game backdrop */
-    SELECT DBO.GF_GetGameBackdrop(@GameId) AS Backdrop;
+    SET @Backdrop = DBO.GF_GetGameBackdrop(@GameId);
 END
 GO
+
+CREATE OR ALTER PROCEDURE GP_GetGameAvgRating
+    @GameId UNIQUEIDENTIFIER,
+    @AvgRating DECIMAL(4,2) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* Return game backdrop */
+    SET @AvgRating =  DBO.GF_GetGameAvgRating(@GameId);
+END
+GO
+
+
 
 /* 
     Procedure: GP_GetGameNumberReview
@@ -1540,13 +1584,14 @@ GO
         INT: Number of reviews or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE GP_GetGameNumberReview
-    @GameId UNIQUEIDENTIFIER
+    @GameId UNIQUEIDENTIFIER,
+    @NumberReview INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of reviews */
-    SELECT DBO.GF_GetGameNumberReview(@GameId) AS NumberReview;
+    SET @NumberReview = DBO.GF_GetGameNumberReview(@GameId);
 END
 GO
 
@@ -1957,13 +2002,14 @@ GO
         NVARCHAR(MAX): Review content or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE RP_GetReviewContent
-    @ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER,
+    @Content NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return review content */
-    SELECT DBO.RF_GetReviewContent(@ReviewId) AS Content;
+    SET @Content = DBO.RF_GetReviewContent(@ReviewId);
 END
 GO
 
@@ -1976,13 +2022,14 @@ GO
         DECIMAL(4,2): Review rating or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE RP_GetReviewRating
-    @ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER,
+    @Rating INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return review rating */
-    SELECT DBO.RF_GetReviewRating(@ReviewId) AS Rating;
+    SET @Rating = DBO.RF_GetReviewRating(@ReviewId);
 END
 GO
 
@@ -1995,13 +2042,14 @@ GO
         DATETIME: Review creation date or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE RP_GetReviewDateCreated
-    @ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER,
+    @DateCreated DATETIME OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return review creation date */
-    SELECT DBO.RF_GetReviewDateCreated(@ReviewId) AS Date;
+    SET @DateCreated = DBO.RF_GetReviewDateCreated(@ReviewId);
 END
 GO
 
@@ -2014,13 +2062,14 @@ GO
         INT: Number of reactions or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE RP_GetReviewNumberReaction
-    @ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER,
+    @NumberReaction INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of reactions */
-    SELECT DBO.RF_GetReviewNumberReaction(@ReviewId) AS NumberReaction;
+    SET @NumberReaction = DBO.RF_GetReviewNumberReaction(@ReviewId);
 END
 GO
 
@@ -2033,13 +2082,14 @@ GO
         INT: Number of comments or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE RP_GetReviewNumberComment
-    @ReviewId UNIQUEIDENTIFIER
+    @ReviewId UNIQUEIDENTIFIER,
+    @NumberComment INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of comments */
-    SELECT DBO.RF_GetReviewNumberComment(@ReviewId) AS NumberComment;
+    SET @NumberComment = DBO.RF_GetReviewNumberComment(@ReviewId);
 END
 GO
 
@@ -2279,13 +2329,14 @@ GO
         NVARCHAR(MAX): Comment content or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE CP_GetCommentContent
-    @CommentId UNIQUEIDENTIFIER
+    @CommentId UNIQUEIDENTIFIER,
+    @Content NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return comment content */
-    SELECT DBO.CF_GetCommentContent(@CommentId) AS Content;
+    SET @Content = DBO.CF_GetCommentContent(@CommentId);
 END
 GO
 
@@ -2298,13 +2349,14 @@ GO
         DATETIME: Comment creation date or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE CP_GetCommentCreatedAt
-    @CommentId UNIQUEIDENTIFIER
+    @CommentId UNIQUEIDENTIFIER,
+    @CreatedAt DATETIME OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return comment creation date */
-    SELECT DBO.CF_GetCommentCreatedAt(@CommentId) AS CreatedAt;
+    SET @CreatedAt =  DBO.CF_GetCommentCreatedAt(@CommentId);
 END
 GO
 
@@ -2317,13 +2369,14 @@ GO
         INT: Number of reactions or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE CP_GetCommentNumberReaction
-    @CommentId UNIQUEIDENTIFIER
+    @CommentId UNIQUEIDENTIFIER,
+    @NumberReaction INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of reactions */
-    SELECT DBO.CF_GetCommentNumberReaction(@CommentId) AS NumberReaction;
+    SET @NumberReaction = DBO.CF_GetCommentNumberReaction(@CommentId);
 END
 GO
 
@@ -2611,13 +2664,14 @@ GO
         NVARCHAR(100): List title or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE LP_GetListTitle
-    @ListId UNIQUEIDENTIFIER
+    @ListId UNIQUEIDENTIFIER,
+    @Title NVARCHAR(255) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return list title */
-    SELECT DBO.LF_GetListTitle(@ListId) AS Title;
+    SET @Title = DBO.LF_GetListTitle(@ListId);
 END;
 GO
 
@@ -2630,13 +2684,14 @@ GO
         NVARCHAR(MAX): List description or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE LP_GetListDescriptions
-    @ListId UNIQUEIDENTIFIER
+    @ListId UNIQUEIDENTIFIER,
+    @Description NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return list description */
-    SELECT DBO.LF_GetListDescriptions(@ListId) AS Descriptions;
+    SET @Description = DBO.LF_GetListDescriptions(@ListId);
 END;
 GO
 
@@ -2649,13 +2704,14 @@ GO
         DATETIME: List creation date or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE LP_GetListCreatedAt
-    @ListId UNIQUEIDENTIFIER
+    @ListId UNIQUEIDENTIFIER,
+    @CreatedAt DATETIME OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return list creation date */
-    SELECT DBO.LF_GetListCreatedAt(@ListId) AS CreatedAt;
+    SET @CreatedAt = DBO.LF_GetListCreatedAt(@ListId);
 END;
 GO
 
@@ -2668,13 +2724,14 @@ GO
         INT: Number of games or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE LP_GetListNumberGame
-    @ListId UNIQUEIDENTIFIER
+    @ListId UNIQUEIDENTIFIER,
+    @NumberGame INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of games */
-    SELECT DBO.LF_GetListNumberGame(@ListId) AS NumberGame;
+    SET @NumberGame = DBO.LF_GetListNumberGame(@ListId);
 END;
 GO
 
@@ -2853,13 +2910,14 @@ GO
         NVARCHAR(MAX): Activity content or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE AP_GetActivityContent
-    @ActivityId UNIQUEIDENTIFIER
+    @ActivityId UNIQUEIDENTIFIER,
+    @Content NVARCHAR(MAX) OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return activity content */
-    SELECT DBO.AF_GetActivityContent(@ActivityId) AS Content;
+    SET @Content = DBO.AF_GetActivityContent(@ActivityId);
 END;
 GO
 
@@ -2872,13 +2930,14 @@ GO
         DATETIME: Activity date or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE AP_GetActivityDateDo
-    @ActivityId UNIQUEIDENTIFIER
+    @ActivityId UNIQUEIDENTIFIER,
+    @DateDo DATETIME OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return activity date */
-    SELECT DBO.AF_GetActivityDateDo(@ActivityId) AS DateDo;
+    SET @DateDo = DBO.AF_GetActivityDateDo(@ActivityId);
 END;
 GO
 
@@ -3106,13 +3165,14 @@ GO
         DATETIME: Diary logged date or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE DP_GetDiaryDateLogged
-    @DiaryId UNIQUEIDENTIFIER
+    @DiaryId UNIQUEIDENTIFIER,
+    @DateLogged DATETIME OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return logged date */
-    SELECT DBO.DF_GetDiaryDateLogged(@DiaryId) AS DateLogged;
+    SET @DateLogged = DBO.DF_GetDiaryDateLogged(@DiaryId);
 END;
 GO
 
@@ -3125,13 +3185,14 @@ GO
         INT: Number of games logged or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE DP_GetDiaryNumberGameLogged
-    @DiaryId UNIQUEIDENTIFIER
+    @DiaryId UNIQUEIDENTIFIER,
+    @NumberGameLogged INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return number of games logged */
-    SELECT DBO.DF_GetDiaryNumberGameLogged(@DiaryId) AS NumberGameLogged;
+    SET @NumberGameLogged = DBO.DF_GetDiaryNumberGameLogged(@DiaryId);
 END;
 GO
 
@@ -3352,12 +3413,13 @@ GO
         INT: Reaction type or NULL if not found.
 */
 CREATE OR ALTER PROCEDURE RP_GetReactionType
-    @ReactionId UNIQUEIDENTIFIER
+    @ReactionId UNIQUEIDENTIFIER,
+    @ReactionType INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     /* Return reaction type */
-    SELECT DBO.RF_GetReactionType(@ReactionId) AS ReactionType;
+    SET @ReactionType = DBO.RF_GetReactionType(@ReactionId);
 END;
 GO
