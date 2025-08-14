@@ -1681,7 +1681,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate new content */
-    IF DBO.RF_IsContentLegality(@Content) = 0
+    IF DBO.RF_IsContentLegal(@Content) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1714,7 +1714,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate new rating */
-    IF DBO.RF_IsRatingLegality(@Rating) = 0
+    IF DBO.RF_IsRatingLegal(@Rating) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -1919,7 +1919,7 @@ BEGIN
     /* Verify review existence */
     IF DBO.RF_ReviewIdExists(@ReviewId) = 0
     BEGIN
-        SET @Result = 0;
+        SET @Result = 1;
         RETURN;
     END
 
@@ -2271,6 +2271,13 @@ CREATE OR ALTER PROCEDURE CP_DeleteComments
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    -- Kiểm tra danh sách có rỗng không
+    IF NOT EXISTS (SELECT 1 FROM @CommentIds)
+    BEGIN
+        SET @Result = 1;
+        RETURN;
+    END
 
     DECLARE @DeletedCount INT = 0;
 
@@ -3347,15 +3354,17 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+        -- Kiểm tra danh sách có rỗng không
+    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
+    BEGIN
+        SET @Result = 1;
+        RETURN;
+    END
+
     -- Khởi tạo biến đếm
     DECLARE @DeletedCount INT = 0;
 
-    -- Kiểm tra danh sách có rỗng không
-    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
-    BEGIN
-        SET @Result = 0;
-        RETURN;
-    END
+
 
     -- Xoá các reaction tồn tại
     DELETE FROM [Reactions]

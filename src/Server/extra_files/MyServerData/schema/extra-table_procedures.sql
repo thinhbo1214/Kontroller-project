@@ -1082,7 +1082,7 @@ BEGIN
     /* Check if review-author pair exists */
     IF DBO.RUF_ReviewUserExists(@Author, @ReviewId) = 0
     BEGIN
-        SET @Result = 0;
+        SET @Result = 1;
         RETURN;
     END;
 
@@ -1330,6 +1330,12 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
+    BEGIN
+        SET @Result = 1;  -- coi như xoá thành công
+        RETURN;
+    END
+
     DECLARE @DeletedCount INT = 0;
 
     -- Xoá các quan hệ tồn tại
@@ -1536,7 +1542,7 @@ BEGIN
     /* Check if game-review pair exists */
     IF DBO.GRF_GameReviewExists(@GameId, @ReviewId) = 0
     BEGIN
-        SET @Result = 0;
+        SET @Result = 1;
         RETURN;
     END;
 
@@ -1818,6 +1824,18 @@ CREATE OR ALTER PROCEDURE RUP_DeleteReactions
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
+    BEGIN
+        SET @Result = 1;  -- coi như xoá thành công
+        RETURN;
+    END
+
+    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
+    BEGIN
+        SET @Result = 1;  -- coi như xoá thành công
+        RETURN;
+    END
 
     DECLARE @DeletedCount INT = 0;
 
@@ -2271,6 +2289,12 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    IF NOT EXISTS (SELECT 1 FROM @CommentIds)
+    BEGIN
+        SET @Result = 1;  -- coi như xoá thành công
+        RETURN;
+    END
+
     DECLARE @DeletedCount INT = 0;
 
     -- Xoá các quan hệ tồn tại
@@ -2492,6 +2516,12 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    IF NOT EXISTS (SELECT 1 FROM @ReactionIds)
+    BEGIN
+        SET @Result = 1;  -- coi như xoá thành công
+        RETURN;
+    END
+
     DECLARE @DeletedCount INT = 0;
 
     -- Xoá các quan hệ tồn tại
@@ -2711,6 +2741,13 @@ CREATE OR ALTER PROCEDURE CRP_DeleteComments
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM @CommentIds)
+    BEGIN
+        SET @Result = 1;  -- coi như xoá thành công
+        RETURN;
+    END
+
 
     DECLARE @DeletedCount INT = 0;
 

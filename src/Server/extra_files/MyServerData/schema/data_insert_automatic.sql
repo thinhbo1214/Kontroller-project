@@ -980,6 +980,21 @@ BEGIN TRY
                 @Result = @result OUTPUT;
             SET @Temp *= @result;
 
+            DECLARE @CurrentAvgRate DECIMAL(4,2);
+            DECLARE @CurrentNumberReview INT;
+
+            EXEC DBO.GP_GetGameAvgRating @gameId, @AvgRating = @CurrentAvgRate OUTPUT;
+            EXEC DBO.GP_GetGameNumberReview @gameId, @NumberReview = @CurrentNumberReview OUTPUT;
+
+            DECLARE @NewAvgRating DECIMAL(4,2) = 
+            CASE WHEN @CurrentNumberReview > 0 
+                 THEN (@CurrentAvgRate * @CurrentNumberReview + @rating) / (@CurrentNumberReview + 1)
+                 ELSE @rating
+            END;
+
+            EXEC DBO.GP_UpdateGameAvgRating @gameId, @NewAvgRating, @Result = @result OUTPUT;
+            SET @Temp *= @result;
+
             EXEC DBO.GP_UpdateGameIncreaseReview
                 @GameId = @gameId, 
                 @Result = @result OUTPUT;
@@ -1112,3 +1127,114 @@ BEGIN CATCH
 END CATCH
 
 PRINT N'Hoàn thành tạo dữ liệu nền cho tất cả game trong bảng Games.';
+
+
+-- Đảm bảo con trỏ không tồn tại trước khi khai báo mới
+IF CURSOR_STATUS('local', 'user_cursor1') >= -1
+BEGIN
+    CLOSE user_cursor1;
+    DEALLOCATE user_cursor1;
+END
+
+IF CURSOR_STATUS('local', 'user_cursor2') >= -1
+BEGIN
+    CLOSE user_cursor2;
+    DEALLOCATE user_cursor2;
+END
+GO
+
+DECLARE 
+    @userFollower UNIQUEIDENTIFIER,
+    @userFollowing UNIQUEIDENTIFIER,
+    @Result INT,
+    @Temp INT = 1;
+
+DECLARE user_cursor1 CURSOR LOCAL FAST_FORWARD FOR
+    SELECT userId FROM Users;
+
+BEGIN TRY
+    OPEN user_cursor1;
+    FETCH NEXT FROM user_cursor1 INTO @userFollower;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- Tạo 1 cursor khác quét user để follow
+        DECLARE user_cursor2 CURSOR LOCAL FAST_FORWARD FOR
+            SELECT userId FROM Users WHERE userId <> @userFollower;
+
+        OPEN user_cursor2;
+        FETCH NEXT FROM user_cursor2 INTO @userFollowing;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Tạo follow ngẫu nhiên 50% xác suất
+            IF RAND(CHECKSUM(NEWID())) < 0.5
+            BEGIN
+                BEGIN TRANSACTION;
+
+                SET @Temp = 1;
+                SET @Result = 1;
+
+                -- Add follow
+                EXEC DBO.UUP_AddUserFollow 
+                    @UserFollower = @userFollower, 
+                    @UserFollowing = @userFollowing, 
+                    @Result = @Temp OUTPUT;
+                SET @Result *= @Temp;
+
+                -- Nếu thành công, tăng số lượng follower/following
+                IF @Temp = 1
+                BEGIN
+                    EXEC DBO.UP_UpdateUserIncreaseFollowing 
+                        @UserId = @userFollower, 
+                        @Result = @Temp OUTPUT;
+                    SET @Result *= @Temp;
+
+                    EXEC DBO.UP_UpdateUserIncreaseFollower 
+                        @UserId = @userFollowing, 
+                        @Result = @Temp OUTPUT;
+                    SET @Result *= @Temp;
+                END
+
+                -- Nếu có lỗi hoặc đã tồn tại, rollback
+                IF @Result = 0
+                    ROLLBACK TRANSACTION;
+                ELSE
+                    COMMIT TRANSACTION;
+            END
+
+            FETCH NEXT FROM user_cursor2 INTO @userFollowing;
+        END
+
+        CLOSE user_cursor2;
+        DEALLOCATE user_cursor2;
+
+        FETCH NEXT FROM user_cursor1 INTO @userFollower;
+    END
+
+    CLOSE user_cursor1;
+    DEALLOCATE user_cursor1;
+
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION;
+
+    -- Đảm bảo đóng cursor nếu xảy ra lỗi
+    IF CURSOR_STATUS('local', 'user_cursor1') >= 0
+    BEGIN
+        CLOSE user_cursor1;
+        DEALLOCATE user_cursor1;
+    END
+    IF CURSOR_STATUS('local', 'user_cursor2') >= 0
+    BEGIN
+        CLOSE user_cursor2;
+        DEALLOCATE user_cursor2;
+    END
+
+    SELECT 
+        ERROR_NUMBER() AS ErrorNumber,
+        ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+PRINT N'Hoàn thành tạo follower/following ngẫu nhiên cho tất cả user.';
