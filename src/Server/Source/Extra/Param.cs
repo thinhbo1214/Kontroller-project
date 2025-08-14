@@ -120,6 +120,12 @@
         public string Target { get; set; }
     }
 
+    public class PaginateParams
+    {
+        public int Page { get; set; }
+        public int Limit { get; set; }
+    }
+
 
     public class UploadedFile
     {

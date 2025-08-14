@@ -25,7 +25,7 @@ namespace Server.Source.Event
                         await Simulation.GetModel<SimulationManager>().Limiter.WaitAsync();
                         try
                         {
-                            Simulation.GetModel<APIAuthHandler>().Handle(request, session);
+                            Simulation.GetModel<APIGameHandler>().Handle(request, session);
                         }
                         catch (Exception ex)
                         {
