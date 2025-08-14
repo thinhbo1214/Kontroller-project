@@ -146,7 +146,7 @@ namespace Server.Source.Manager
             {
                 Simulation.GetModel<LogManager>().Log($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
                 var tasks = new List<Task<(string, bool)>>();
-                for (int i = 1; i <= 10; i++) // Giới hạn quét
+                for (int i = 1; i <= 254; i++) // Giới hạn quét
                 {
                     string ip = $"{baseSubnet}.{i}";
                     if (ip == defaultIp) continue;
@@ -208,18 +208,25 @@ namespace Server.Source.Manager
         public async Task Init()
         {
             Simulation.GetModel<LogManager>().Log("DatabaseManager.Init() được gọi", LogLevel.DEBUG, LogSource.SYSTEM);
+            try
+            {
+                _connectionString = await TryAutoConnectAsync(database, user, password, defaultIp);
 
-            _connectionString = await TryAutoConnectAsync(database, user, password, defaultIp);
-
-            if (_connectionString == null)
+                if (_connectionString == null)
+                {
+                    Simulation.GetModel<LogManager>().Log("Kết nối database thất bại.", LogLevel.ERROR, LogSource.SYSTEM);
+                    FailedConnectDB?.Invoke();
+                }
+                else
+                {
+                    Simulation.GetModel<LogManager>().Log("Kết nối database thành công.", LogLevel.INFO, LogSource.SYSTEM);
+                }
+            }
+            catch
             {
                 Simulation.GetModel<LogManager>().Log("Kết nối database thất bại.", LogLevel.ERROR, LogSource.SYSTEM);
-                FailedConnectDB?.Invoke();
             }
-            else
-            {
-                Simulation.GetModel<LogManager>().Log("Kết nối database thành công.", LogLevel.INFO, LogSource.SYSTEM);
-            }
+
         }
 
         /// <summary>
