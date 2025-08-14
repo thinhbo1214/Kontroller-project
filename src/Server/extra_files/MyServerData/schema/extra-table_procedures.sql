@@ -2265,7 +2265,7 @@ BEGIN
     /* Check if comment-author pair exists */
     IF DBO.CUF_CommentUserExists(@CommentId, @Author) = 0
     BEGIN
-        SET @Result = 0;
+        SET @Result = 1;
         RETURN;
     END;
 
@@ -2718,7 +2718,7 @@ BEGIN
     /* Check if comment-review pair exists */
     IF DBO.CRF_CommentReviewExists(@CommentId, @ReviewId) = 0
     BEGIN
-        SET @Result = 0;
+        SET @Result = 1;
         RETURN;
     END;
 

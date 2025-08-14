@@ -680,7 +680,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Return avatar and username */
-    SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar, DBO.UF_GetUsername(@UserId) AS Username;
+    SELECT DBO.UF_GetUserAvatar(@UserId) AS Avatar, DBO.UF_GetUserUsername(@UserId) AS Username;
 END
 GO
 
@@ -2246,7 +2246,7 @@ BEGIN
     /* Verify comment existence */
     IF DBO.CF_CommentIdExists(@CommentId) = 0
     BEGIN
-        SET @Result = 0;
+        SET @Result = 1;
         RETURN;
     END
 
@@ -2406,8 +2406,8 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate list title and description */
-    IF DBO.LF_IsTitleLegal(@Title) = 0 OR
-        DBO.LF_IsDescriptionLegal(@Descriptions) = 0
+    IF DBO.LF_IsListTitleLegal(@Title) = 0 OR
+        DBO.LF_IsListDescriptionLegal(@Descriptions) = 0
     BEGIN
         SET @ListId = NULL;
         RETURN;
@@ -2448,7 +2448,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate new list title */
-    IF DBO.LF_IsTitleLegal(@Title) = 0
+    IF DBO.LF_IsListTitleLegal(@Title) = 0
     BEGIN
         SET @Result = 0;
         RETURN;
@@ -2481,7 +2481,7 @@ BEGIN
     SET NOCOUNT ON;
 
     /* Validate new description */
-    IF DBO.LF_IsDescriptionLegal(@Descriptions) = 0
+    IF DBO.LF_IsListDescriptionLegal(@Descriptions) = 0
     BEGIN
         SET @Result = 0;
         RETURN;

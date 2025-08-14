@@ -15,6 +15,11 @@ BEGIN CATCH
     IF @@TRANCOUNT > 0 
         ROLLBACK TRANSACTION;
 
+    SELECT 
+         ERROR_MESSAGE(),
+         ERROR_SEVERITY(),
+         ERROR_STATE();
+
     SET @Result = 0;
 END CATCH
 

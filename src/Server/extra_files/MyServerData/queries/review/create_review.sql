@@ -1,5 +1,5 @@
--- DECLARE @UserId UNIQUEIDENTIFIER = '77F1A9A4-EF67-469E-A571-DB63BC5BD9D3';
--- DECLARE @GameId UNIQUEIDENTIFIER = '96BD943E-D105-409C-9F1E-05F207A4C7D6';
+-- DECLARE @UserId UNIQUEIDENTIFIER = '45B4C3C5-BEA0-4251-98C6-A81828CB0B9C';
+-- DECLARE @GameId UNIQUEIDENTIFIER = 'A85E5BD2-71BD-4079-B194-03C727DF60F4';
 -- DECLARE @Content NVARCHAR(MAX) = N'Game tạm chấp nhận được';
 -- DECLARE @Rating INT = 6;
 DECLARE @ReviewId UNIQUEIDENTIFIER;
@@ -8,6 +8,18 @@ DECLARE @Temp INT = 1;
 
 BEGIN TRY
     BEGIN TRANSACTION;
+
+        -- 1. Kiểm tra user đã review game này chưa
+        IF EXISTS (
+            SELECT 1
+            FROM Game_Review GR
+            INNER JOIN Review_User RU ON GR.reviewId = RU.reviewId
+            WHERE GR.gameId = @GameId
+              AND RU.author = @UserId
+        )
+        BEGIN
+            RAISERROR('User đã review game này!', 16, 1);
+        END
 
         EXEC DBO.RP_CreateReview 
             @Content = @Content, 
@@ -48,6 +60,11 @@ END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0 
         ROLLBACK TRANSACTION;
+
+    SELECT 
+         ERROR_MESSAGE(),
+         ERROR_SEVERITY(),
+         ERROR_STATE();
 
     SET @Result = 0;
 END CATCH
