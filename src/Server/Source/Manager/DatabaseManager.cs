@@ -3,6 +3,7 @@ using Server.Source.Core;
 using Server.Source.Helper;
 using System.Data;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Server.Source.Manager
@@ -127,6 +128,22 @@ namespace Server.Source.Manager
             }
             return null;
         }
+        private string GetLocalIPv4()
+        {
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (ni.OperationalStatus != OperationalStatus.Up) continue;
+                if (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
+
+                foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                {
+                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        return ip.Address.ToString();
+                }
+            }
+            return null;
+        }
+
 
         private async Task<string> TryAutoConnectAsync(string database, string user, string password, string defaultIp)
         {
@@ -136,7 +153,7 @@ namespace Server.Source.Manager
                 return localConn;
 
             // Thử IP default
-            string defaultConn = $"Server={defaultIp};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
+            string defaultConn = $"Server={GetLocalIPv4()};Database={database};User Id={user};Password={password};TrustServerCertificate=True;";
             if (await TestConnectionAsync(defaultConn))
                 return defaultConn;
 
@@ -146,7 +163,7 @@ namespace Server.Source.Manager
             {
                 Simulation.GetModel<LogManager>().Log($"🔍 Đang quét subnet {baseSubnet}.x ...", LogLevel.INFO, LogSource.SYSTEM);
                 var tasks = new List<Task<(string, bool)>>();
-                for (int i = 1; i <= 254; i++) // Giới hạn quét
+                for (int i = 1; i <= 10; i++) // Giới hạn quét
                 {
                     string ip = $"{baseSubnet}.{i}";
                     if (ip == defaultIp) continue;
