@@ -1,4 +1,4 @@
--- DECLARE @GameId UNIQUEIDENTIFIER = '96BD943E-D105-409C-9F1E-05F207A4C7D60';
+-- DECLARE @GameId UNIQUEIDENTIFIER = 'A85E5BD2-71BD-4079-B194-03C727DF60F4';
 
 SELECT G.gameId AS GameId,
 		G.title AS Title,
@@ -8,6 +8,11 @@ SELECT G.gameId AS GameId,
 		G.poster AS Poster,
 		G.backdrop AS Backdrop,
 		G.details AS Details,
-		G.numberReview AS NumberReview
-FROM [Games] G 
-WHERE G.gameId = @GameId;
+		G.numberReview AS NumberReview,
+		ISNULL(STRING_AGG(GS.serviceName, ','), '') AS Services
+FROM [Games] G
+LEFT JOIN Game_Service GS ON G.gameId = GS.gameId
+WHERE G.gameId = @GameId
+GROUP BY 
+    G.gameId, G.title, G.descriptions, G.genre, 
+    G.avgRating, G.poster, G.backdrop, G.details, G.numberReview;

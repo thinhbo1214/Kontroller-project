@@ -94,7 +94,8 @@ CREATE OR ALTER PROCEDURE HP_PaginateQuery
     @limit INT,
     @columns NVARCHAR(MAX),
     @filterColumn NVARCHAR(MAX) = NULL,
-    @filterValue NVARCHAR(MAX) = NULL
+    @filterValue NVARCHAR(MAX) = NULL,
+    @groupByClause NVARCHAR(MAX) = NULL
 AS
 BEGIN
     DECLARE @sql NVARCHAR(MAX);
@@ -106,6 +107,11 @@ BEGIN
         ' + CASE 
                 WHEN @filterColumn IS NOT NULL AND @filterValue IS NOT NULL
                 THEN 'WHERE ' + @filterColumn + ' = @filterValue'
+                ELSE ''
+            END + '
+        ' + CASE
+                WHEN @groupByClause IS NOT NULL
+                THEN 'GROUP BY ' + @groupByClause
                 ELSE ''
             END + '
         ORDER BY ' + @orderColumn + '
@@ -1606,19 +1612,24 @@ BEGIN
     IF @Limit < 1 SET @Limit = 10;
 
     EXEC DBO.HP_PaginateQuery 
-    @fromClause = 'Games', 
-    @orderColumn = 'gameId',
-    @page = @Page, 
-    @limit = @Limit, 
-    @columns = 'gameId AS GameId,title AS Title,
-    descriptions AS Descriptions,
-    genre AS Genre, 
-    avgRating AS AvgRating,
-    poster AS Poster,
-    backdrop AS Backdrop,
-    details AS Details,
-    numberReview AS NumberReview';
-    
+        @fromClause = 'Games G LEFT JOIN Game_Service GS ON G.gameId = GS.gameId', 
+        @orderColumn = 'G.gameId',
+        @page = @Page, 
+        @limit = @Limit, 
+        @columns = '
+            G.gameId AS GameId,
+            G.title AS Title,
+            G.descriptions AS Descriptions,
+            G.genre AS Genre, 
+            G.avgRating AS AvgRating,
+            G.poster AS Poster,
+            G.backdrop AS Backdrop,
+            G.details AS Details,
+            G.numberReview AS NumberReview,
+            ISNULL(STRING_AGG(GS.serviceName, '',''), '''') AS Services',
+        @groupByClause = '
+            G.gameId, G.title, G.descriptions, G.genre, 
+            G.avgRating, G.poster, G.backdrop, G.details, G.numberReview';
 END
 GO
 
