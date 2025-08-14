@@ -14,6 +14,9 @@ class API {
       headers['X_Token_Authorization'] = token; // Gửi token nếu có
     }
 
+    // Ngrok warning
+    headers['ngrok-skip-browser-warning'] = 'true';
+
     options.headers = headers; // thêm dòng này để đảm bảo headers có token
 
     // fetch để gửi request và nhận response
@@ -139,7 +142,7 @@ export class APIUser extends API {
 
   async GetUser(userId = null, username = null) {
     const query = API.buildQuery({ userId, username });
-    
+
     const res = await this.GET(query);
     return res;
   }

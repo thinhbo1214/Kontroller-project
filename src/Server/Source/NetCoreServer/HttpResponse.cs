@@ -605,6 +605,13 @@ namespace Server.Source.NetCoreServer
             Clear();
             SetBegin(200);
             SetHeader("Allow", allow);
+
+            // --- Thêm CORS headers ---
+            SetHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            SetHeader("Access-Control-Allow-Headers", "X_Token_Authorization, Content-Type");
+            SetHeader("Access-Control-Allow-Credentials", "true");
+            // ------------------------
+
             SetBody();
             return this;
         }

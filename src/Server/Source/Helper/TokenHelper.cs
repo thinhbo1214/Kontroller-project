@@ -82,10 +82,11 @@ namespace Server.Source.Helper
             for (int i = 0; i < request.Headers; i++)
             {
                 var (key, value) = request.Header(i);
-                if (key == "X_Token_Authorization")
+                if (string.Equals(key, "X_Token_Authorization", StringComparison.OrdinalIgnoreCase))
                     return value;
             }
             return null;
         }
+
     }
 }
