@@ -21,7 +21,7 @@ namespace Server.Source.Handler
         public APIReviewHandler() 
         {
             GetRoutes["/api/review/game"] = GetReviewByGameHandle;
-            GetRoutes["/api/review/user"] = GetReviewByUsserHandle;
+            GetRoutes["/api/review/user"] = GetReviewByUserHandle;
         }
 
         protected override void GetHandle(HttpRequest request, HttpsSession session)
@@ -53,7 +53,7 @@ namespace Server.Source.Handler
 
         }
 
-        private void GetReviewByUsserHandle(HttpRequest request, HttpsSession session)
+        private void GetReviewByUserHandle(HttpRequest request, HttpsSession session)
         {
             var userId = DecodeHelper.GetUserIdFromRequest(request);
 

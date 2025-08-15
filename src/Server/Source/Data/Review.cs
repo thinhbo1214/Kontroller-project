@@ -42,20 +42,20 @@ namespace Server.Source.Data
 
         public Review()
         {
-            ReviewId = Guid.Empty;
-            Content = "";
-            Rating = 0;
-            DateCreated = "";
-            NumberReaction = 0;
-            NumberComment = 0;
+            //ReviewId = Guid.Empty;
+            //Content = "";
+            //Rating = 0;
+            //DateCreated = "";
+            //NumberReaction = 0;
+            //NumberComment = 0;
 
-            Username = "";
-            Avatar = "";
-            UserId = Guid.Empty;
+            //Username = "";
+            //Avatar = "";
+            //UserId = Guid.Empty;
 
-            GameId = Guid.Empty;
-            Title = "";
-            AvgRating = 0;
+            //GameId = Guid.Empty;
+            //Title = "";
+            //AvgRating = 0;
 
         }
     }

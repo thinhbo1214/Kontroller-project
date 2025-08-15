@@ -45,7 +45,7 @@ namespace Server.Source.Database
 
         public virtual int SetReactionComment(object data)
         {
-            var sqlPath = $"{TableName}/set_reaction_commment";
+            var sqlPath = $"{TableName}/set_reaction_comment";
             var result = ExecuteScalar<Reaction>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);

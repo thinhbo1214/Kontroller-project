@@ -38,14 +38,14 @@ namespace Server.Source.Data
 
         public Comment() 
         {
-            CommentId = Guid.Empty;
-            Content = "";
-            Username = "";
-            Avatar = "";
-            UserId = Guid.Empty;
-            CreatedAt = "";
-            NumberReaction = 0;
-            ReviewId = Guid.Empty;
+            //CommentId = Guid.Empty;
+            //Content = "";
+            //Username = "";
+            //Avatar = "";
+            //UserId = Guid.Empty;
+            //CreatedAt = "";
+            //NumberReaction = 0;
+            //ReviewId = Guid.Empty;
         }
     }
 }

@@ -40,13 +40,13 @@
 
         public User()
         {
-            UserId = Guid.Empty; // Có thể gán null
-            Username = "";
-            Email = "";
-            Avatar = "";
-            IsLoggedIn = false;
-            NumberFollower = 0;
-            NumberFollowing = 0;
+            //UserId = Guid.Empty; // Có thể gán null
+            //Username = "";
+            //Email = "";
+            //Avatar = "";
+            //IsLoggedIn = false;
+            //NumberFollower = 0;
+            //NumberFollowing = 0;
         }
     }
 }

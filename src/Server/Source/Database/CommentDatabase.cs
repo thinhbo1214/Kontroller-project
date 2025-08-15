@@ -38,7 +38,7 @@ namespace Server.Source.Database
 
         public virtual int SetComment(object data)
         {
-            var sqlPath = $"{TableName}/set_review";
+            var sqlPath = $"{TableName}/set_comment";
             var result = ExecuteScalar<Comment>(sqlPath, data);
 
             return DatabaseHelper.GetScalarValue<int>(result);

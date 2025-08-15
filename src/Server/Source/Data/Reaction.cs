@@ -9,7 +9,7 @@
         /// Unique identifier for the reaction.
         /// </summary>
         /// <example>'001'</example>
-        public string ReactionId { get; set; }
+        public Guid ReactionId { get; set; }
 
         /// <summary>
         /// URL of the reaction type, such as an emoji or icon representing the reaction.
@@ -38,16 +38,16 @@
 
         public Reaction()
         {
-            ReactionId = "";
-            ReactionType = 0;
-            Username = "";
-            Avatar = "";
-            UserId = Guid.Empty;
-            DateDo = "";
-            Type = "";
-            Id = Guid.Empty;
-            CommentId = Guid.Empty;
-            ReviewId = Guid.Empty;
+            //ReactionId = "";
+            //ReactionType = 0;
+            //Username = "";
+            //Avatar = "";
+            //UserId = Guid.Empty;
+            //DateDo = "";
+            //Type = "";
+            //Id = Guid.Empty;
+            //CommentId = Guid.Empty;
+            //ReviewId = Guid.Empty;
         }
     }
 }

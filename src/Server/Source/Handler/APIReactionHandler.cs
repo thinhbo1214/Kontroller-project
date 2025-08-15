@@ -15,8 +15,9 @@ namespace Server.Source.Handler
 
         public APIReactionHandler()
         {
-            GetRoutes["/api/reaction/comment"] = GetByCommentHandle;
-            GetRoutes["/api/reaction/review"] = GetByReviewHandle;
+            GetRoutes["/api/reaction/user"] = GetReactionByUserHandle;
+            GetRoutes["/api/reaction/comment"] = GetReactionByCommentHandle;
+            GetRoutes["/api/reaction/review"] = GetReactionByReviewHandle;
 
             PostRoutes["/api/reaction/comment"] = PostReactionForCommentHandle;
             PostRoutes["/api/reaction/review"] = PostReactionForReviewHandle;
@@ -28,8 +29,23 @@ namespace Server.Source.Handler
             DeleteRoutes["/api/reaction/review"] = DeleteReactionForReviewHandle;
         }
 
+        private void GetReactionByUserHandle(HttpRequest request, HttpsSession session)
+        {
+            var userId = DecodeHelper.GetUserIdFromRequest(request);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                ErrorHandle(session, "Không tìm thấy thông tin!");
+                return;
+            }
+
+            var userIdParams = new UserIdParams(userId);
+            var reactionInfo = ReactionDatabase.Instance.GetReactionByUser(userIdParams);
+            OkHandle(session, reactionInfo);
+        }
+
         // GET reactions by comment
-        private void GetByCommentHandle(HttpRequest request, HttpsSession session)
+        private void GetReactionByCommentHandle(HttpRequest request, HttpsSession session)
         {
             var commentId = DecodeHelper.GetParamWithURL("commentId", request.Url);
             if (string.IsNullOrEmpty(commentId))
@@ -44,7 +60,7 @@ namespace Server.Source.Handler
         }
 
         // GET reactions by review
-        private void GetByReviewHandle(HttpRequest request, HttpsSession session)
+        private void GetReactionByReviewHandle(HttpRequest request, HttpsSession session)
         {
             var reviewId = DecodeHelper.GetParamWithURL("reviewId", request.Url);
             if (string.IsNullOrEmpty(reviewId))

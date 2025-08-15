@@ -2,7 +2,7 @@
 -- DECLARE @GameId UNIQUEIDENTIFIER = 'A85E5BD2-71BD-4079-B194-03C727DF60F4';
 -- DECLARE @Content NVARCHAR(MAX) = N'Game tạm chấp nhận được';
 -- DECLARE @Rating INT = 6;
-DECLARE @ReviewId UNIQUEIDENTIFIER;
+-- DECLARE @ReviewId UNIQUEIDENTIFIER;
 DECLARE @Result INT = 1;
 DECLARE @Temp INT = 1;
 
@@ -24,7 +24,7 @@ BEGIN TRY
         EXEC DBO.RP_CreateReview 
             @Content = @Content, 
             @Rating = @Rating, 
-            @ReviewId = @reviewId OUTPUT;
+            @ReviewId = @ReviewId OUTPUT;
 
         EXEC DBO.GRP_AddGameReview 
             @GameId = @GameId, 
@@ -47,7 +47,7 @@ BEGIN TRY
         SET @Result *= @Temp;  
 
         EXEC DBO.RUP_CreateReviewUser 
-            @ReviewId = @reviewId, 
+            @ReviewId = @ReviewId, 
             @Author = @UserId, 
             @Result = @Temp OUTPUT;
         SET @Result *= @Temp;         

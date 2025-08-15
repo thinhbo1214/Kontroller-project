@@ -52,7 +52,7 @@ namespace Server.Source.Handler
 
         private void GetGameByUserHandle(HttpRequest request, HttpsSession session)
         {
-            var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
+            var userId = DecodeHelper.GetUserIdFromRequest(request);
 
             var data = new UserIdParams(userId);
 

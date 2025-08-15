@@ -63,16 +63,16 @@
 
         public Game() 
         {
-            GameId = Guid.Empty;
-            Title = "";
-            Descriptions = "";
-            Genre = "";
-            NumberReview = 0;
-            AvgRating = 0;
-            Poster = "";
-            Backdrop = "";
-            Details = "";
-            Services = "";
+            //GameId = Guid.Empty;
+            //Title = "";
+            //Descriptions = "";
+            //Genre = "";
+            //NumberReview = 0;
+            //AvgRating = 0;
+            //Poster = "";
+            //Backdrop = "";
+            //Details = "";
+            //Services = "";
         }
     }
 }

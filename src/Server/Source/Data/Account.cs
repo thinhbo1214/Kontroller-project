@@ -27,9 +27,9 @@ namespace Server.Source.Data
         public string? Email { get; set; }
         public Account()
         {
-            Username = "";
-            Password = "";
-            Email = "";
+            //Username = "";
+            //Password = "";
+            //Email = "";
         }
     }
 }

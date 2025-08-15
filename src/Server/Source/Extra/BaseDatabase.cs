@@ -30,6 +30,7 @@ namespace Server.Source.Database
             ["review"] = id => new ReviewIdParams(id),
             ["game"] = id => new GameIdParams(id),
             ["reaction"] = id => new ReactionIdParams(id),
+            ["comment"] = id => new CommentIdParams(id),
         };
         /// <summary>
         /// Lấy bản ghi từ database theo ID.
