@@ -1,4 +1,6 @@
-﻿namespace Server.Source.Data
+﻿using Microsoft.VisualBasic.ApplicationServices;
+
+namespace Server.Source.Data
 {
     /// <summary>
     /// A comment made by a user on a review, typically used for feedback or discussion.
@@ -18,22 +20,19 @@
         public string Content { get; set; }
 
         /// <summary>
-        /// The user who created the comment.
-        /// </summary>
-        public Guid Author { get; set; }
-
-        /// <summary>
         /// The date the comment was created, in YYYY-MM-DD format.
         /// </summary>
         /// <example>'2023-10-01'</example>
-        public string DateCreated { get; set; }
-
-        /// <summary>
-        /// Number of reactions the comment received from other users.
-        /// </summary>
-        public List<Guid> Reactions { get; set; }
+        public string CreatedAt { get; set; }
 
         public int NumberReaction { get; set; }
+
+        /// <summary>
+        /// The user who created the comment.
+        /// </summary>
+        public Guid UserId { get; set; }
+        public string Username { get; set; }
+        public string Avatar { get; set; }
 
         public Guid ReviewId { get; set; }
 
@@ -41,14 +40,12 @@
         {
             CommentId = Guid.Empty;
             Content = "";
-            Author = Guid.Empty;
-            DateCreated = "";
+            Username = "";
+            Avatar = "";
+            UserId = Guid.Empty;
+            CreatedAt = "";
             NumberReaction = 0;
-
             ReviewId = Guid.Empty;
-            Reactions = new List<Guid>();
-            
-
         }
     }
 }

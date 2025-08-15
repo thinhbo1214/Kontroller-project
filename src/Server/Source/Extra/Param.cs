@@ -19,9 +19,25 @@
     /// <summary>
     /// Yêu cầu xóa một mục tiêu cụ thể (ví dụ bài viết, bình luận,...), bao gồm UserId và TargetId.
     /// </summary>
-    public class DeleteTargetParams : DeleteBaseParams
+    public class DeleteReviewParams : DeleteBaseParams
     {
-        public string TargetId { get; set; }
+        public string GameId { get; set; }
+        public string ReviewId { get; set; }
+    }
+    public class DeleteCommentParams : DeleteBaseParams
+    {
+        public string ReviewId { get; set; }
+        public string CommentId { get; set; }
+    }
+    public class DeleteReactionCParams : DeleteBaseParams
+    {
+        public string CommentId { get; set; }
+        public string ReactionId { get; set; }
+    }
+    public class DeleteReactionRParams : DeleteBaseParams
+    {
+        public string ReviewId { get; set; }
+        public string ReactionId { get; set; }
     }
 
     /// <summary>
@@ -56,6 +72,15 @@
         public string GameId { get; set; }
     }
 
+    public class CommentIdParams : IdParams
+    {
+        public CommentIdParams(string commentId)
+        {
+            CommentId = commentId;
+        }
+        public string CommentId { get; set; }
+    }
+
     public class ReactionIdParams : IdParams
     {
         public ReactionIdParams(string reactionId)
@@ -64,6 +89,7 @@
         }
         public string ReactionId { get; set; }
     }
+
 
     /// <summary>
     /// Yêu cầu thay đổi mật khẩu, bao gồm mật khẩu cũ và mật khẩu mới.
@@ -124,6 +150,11 @@
     {
         public int Page { get; set; }
         public int Limit { get; set; }
+    }
+
+    public class UserPaginateParams : PaginateParams
+    {
+        public string UserId;
     }
 
 

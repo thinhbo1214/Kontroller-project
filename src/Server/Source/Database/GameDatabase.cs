@@ -24,7 +24,7 @@ namespace Server.Source.Database
         public virtual List<Game> GetGameByUser(object data)
         {
             var sqlPath = $"{TableName}/get_game_by_user";
-            var result = ExecuteQuery<Game, IdParams>(sqlPath, data);
+            var result = ExecuteQuery<Game, UserIdParams>(sqlPath, data);
 
             return result;
         }

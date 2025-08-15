@@ -1,4 +1,6 @@
-﻿namespace Server.Source.Data
+﻿using Microsoft.VisualBasic.ApplicationServices;
+
+namespace Server.Source.Data
 {
     /// <summary>
     /// A written review by a user that includes their thoughts and rating for a game.
@@ -26,14 +28,17 @@
         /// 
         public string DateCreated { get; set; }
 
-        public Guid Author { get; set; }
-
-        public List<Guid> CommentId { get; set; }
         public int NumberComment { get; set; }
 
-        public List<Guid> ReactionId { get; set; }
-
         public int NumberReaction { get; set; }
+        public Guid UserId { get; set; }
+
+        public string Username { get; set; }
+        public string Avatar { get; set; }
+
+        public Guid GameId { get; set; }
+        public string Title { get; set; }
+        public float AvgRating { get; set; }
 
         public Review()
         {
@@ -41,12 +46,17 @@
             Content = "";
             Rating = 0;
             DateCreated = "";
-            Author = Guid.Empty;
             NumberReaction = 0;
             NumberComment = 0;
 
-            ReactionId = new List<Guid>();
-            CommentId = new List<Guid>();
+            Username = "";
+            Avatar = "";
+            UserId = Guid.Empty;
+
+            GameId = Guid.Empty;
+            Title = "";
+            AvgRating = 0;
+
         }
     }
 }

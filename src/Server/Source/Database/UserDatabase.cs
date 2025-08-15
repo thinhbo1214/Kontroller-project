@@ -82,5 +82,29 @@ namespace Server.Source.Database
 
             return DatabaseHelper.GetScalarValue<int>(result);
         }
+
+        public virtual List<User> GetUserFollower(object data)
+        {
+            var sqlPath = $"{TableName}/get_user_follower";
+            var result = ExecuteQuery<User, UserPaginateParams>(sqlPath, data);
+
+            return result;
+        }
+
+        public virtual List<User> GetUserFollowing(object data)
+        {
+            var sqlPath = $"{TableName}/get_user_following";
+            var result = ExecuteQuery<User, UserPaginateParams>(sqlPath, data);
+
+            return result;
+        }
+        public virtual int SetUser(object data)
+        {
+            var sqlPath = $"{TableName}/set_user";
+            var result = ExecuteScalar<User>(sqlPath, data);
+
+            return DatabaseHelper.GetScalarValue<int>(result);
+        }
+
     }
 }

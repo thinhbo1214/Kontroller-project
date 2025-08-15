@@ -34,26 +34,9 @@
         /// <example>true</example>
         public bool IsLoggedIn { get; set; }
 
-        public Guid DiaryId { get; set; }
-
-        public List<Guid> ListId { get; set; }
-        public int NumberList { get; set; }
-
-        public List<Guid> Follower { get; set; }
-
         public int NumberFollower { get; set; }
 
-        public List<Guid> Following { get; set; }
-
         public int NumberFollowing { get; set; }
-
-        public List<Guid> ActivityId { get; set; }
-
-        public List<Guid> ReviewId { get; set; }
-
-        public List<Guid> ReactionId { get; set; }
-
-        public List<Guid> CommentId { get; set; }
 
         public User()
         {
@@ -64,16 +47,6 @@
             IsLoggedIn = false;
             NumberFollower = 0;
             NumberFollowing = 0;
-            NumberList = 0;
-
-            DiaryId = Guid.Empty;
-            ListId = new List<Guid>();
-            Follower = new List<Guid>();
-            Following = new List<Guid>();
-            ActivityId = new List<Guid>();
-            ReviewId = new List<Guid>();
-            CommentId = new List<Guid>();
-            ReactionId = new List<Guid>();
         }
     }
 }

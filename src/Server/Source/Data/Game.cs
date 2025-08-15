@@ -29,11 +29,6 @@
         /// <example>'Adventure'</example>
         public string Genre { get; set; }
 
-        /// <summary>
-        /// List of reviews written by users about this game.
-        /// </summary>
-        public List<Guid> Review { get; set; }
-
         public int NumberReview { get; set; }
 
         /// <summary>
@@ -64,7 +59,7 @@
         /// List of platforms or digital stores where the game is available.
         /// </summary>
         /// <example> 'Steam','Epic Games Store'</example>
-        public List<string> Services { get; set; }
+        public string Services { get; set; }
 
         public Game() 
         {
@@ -77,9 +72,7 @@
             Poster = "";
             Backdrop = "";
             Details = "";
-
-            Review = new List<Guid>();
-            Services = new List<string>();
+            Services = "";
         }
     }
 }

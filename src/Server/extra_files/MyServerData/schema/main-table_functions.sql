@@ -121,8 +121,7 @@ RETURN
            avatar AS Avatar,
            isLoggedIn AS IsLoggedIn,
            numberFollower AS NumberFollower,
-           numberFollowing AS NumberFollowing,
-           numberList AS NumberList
+           numberFollowing AS NumberFollowing
     FROM [Users]
     WHERE userId = @UserId
 );

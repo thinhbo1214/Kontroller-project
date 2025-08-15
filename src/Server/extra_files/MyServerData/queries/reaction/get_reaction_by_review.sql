@@ -3,7 +3,6 @@
 SELECT  R.reactionId AS ReactionId,
         R.reactionType AS ReactionType,
         R.dateDo AS DateDo,
-        U.userId AS UserId,
         U.username AS Username,
         U.avatar AS Avatar
 FROM [Reactions] R 

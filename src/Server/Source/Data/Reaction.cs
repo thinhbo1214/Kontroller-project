@@ -18,22 +18,36 @@
         public int ReactionType { get; set; }
 
         /// <summary>
-        /// The user who performed the reaction.
-        /// </summary>
-        public Guid Author { get; set; }
-
-        /// <summary>
         /// The date the reaction was performed, in YYYY-MM-DD format.
         /// </summary>
         /// <example>'2023-10-01'</example>
         public string DateDo { get; set; }
 
+        /// <summary>
+        /// The user who performed the reaction.
+        /// </summary>
+        public Guid UserId { get; set; }
+        public string Username { get; set; }
+        public string Avatar { get; set; }
+
+        public string Type { get; set; }
+
+        public Guid CommentId { get; set; } 
+        public Guid ReviewId { get; set; }
+        public Guid Id { get; set; }
+
         public Reaction()
         {
             ReactionId = "";
             ReactionType = 0;
-            Author = Guid.Empty;
+            Username = "";
+            Avatar = "";
+            UserId = Guid.Empty;
             DateDo = "";
+            Type = "";
+            Id = Guid.Empty;
+            CommentId = Guid.Empty;
+            ReviewId = Guid.Empty;
         }
     }
 }

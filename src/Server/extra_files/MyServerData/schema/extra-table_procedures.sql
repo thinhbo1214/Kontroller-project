@@ -783,7 +783,7 @@ BEGIN
         @orderColumn = 'U.userId',
         @page = @Page,
         @limit = @Limit,
-        @columns = 'U.userId AS UserId, U.username AS Username, U.email AS Email, U.avatar AS Avatar, U.isLoggedIn AS IsLoggedIn, U.numberFollower AS NumberFollower, U.numberFollowing AS NumberFollowing, U.numberList AS NumberList',
+        @columns = 'U.userId AS UserId, U.username AS Username, U.email AS Email, U.avatar AS Avatar, U.isLoggedIn AS IsLoggedIn, U.numberFollower AS NumberFollower, U.numberFollowing AS NumberFollowing',
         @filterColumn = 'UU.userFollowing',
         @filterValue = @UserFollowing;
 END;
@@ -802,7 +802,7 @@ BEGIN
         @orderColumn = 'U.userId',
         @page = @Page,
         @limit = @Limit,
-        @columns = 'U.userId AS UserId, U.username AS Username, U.email AS Email, U.avatar AS Avatar, U.isLoggedIn AS IsLoggedIn, U.numberFollower AS NumberFollower, U.numberFollowing AS NumberFollowing, U.numberList AS NumberList',
+        @columns = 'U.userId AS UserId, U.username AS Username, U.email AS Email, U.avatar AS Avatar, U.isLoggedIn AS IsLoggedIn, U.numberFollower AS NumberFollower, U.numberFollowing AS NumberFollowing',
         @filterColumn = 'UU.userFollower',
         @filterValue = @UserFollower;
 END;
