@@ -13,6 +13,9 @@ namespace Server.Source.Handler
             GetModel<APIAuthHandler>(),
             GetModel<APIUserHandler>(),
             GetModel<APIGameHandler>(),
+            GetModel<APIReviewHandler>(),
+            GetModel<APICommentHandler>(),
+            GetModel<APIReactionHandler>()
         };
 
         // Trả về IApiEvent thay vì Event gốc
@@ -21,7 +24,10 @@ namespace Server.Source.Handler
             { typeof(APICacheHandler), () => Schedule<CacheEvent>(0.25f) },
             { typeof(APIAuthHandler), () => Schedule<APIAuthEvent>(0.25f) },
             { typeof(APIUserHandler), () => Schedule<APIUserEvent>(0.25f) },
-            { typeof(APIGameHandler), () => Schedule<APIGameEvent>(0.25f) }
+            { typeof(APIGameHandler), () => Schedule<APIGameEvent>(0.25f) },
+            { typeof(APIReviewHandler), () => Schedule<APIReviewEvent>(0.25f) },
+            { typeof(APICommentHandler), () => Schedule<APICommentEvent>(0.25f) },
+            { typeof(APIReactionHandler), () => Schedule<APIReactionEvent>(0.25f) }
         };
 
         public void Handle(HttpRequest request, HttpsSession session)

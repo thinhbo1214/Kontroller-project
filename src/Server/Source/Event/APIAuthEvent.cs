@@ -29,7 +29,7 @@ namespace Server.Source.Event
                         catch (Exception ex)
                         {
                             session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 500));
-                            Simulation.GetModel<LogManager>().Log("Lỗi trong APILoginEvent: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
+                            Simulation.GetModel<LogManager>().Log("Lỗi trong API Auth: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
                         }
                         finally
                         {

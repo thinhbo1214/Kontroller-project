@@ -7,8 +7,8 @@ using Server.Source.NetCoreServer;
 
 namespace Server.Source.Event
 {
-   
-    public class APIGameEvent : Simulation.Event<APIGameEvent>, IApiEvent
+
+    public class APIReviewEvent : Simulation.Event<APIReviewEvent>, IApiEvent
     {
         public HttpRequest request { get; set; }
         public HttpsSession session { get; set; }
@@ -25,12 +25,12 @@ namespace Server.Source.Event
                         await Simulation.GetModel<SimulationManager>().Limiter.WaitAsync();
                         try
                         {
-                            Simulation.GetModel<APIGameHandler>().Handle(request, session);
+                            Simulation.GetModel<APIReviewHandler>().Handle(request, session);
                         }
                         catch (Exception ex)
                         {
                             session.SendResponseAsync(ResponseHelper.MakeJsonResponse(session.Response, 500));
-                            Simulation.GetModel<LogManager>().Log("Lỗi trong API Game: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
+                            Simulation.GetModel<LogManager>().Log("Lỗi trong API Review: " + ex.ToString(), LogLevel.ERROR, LogSource.SYSTEM);
                         }
                         finally
                         {
