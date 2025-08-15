@@ -23,11 +23,8 @@ namespace Server.Source.Helper
         private readonly static Dictionary<Type, IDatabase> databaseMap = new()
         {
             { typeof(Account),  AccountDatabase.Instance },
-            { typeof(Activity), ActivityDatabase.Instance },
             { typeof(Comment), CommentDatabase.Instance },
-            { typeof(Diary), DiaryDatabase.Instance },
             { typeof(Game), GameDatabase.Instance },
-            { typeof(List), ListDatabase.Instance },
             { typeof(Reaction), ReactionDatabase.Instance },
             { typeof(Review), ReviewDatabase.Instance },
             { typeof(User), UserDatabase.Instance },
