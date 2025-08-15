@@ -77,8 +77,9 @@ namespace Server.Source.Handler
         {
             var page = DecodeHelper.GetParamWithURL("page", request.Url);
             var limit = DecodeHelper.GetParamWithURL("limit", request.Url);
+            var userId = DecodeHelper.GetUserIdFromRequest(request);
 
-            var data = new UserPaginateParams { Page = int.Parse(page), Limit = int.Parse(limit) };
+            var data = new UserPaginateParams { Page = int.Parse(page), Limit = int.Parse(limit), UserId = userId };
 
             if (string.IsNullOrEmpty(data.UserId))
             {
@@ -94,7 +95,7 @@ namespace Server.Source.Handler
                 ErrorHandle(session, "Không tìm thấy thông tin user!");
                 return;
             }
-
+            ObjectHelper.LogObjectProperties(data);
             var userFollower = UserDatabase.Instance.GetUserFollower(data);
             OkHandle(session, userFollower);
         }
@@ -103,8 +104,9 @@ namespace Server.Source.Handler
         {
             var page = DecodeHelper.GetParamWithURL("page", request.Url);
             var limit = DecodeHelper.GetParamWithURL("limit", request.Url);
+            var userId = DecodeHelper.GetUserIdFromRequest(request);
 
-            var data = new UserPaginateParams { Page = int.Parse(page), Limit = int.Parse(limit) };
+            var data = new UserPaginateParams { Page = int.Parse(page), Limit = int.Parse(limit), UserId = userId };
 
             if (string.IsNullOrEmpty(data.UserId))
             {

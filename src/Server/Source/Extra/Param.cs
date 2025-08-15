@@ -154,7 +154,7 @@
 
     public class UserPaginateParams : PaginateParams
     {
-        public string UserId;
+        public string UserId { get; set; }
     }
 
 

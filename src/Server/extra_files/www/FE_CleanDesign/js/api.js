@@ -94,6 +94,7 @@ export class APIAuth extends API {
     }
     const payload = { username, password }
     const query = API.buildPathWithQuery('login');
+
     const res = await this.POST(query, {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -129,21 +130,40 @@ export class APIAuth extends API {
 
 }
 
-
 // API để tương tác với user
 export class APIUser extends API {
   static baseUrl = '/api/user';
-
-  async GetSelf() {
-    const query = API.buildQuery({});
-    const res = await this.GET(query);
-    return res;
-  }
 
   async GetUser(userId = null, username = null) {
     const query = API.buildQuery({ userId, username });
 
     const res = await this.GET(query);
+    return res;
+  }
+
+  async GetUserFollower(userId = null, page = 1, limit = 10) {
+    const query = API.buildPathWithQuery('follower', { page, limit, userId})
+
+    const res = await this.GET(query);
+    return res;
+  }
+
+  async GetUserFollowing(userId = null, page = 1, limit = 10) {
+    const query = API.buildPathWithQuery('following', { page, limit, userId})
+
+    const res = await this.GET(query);
+    return res;
+  }
+
+  async PostUserFollow(target) {
+    const query = API.buildPathWithQuery('follow');
+    const payload = { target };
+
+    const res = await this.POST(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
     return res;
   }
 
@@ -159,18 +179,20 @@ export class APIUser extends API {
   }
 
 
-  async PutUserEmail(email = '') {
+  async PutUserEmail(email) {
     const payload = { email }
     const query = API.buildPathWithQuery('email');
+
     const res = await this.PUT(query, {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
     return res;
   }
+
   async PutUserAvatar(avatar) {
     const payload = { avatar }
-
     const query = API.buildPathWithQuery('avatar');
 
     // Không set Content-Type, fetch tự set multipart/form-data
@@ -189,9 +211,10 @@ export class APIUser extends API {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
     return res;
   }
-  async PutUserPassword(oldpassword = '', newpassword = '') {
+  async PutUserPassword(oldpassword, newpassword) {
     const payload = { oldpassword, newpassword }
     const query = API.buildPathWithQuery('password');
 
@@ -199,18 +222,34 @@ export class APIUser extends API {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
     return res;
   }
 
   async DeleteUser(password) {
     const payload = { password }
     const query = API.buildQuery({});
+
     const res = await this.DELETE(query, {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
     return res;
   }
+
+  async DeleteUserFollow(target) {
+    const query = API.buildPathWithQuery('follow');
+    const payload = { target };
+
+    const res = await this.DELETE(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    return res;
+  }
+
 }
 // API để tương tác với review
 export class ReviewAPI extends API {
@@ -218,201 +257,87 @@ export class ReviewAPI extends API {
 
   async GetReview(reviewId) {
     const query = API.buildQuery({ reviewId });
+
     const res = await this.GET(query);
+
     return res;
   }
 
-  async PostReview(content, author, rating) {
-    const payload = { content, author, rating };
+  async GetReviewByUser(userId = null) {
+    const query = API.buildPathWithQuery('user', { userId });
+
+    const res = await this.GET(query);
+
+    return res;
+  }
+
+  async GetReviewByGame(gameId) {
+    const query = API.buildPathWithQuery('game', { gameId });
+
+    const res = await this.GET(query);
+
+    return res;
+  }
+
+  async PostReview(gameId, content, rating) {
+    const payload = { gameId, content, rating };
 
     const res = await this.POST('', {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(payload)
     });
 
     return res;
   }
 
-  async PutReview(reviewId, content, rating = null) {
-    const payload = {}
+  async PutReview(reviewId, gameId, content, rating) {
+    const payload = { reviewId, gameId, content, rating };
 
-    const res = await this.PUT(`?reviewId = ${reviewId}`, {
+    const res = await this.PUT('', {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(payload)
     });
+
     return res;
   }
 
-  async DeleteReview(reviewId) {
-    const query = API.buildQuery({ reviewId });
-    const res = await this.DELETE(query);
+  async DeleteReview(reviewId, gameId) {
+    const payload = { reviewId, gameId };
+    const query = API.buildQuery({});
+
+    const res = await this.DELETE(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
     return res;
   }
 }
+
 // API để tương tác với game
 export class GameAPI extends API {
   static baseUrl = '/api/game';
 
-  async GetGame(gameId = '') {
+  async GetGame(gameId) {
     const query = API.buildQuery({ gameId });
+
     const res = await this.GET(query);
-    return res;
-  }
-
-  async PostGame(title = '', description = '', genre = '', poster = '', backdrop = '', details = [], services = []) {
-    const payload = { title, description, genre, poster, backdrop, details, services };
-
-    const res = await this.POST('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
 
     return res;
   }
 
+  async GetGameByUser(userId = null) {
+    const query = API.buildPathWithQuery('user', { userId });
 
-  async PutGame(gameId, title = '', description = '', genre = '', poster = '', backdrop = '', details = [], services = []) {
-    const payload = { title, description, genre, poster, backdrop, details, services };
-
-    const res = await this.PUT(`?gameId = ${gameId}`, {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-    return res;
-  }
-
-  async DeleteGame(gameId) {
-    const query = API.buildQuery({ gameId });
-    const res = await this.DELETE(query);
-    return res;
-  }
-}
-
-
-// API để tương tác với cache
-
-export class CacheAPI extends API {
-  static baseUrl = '/api/cache';
-
-  async GetCache(key) {
-    const query = API.buildQuery({ key });
     const res = await this.GET(query);
-    return res;
-  }
-
-
-  async PostCache(key, value) {
-    if (!key) return alert('Key is required');
-
-    const query = API.buildQuery({ key });
-    const res = await this.POST(query, {
-      headers: { 'Content-Type': 'text/plain' },
-      body: value
-    });
 
     return res;
   }
+  async GetGamePagination(page = 1, limit = 10) {
+    const query = API.buildPathWithQuery('pagination', { page, limit });
 
-  async PutCache(key, value) {
-    if (!key) return alert('Key is required');
-
-    const query = API.buildQuery({ key });
-    const res = await this.PUT(query, {
-      headers: { 'Content-Type': 'text/plain' },
-      body: value
-    });
-    return res;
-  }
-
-  async DeleteCache(key) {
-    if (!key) return alert('Key is required');
-
-    const query = API.buildQuery({ key });
-    const res = await this.DELETE(query);
-    return res;
-  }
-}
-// API để tương tác với Diary 
-export class DiaryAPI extends API {
-  static baseUrl = '/api/diary';
-
-  // Lấy diary 
-  async GetDiary(diaryId) {
-    const query = API.buildQuery({ diaryId });
     const res = await this.GET(query);
-    return res;
-  }
 
-  // Tạo mới diary 
-  async PostDiary(gameLogged = []) {
-    const payload = { gameLogged };
-
-    const res = await this.POST('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-
-    return res;
-  }
-
-  // Cập nhật danh sách game của diary
-  async PutDiary(diaryId, gameLogged = []) {
-    const payload = { gameLogged };
-
-    const res = await this.PUT(`?diaryId=${diaryId}`, {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-
-    return res;
-  }
-
-  // Xoá diary theo diaryId
-  async DeleteDiary(diaryId) {
-    const query = API.buildQuery({ diaryId });
-    const res = await this.DELETE(query);
-    return res;
-  }
-}
-// API để tương tác với Activity 
-export class ActivityAPI extends API {
-  static baseUrl = '/api/activity';
-
-  // Lấy activity theo activityId
-  async GetActivity(activityId) {
-    const query = API.buildQuery({ activityId });
-    const res = await this.GET(query);
-    return res;
-  }
-
-  // Tạo mới activity 
-  async PostActivity(content = '', dateDo = '') {
-    const payload = { content, dateDo };
-
-    const res = await this.POST('', {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-
-    return res;
-  }
-
-  // Cập nhật nội dung activity 
-  async PutActivity(activityId, content = '', dateDo = '') {
-    const payload = { content, dateDo };
-
-    const res = await this.PUT(`?activityId=${activityId}`, {
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    });
-
-    return res;
-  }
-
-  // Xoá activity 
-  async DeleteActivity(activityId) {
-    const query = API.buildQuery({ activityId });
-    const res = await this.DELETE(query);
     return res;
   }
 }
@@ -424,132 +349,218 @@ export class CommentAPI extends API {
   // Lấy comment 
   async GetComment(commentId) {
     const query = API.buildQuery({ commentId });
+
     const res = await this.GET(query);
+
+    return res;
+  }
+
+  async GetCommentByUser(userId = null) {
+    const query = API.buildPathWithQuery('user', { userId });
+
+    const res = await this.GET(query);
+
+    return res;
+  }
+
+  async GetCommentByReview(reviewId) {
+    const query = API.buildPathWithQuery('review', { reviewId });
+
+    const res = await this.GET(query);
+
     return res;
   }
 
   // Tạo mới comment 
-  async PostComment(content = '', author = '') {
-    const payload = { content, author };
+  async PostComment(content, reviewId) {
+    const payload = { reviewId, content };
 
     const res = await this.POST('', {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(payload)
     });
 
     return res;
   }
 
   // Cập nhật nội dung comment 
-  async PutComment(commentId, content = '') {
-    const payload = { content };
+  async PutComment(commentId, reviewId, content) {
+    const payload = { commentId, reviewId, content };
 
-    const res = await this.PUT(`?commentId=${commentId}`, {
+    const res = await this.PUT('', {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(payload)
     });
 
     return res;
   }
 
   // Xoá comment theo 
-  async DeleteComment(commentId) {
-    const query = API.buildQuery({ commentId });
-    const res = await this.DELETE(query);
+  async DeleteComment(commentId, reviewId) {
+    const payload = { commentId, reviewId };
+
+    const res = await this.DELETE('', {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
     return res;
   }
 }
-export class RateAPI extends API {
-  static baseUrl = '/api/rate';
 
-  // Lấy rating 
-  async GetRate(rateId) {
-    const query = API.buildQuery({ rateId });
+// API để tương tác với Reaction 
+export class ReactionAPI extends API {
+  static baseUrl = '/api/reaction';
+
+  // Lấy reaction 
+  async GetReactionByComment(commentId) {
+    const query = API.buildPathWithQuery('comment', { commentId });
+
     const res = await this.GET(query);
+
     return res;
   }
 
-  // Tạo rating mới 
-  async PostRate(value = 1, rater = '', target = '') {
-    const payload = {
-      value,
-      rater,
-      target
-    };
+  async GetReactionByUser(userId = null) {
+    const query = API.buildPathWithQuery('user', { userId });
 
-    const res = await this.POST('', {
+    const res = await this.GET(query);
+
+    return res;
+  }
+
+  async GetReactionByReview(reviewId) {
+    const query = API.buildPathWithQuery('review', { reviewId });
+
+    const res = await this.GET(query);
+
+    return res;
+  }
+
+  // Tạo mới reaction 
+  async PostReactionForComment(reactionType, commentId) {
+    const query = API.buildPathWithQuery('comment');
+    const payload = { commentId, reactionType };
+
+    const res = await this.POST(query, {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(payload)
     });
 
     return res;
   }
 
-  //  cập nhật rate
-  async PutRate(rateId, value) {
-    const payload = { value };
+  async PostReactionForReview(reactionType, reviewId) {
+    const query = API.buildPathWithQuery('review');
+    const payload = { reviewId, reactionType };
 
-    const res = await this.PUT(`?rateId=${rateId}`, {
+    const res = await this.POST(query, {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(payload)
     });
 
     return res;
   }
 
-  // Xoá rate
-  async DeleteRate(rateId) {
-    const query = API.buildQuery({ rateId });
-    const res = await this.DELETE(query);
+  // Cập nhật nội dung reaction 
+  async PutReactionForComment(reactionId, reactionType, commentId) {
+    const query = API.buildPathWithQuery('comment');
+    const payload = { reactionId, commentId, reactionType };
+
+    const res = await this.PUT(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
     return res;
   }
+
+  async PutReactionForReview(reactionId, reactionType, reviewId) {
+    const query = API.buildPathWithQuery('review');
+    const payload = { reactionId, reviewId, reactionType };
+
+    const res = await this.PUT(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    return res;
+  }
+
+  // Xoá reaction 
+  async DeleteReactionOfComment(commentId, reactionId) {
+    const payload = { commentId, reactionId };
+    const query = API.buildPathWithQuery('comment');
+
+    const res = await this.DELETE(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    return res;
+  }
+
+  async DeleteReactionOfReview(reviewId, reactionId) {
+    const payload = { reviewId, reactionId };
+    const query = API.buildPathWithQuery('review');
+
+    const res = await this.DELETE(query, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    return res;
+  }
+
 }
-export class ListAPI extends API {
-  static baseUrl = '/api/list';
 
-  // lấy list
-  async GetList(listId) {
-    const query = API.buildQuery({ listId });
+
+// API để tương tác với cache (Admin)
+export class CacheAPI extends API {
+  static baseUrl = '/api/cache';
+
+  async GetCache(key) {
+    const query = API.buildQuery({ key });
+
     const res = await this.GET(query);
+
     return res;
   }
 
-  // tạo list mới
-  async PostList(title = '', descriptions = '', games = []) {
-    const payload = {
-      title,
-      descriptions,
-      games
-    };
 
-    const res = await this.POST('', {
+  async PostCache(key, value) {
+    if (!key) return alert('Key is required');
+
+    const query = API.buildQuery({ key });
+
+    const res = await this.POST(query, {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(value)
     });
 
     return res;
   }
 
-  // cập nhật list
-  async PutList(listId, title = '', descriptions = '', games = []) {
-    const payload = {
-      title,
-      descriptions,
-      games
-    };
+  async PutCache(key, value) {
+    if (!key) return alert('Key is required');
 
-    const res = await this.PUT(`?listId=${listId}`, {
+    const query = API.buildQuery({ key });
+
+    const res = await this.PUT(query, {
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body: JSON.stringify(value)
     });
 
     return res;
   }
 
-  // Xóa list
-  async DeleteList(listId) {
-    const query = API.buildQuery({ listId });
+  async DeleteCache(key) {
+    if (!key) return alert('Key is required');
+
+    const query = API.buildQuery({ key });
+
     const res = await this.DELETE(query);
+
     return res;
   }
 }
