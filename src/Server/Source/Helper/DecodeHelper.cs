@@ -1,4 +1,6 @@
-﻿using Server.Source.NetCoreServer;
+﻿using Server.Source.Core;
+using Server.Source.Manager;
+using Server.Source.NetCoreServer;
 
 namespace Server.Source.Helper
 {
@@ -64,6 +66,19 @@ namespace Server.Source.Helper
         public static string GetParamWithURL(string key, string url)
         {
             return ParseQueryParams(url).GetValueOrDefault(key);
+        }
+
+        public static string GetUserIdFromRequest(HttpRequest request)
+        {
+            var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
+            if (!string.IsNullOrEmpty(userId))
+                return userId;
+
+            string token = TokenHelper.GetToken(request);
+            if (TokenHelper.TryParseToken(token, out var sessionId))
+                return Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+
+            return null;
         }
     }
 }

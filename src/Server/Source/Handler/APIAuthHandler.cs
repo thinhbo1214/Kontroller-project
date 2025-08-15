@@ -28,7 +28,7 @@ namespace Server.Source.Handler
             if (sessionManager.Authorization(request, out string id, session))
             {
 
-                ErrorHandle(session, "Không thể đăng ký tài khoản, đã đăng nhập rồi!");
+                ErrorHandle(session, "Bạn đã đăng nhập, không thể đăng nhập lại!");
                 return;
             }
 
@@ -88,7 +88,6 @@ namespace Server.Source.Handler
                 return;
             }
             var newPassword = AccountDatabase.Instance.ForgetPassword(data);
-            Simulation.GetModel<LogManager>().Log(newPassword);
 
             if (newPassword != null)
             {
@@ -97,7 +96,7 @@ namespace Server.Source.Handler
                 return;
             }
 
-            ErrorHandle(session, "Đổi email ko thành công!");
+            ErrorHandle(session, "Reset mật khẩu không thành công!");
 
         }
 

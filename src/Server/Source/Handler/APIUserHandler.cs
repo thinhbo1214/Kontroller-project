@@ -28,6 +28,8 @@ namespace Server.Source.Handler
         /// </summary>
         public APIUserHandler()
         {
+            GetRoutes["/api/user/follower"] = GetFollowerHandle;
+            GetRoutes["/api/user/following"] = GetFollowingHandle;
             PutRoutes["/api/user/email"] = PutUserEmail;
             PutRoutes["/api/user/avatar"] = PutUserAvatar;
             PutRoutes["/api/user/username"] = PutUserUsername;
@@ -41,26 +43,7 @@ namespace Server.Source.Handler
         /// </summary>
         protected override void GetHandle(HttpRequest request, HttpsSession session)
         {
-            var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
-            if (string.IsNullOrEmpty(userId))
-            {
-                var username = DecodeHelper.GetParamWithURL("username", request.Url);
-
-                if (!string.IsNullOrEmpty(username))
-                {
-                    var usernameParams = new UsernameParams { Username = username };
-                    userId = UserDatabase.Instance.GetUserIdByUsername(usernameParams);
-                }
-                else
-                {
-                    string token = TokenHelper.GetToken(request);
-                    if (TokenHelper.TryParseToken(token, out var sessionId))
-                    {
-                        userId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
-                    }
-                }
-
-            }
+            var userId = ResolveUserId(request);
             if (string.IsNullOrEmpty(userId))
             {
                 ErrorHandle(session, "Không tìm thấy thông tin user!");
@@ -69,6 +52,77 @@ namespace Server.Source.Handler
 
             var userInfo = DatabaseHelper.GetData<User>(userId);
             OkHandle(session, userInfo);
+        }
+        private string ResolveUserId(HttpRequest request)
+        {
+            var userId = DecodeHelper.GetParamWithURL("userId", request.Url);
+            if (!string.IsNullOrEmpty(userId)) return userId;
+
+            var username = DecodeHelper.GetParamWithURL("username", request.Url);
+            if (!string.IsNullOrEmpty(username))
+            {
+                return UserDatabase.Instance.GetUserIdByUsername(new UsernameParams { Username = username });
+            }
+
+            string token = TokenHelper.GetToken(request);
+            if (TokenHelper.TryParseToken(token, out var sessionId))
+            {
+                return Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+            }
+
+            return null;
+        }
+
+        private void GetFollowerHandle(HttpRequest request, HttpsSession session)
+        {
+            var page = DecodeHelper.GetParamWithURL("page", request.Url);
+            var limit = DecodeHelper.GetParamWithURL("limit", request.Url);
+
+            var data = new UserPaginateParams { Page = int.Parse(page), Limit = int.Parse(limit) };
+
+            if (string.IsNullOrEmpty(data.UserId))
+            {
+                string token = TokenHelper.GetToken(request);
+                if (TokenHelper.TryParseToken(token, out var sessionId))
+                {
+                    data.UserId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+                }
+
+            }
+            if (string.IsNullOrEmpty(data.UserId))
+            {
+                ErrorHandle(session, "Không tìm thấy thông tin user!");
+                return;
+            }
+
+            var userFollower = UserDatabase.Instance.GetUserFollower(data);
+            OkHandle(session, userFollower);
+        }
+
+        private void GetFollowingHandle(HttpRequest request, HttpsSession session)
+        {
+            var page = DecodeHelper.GetParamWithURL("page", request.Url);
+            var limit = DecodeHelper.GetParamWithURL("limit", request.Url);
+
+            var data = new UserPaginateParams { Page = int.Parse(page), Limit = int.Parse(limit) };
+
+            if (string.IsNullOrEmpty(data.UserId))
+            {
+                string token = TokenHelper.GetToken(request);
+                if (TokenHelper.TryParseToken(token, out var sessionId))
+                {
+                    data.UserId = Simulation.GetModel<SessionManager>().GetUserId(sessionId);
+                }
+
+            }
+            if (string.IsNullOrEmpty(data.UserId))
+            {
+                ErrorHandle(session, "Không tìm thấy thông tin user!");
+                return;
+            }
+
+            var userFollower = UserDatabase.Instance.GetUserFollowing(data);
+            OkHandle(session, userFollower);
         }
 
         /// <summary>
@@ -88,7 +142,7 @@ namespace Server.Source.Handler
             var account = JsonHelper.Deserialize<Account>(value);
             if (account == null)
             {
-                ErrorHandle(session);
+                ErrorHandle(session, "Thông tin đăng ký không có giá trị hoặc được sử dụng bởi người khác");
                 return;
             }
 
@@ -100,7 +154,7 @@ namespace Server.Source.Handler
                 return;
             }
 
-            ErrorHandle(session);
+            ErrorHandle(session, "Đăng ký không thành công");
 
         }
 
@@ -156,6 +210,20 @@ namespace Server.Source.Handler
 
             var newData = JsonHelper.AddPropertyAndDeserialize<T>(JsonHelper.Serialize(data), "UserId", userId);
             return newData;
+        }
+        protected override void PutHandle(HttpRequest request, HttpsSession session)
+        {
+            var data = PutBase<User>(request, session);
+            if (data == null)
+            {
+                return;
+            }
+            if (UserDatabase.Instance.SetUser(data) != 1)
+            {
+                ErrorHandle(session, "Cập nhật thông tin user không thành công");
+                return;
+            }
+            OkHandle(session, "Cập nhật thông tin user thành công");
         }
 
         /// <summary>Cập nhật email người dùng.</summary>

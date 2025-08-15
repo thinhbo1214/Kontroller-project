@@ -20,10 +20,10 @@ namespace Server.Source.Handler
 
         public APIGameHandler()
         {
-            GetRoutes[Type] = GetHandle;
             GetRoutes["/api/game/pagination"] = GetGamePaginateHandle;
             GetRoutes["/api/game/user"] = GetGameByUserHandle;
         }
+
         protected override void GetHandle(HttpRequest request, HttpsSession session)
         {
             var gameId = DecodeHelper.GetParamWithURL("gameId", request.Url);
@@ -44,8 +44,6 @@ namespace Server.Source.Handler
             var limit = DecodeHelper.GetParamWithURL("limit", request.Url);
 
             var pagination = new PaginateParams { Page = int.Parse(page), Limit = int.Parse(limit) };
-
-            ObjectHelper.LogObjectProperties(pagination);
 
             var games = GameDatabase.Instance.GetGamePagination(pagination);
 
