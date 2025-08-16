@@ -58,11 +58,15 @@
                 </div>
                 
                 <!-- Right side: Search and Friends button -->
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" id="searchInput" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64 transition-colors">
+                <!-- Parent có thể là flex row chứa cả phần trái (logo/links) -->
+                <div class="flex items-center space-x-4 w-full">
+                    <!-- other left-side items here -->
+
+                    <!-- Wrapper search: ml-auto sẽ đẩy nó sang phải khi còn khoảng trống -->
+                    <div class="relative ml-auto w-64 max-[520px]:w-full max-[520px]:max-w-[520px]">
+                        <input type="text" placeholder="Search for games"
+                            class="w-full bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" />
                         <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        <div id="searchResults" class="absolute top-full left-0 right-0 bg-gray-700 rounded-b-lg border border-gray-600 border-t-0 hidden max-h-60 overflow-y-auto z-10"></div>
                     </div>
                 </div>
             </div>

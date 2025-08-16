@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-height, initial-scale=1.0">
@@ -12,15 +13,19 @@
             height: 8px;
             border-radius: 4px;
         }
+
         .backdrop-overlay {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
         }
+
         .action-popup {
             display: none;
         }
+
         .action-popup.show {
             display: block;
         }
+
         .success-popup {
             display: none;
             position: fixed;
@@ -34,12 +39,14 @@
             z-index: 60;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .success-popup.show {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             animation: fadeIn 0.3s ease-in-out;
         }
+
         .list-popup {
             display: none;
             position: fixed;
@@ -57,29 +64,35 @@
             max-width: 800px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .list-popup.show {
             display: block;
         }
+
         .list-item {
             display: flex;
             align-items: flex-start;
             padding: 1rem;
             border-bottom: 1px solid #4b5563;
         }
+
         .list-item:last-child {
             border-bottom: none;
         }
+
         .list-posters {
             display: flex;
             gap: 0.25rem;
             margin-right: 1rem;
         }
+
         .list-posters img {
             width: 60px;
             height: 90px;
             object-fit: cover;
             border-radius: 4px;
         }
+
         .list-details {
             flex-grow: 1;
             display: flex;
@@ -87,113 +100,125 @@
             align-items: center;
             width: 100%;
         }
+
         .list-info {
             flex-grow: 1;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
 
 <!-- Write Review Modal -->
-<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden" style="align-items: center;">
-  <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6 mt-16">
-    
-    <!-- Top bar -->
-    <div class="flex justify-between text-blue-400 font-semibold text-lg">
-      <button onclick="closeReviewModal()">Cancel</button>
-      <button onclick="closeReviewModal()">Save</button>
-    </div>
+<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden"
+    style="align-items: center;">
+    <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6 mt-16">
 
-    <!-- Game Title, Poster, and Date -->
-    <div class="space-y-2">
-      <div class="flex items-center space-x-4">
-        <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
-        <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
-      </div>
-      <div class="flex justify-between items-center">
-        <span id="dateLabel" class="text-sm text-gray-400">Date</span>
-        <p class="text-sm text-gray-400" id="reviewDate"></p>
-      </div>
-    </div>
-
-    <!-- Rating and Like on the same line -->
-    <div class="flex justify-between items-center space-y-0">
-      <div class="text-center space-x-2">
-        <div id="rateLabel" class="text-sm text-gray-400 font-semibold">Rate</div>
-        <div class="flex justify-center gap-1">
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="0.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.0">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.5">&#9733;</span>
-          <span class="star text-2xl text-gray-500 cursor-pointer" data-value="5.0">&#9733;</span>
+        <!-- Top bar -->
+        <div class="flex justify-between text-blue-400 font-semibold text-lg">
+            <button onclick="closeReviewModal()">Cancel</button>
+            <button onclick="closeReviewModal()">Save</button>
         </div>
-      </div>
-      <div class="text-center">
-        <div id="likeLabel" class="text-sm text-gray-400 font-semibold">Like</div>
-        <span id="heartIcon" class="text-2xl text-green-500 cursor-pointer" style="font-family: 'Font Awesome 6 Free'; content: '\f004';">&#x2665;</span>
-      </div>
-    </div>
 
-    <!-- Textarea -->
-    <div>
-      <textarea rows="8" placeholder="Write your review..." class="w-full bg-gray-800 text-white p-4 rounded-lg focus:outline-none resize-none"></textarea>
+        <!-- Game Title, Poster, and Date -->
+        <div class="space-y-2">
+            <div class="flex items-center space-x-4">
+                <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
+                <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
+            </div>
+            <div class="flex justify-between items-center">
+                <span id="dateLabel" class="text-sm text-gray-400">Date</span>
+                <p class="text-sm text-gray-400" id="reviewDate"></p>
+            </div>
+        </div>
+
+        <!-- Rating and Like on the same line -->
+        <div class="flex justify-between items-center space-y-0">
+            <div class="text-center space-x-2">
+                <div id="rateLabel" class="text-sm text-gray-400 font-semibold">Rate</div>
+                <div class="flex justify-center gap-1">
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="0.5">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.0">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="1.5">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.0">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="2.5">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.0">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="3.5">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.0">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="4.5">&#9733;</span>
+                    <span class="star text-2xl text-gray-500 cursor-pointer" data-value="5.0">&#9733;</span>
+                </div>
+            </div>
+            <div class="text-center">
+                <div id="likeLabel" class="text-sm text-gray-400 font-semibold">Like</div>
+                <span id="heartIcon" class="text-2xl text-green-500 cursor-pointer"
+                    style="font-family: 'Font Awesome 6 Free'; content: '\f004';">&#x2665;</span>
+            </div>
+        </div>
+
+        <!-- Textarea -->
+        <div>
+            <textarea rows="8" placeholder="Write your review..."
+                class="w-full bg-gray-800 text-white p-4 rounded-lg focus:outline-none resize-none"></textarea>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Rate & Log Modal -->
-<div id="rateLogModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden" style="align-items: center;">
-  <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6 mt-16">
-    
-    <!-- Top bar -->
-    <div class="flex justify-between text-blue-400 font-semibold text-lg">
-      <button onclick="closeRateLogModal()">Cancel</button>
-      <button onclick="closeRateLogModal()">Save</button>
-    </div>
+<div id="rateLogModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden"
+    style="align-items: center;">
+    <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-xl p-6 relative space-y-6 mt-16">
 
-    <!-- Game Title, Poster, and Date -->
-    <div class="space-y-2">
-      <div class="flex items-center space-x-4">
-        <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
-        <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
-      </div>
-      <div class="flex justify-between items-center">
-        <span id="rateDateLabel" class="text-sm text-gray-400">Date</span>
-        <p class="text-sm text-gray-400" id="rateLogDate"></p>
-      </div>
-    </div>
-
-    <!-- Rating and Like on the same line -->
-    <div class="flex justify-between items-center space-y-0">
-      <div class="text-center space-x-2">
-        <div id="rateLogLabel" class="text-sm text-gray-400 font-semibold">Rate</div>
-        <div class="flex justify-center gap-1">
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="0.5">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="1.0">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="1.5">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="2.0">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="2.5">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="3.0">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="3.5">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="4.0">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="4.5">&#9733;</span>
-          <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="5.0">&#9733;</span>
+        <!-- Top bar -->
+        <div class="flex justify-between text-blue-400 font-semibold text-lg">
+            <button onclick="closeRateLogModal()">Cancel</button>
+            <button onclick="closeRateLogModal()">Save</button>
         </div>
-      </div>
-      <div class="text-center">
-        <div id="rateLikeLabel" class="text-sm text-gray-400 font-semibold">Like</div>
-        <span id="rateHeartIcon" class="text-2xl text-green-500 cursor-pointer" style="font-family: 'Font Awesome 6 Free'; content: '\f004';">&#x2665;</span>
-      </div>
+
+        <!-- Game Title, Poster, and Date -->
+        <div class="space-y-2">
+            <div class="flex items-center space-x-4">
+                <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
+                <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
+            </div>
+            <div class="flex justify-between items-center">
+                <span id="rateDateLabel" class="text-sm text-gray-400">Date</span>
+                <p class="text-sm text-gray-400" id="rateLogDate"></p>
+            </div>
+        </div>
+
+        <!-- Rating and Like on the same line -->
+        <div class="flex justify-between items-center space-y-0">
+            <div class="text-center space-x-2">
+                <div id="rateLogLabel" class="text-sm text-gray-400 font-semibold">Rate</div>
+                <div class="flex justify-center gap-1">
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="0.5">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="1.0">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="1.5">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="2.0">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="2.5">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="3.0">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="3.5">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="4.0">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="4.5">&#9733;</span>
+                    <span class="rate-star text-2xl text-gray-500 cursor-pointer" data-value="5.0">&#9733;</span>
+                </div>
+            </div>
+            <div class="text-center">
+                <div id="rateLikeLabel" class="text-sm text-gray-400 font-semibold">Like</div>
+                <span id="rateHeartIcon" class="text-2xl text-green-500 cursor-pointer"
+                    style="font-family: 'Font Awesome 6 Free'; content: '\f004';">&#x2665;</span>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Success Popup -->
@@ -269,7 +294,8 @@
             <div class="flex items-center justify-between mb-4">
                 <!-- Left side: Avatar and Username -->
                 <div class="flex items-center space-x-3">
-                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar"
+                        class="w-12 h-12 rounded-full border-2 border-blue-500">
                     <div>
                         <h2 class="text-lg font-bold text-white">Username</h2>
                         <div class="flex items-center space-x-2 text-sm text-gray-300">
@@ -278,43 +304,48 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Right side: Search and Friends button -->
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                <!-- Parent có thể là flex row chứa cả phần trái (logo/links) -->
+                <div class="flex items-center space-x-4 w-full">
+                    <!-- other left-side items here -->
+
+                    <!-- Wrapper search: ml-auto sẽ đẩy nó sang phải khi còn khoảng trống -->
+                    <div class="relative ml-auto w-64 max-[520px]:w-full max-[520px]:max-w-[520px]">
+                        <input type="text" placeholder="Search for games"
+                            class="w-full bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" />
                         <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
                 </div>
             </div>
-                
-                <!-- Main Navigation -->
-                <nav class="flex space-x-4 overflow-x-auto">
-                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Home</a>
-                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
-                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
-                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
-                    <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reaction</a>         
-                </nav>
-            </div>
+
+            <!-- Main Navigation -->
+            <nav class="flex space-x-4 overflow-x-auto">
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Home</a>
+                <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reaction</a>
+            </nav>
+        </div>
         </div>
     </header>
 
     <!-- Game Detail Content -->
     <main class="relative">
         <!-- Backdrop Image -->
-        <div class="relative h-96 bg-cover bg-center" 
-             style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=400&fit=crop')">
+        <div class="relative h-96 bg-cover bg-center"
+            style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=400&fit=crop')">
             <div class="backdrop-overlay absolute inset-0"></div>
-            
+
             <!-- Game Card -->
             <div class="absolute bottom-6 left-6 flex items-end space-x-6 z-10">
                 <!-- Poster -->
                 <div class="flex-shrink-0">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop" 
-                         alt="Elden Ring" class="w-48 h-72 rounded-lg shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop"
+                        alt="Elden Ring" class="w-48 h-72 rounded-lg shadow-2xl">
                 </div>
-                
+
                 <!-- Game Info -->
                 <div class="pb-4">
                     <h1 class="text-4xl font-bold mb-2">Elden Ring</h1>
@@ -327,29 +358,35 @@
                                 <span class="text-sm text-gray-300 mt-1">Based on 15,234 reviews</span>
                             </div>
                         </div>
-                        
+
                         <!-- Action Button -->
                         <div class="relative">
-                            <button id="actionBtn" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
+                            <button id="actionBtn"
+                                class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
                                 Action
                             </button>
-                            
+
                             <!-- Action Popup -->
-                            <div id="actionPopup" class="action-popup absolute top-full mt-2 left-0 bg-gray-800 rounded-lg shadow-xl border border-gray-700 min-w-48 z-20">
+                            <div id="actionPopup"
+                                class="action-popup absolute top-full mt-2 left-0 bg-gray-800 rounded-lg shadow-xl border border-gray-700 min-w-48 z-20">
                                 <div class="p-2">
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                    <button
+                                        class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
                                         <i class="fas fa-star text-yellow-400"></i>
                                         <span>Rate & Log</span>
                                     </button>
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                    <button
+                                        class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
                                         <i class="fas fa-edit text-blue-400"></i>
                                         <span>Write Review</span>
                                     </button>
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                    <button
+                                        class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
                                         <i class="fas fa-plus text-green-400"></i>
                                         <span>Add to Lists</span>
                                     </button>
-                                    <button class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
+                                    <button
+                                        class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
                                         <i class="fas fa-bookmark text-purple-400"></i>
                                         <span>Add to PlayLaterList</span>
                                     </button>
@@ -365,16 +402,23 @@
         <div class="bg-gray-800 border-b border-gray-700">
             <div class="max-w-7xl mx-auto px-6">
                 <nav class="flex space-x-8">
-                    <button class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium" data-tab="reviews">
+                    <button class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium"
+                        data-tab="reviews">
                         Reviews
                     </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="details">
+                    <button
+                        class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
+                        data-tab="details">
                         Details
                     </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="genres">
+                    <button
+                        class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
+                        data-tab="genres">
                         Genres
                     </button>
-                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium" data-tab="services">
+                    <button
+                        class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
+                        data-tab="services">
                         Services
                     </button>
                 </nav>
@@ -390,8 +434,8 @@
                     <!-- Review Item -->
                     <div class="bg-gray-800 rounded-lg p-6">
                         <div class="flex items-start space-x-4">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
-                                 alt="Reviewer" class="w-12 h-12 rounded-full">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+                                alt="Reviewer" class="w-12 h-12 rounded-full">
                             <div class="flex-1">
                                 <div class="flex items-center space-x-3 mb-2">
                                     <h3 class="font-semibold">John Doe</h3>
@@ -399,8 +443,10 @@
                                     <span class="text-sm text-gray-400">March 15, 2024</span>
                                 </div>
                                 <p class="text-gray-300 mb-3">
-                                    Elden Ring is a masterpiece that combines the best elements of Dark Souls with an expansive open world. 
-                                    The game's intricate world-building and challenging gameplay create an unforgettable experience.
+                                    Elden Ring is a masterpiece that combines the best elements of Dark Souls with an
+                                    expansive open world.
+                                    The game's intricate world-building and challenging gameplay create an unforgettable
+                                    experience.
                                 </p>
                                 <div class="flex items-center space-x-4">
                                     <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
@@ -417,8 +463,8 @@
                     <!-- More Review Items -->
                     <div class="bg-gray-800 rounded-lg p-6">
                         <div class="flex items-start space-x-4">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
-                                 alt="Reviewer" class="w-12 h-12 rounded-full">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                                alt="Reviewer" class="w-12 h-12 rounded-full">
                             <div class="flex-1">
                                 <div class="flex items-center space-x-3 mb-2">
                                     <h3 class="font-semibold">Sarah Wilson</h3>
@@ -426,7 +472,8 @@
                                     <span class="text-sm text-gray-400">March 10, 2024</span>
                                 </div>
                                 <p class="text-gray-300 mb-3">
-                                    Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming at times. 
+                                    Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming
+                                    at times.
                                     Still, it's a game that rewards patience and skill.
                                 </p>
                                 <div class="flex items-center space-x-4">
@@ -466,11 +513,15 @@
                         </div>
                         <div class="md:col-span-2">
                             <h3 class="font-semibold text-gray-400 mb-2">Languages</h3>
-                            <p class="text-white">English, Japanese, Korean, Chinese, French, Italian, German, Spanish, Portuguese, Russian</p>
+                            <p class="text-white">English, Japanese, Korean, Chinese, French, Italian, German, Spanish,
+                                Portuguese, Russian</p>
                         </div>
                         <div class="md:col-span-2">
                             <h3 class="font-semibold text-gray-400 mb-2">Description</h3>
-                            <p class="text-white">Elden Ring is an action RPG which takes place in the Lands Between, sometime after the Shattering of the titular Elden Ring. Players must explore and fight their way through the vast open-world to unite all the shards, restore the Elden Ring, and become the Elden Lord.</p>
+                            <p class="text-white">Elden Ring is an action RPG which takes place in the Lands Between,
+                                sometime after the Shattering of the titular Elden Ring. Players must explore and fight
+                                their way through the vast open-world to unite all the shards, restore the Elden Ring,
+                                and become the Elden Lord.</p>
                         </div>
                     </div>
                 </div>
@@ -481,12 +532,18 @@
                 <h2 class="text-2xl font-bold mb-6">Genres</h2>
                 <div class="bg-gray-800 rounded-lg p-6">
                     <div class="flex flex-wrap gap-3">
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Action RPG</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Open World</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Dark Fantasy</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Souls-like</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Third-Person</span>
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Challenging</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Action
+                            RPG</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Open
+                            World</span>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Dark
+                            Fantasy</span>
+                        <span
+                            class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Souls-like</span>
+                        <span
+                            class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Third-Person</span>
+                        <span
+                            class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">Challenging</span>
                     </div>
                 </div>
             </div>
@@ -546,22 +603,22 @@
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetTab = btn.getAttribute('data-tab');
-                
+
                 // Remove active class from all buttons
                 tabBtns.forEach(b => {
                     b.classList.remove('active', 'border-blue-500', 'text-blue-400');
                     b.classList.add('border-transparent', 'text-gray-300');
                 });
-                
+
                 // Add active class to clicked button
                 btn.classList.add('active', 'border-blue-500', 'text-blue-400');
                 btn.classList.remove('border-transparent', 'text-gray-300');
-                
+
                 // Hide all tab contents
                 tabContents.forEach(content => {
                     content.classList.add('hidden');
                 });
-                
+
                 // Show target tab content
                 document.getElementById(targetTab).classList.remove('hidden');
             });
@@ -717,4 +774,5 @@
 
     <script type="module" src="./js/event.js"></script>
 </body>
+
 </html>

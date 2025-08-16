@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,19 +13,23 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
+
         .scroll-container::-webkit-scrollbar {
             display: none;
         }
+
         .game-grid {
             display: flex;
             gap: 1rem;
             padding: 0 1rem;
             min-width: fit-content;
         }
+
         .game-item {
             flex-shrink: 0;
             width: 150px;
         }
+
         .game-poster {
             width: 150px;
             height: 200px;
@@ -32,11 +37,13 @@
             border-radius: 8px;
             transition: transform 0.2s ease;
         }
+
         .game-poster:hover {
             transform: scale(1.05);
         }
     </style>
 </head>
+
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Header with Avatar, Username and Main Toolbar -->
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
@@ -45,7 +52,8 @@
             <div class="flex items-center justify-between mb-4">
                 <!-- Left side: Avatar and Username -->
                 <div class="flex items-center space-x-3">
-                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar"
+                        class="w-12 h-12 rounded-full border-2 border-blue-500">
                     <div>
                         <h2 class="text-lg font-bold text-white">Username</h2>
                         <div class="flex items-center space-x-2 text-sm text-gray-300">
@@ -54,25 +62,30 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Right side: Search and Friends button -->
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-64">
+                <!-- Parent có thể là flex row chứa cả phần trái (logo/links) -->
+                <div class="flex items-center space-x-4 w-full">
+                    <!-- other left-side items here -->
+
+                    <!-- Wrapper search: ml-auto sẽ đẩy nó sang phải khi còn khoảng trống -->
+                    <div class="relative ml-auto w-64 max-[520px]:w-full max-[520px]:max-w-[520px]">
+                        <input type="text" placeholder="Search for games"
+                            class="w-full bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" />
                         <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
                 </div>
             </div>
-                
-                <!-- Main Navigation -->
-                <nav class="flex space-x-4 overflow-x-auto">
-                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Home</a>
-                    <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
-                    <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
-                    <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
-                    <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reaction</a>
-                </nav>
-            </div>
+
+            <!-- Main Navigation -->
+            <nav class="flex space-x-4 overflow-x-auto">
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Home</a>
+                <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
+                <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
+                <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
+                <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reaction</a>
+            </nav>
+        </div>
         </div>
     </header>
 
@@ -95,8 +108,8 @@
                         <!-- Game Item 1 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop" 
-                                     alt="Elden Ring" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop"
+                                    alt="Elden Ring" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Elden Ring</h3>
                             </a>
                         </div>
@@ -104,8 +117,8 @@
                         <!-- Game Item 2 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop" 
-                                     alt="The Witcher 3" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop"
+                                    alt="The Witcher 3" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">The Witcher 3</h3>
                             </a>
                         </div>
@@ -113,8 +126,8 @@
                         <!-- Game Item 3 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop" 
-                                     alt="Cyberpunk 2077" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop"
+                                    alt="Cyberpunk 2077" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Cyberpunk 2077</h3>
                             </a>
                         </div>
@@ -122,8 +135,8 @@
                         <!-- Game Item 4 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop" 
-                                     alt="Baldur's Gate 3" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop"
+                                    alt="Baldur's Gate 3" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Baldur's Gate 3</h3>
                             </a>
                         </div>
@@ -131,8 +144,8 @@
                         <!-- Game Item 5 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop" 
-                                     alt="God of War" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop"
+                                    alt="God of War" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">God of War</h3>
                             </a>
                         </div>
@@ -140,8 +153,8 @@
                         <!-- Game Item 6 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop" 
-                                     alt="Horizon Zero Dawn" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop"
+                                    alt="Horizon Zero Dawn" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Horizon Zero Dawn</h3>
                             </a>
                         </div>
@@ -149,8 +162,8 @@
                         <!-- Game Item 7 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop" 
-                                     alt="Spider-Man" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop"
+                                    alt="Spider-Man" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Spider-Man</h3>
                             </a>
                         </div>
@@ -158,8 +171,8 @@
                         <!-- Game Item 8 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop" 
-                                     alt="Red Dead Redemption 2" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop"
+                                    alt="Red Dead Redemption 2" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Red Dead Redemption 2</h3>
                             </a>
                         </div>
@@ -179,8 +192,8 @@
                         <!-- Game Item 1 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop" 
-                                     alt="Elden Ring" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop"
+                                    alt="Elden Ring" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Elden Ring</h3>
                                 <div class="text-center mt-1">
                                     <span class="text-green-400">★★★★★</span>
@@ -193,8 +206,8 @@
                         <!-- Game Item 2 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop" 
-                                     alt="Baldur's Gate 3" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop"
+                                    alt="Baldur's Gate 3" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Baldur's Gate 3</h3>
                                 <div class="text-center mt-1">
                                     <span class="text-green-400">★★★★★</span>
@@ -206,8 +219,8 @@
                         <!-- Game Item 3 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop" 
-                                     alt="God of War" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop"
+                                    alt="God of War" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">God of War</h3>
                             </a>
                         </div>
@@ -215,8 +228,8 @@
                         <!-- Game Item 4 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop" 
-                                     alt="Horizon Zero Dawn" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop"
+                                    alt="Horizon Zero Dawn" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Horizon Zero Dawn</h3>
                                 <div class="text-center mt-1">
                                     <span class="text-green-400">★★★★</span>
@@ -227,8 +240,8 @@
                         <!-- Game Item 5 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop" 
-                                     alt="Cyberpunk 2077" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop"
+                                    alt="Cyberpunk 2077" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Cyberpunk 2077</h3>
                                 <div class="text-center mt-1">
                                     <span class="text-green-400">★★★½</span>
@@ -240,8 +253,8 @@
                         <!-- Game Item 6 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop" 
-                                     alt="Spider-Man" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop"
+                                    alt="Spider-Man" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Spider-Man</h3>
                                 <div class="text-center mt-1">
                                     <span class="text-green-400">★★★★</span>
@@ -253,8 +266,8 @@
                         <!-- Game Item 7 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop" 
-                                     alt="The Witcher 3" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop"
+                                    alt="The Witcher 3" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">The Witcher 3</h3>
                             </a>
                         </div>
@@ -262,8 +275,8 @@
                         <!-- Game Item 8 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop" 
-                                     alt="Red Dead Redemption 2" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop"
+                                    alt="Red Dead Redemption 2" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Red Dead Redemption 2</h3>
                                 <div class="text-center mt-1">
                                     <span class="text-green-400">★★★★½</span>
@@ -288,8 +301,8 @@
                         <!-- Game Item 1 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop" 
-                                     alt="God of War" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=200&fit=crop"
+                                    alt="God of War" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">God of War</h3>
                             </a>
                         </div>
@@ -297,8 +310,8 @@
                         <!-- Game Item 2 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop" 
-                                     alt="Elden Ring" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=150&h=200&fit=crop"
+                                    alt="Elden Ring" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Elden Ring</h3>
                             </a>
                         </div>
@@ -306,8 +319,8 @@
                         <!-- Game Item 3 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop" 
-                                     alt="The Witcher 3" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=150&h=200&fit=crop"
+                                    alt="The Witcher 3" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">The Witcher 3</h3>
                             </a>
                         </div>
@@ -315,8 +328,8 @@
                         <!-- Game Item 4 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop" 
-                                     alt="Baldur's Gate 3" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=150&h=200&fit=crop"
+                                    alt="Baldur's Gate 3" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Baldur's Gate 3</h3>
                             </a>
                         </div>
@@ -324,8 +337,8 @@
                         <!-- Game Item 5 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop" 
-                                     alt="Horizon Zero Dawn" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=200&fit=crop"
+                                    alt="Horizon Zero Dawn" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Horizon Zero Dawn</h3>
                             </a>
                         </div>
@@ -333,8 +346,8 @@
                         <!-- Game Item 6 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop" 
-                                     alt="Red Dead Redemption 2" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=200&fit=crop"
+                                    alt="Red Dead Redemption 2" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Red Dead Redemption 2</h3>
                             </a>
                         </div>
@@ -342,8 +355,8 @@
                         <!-- Game Item 7 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop" 
-                                     alt="Spider-Man" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150&h=200&fit=crop"
+                                    alt="Spider-Man" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Spider-Man</h3>
                             </a>
                         </div>
@@ -351,8 +364,8 @@
                         <!-- Game Item 8 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
-                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop" 
-                                     alt="Cyberpunk 2077" class="game-poster">
+                                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150&h=200&fit=crop"
+                                    alt="Cyberpunk 2077" class="game-poster">
                                 <h3 class="text-sm font-medium mt-2 text-center">Cyberpunk 2077</h3>
                             </a>
                         </div>
@@ -361,16 +374,16 @@
             </div>
         </section>
 
-                <!-- Friends List Section -->
+        <!-- Friends List Section -->
         <section class="mb-12">
             <div class="bg-gray-800 rounded-lg p-6">
                 <h2 class="text-xl font-bold mb-6">Your Friends</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Friend Card 1 -->
-                    <button 
-                    id="BioShow"
-                    class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
-                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                    <button id="BioShow"
+                        class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
+                        <div
+                            class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                             SW
                         </div>
                         <div class="flex-1">
@@ -383,10 +396,10 @@
                     </button>
 
                     <!-- Friend Card 2 -->
-                    <button 
-                    id="BioShow"
-                    class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
-                        <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                    <button id="BioShow"
+                        class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
+                        <div
+                            class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
                             MC
                         </div>
                         <div class="flex-1">
@@ -399,10 +412,10 @@
                     </button>
 
                     <!-- Friend Card 3 -->
-                    <button 
-                    id="BioShow"
-                    class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
-                        <div class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
+                    <button id="BioShow"
+                        class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
+                        <div
+                            class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
                             ED
                         </div>
                         <div class="flex-1">
@@ -415,10 +428,10 @@
                     </button>
 
                     <!-- Friend Card 4 -->
-                    <button 
-                    id="BioShow"
-                    class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
-                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
+                    <button id="BioShow"
+                        class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-600 transition-colors duration-200 w-full text-left">
+                        <div
+                            class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
                             JD
                         </div>
                         <div class="flex-1">
@@ -434,4 +447,5 @@
         </section>
     </main>
 </body>
+
 </html>
