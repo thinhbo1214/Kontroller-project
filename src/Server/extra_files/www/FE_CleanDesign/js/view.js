@@ -521,15 +521,12 @@ export class View {
 export const Pages = {
     AUTH: 'auth.html',
     PROFILE: 'profile.html',
-    ACTIVITY: 'activity.html',
-    DIARY: 'diary.html',
-    FRIENDS: 'friends.html',
+    HOME: 'home.html',
     GAME_DETAIL: 'game-detail.html',
     GAME_REVIEW: 'game-review.html',
     GAMES: 'games.html',
     INDEX: 'index.html',
-    LIKES: 'likes.html',
-    LISTS: 'lists.html',
+    REACTION: 'reaction.html',
     REGISTER: 'register.html',
     REVIEW: 'review.html',
     FOLLOWERS: 'followers.html'

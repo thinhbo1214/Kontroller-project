@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (token != null) {
             if (Model.isAuthTokenValid(token)) {
                 if (page == Pages.INDEX || page == Pages.AUTH || page == Pages.REGISTER)
-                    View.goTo(Pages.PROFILE);
+                    View.goTo(Pages.HOME);
             } else {
                 Model.deleteAuthToken();
                 if (page != Pages.INDEX && page != Pages.AUTH && page != Pages.REGISTER)
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         View.showLoading();
-        setTimeout(() => View.hideLoading(), 500);
+        setTimeout(() => View.hideLoading(), 250);
     })
 
     listenWindow('offline', () => {

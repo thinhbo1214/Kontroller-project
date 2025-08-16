@@ -250,3 +250,184 @@
 #deletePassword::placeholder {
     color: #9ca3af;
 }
+
+
+
+
+
+
+// Game
+.backdrop-overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.action-popup {
+    display: none;
+}
+
+.action-popup.show {
+    display: block;
+}
+
+.success-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #10b981;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    z-index: 60;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.success-popup.show {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.list-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1f2937;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    z-index: 60;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.list-popup.show {
+    display: block;
+}
+
+.list-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    border-bottom: 1px solid #4b5563;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-posters {
+    display: flex;
+    gap: 0.25rem;
+    margin-right: 1rem;
+}
+
+.list-posters img {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.list-details {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.list-info {
+    flex-grow: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments for Game Card */
+@media (max-width: 640px) {
+    .game-card-container {
+        display: flex;
+        flex-direction: row;
+        /* Giữ bố cục ngang cho poster và thông tin */
+        align-items: flex-start;
+        gap: 1rem;
+        left: 1rem;
+        bottom: 1rem;
+    }
+
+    .game-card-container .flex-shrink-0 img {
+        width: 100%;
+        max-width: 120px;
+        /* Thu nhỏ poster trên mobile */
+        height: auto;
+        border-radius: 0.5rem;
+    }
+
+    .game-card-container .game-info {
+        display: flex;
+        flex-direction: column;
+        /* Xếp dọc các thành phần bên phải */
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .game-card-container h1 {
+        font-size: 1.5rem;
+        /* Thu nhỏ tiêu đề Elden Ring */
+    }
+
+    .game-card-container .rating-container {
+        display: flex;
+        flex-direction: column;
+        /* Xếp dọc điểm số, thanh rating, số đánh giá */
+        gap: 0.5rem;
+    }
+
+    .game-card-container .rating-curve {
+        width: 100%;
+        max-width: 100px;
+        /* Thu nhỏ thanh rating */
+    }
+
+    .game-card-container .text-3xl {
+        font-size: 1.25rem;
+        /* Thu nhỏ điểm số 4.7 */
+    }
+
+    .game-card-container .text-sm.mt-1 {
+        font-size: 0.75rem;
+        /* Thu nhỏ số lượng đánh giá */
+    }
+
+    .game-card-container .action-container {
+        width: 100%;
+    }
+
+    .game-card-container button#actionBtn {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 1rem; /* Giảm padding để nút nhỏ hơn */
+        font-size: 0.875rem; /* Giảm kích thước chữ (text-sm) */
+    }
+
+    .game-card-container #actionPopup {
+        width: 100%;
+        left: 0;
+        min-width: unset;
+    }
+}

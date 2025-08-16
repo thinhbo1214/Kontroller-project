@@ -25,7 +25,7 @@ export class Controller {
         }
 
         View.showSuccess("Đăng nhập thành công!");
-        View.goTo(Pages.AUTH);
+        View.goTo(Pages.HOME);
         return true;
     }
     static async Register(username, password, email) {

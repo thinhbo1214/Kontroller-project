@@ -3,116 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-height, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elden Ring - Kontroller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/custom.css">
     <style>
         .rating-curve {
             background: linear-gradient(90deg, #10b981 80%, #fbbf24 15%, #ef4444 5%);
             height: 8px;
             border-radius: 4px;
-        }
-
-        .backdrop-overlay {
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
-        }
-
-        .action-popup {
-            display: none;
-        }
-
-        .action-popup.show {
-            display: block;
-        }
-
-        .success-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #10b981;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            z-index: 60;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .success-popup.show {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .list-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1f2937;
-            color: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            z-index: 60;
-            max-height: 80vh;
-            overflow-y: auto;
-            width: 90%;
-            max-width: 800px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .list-popup.show {
-            display: block;
-        }
-
-        .list-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 1rem;
-            border-bottom: 1px solid #4b5563;
-        }
-
-        .list-item:last-child {
-            border-bottom: none;
-        }
-
-        .list-posters {
-            display: flex;
-            gap: 0.25rem;
-            margin-right: 1rem;
-        }
-
-        .list-posters img {
-            width: 60px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
-        .list-details {
-            flex-grow: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .list-info {
-            flex-grow: 1;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
         }
     </style>
 </head>
@@ -339,7 +239,7 @@
             <div class="backdrop-overlay absolute inset-0"></div>
 
             <!-- Game Card -->
-            <div class="absolute bottom-6 left-6 flex items-end space-x-6 z-10">
+            <div class="absolute bottom-6 left-6 flex items-end space-x-6 z-10 game-card-container">
                 <!-- Poster -->
                 <div class="flex-shrink-0">
                     <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&h=300&fit=crop"
@@ -347,9 +247,9 @@
                 </div>
 
                 <!-- Game Info -->
-                <div class="pb-4">
+                <div class="pb-4 game-info">
                     <h1 class="text-4xl font-bold mb-2">Elden Ring</h1>
-                    <div class="flex items-center space-x-6 mb-4">
+                    <div class="flex items-center space-x-6 mb-4 rating-container">
                         <!-- Rating -->
                         <div class="flex items-center space-x-3">
                             <span class="text-3xl font-bold text-green-400">4.7</span>
@@ -360,7 +260,7 @@
                         </div>
 
                         <!-- Action Button -->
-                        <div class="relative">
+                        <div class="relative action-container">
                             <button id="actionBtn"
                                 class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
                                 Action
@@ -401,7 +301,7 @@
         <!-- Tabs Section -->
         <div class="bg-gray-800 border-b border-gray-700">
             <div class="max-w-7xl mx-auto px-6">
-                <nav class="flex space-x-8">
+                <nav class="flex space-x-8 overflow-x-auto">
                     <button class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium"
                         data-tab="reviews">
                         Reviews
