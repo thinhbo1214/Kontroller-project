@@ -69,39 +69,6 @@
                                 </div>
 
 
-
-                                <!-- Edit Favorite Games -->
-                                <div>
-                                    <label class="block text-sm text-gray-400">Favorite Games</label>
-                                    <div id="favoriteGamesEdit" class="flex space-x-2 overflow-x-auto pb-2">
-                                        <div class="editable-poster" data-index="0">
-                                            <img src="https://via.placeholder.com/150x200" alt="Game 1"
-                                                class="w-24 h-32 rounded-lg shadow-lg">
-                                        </div>
-                                        <div class="editable-poster" data-index="1">
-                                            <img src="https://via.placeholder.com/150x200" alt="Game 2"
-                                                class="w-24 h-32 rounded-lg shadow-lg">
-                                        </div>
-                                        <div class="editable-poster" data-index="2">
-                                            <img src="https://via.placeholder.com/150x200" alt="Game 3"
-                                                class="w-24 h-32 rounded-lg shadow-lg">
-                                        </div>
-                                        <div class="editable-poster" data-index="3">
-                                            <img src="" alt="Game 4" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
-                                        </div>
-                                        <div class="editable-poster" data-index="4">
-                                            <img src="" alt="Game 5" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Edit Bio -->
-                                <div>
-                                    <label class="block text-sm text-gray-400">Bio</label>
-                                    <textarea id="editBio"
-                                        class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                        rows="4">Passionate gamer who loves exploring new worlds and experiencing epic stories. RPGs and action-adventure games are my favorite genres. Always looking for the next great gaming experience!</textarea>
-                                </div>
-
                                 <!-- Delete Account Section -->
                                 <div class="pt-4 border-t border-gray-600">
                                     <h3 class="text-sm font-semibold text-red-400 mb-2">Danger Zone</h3>
@@ -380,7 +347,6 @@
         const externalLinks = document.getElementById('externalLinks');
         const favoriteGamesEdit = document.getElementById('favoriteGamesEdit');
         const bioDisplay = document.getElementById('bioDisplay');
-        const editBio = document.getElementById('editBio');
         const favoriteGamesDisplay = document.getElementById('favoriteGamesDisplay');
         const searchPopup = document.getElementById('searchPopup');
         const searchInput = document.getElementById('searchInput');
@@ -394,7 +360,6 @@
         editButton.addEventListener('click', () => {
             editMode.classList.remove('hidden');
             editName.value = usernameDisplay.textContent;
-            editBio.value = bioDisplay.textContent;
             avatarPreview.src = document.querySelector('header img').src; // Sync with header avatar
             const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
             const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
@@ -404,11 +369,11 @@
             });
         });
 
-        cancelEdit.addEventListener('click', () => {
-            editMode.classList.add('hidden');
-            searchPopup.classList.remove('active');
-            activePosterIndex = null;
-        });
+        // cancelEdit.addEventListener('click', () => {
+        //     editMode.classList.add('hidden');
+        //     searchPopup.classList.remove('active');
+        //     activePosterIndex = null;
+        // });
 
         saveEdit.addEventListener('click', () => {
             usernameDisplay.textContent = editName.value;
@@ -420,7 +385,6 @@
                 link.innerHTML = '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"/></svg>';
                 externalLinks.appendChild(link);
             }
-            bioDisplay.textContent = editBio.value;
             const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
             const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
             editPosters.forEach((ep, i) => {

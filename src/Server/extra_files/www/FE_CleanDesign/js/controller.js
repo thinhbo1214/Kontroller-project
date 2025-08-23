@@ -109,21 +109,8 @@ export class Controller {
         View.goTo(Pages.Page.AUTH);
         return true;
     }
-    static async ShowEdit(userId) {
-
-
-        const api = new APIUser();
-        View.showLoading();
-
-        const res = await api.GetUser(userId);
-        View.hideLoading();
-        if (!res.ok) {
-            View.showWarning("Lỗi xảy ra")
-            return false;
-        }
-
-        View.showSuccess("Mở bio thành công")
-        return true;
+    static async ShowEdit() {
+        
     }
 
     static async DeleteAcc(password) {

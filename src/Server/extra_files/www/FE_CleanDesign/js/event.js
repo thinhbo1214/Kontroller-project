@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========== Element event ===========
 
+
+    // ========== Auth ===========
     // Đăng nhập
     listenIfExists('#button-auth', 'click', () => {
         const username = document.getElementById('loginUsername')?.value || '';
@@ -31,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         Controller.Login(username, password);
     });
 
+
+
+
+
+    // ========== Register ===========
     // Đăng ký
     listenIfExists('#signupBtn', 'click', () => {
         const username = document.getElementById('signupUsername')?.value || '';
@@ -38,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('signupEmail')?.value || '';
         Controller.Register(username, password, email);
     });
-    // Quen mat khua 
+
+    // Quên mật khẩu
     listenIfExists('#forgotBtn', 'click', () => {
         const email = prompt('Please enter your email address:');
         if (email) {
@@ -47,7 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
-    // 1. Lắng nghe sự kiện "change" để xem trước ảnh
+
+    // ========= Profile ===========
+    // Lắng nghe sự kiện "change" để xem trước ảnh
     listenIfExists('#editAvatar', 'change', (e) => {
         const file = e.target.files[0];
         const preview = document.getElementById('avatarPreview');
@@ -69,26 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    listenIfExists('#saveEdit', 'click', () => {
-        const avatar = document.getElementById('avatar');
-
-        // Kiểm tra xem có file nào đã được chọn không
-        if (Model.selectedFile) {
-            // Gọi hàm xử lý chính với file đã được lưu
-            Controller.ChangeAvatar(Model.selectedFile, avatar);
-        }
-    });
-
-    // temp
-    listenIfExists('#usernameDisplay', 'click', () => {
-        const avatar = document.getElementById('usernameDisplay');
-    });
-
-    // hienej thi thong tin 
-    listenIfExists('#ProBtn', 'click', () => {
-        const userID = document.getElementById('')
-        Controller.ShowUser(userID)
-    });
     // xóa tài khoản 
     listenIfExists('#deleteAccount', 'click', () => {
         const passwordInput = document.getElementById('deletePassword'); // 
@@ -102,12 +92,101 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm("Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.")) {
             Controller.DeleteAcc(password);
         }
-    })
+    });
 
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Controller.Logout();
     });
+
+    // EDIT PAGE
+    listenIfExists('#editButton', 'click', () => {
+        const editMode = document.getElementById('editMode');
+        const editName = document.getElementById('editName');
+    });
+
+    listenIfExists('#editPassword', 'click', () => {
+
+    });
+
+    listenIfExists('#editEmail', 'click', () => {
+
+    });
+
+    listenIfExists('#editName', 'click', () => {
+
+    });
+
+    listenIfExists('#cancelEdit', 'click', () => {
+        const editMode = document.getElementById('editMode');
+        editMode.classList.add('hidden');
+    });
+
+    // Lưu lại chỉnh sửa
+    listenIfExists('#saveEdit', 'click', () => {
+        const avatar = document.getElementById('avatar');
+
+        // Kiểm tra xem có file nào đã được chọn không
+        if (Model.selectedFile) {
+            // Gọi hàm xử lý chính với file đã được lưu
+            Controller.ChangeAvatar(Model.selectedFile, avatar);
+        }
+    });
+
+    listenIfExists('#closeSearchPopup', 'click', () => {
+
+    });
+
+
+
+
+    // ========= Review =============
+    listenIfExists('#clearFilters', 'click', () => {
+
+    });
+    listenIfExists('#loadMoreBtn', 'click', () => {
+
+    });
+    listenIfExists('#addReviewBtn', 'click', () => {
+
+    });
+    listenIfExists('#closeModal', 'click', () => {
+
+    });
+    listenIfExists('#cancelReview', 'click', () => {
+
+    });
+    listenIfExists('#addReviewModal', 'click', () => {
+
+    });
+
+    // ======== Commment =============
+
+
+
+    // ======== Reaction =============
+
+
+
+    // ======== Follower ============
+
+
+    // ======== Following ===========
+
+
+    // ======== Home ===========
+
+
+
+    // ========  Game-Detail ==========
+
+
+    // ======== Game-Review =========
+
+
+
+    // ======== 
+
 
     // ========= Window event =========
     listenWindow('load', () => {
