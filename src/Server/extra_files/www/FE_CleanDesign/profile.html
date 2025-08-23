@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews - Kontroller</title>
+    <title>Profile - Kontroller</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/custom.css">
@@ -61,14 +61,6 @@
                                     <input id="editName" type="text" value="Username"
                                         class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
                                 </div>
-                                <!-- Edit Website Links -->
-                                <div>
-                                    <label class="block text-sm text-gray-400">Website Links</label>
-                                    <input id="editLinks" type="text" placeholder="Add website URL"
-                                        class="w-full bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
-                                </div>
-
-
                                 <!-- Delete Account Section -->
                                 <div class="pt-4 border-t border-gray-600">
                                     <h3 class="text-sm font-semibold text-red-400 mb-2">Danger Zone</h3>
@@ -77,20 +69,15 @@
                                         class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium">
                                         Delete Account
                                     </button>
-                                    <p class="text-xs text-gray-500 mt-2">This action cannot be undone. All your data
+                                    <p class="text-xs text-gray-400 mt-2">This action cannot be undone. All your data
                                         will be permanently deleted.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Right side: Search and Friends button -->
-                <!-- Parent có thể là flex row chứa cả phần trái (logo/links) -->
                 <div class="flex items-center space-x-4 w-full">
-                    <!-- other left-side items here -->
-
-                    <!-- Wrapper search: ml-auto sẽ đẩy nó sang phải khi còn khoảng trống -->
                     <div class="relative ml-auto w-64 max-[520px]:w-full max-[520px]:max-w-[520px]">
                         <input type="text" placeholder="Search for games"
                             class="w-full bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" />
@@ -98,7 +85,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Main Navigation -->
             <nav class="flex space-x-4 overflow-x-auto">
                 <a href="home.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Home</a>
@@ -110,217 +96,188 @@
         </div>
     </header>
 
-    <!-- Profile Stats Section -->
-    <section class="bg-slate-900 border-b border-slate-700">
-        <div class="container mx-auto px-6 py-6">
-            <div class="flex items-center justify-between">
-                <!-- External Links -->
-                <div id="externalLinks" class="flex space-x-4">
-                    <!-- Links will be populated here -->
-                </div>
-
-                <!-- Stats Buttons -->
-                <div class="flex space-x-8 text-center">
-                    <a id="StatBtn" href="followers.html"
-                        class="group hover:bg-blue-600/20 rounded-lg p-4 transition-all duration-200 hover:scale-105">
-                        <div class="text-xl font-bold text-blue-400 group-hover:text-blue-300">245</div>
-                        <div class="text-sm text-gray-400 group-hover:text-gray-300">Followers</div>
-                    </a>
-
-                    <a id="StatBtn" href="following.html"
-                        class="group hover:bg-blue-600/20 rounded-lg p-4 transition-all duration-200 hover:scale-105">
-                        <div class="text-xl font-bold text-blue-400 group-hover:text-blue-300">180</div>
-                        <div class="text-sm text-gray-400 group-hover:text-gray-300">Following</div>
-                    </a>
-
-                    <a id="StatBtn" href="games.html"
-                        class="group hover:bg-blue-600/20 rounded-lg p-4 transition-all duration-200 hover:scale-105">
-                        <div class="text-xl font-bold text-blue-400 group-hover:text-blue-300">89</div>
-                        <div class="text-sm text-gray-400 group-hover:text-gray-300">Games Logged</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column -->
-            <div class="lg:col-span-2 space-y-8">
-                <!-- 5 Favorite Games -->
-                <section>
-                    <h2 class="text-xl font-bold mb-4">Favorite Games</h2>
-                    <div id="favoriteGamesDisplay" class="flex space-x-4 overflow-x-auto pb-2">
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Game 1"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Game 2"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Game 3"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="" alt="Game 4" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="" alt="Game 5" class="w-24 h-32 rounded-lg shadow-lg gray-poster">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 5 Most Recently Logged Games -->
-                <section>
-                    <h2 class="text-xl font-bold mb-4">Recently Logged</h2>
-                    <div class="flex space-x-4 overflow-x-auto pb-2">
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Recent 1"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Recent 2"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Recent 3"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Recent 4"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img src="https://via.placeholder.com/150x200" alt="Recent 5"
-                                class="w-24 h-32 rounded-lg shadow-lg">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Reviews Section -->
-                <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Most Liked Reviews -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold mb-4 text-kontroller-blue">Most Liked Reviews</h3>
-                        <div class="space-y-3">
-                            <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://via.placeholder.com/40x60" alt="Game" class="w-8 h-12 rounded">
-                                    <div>
-                                        <p class="font-medium">Elden Ring</p>
-                                        <p class="text-sm text-gray-400">❤️ 24 likes</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://via.placeholder.com/40x60" alt="Game" class="w-8 h-12 rounded">
-                                    <div>
-                                        <p class="font-medium">God of War</p>
-                                        <p class="text-sm text-gray-400">❤️ 18 likes</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://via.placeholder.com/40x60" alt="Game" class="w-8 h-12 rounded">
-                                    <div>
-                                        <p class="font-medium">Cyberpunk 2077</p>
-                                        <p class="text-sm text-gray-400">❤️ 15 likes</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Most Recent Reviews -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold mb-4 text-kontroller-blue">Recent Reviews</h3>
-                        <div class="space-y-3">
-                            <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://via.placeholder.com/40x60" alt="Game" class="w-8 h-12 rounded">
-                                    <div>
-                                        <p class="font-medium">Spider-Man 2</p>
-                                        <p class="text-sm text-gray-400">2 days ago</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://via.placeholder.com/40x60" alt="Game" class="w-8 h-12 rounded">
-                                    <div>
-                                        <p class="font-medium">Baldur's Gate 3</p>
-                                        <p class="text-sm text-gray-400">5 days ago</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://via.placeholder.com/40x60" alt="Game" class="w-8 h-12 rounded">
-                                    <div>
-                                        <p class="font-medium">Alan Wake 2</p>
-                                        <p class="text-sm text-gray-400">1 week ago</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Right Column -->
+        <div class="grid grid-cols-1 lg:grid-cols-[1.5fr,3fr,1.5fr] gap-8">
+            <!-- Left Column: Stats and Followers/Following -->
             <div class="space-y-8">
-                <!-- Bio -->
-                <section class="bg-gray-800 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">Bio</h3>
-                    <p id="bioDisplay" class="text-gray-300 leading-relaxed">
-                        Passionate gamer who loves exploring new worlds and experiencing epic stories. RPGs and
-                        action-adventure games are my favorite genres. Always looking for the next great gaming
-                        experience!
-                    </p>
-                </section>
-
-                <!-- Currently Playing -->
-                <section class="bg-gray-800 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">Currently Playing</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span>The Legend of Zelda: Tears of the Kingdom</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span>Hogwarts Legacy</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span>Street Fighter 6</span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Most Popular Lists -->
-                <section class="bg-gray-800 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4 text-kontroller-blue">Popular Lists</h3>
-                    <div class="space-y-3">
-                        <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                            <p class="font-medium">Top 10 RPGs of All Time</p>
-                            <p class="text-sm text-gray-400">👍 45 likes • 3 months ago</p>
+                <!-- Stats Bar -->
+                <section class="bg-gray-800 p-4 rounded-lg">
+                    <div class="flex justify-around items-center">
+                        <a href="followers.html"
+                            class="group text-center hover:bg-gray-700 p-2 rounded transition-colors">
+                            <div class="text-xl font-bold text-blue-400 group-hover:text-blue-300">245</div>
+                            <div class="text-sm text-gray-400 group-hover:text-gray-300">Followers</div>
                         </a>
-                        <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                            <p class="font-medium">Best Indie Games 2024</p>
-                            <p class="text-sm text-gray-400">👍 32 likes • 1 month ago</p>
+                        <a href="following.html"
+                            class="group text-center hover:bg-gray-700 p-2 rounded transition-colors">
+                            <div class="text-xl font-bold text-blue-400 group-hover:text-blue-300">180</div>
+                            <div class="text-sm text-gray-400 group-hover:text-gray-300">Following</div>
                         </a>
-                        <a href="#" class="block hover:bg-gray-700 p-3 rounded transition-colors">
-                            <p class="font-medium">Must-Play Horror Games</p>
-                            <p class="text-sm text-gray-400">👍 28 likes • 2 months ago</p>
+                        <a href="games.html"
+                            class="group text-center hover:bg-gray-700 p-2 rounded transition-colors">
+                            <div class="text-xl font-bold text-blue-400 group-hover:text-blue-300">89</div>
+                            <div class="text-sm text-gray-400 group-hover:text-gray-300">Games Logged</div>
                         </a>
                     </div>
                 </section>
+                <!-- Followers and Following -->
+                <div class="bg-gray-800 p-4 rounded-lg min-h-fit">
+                    <h2 class="text-xl font-bold mb-4">Followers</h2>
+                    <div class="grid grid-cols-2 gap-8 mb-6">
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser1</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser2</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser3</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser4</p>
+                        </div>
+                    </div>
+                    <h2 class="text-xl font-bold mb-4">Following</h2>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser5</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser6</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser7</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="inline-block w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">XX</span>
+                            <p class="text-sm mt-1">PlaceholderUser8</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Middle Column: Highest Rated Games -->
+            <div class="space-y-8">
+                <div class="bg-gray-800 p-6 rounded-lg min-h-fit">
+                    <h2 class="text-xl font-bold mb-4">Highest Rated Games</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★★★★</span>
+                            <span class="font-medium">PlaceholderGame1</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★★★½</span>
+                            <span class="font-medium">PlaceholderGame2</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★★★</span>
+                            <span class="font-medium">PlaceholderGame3</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★★½</span>
+                            <span class="font-medium">PlaceholderGame4</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★★</span>
+                            <span class="font-medium">PlaceholderGame5</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★½</span>
+                            <span class="font-medium">PlaceholderGame6</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★★</span>
+                            <span class="font-medium">PlaceholderGame7</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★½</span>
+                            <span class="font-medium">PlaceholderGame8</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">★</span>
+                            <span class="font-medium">PlaceholderGame9</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-8 h-12 rounded">
+                            <span class="star-rating">½</span>
+                            <span class="font-medium">PlaceholderGame10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column: Recently Rated Games -->
+            <div class="space-y-8">
+                <div class="bg-gray-800 p-5 rounded-lg min-h-fit">
+                    <h2 class="text-xl font-bold mb-4">Recently Rated Games</h2>
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★★½</span>
+                            <span class="font-medium">PlaceholderGame1</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★★</span>
+                            <span class="font-medium">PlaceholderGame2</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★½</span>
+                            <span class="font-medium">PlaceholderGame3</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★★★</span>
+                            <span class="font-medium">PlaceholderGame4</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★★★½</span>
+                            <span class="font-medium">PlaceholderGame5</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★</span>
+                            <span class="font-medium">PlaceholderGame6</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★½</span>
+                            <span class="font-medium">PlaceholderGame7</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★</span>
+                            <span class="font-medium">PlaceholderGame8</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★★★★</span>
+                            <span class="font-medium">PlaceholderGame9</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-2 bg-gray-800 rounded-lg">
+                            <img src="https://via.placeholder.com/40x60" alt="Game Poster" class="w-6 h-9 rounded">
+                            <span class="star-rating">★★★½</span>
+                            <span class="font-medium">PlaceholderGame10</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -334,122 +291,6 @@
             <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
         </div>
     </div>
-
-    <script>
-        // Edit Mode Toggle
-        const editButton = document.getElementById('editButton');
-        const editMode = document.getElementById('editMode');
-        const cancelEdit = document.getElementById('cancelEdit');
-        const saveEdit = document.getElementById('saveEdit');
-        const usernameDisplay = document.getElementById('usernameDisplay');
-        const editName = document.getElementById('editName');
-        const editLinks = document.getElementById('editLinks');
-        const externalLinks = document.getElementById('externalLinks');
-        const favoriteGamesEdit = document.getElementById('favoriteGamesEdit');
-        const bioDisplay = document.getElementById('bioDisplay');
-        const favoriteGamesDisplay = document.getElementById('favoriteGamesDisplay');
-        const searchPopup = document.getElementById('searchPopup');
-        const searchInput = document.getElementById('searchInput');
-        const closeSearchPopup = document.getElementById('closeSearchPopup');
-        let activePosterIndex = null;
-        const editAvatar = document.getElementById('editAvatar');
-        const avatarPreview = document.getElementById('avatarPreview');
-        const editPassword = document.getElementById('editPassword');
-        const editEmail = document.getElementById('editEmail');
-
-        editButton.addEventListener('click', () => {
-            editMode.classList.remove('hidden');
-            editName.value = usernameDisplay.textContent;
-            avatarPreview.src = document.querySelector('header img').src; // Sync with header avatar
-            const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
-            const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
-            displayPosters.forEach((dp, i) => {
-                editPosters[i].src = dp.src;
-                editPosters[i].alt = dp.alt;
-            });
-        });
-
-        // cancelEdit.addEventListener('click', () => {
-        //     editMode.classList.add('hidden');
-        //     searchPopup.classList.remove('active');
-        //     activePosterIndex = null;
-        // });
-
-        saveEdit.addEventListener('click', () => {
-            usernameDisplay.textContent = editName.value;
-            externalLinks.innerHTML = '';
-            if (editLinks.value) {
-                const link = document.createElement('a');
-                link.href = editLinks.value;
-                link.className = 'text-blue-400 hover:text-blue-300';
-                link.innerHTML = '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"/></svg>';
-                externalLinks.appendChild(link);
-            }
-            const editPosters = favoriteGamesEdit.querySelectorAll('.editable-poster img');
-            const displayPosters = favoriteGamesDisplay.querySelectorAll('img');
-            editPosters.forEach((ep, i) => {
-                displayPosters[i].src = ep.src;
-                displayPosters[i].alt = ep.alt;
-            });
-            if (editAvatar.files && editAvatar.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.querySelector('header img').src = e.target.result;
-                    avatarPreview.src = e.target.result;
-                };
-                reader.readAsDataURL(editAvatar.files[0]);
-            }
-            editMode.classList.add('hidden');
-            searchPopup.classList.remove('active');
-            activePosterIndex = null;
-        });
-
-        // Avatar Upload
-        editAvatar.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    avatarPreview.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        avatarPreview.addEventListener('click', () => editAvatar.click());
-
-        // Favorite Games Poster Editing
-        const posters = favoriteGamesEdit.querySelectorAll('.editable-poster');
-        posters.forEach(poster => {
-            poster.addEventListener('click', () => {
-                activePosterIndex = poster.getAttribute('data-index');
-                searchPopup.classList.add('active');
-                searchInput.focus();
-            });
-        });
-
-        closeSearchPopup.addEventListener('click', () => {
-            searchPopup.classList.remove('active');
-            activePosterIndex = null;
-        });
-
-        searchInput.addEventListener('blur', () => {
-            setTimeout(() => {
-                searchPopup.classList.remove('active');
-                activePosterIndex = null;
-            }, 200);
-        });
-
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && activePosterIndex !== null) {
-                const searchValue = searchInput.value;
-                posters[activePosterIndex].querySelector('img').src = `https://via.placeholder.com/150x200?text=${encodeURIComponent(searchValue)}`;
-                posters[activePosterIndex].querySelector('img').alt = searchValue;
-                searchInput.value = '';
-                searchPopup.classList.remove('active');
-                activePosterIndex = null;
-            }
-        });
-    </script>
 
     <script type="module" src="./js/event.js"></script>
 </body>

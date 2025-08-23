@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,35 +11,51 @@
         .review-card {
             transition: all 0.3s ease;
         }
+
         .review-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
+
         .star-rating {
             cursor: pointer;
         }
+
         .star-rating .star {
             transition: color 0.2s ease;
         }
+
         .star-rating .star:hover,
         .star-rating .star.active {
             color: #fbbf24;
         }
+
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .loading {
             display: none;
         }
+
         .loading.active {
             display: inline-block;
         }
     </style>
 </head>
+
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- Header with Avatar, Username and Main Toolbar -->
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
@@ -47,16 +64,19 @@
             <div class="flex items-center justify-between mb-4">
                 <!-- Left side: Avatar and Username -->
                 <div class="flex items-center space-x-3">
-                    <img src="https://via.placeholder.com/50x50" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-500 cursor-pointer hover:border-blue-400 transition-colors">
+                    <img src="https://via.placeholder.com/50x50" alt="Avatar"
+                        class="w-12 h-12 rounded-full border-2 border-blue-500 cursor-pointer hover:border-blue-400 transition-colors">
                     <div>
-                        <h2 class="text-lg font-bold text-white cursor-pointer hover:text-blue-400 transition-colors">Username</h2>
+                        <h2 class="text-lg font-bold text-white cursor-pointer hover:text-blue-400 transition-colors">
+                            Username</h2>
                         <div class="flex items-center space-x-2 text-sm text-gray-300">
-                            <a href="#" class="hover:text-blue-400 transition-colors"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="hover:text-blue-400 transition-colors"><i
+                                    class="fab fa-facebook"></i></a>
                             <a href="#" class="hover:text-blue-400 transition-colors"><i class="fab fa-discord"></i></a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Right side: Search and Friends button -->
                 <!-- Parent có thể là flex row chứa cả phần trái (logo/links) -->
                 <div class="flex items-center space-x-4 w-full">
@@ -70,7 +90,7 @@
                     </div>
                 </div>
             </div>
-                
+
             <!-- Main Navigation -->
             <nav class="flex space-x-4 overflow-x-auto">
                 <a href="home.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Home</a>
@@ -90,15 +110,16 @@
                 <h1 class="text-3xl font-bold mb-2">My Reviews</h1>
                 <p class="text-gray-400" id="reviewStats">Total: <span id="totalReviews">0</span> reviews </p>
             </div>
-            <button id="addReviewBtn" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium flex items-center transition-colors">
+            <!-- <button id="addReviewBtn" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium flex items-center transition-colors">
                 <i class="fas fa-plus mr-2"></i>Add Review
-            </button>
+            </button> -->
         </div>
 
         <!-- Filter Bar -->
         <div class="mb-8 bg-gray-800 p-4 rounded-lg">
             <div class="flex flex-wrap gap-4 items-center">
-                <select id="genreFilter" class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <select id="genreFilter"
+                    class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                     <option value="">All Genres</option>
                     <option value="action">Action</option>
                     <option value="adventure">Adventure</option>
@@ -110,8 +131,9 @@
                     <option value="puzzle">Puzzle</option>
                     <option value="indie">Indie</option>
                 </select>
-                
-                <select id="platformFilter" class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+
+                <select id="platformFilter"
+                    class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                     <option value="">All Platforms</option>
                     <option value="pc">PC</option>
                     <option value="playstation">PlayStation</option>
@@ -119,8 +141,9 @@
                     <option value="nintendo">Nintendo Switch</option>
                     <option value="mobile">Mobile</option>
                 </select>
-                
-                <select id="sortFilter" class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+
+                <select id="sortFilter"
+                    class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                     <option value="date_desc">Sort by Date (Newest)</option>
                     <option value="date_asc">Sort by Date (Oldest)</option>
                     <option value="rating_desc">Sort by Rating (High to Low)</option>
@@ -131,7 +154,8 @@
                     <option value="title_desc">Sort by Title (Z-A)</option>
                 </select>
 
-                <button id="clearFilters" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors">
+                <button id="clearFilters"
+                    class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors">
                     <i class="fas fa-times mr-2"></i>Clear Filters
                 </button>
 
@@ -155,7 +179,8 @@
 
         <!-- Load More Button -->
         <div class="text-center mt-12" id="loadMoreSection">
-            <button id="loadMoreBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
+            <button id="loadMoreBtn"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
                 <span class="loading" id="loadingIcon">
                     <i class="fas fa-spinner fa-spin mr-2"></i>Loading...
                 </span>
@@ -165,7 +190,8 @@
     </main>
 
     <!-- Add Review Modal -->
-    <div id="addReviewModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div id="addReviewModal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-screen overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Add New Review</h2>
@@ -173,13 +199,15 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <form id="reviewForm">
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">Game Title</label>
-                    <input type="text" id="gameTitle" class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" required>
+                    <input type="text" id="gameTitle"
+                        class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        required>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">Rating</label>
                     <div class="star-rating flex gap-1" id="modalStarRating">
@@ -191,22 +219,28 @@
                     </div>
                     <input type="hidden" id="ratingValue" value="0">
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">Review</label>
-                    <textarea id="reviewText" rows="6" class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" placeholder="Write your review here..." required></textarea>
+                    <textarea id="reviewText" rows="6"
+                        class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        placeholder="Write your review here..." required></textarea>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">Tags (comma separated)</label>
-                    <input type="text" id="reviewTags" class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" placeholder="e.g. masterpiece, openworld, challenging">
+                    <input type="text" id="reviewTags"
+                        class="w-full bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        placeholder="e.g. masterpiece, openworld, challenging">
                 </div>
-                
+
                 <div class="flex gap-4">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-medium transition-colors">
+                    <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-medium transition-colors">
                         <i class="fas fa-save mr-2"></i>Save Review
                     </button>
-                    <button type="button" id="cancelReview" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors">
+                    <button type="button" id="cancelReview"
+                        class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors">
                         Cancel
                     </button>
                 </div>
@@ -307,24 +341,24 @@
             platformFilter.addEventListener('change', applyFilters);
             sortFilter.addEventListener('change', applyFilters);
             clearFilters.addEventListener('click', clearAllFilters);
-            
+
             // Search functionality
             searchInput.addEventListener('input', debounce(handleSearch, 300));
             searchInput.addEventListener('focus', showSearchResults);
             searchInput.addEventListener('blur', hideSearchResults);
-            
+
             // Load more
             loadMoreBtn.addEventListener('click', loadMoreReviews);
-            
+
             // Modal events
             addReviewBtn.addEventListener('click', openAddReviewModal);
             closeModal.addEventListener('click', closeAddReviewModal);
             cancelReview.addEventListener('click', closeAddReviewModal);
             reviewForm.addEventListener('submit', handleAddReview);
-            
+
             // Star rating in modal
             setupModalStarRating();
-            
+
             // Close modal on outside click
             addReviewModal.addEventListener('click', (e) => {
                 if (e.target === addReviewModal) {
@@ -356,11 +390,11 @@
             filteredReviews = reviews.filter(review => {
                 const matchesGenre = !genre || review.genre === genre;
                 const matchesPlatform = !platform || review.platform === platform;
-                const matchesSearch = !searchTerm || 
+                const matchesSearch = !searchTerm ||
                     review.title.toLowerCase().includes(searchTerm) ||
                     review.content.toLowerCase().includes(searchTerm) ||
                     review.tags.some(tag => tag.toLowerCase().includes(searchTerm));
-                
+
                 return matchesGenre && matchesPlatform && matchesSearch;
             });
 
@@ -408,7 +442,7 @@
 
             noResults.classList.add('hidden');
             reviewsList.innerHTML = displayedReviews.map(review => createReviewHTML(review)).join('');
-            
+
             // Show/hide load more button
             if (displayedReviews.length >= filteredReviews.length) {
                 document.getElementById('loadMoreSection').classList.add('hidden');
@@ -489,7 +523,7 @@
         // Add click events to game elements
         function addGameClickEvents() {
             document.querySelectorAll('.game-title, .game-poster').forEach(element => {
-                element.addEventListener('click', function() {
+                element.addEventListener('click', function () {
                     const reviewCard = this.closest('.review-card');
                     const reviewId = reviewCard.dataset.reviewId;
                     const review = reviews.find(r => r.id == reviewId);
@@ -499,7 +533,7 @@
 
             // Like button events
             document.querySelectorAll('.like-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const reviewId = parseInt(this.dataset.reviewId);
                     toggleLike(reviewId);
                 });
@@ -507,21 +541,21 @@
 
             // Edit/Delete button events
             document.querySelectorAll('.edit-review-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const reviewId = parseInt(this.dataset.reviewId);
                     editReview(reviewId);
                 });
             });
 
             document.querySelectorAll('.delete-review-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const reviewId = parseInt(this.dataset.reviewId);
                     deleteReview(reviewId);
                 });
             });
 
             document.querySelectorAll('.share-review-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const reviewId = parseInt(this.dataset.reviewId);
                     shareReview(reviewId);
                 });
@@ -552,12 +586,12 @@
 
         function showSearchResults() {
             if (searchInput.value.trim()) {
-                const results = reviews.filter(review => 
+                const results = reviews.filter(review =>
                     review.title.toLowerCase().includes(searchInput.value.toLowerCase())
                 ).slice(0, 5);
-                
+
                 if (results.length > 0) {
-                    searchResults.innerHTML = results.map(review => 
+                    searchResults.innerHTML = results.map(review =>
                         `<div class="p-2 hover:bg-gray-600 cursor-pointer transition-colors" onclick="selectSearchResult('${review.title}')">
                             <div class="flex items-center gap-2">
                                 <img src="${review.poster}" alt="${review.title}" class="w-8 h-10 object-cover rounded">
@@ -592,7 +626,7 @@
         function loadMoreReviews() {
             loadingIcon.classList.add('active');
             loadMoreText.style.display = 'none';
-            
+
             setTimeout(() => {
                 currentPage++;
                 displayReviews();
@@ -666,7 +700,7 @@
         // Handle add review form submission
         function handleAddReview(e) {
             e.preventDefault();
-            
+
             const formData = new FormData(reviewForm);
             const gameTitle = document.getElementById('gameTitle').value;
             const rating = parseInt(document.getElementById('ratingValue').value);
@@ -695,7 +729,7 @@
             closeAddReviewModal();
             applyFilters();
             updateStats();
-            
+
             // Show success message
             showNotification('Review added successfully!', 'success');
         }
@@ -709,11 +743,11 @@
                 document.getElementById('reviewText').value = review.content;
                 document.getElementById('reviewTags').value = review.tags.join(', ');
                 highlightStars(review.rating);
-                
+
                 openAddReviewModal();
-                
+
                 // Change form submission to update instead of create
-                reviewForm.onsubmit = function(e) {
+                reviewForm.onsubmit = function (e) {
                     e.preventDefault();
                     updateReview(reviewId);
                 };
@@ -725,7 +759,7 @@
             const reviewIndex = reviews.findIndex(r => r.id === reviewId);
             if (reviewIndex !== -1) {
                 const rating = parseInt(document.getElementById('ratingValue').value);
-                
+
                 if (rating === 0) {
                     alert('Please select a rating');
                     return;
@@ -743,7 +777,7 @@
                 applyFilters();
                 updateStats();
                 showNotification('Review updated successfully!', 'success');
-                
+
                 // Reset form submission
                 reviewForm.onsubmit = handleAddReview;
             }
@@ -764,7 +798,7 @@
             const review = reviews.find(r => r.id === reviewId);
             if (review) {
                 const shareText = `Check out my review of ${review.title}! I gave it ${review.rating}/5 stars. ${review.content.substring(0, 100)}...`;
-                
+
                 if (navigator.share) {
                     navigator.share({
                         title: `${review.title} Review`,
@@ -796,7 +830,7 @@
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 transition-all duration-300 transform translate-x-full`;
-            
+
             switch (type) {
                 case 'success':
                     notification.classList.add('bg-green-600');
@@ -810,21 +844,21 @@
                 default:
                     notification.classList.add('bg-blue-600');
             }
-            
+
             notification.innerHTML = `
                 <div class="flex items-center gap-2">
                     <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle"></i>
                     <span>${message}</span>
                 </div>
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             // Animate in
             setTimeout(() => {
                 notification.classList.remove('translate-x-full');
             }, 100);
-            
+
             // Animate out and remove
             setTimeout(() => {
                 notification.classList.add('translate-x-full');
@@ -837,20 +871,20 @@
         }
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // Ctrl/Cmd + K for search focus
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 searchInput.focus();
             }
-            
+
             // Escape to close modal
             if (e.key === 'Escape') {
                 if (!addReviewModal.classList.contains('hidden')) {
                     closeAddReviewModal();
                 }
             }
-            
+
             // Ctrl/Cmd + N for new review
             if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
                 e.preventDefault();
@@ -897,7 +931,7 @@
         // Export/Import reviews (for backup)
         function exportReviews() {
             const dataStr = JSON.stringify(reviews, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
@@ -910,7 +944,7 @@
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     try {
                         const importedReviews = JSON.parse(e.target.result);
                         if (Array.isArray(importedReviews)) {
@@ -956,7 +990,7 @@
         */
 
         // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadUserPreferences();
             init();
             // setupInfiniteScroll(); // Uncomment to enable infinite scroll
@@ -1000,7 +1034,7 @@
             genreFilter.addEventListener('change', () => trackEvent('filter_used', { type: 'genre', value: genreFilter.value }));
             platformFilter.addEventListener('change', () => trackEvent('filter_used', { type: 'platform', value: platformFilter.value }));
             sortFilter.addEventListener('change', () => trackEvent('filter_used', { type: 'sort', value: sortFilter.value }));
-            
+
             // Track search usage
             searchInput.addEventListener('input', debounce(() => {
                 if (searchInput.value.length > 2) {
@@ -1012,5 +1046,7 @@
         // Initialize tracking
         // trackUserInteraction(); // Uncomment to enable tracking
     </script>
+    <script type="module" src="./js/event.js"></script>
 </body>
+
 </html>

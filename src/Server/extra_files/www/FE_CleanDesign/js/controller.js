@@ -1,7 +1,8 @@
-import { APIAuth, APIUser } from './api.js';
+import { APIAuth, APIUser, GameAPI, ReviewAPI } from './api.js';
 import { View } from './view.js';
 import { uploadImage } from './externalapi.js';
 import { Model, Pages } from './model.js';
+ 
 
 export class Controller {
 
@@ -109,8 +110,38 @@ export class Controller {
         View.goTo(Pages.Page.AUTH);
         return true;
     }
-    static async ShowEdit() {
-        
+    
+    static async GetGame(){
+        const api = new GameAPI();
+        View.showLoading();
+
+        const res = await api.GetGame();
+        View.hideLoading();
+
+        if (!res.ok){
+            View.showWarning("Gặp lỗi khi lấy dữ liệu game")
+            return false;
+        }
+
+        View.showGame(res.data)
+        return true;
+    }
+
+    static async GetReview(){
+        const api = new ReviewAPI();
+        View.showLoading();
+
+        const res = await api.GetReviewByUser()
+        View.hideLoading();
+
+        if(!res.ok){
+            View.showWarning("Gặp lỗi khi lấy dữ liệu reviews")
+            return false;
+        }
+
+        View.showReview(res.data)
+        return true;
+
     }
 
     static async DeleteAcc(password) {

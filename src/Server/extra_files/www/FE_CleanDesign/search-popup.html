@@ -1,11 +1,11 @@
 <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+        return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
         if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
             try {
                 var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
@@ -19,11 +19,11 @@
 
                 // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
                 var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                 );
                 // Fallback
                 if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
+                    headerRowIndex = 0;
                 }
 
                 // Convert filtered JSON back to CSV
@@ -36,9 +36,11 @@
             }
         }
         return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+    }
+</script>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,9 +63,11 @@
             max-height: 80vh;
             overflow-y: auto;
         }
+
         #searchPopup.active {
             display: block;
         }
+
         #searchPopup .close-btn {
             position: absolute;
             top: 0.5rem;
@@ -72,9 +76,11 @@
             cursor: pointer;
             font-size: 1.5rem;
         }
+
         #searchPopup .close-btn:hover {
             color: #f87171;
         }
+
         #searchInput {
             width: 100%;
             background: #374151;
@@ -85,21 +91,27 @@
             margin-bottom: 1rem;
             outline: none;
         }
+
         #searchInput:focus {
             border-color: #60a5fa;
         }
+
         .search-section {
             margin-bottom: 1rem;
         }
+
         .search-section h3 {
             font-size: 0.875rem;
             color: #9ca3af;
             margin-bottom: 0.5rem;
         }
-        .search-results, .recent-searches {
+
+        .search-results,
+        .recent-searches {
             max-height: 200px;
             overflow-y: auto;
         }
+
         .search-item {
             display: flex;
             align-items: center;
@@ -109,9 +121,11 @@
             margin-bottom: 0.5rem;
             cursor: pointer;
         }
+
         .search-item:hover {
             background: #4b5563;
         }
+
         .search-item img {
             width: 40px;
             height: 60px;
@@ -119,39 +133,57 @@
             border-radius: 0.25rem;
             margin-right: 0.75rem;
         }
+
         .search-item span {
             color: #fff;
             font-size: 0.875rem;
         }
     </style>
 </head>
+
 <body>
     <div id="searchPopup" class="hidden">
         <span class="close-btn" id="closeSearchPopup">&times;</span>
-        <input type="text" id="searchInput" placeholder="Search for games" class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-full">
+        <input type="text" id="searchInput" placeholder="Search for games"
+            class="bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none w-full">
         <div class="search-section">
             <h3>Recent Searches</h3>
             <div class="recent-searches">
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 1"><span>Game 1</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 2"><span>Game 2</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 3"><span>Game 3</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 4"><span>Game 4</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 5"><span>Game 5</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 6"><span>Game 6</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 7"><span>Game 7</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 8"><span>Game 8</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 9"><span>Game 9</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 10"><span>Game 10</span></div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 1"><span>Game 1</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 2"><span>Game 2</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 3"><span>Game 3</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 4"><span>Game 4</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 5"><span>Game 5</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 6"><span>Game 6</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 7"><span>Game 7</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 8"><span>Game 8</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 9"><span>Game 9</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Recent 10"><span>Game
+                        10</span></div>
             </div>
         </div>
         <div class="search-section">
             <h3>Search Results</h3>
             <div class="search-results">
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 1"><span>Game A</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 2"><span>Game B</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 3"><span>Game C</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 4"><span>Game D</span></div>
-                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 5"><span>Game E</span></div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 1"><span>Game A</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 2"><span>Game B</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 3"><span>Game C</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 4"><span>Game D</span>
+                </div>
+                <div class="search-item"><img src="https://via.placeholder.com/40x60" alt="Result 5"><span>Game E</span>
+                </div>
             </div>
         </div>
     </div>
@@ -186,5 +218,7 @@
             });
         });
     </script>
+    <script type="module" src="./js/event.js"></script>
 </body>
+
 </html>

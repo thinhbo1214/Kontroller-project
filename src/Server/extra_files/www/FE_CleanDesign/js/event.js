@@ -35,8 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
     // ========== Register ===========
     // Đăng ký
     listenIfExists('#signupBtn', 'click', () => {
@@ -57,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ========= Profile ===========
+
     // Lắng nghe sự kiện "change" để xem trước ảnh
     listenIfExists('#editAvatar', 'change', (e) => {
         const file = e.target.files[0];
@@ -103,6 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
     listenIfExists('#editButton', 'click', () => {
         const editMode = document.getElementById('editMode');
         const editName = document.getElementById('editName');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        editMode.classList.remove('hidden');
+        editName.value = usernameDisplay.textContent;
+        avatarPreview.src = document.querySelector('header img').src; // Sync with header avatar
     });
 
     listenIfExists('#editPassword', 'click', () => {
@@ -125,18 +129,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lưu lại chỉnh sửa
     listenIfExists('#saveEdit', 'click', () => {
         const avatar = document.getElementById('avatar');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const editName = document.getElementById('editName');
+
+        usernameDisplay.textContent = editName.value;
 
         // Kiểm tra xem có file nào đã được chọn không
         if (Model.selectedFile) {
             // Gọi hàm xử lý chính với file đã được lưu
             Controller.ChangeAvatar(Model.selectedFile, avatar);
         }
+
+        editMode.classList.add('hidden');
     });
 
     listenIfExists('#closeSearchPopup', 'click', () => {
-
+        searchPopup.classList.remove('active');
     });
 
+    listenIfExists('#searchInput', 'blur', () => {
+        setTimeout(() => {
+            searchPopup.classList.remove('active');
+        }, 200);
+    });
+
+    listenIfExists('#closeSearchPopup', 'keypress', (e) => {
+        const searchPopup = document.getElementById('searchPopup');
+        const searchInput = document.getElementById('searchInput');
+        
+        searchPopup.classList.remove('active');
+
+        if (e.key === 'Enter' && activePosterIndex !== null) {
+            
+        }
+    });
 
 
 
@@ -177,9 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======== Home ===========
 
 
-
     // ========  Game-Detail ==========
-
+    listenIfExists('#Savebtn', 'click', () =>{
+        // Controller.
+    })
 
     // ======== Game-Review =========
 
