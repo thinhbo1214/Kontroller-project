@@ -98,3 +98,45 @@ export class Model {
 
 }
 
+export class Pages {
+    static Page = {
+        AUTH: 'auth.html',
+        PROFILE: 'profile.html',
+        HOME: 'home.html',
+        GAME_DETAIL: 'game-detail.html',
+        GAME_REVIEW: 'game-review.html',
+        GAMES: 'games.html',
+        INDEX: 'index.html',
+        REACTION: 'reaction.html',
+        REGISTER: 'register.html',
+        REVIEW: 'review.html',
+        FOLLOWERS: 'followers.html'
+    };
+
+    static stack = [];
+    static current = null;
+
+    static push(page) {
+        if (this.current !== null) {
+            this.stack.push(this.current);
+        }
+        this.current = page;
+    }
+    static back() {
+        if (this.stack.length > 0) {
+            const prev = this.stack.pop();
+            this.current = prev;
+            return prev;
+        }
+        return null;
+    }
+    static getStack() {
+        return [...this.stack];
+    }
+    static getCurrent() {
+        return this.current;
+    }
+
+}
+
+

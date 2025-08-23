@@ -1,7 +1,7 @@
 import { APIAuth, APIUser } from './api.js';
-import { Pages, View } from './view.js';
+import { View } from './view.js';
 import { uploadImage } from './externalapi.js';
-import { Model } from './model.js';
+import { Model, Pages } from './model.js';
 
 export class Controller {
 
@@ -25,7 +25,7 @@ export class Controller {
         }
 
         View.showSuccess("Đăng nhập thành công!");
-        View.goTo(Pages.HOME);
+        View.goTo(Pages.Page.HOME);
         return true;
     }
     static async Register(username, password, email) {
@@ -45,7 +45,7 @@ export class Controller {
         }
 
         View.showSuccess("Đăng ký thành công");
-        View.goTo(Pages.PROFILE);
+        View.goTo(Pages.Page.PROFILE);
         return true;
     }
 
@@ -73,7 +73,7 @@ export class Controller {
 
         if (res.status === 401) {
             Model.deleteAuthToken();
-            View.goTo(Pages.AUTH);
+            View.goTo(Pages.Page.AUTH);
             return;
         }
 
@@ -106,7 +106,7 @@ export class Controller {
         }
 
         View.showSuccess("Gửi mã thiết lập lại mật khẩu thành công")
-        View.goTo(Pages.AUTH);
+        View.goTo(Pages.Page.AUTH);
         return true;
     }
     static async ShowEdit(userId) {
@@ -135,7 +135,7 @@ export class Controller {
 
         if (res.status === 401) {
             Model.deleteAuthToken();
-            View.goTo(Pages.AUTH);
+            View.goTo(Pages.Page.AUTH);
             return;
         }
         if (!res.ok) {
@@ -145,7 +145,7 @@ export class Controller {
 
         View.showSuccess("Xóa tài khoản thành công")
         Model.deleteAuthToken();
-        View.goTo(Pages.INDEX)
+        View.goTo(Pages.Page.INDEX)
         return true;
     }
 
@@ -161,18 +161,17 @@ export class Controller {
             return false;
         }
 
-        View.goTo(Pages.PROFILE)
+        View.goTo(Pages.Page.PROFILE)
         return true;
 
     }
     // ======== Web client logic method
-
     static resetIdleTimer() {
         clearTimeout(Model.idleTimer);
         Model.idleTimer = setTimeout(() => {
             View.showWarning('Bạn đã quá thời gian chờ');
             Model.deleteAuthToken();
-            View.goTo(Pages.AUTH);
+            View.goTo(Pages.Page.AUTH);
         }, Model.idleLimit);
     }
 }

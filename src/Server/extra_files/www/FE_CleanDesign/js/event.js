@@ -1,6 +1,6 @@
 import { Controller } from './controller.js';
-import { View, Pages } from './view.js';
-import { Model } from './model.js';
+import { View } from './view.js';
+import { Model, Pages } from './model.js';
 
 View.init();
 
@@ -103,17 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
             Controller.DeleteAcc(password);
         }
     })
+
     // Ví dụ thêm: Đăng xuất
     listenIfExists('#button-logout', 'click', () => {
         Controller.Logout();
     });
-
-    listenIfExists('#createListBtn', 'click', () => {
-
-    });
-
-
-
 
     // ========= Window event =========
     listenWindow('load', () => {
@@ -122,19 +116,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = Model.getAuthToken();
         if (token != null) {
             if (Model.isAuthTokenValid(token)) {
-                if (page == Pages.INDEX || page == Pages.AUTH || page == Pages.REGISTER)
-                    View.goTo(Pages.HOME);
+                if (page == Pages.Page.INDEX || page == Pages.Page.AUTH || page == Pages.Page.REGISTER)
+                    View.goTo(Pages.Page.HOME);
             } else {
                 Model.deleteAuthToken();
-                if (page != Pages.INDEX && page != Pages.AUTH && page != Pages.REGISTER)
-                    View.goTo(Pages.AUTH);
+                if (page != Pages.Page.INDEX && page != Pages.Page.AUTH && page != Pages.Page.REGISTER)
+                    View.goTo(Pages.Page.AUTH);
 
             }
         }
 
         View.showLoading();
         setTimeout(() => View.hideLoading(), 250);
-    })
+    });
+
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 
     listenWindow('offline', () => {
         View.showWarning('Bạn đang ngoại tuyến');

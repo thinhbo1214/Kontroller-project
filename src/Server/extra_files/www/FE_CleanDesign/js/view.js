@@ -8,6 +8,7 @@ export class View {
     }
 
     static goTo(page) {
+        // Điều hướng thật
         window.location.href = page;
     }
     static getPageNow() {
@@ -148,24 +149,6 @@ export class View {
                 return '<i class="fas fa-info-circle text-blue-400"></i>';
         }
     }
-
-    // Modal Management
-    showModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    hideModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-    }
-
     // Lists Page Specific Methods
     displayGameSearchResults(results, addGameCallback) {
         const container = document.getElementById('gameSearchResults');
@@ -308,17 +291,3 @@ export class View {
         notifications.forEach(notification => notification.remove());
     }
 }
-
-export const Pages = {
-    AUTH: 'auth.html',
-    PROFILE: 'profile.html',
-    HOME: 'home.html',
-    GAME_DETAIL: 'game-detail.html',
-    GAME_REVIEW: 'game-review.html',
-    GAMES: 'games.html',
-    INDEX: 'index.html',
-    REACTION: 'reaction.html',
-    REGISTER: 'register.html',
-    REVIEW: 'review.html',
-    FOLLOWERS: 'followers.html'
-};
