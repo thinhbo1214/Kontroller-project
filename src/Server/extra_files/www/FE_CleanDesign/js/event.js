@@ -156,14 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
     listenIfExists('#closeSearchPopup', 'keypress', (e) => {
         const searchPopup = document.getElementById('searchPopup');
         const searchInput = document.getElementById('searchInput');
-        
+
         searchPopup.classList.remove('active');
 
         if (e.key === 'Enter' && activePosterIndex !== null) {
-            
+
         }
     });
-
 
 
     // ========= Review =============
@@ -204,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ========  Game-Detail ==========
-    listenIfExists('#Savebtn', 'click', () =>{
+    listenIfExists('#Savebtn', 'click', () => {
         // Controller.
     })
 
@@ -217,6 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ========= Window event =========
     listenWindow('load', () => {
+        View.showLoading();
+        Controller.ShowBio();
         const page = View.getPageNow();
 
         const token = Model.getAuthToken();
@@ -231,8 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
         }
-
-        View.showLoading();
         setTimeout(() => View.hideLoading(), 250);
     });
 

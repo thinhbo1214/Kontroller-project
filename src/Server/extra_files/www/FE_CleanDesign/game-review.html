@@ -51,13 +51,12 @@
                 <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reaction</a>
             </nav>
         </div>
-        </div>
     </header>
 
     <!-- Review Content -->
     <main class="max-w-4xl mx-auto px-6 py-8">
         <!-- Back Button -->
-        <button onclick="window.history.back()" class="flex items-center space-x-2 text-gray-400 hover:text-white mb-6">
+        <button onclick="window.location.href='game-detail.html'" class="flex items-center space-x-2 text-gray-400 hover:text-white mb-6">
             <i class="fas fa-arrow-left"></i>
             <span>Back</span>
         </button>
@@ -92,14 +91,13 @@
                             <h1 class="text-3xl font-bold mb-2">Elden Ring</h1>
                             <div class="flex items-center space-x-4">
                                 <div class="flex items-center space-x-2">
-                                    <div class="flex text-yellow-400 text-xl">
+                                    <div class="flex text-green-400 text-xl">
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
                                     </div>
-                                    <span class="text-lg font-semibold">5/5</span>
                                 </div>
                                 <span class="text-gray-400">•</span>
                                 <span class="text-gray-400">2022</span>
@@ -153,36 +151,32 @@
                         </div>
                     </div>
 
-                    <!-- Tags -->
-                    <div class="mb-6">
-                        <h3 class="text-sm font-semibold text-gray-400 mb-3">TAGS</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Masterpiece</span>
-                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Open World</span>
-                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Challenging</span>
-                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Beautiful</span>
-                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">Atmospheric</span>
-                            <span class="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">RPG</span>
-                        </div>
-                    </div>
-
                     <!-- Actions -->
                     <div class="flex items-center justify-between pt-6 border-t border-gray-700">
-                        <!-- Like Button -->
-                        <button class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                            <i class="fas fa-heart text-lg"></i>
-                            <span class="font-semibold">87 likes</span>
-                        </button>
-
-                        <!-- Share Options -->
+                        <!-- Reaction Buttons -->
                         <div class="flex items-center space-x-4">
-                            <button class="text-gray-400 hover:text-blue-400 transition-colors">
-                                <i class="fas fa-share text-lg"></i>
+                            <button onclick="event.preventDefault(); openReactionPopup('like', 87)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+                                <i class="fas fa-thumbs-up text-lg"></i>
+                                <span class="font-semibold">87</span>
                             </button>
-                            <button class="text-gray-400 hover:text-yellow-400 transition-colors">
-                                <i class="fas fa-bookmark text-lg"></i>
+                            <button onclick="event.preventDefault(); openReactionPopup('heart', 24)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                                <i class="fas fa-heart text-lg"></i>
+                                <span class="font-semibold">24</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('sad', 5)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                                <i class="far fa-frown text-lg"></i>
+                                <span class="font-semibold">5</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('laugh', 12)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                                <i class="far fa-laugh text-lg"></i>
+                                <span class="font-semibold">12</span>
                             </button>
                         </div>
+
+                        <!-- Copy Link Button -->
+                        <button id="copyLinkBtn" class="text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="fas fa-arrow-right text-lg"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -229,11 +223,22 @@
                             </p>
                         </div>
                         <div class="flex items-center space-x-4 mt-2">
-                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
-                                <i class="fas fa-heart"></i>
+                            <button onclick="event.preventDefault(); openReactionPopup('like', 5)" class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                                <i class="fas fa-thumbs-up"></i>
                                 <span>5</span>
                             </button>
-                            <button class="text-gray-400 hover:text-white text-sm">Reply</button>
+                            <button onclick="event.preventDefault(); openReactionPopup('heart', 3)" class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>3</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('sad', 1)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                                <i class="far fa-frown"></i>
+                                <span>1</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('laugh', 2)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                                <i class="far fa-laugh"></i>
+                                <span>2</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -254,17 +259,99 @@
                             </p>
                         </div>
                         <div class="flex items-center space-x-4 mt-2">
-                            <button class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
-                                <i class="fas fa-heart"></i>
+                            <button onclick="event.preventDefault(); openReactionPopup('like', 3)" class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                                <i class="fas fa-thumbs-up"></i>
                                 <span>3</span>
                             </button>
-                            <button class="text-gray-400 hover:text-white text-sm">Reply</button>
+                            <button onclick="event.preventDefault(); openReactionPopup('heart', 2)" class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>2</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('sad', 0)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                                <i class="far fa-frown"></i>
+                                <span>0</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('laugh', 1)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                                <i class="far fa-laugh"></i>
+                                <span>1</span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        // Reaction Popup
+        function openReactionPopup(type, count) {
+            event.preventDefault(); // Prevent default link behavior
+            const reactionList = document.createElement('div');
+            reactionList.id = 'reactionPopup';
+            reactionList.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden';
+            reactionList.innerHTML = `
+                <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-md p-6 relative space-y-6">
+                    <div class="flex justify-between text-blue-400 font-semibold text-lg">
+                        <h2 id="reactionTitle" class="text-xl font-bold">${type.charAt(0).toUpperCase() + type.slice(1)} Reactions (${count})</h2>
+                        <button onclick="closeReactionPopup()">Close</button>
+                    </div>
+                    <div class="space-y-4 max-h-80 overflow-y-auto" id="reactionList"></div>
+                </div>
+            `;
+            document.body.appendChild(reactionList);
+
+            const list = document.getElementById('reactionList');
+            const reactions = {
+                like: [
+                    { name: 'John Doe', avatar: 'https://via.placeholder.com/40x40' },
+                    { name: 'Sarah Wilson', avatar: 'https://via.placeholder.com/40x40' }
+                ],
+                heart: [
+                    { name: 'Mike Chen', avatar: 'https://via.placeholder.com/40x40' },
+                    { name: 'Emma Davis', avatar: 'https://via.placeholder.com/40x40' }
+                ],
+                sad: [
+                    { name: 'Tom Brown', avatar: 'https://via.placeholder.com/40x40' }
+                ],
+                laugh: [
+                    { name: 'Anna Lee', avatar: 'https://via.placeholder.com/40x40' },
+                    { name: 'Peter Smith', avatar: 'https://via.placeholder.com/40x40' }
+                ]
+            };
+
+            const people = reactions[type] || [];
+            people.forEach(person => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center space-x-4';
+                div.innerHTML = `<img src="${person.avatar}" alt="User Avatar" class="w-10 h-10 rounded-full"> <p class="font-semibold">${person.name}</p>`;
+                list.appendChild(div);
+            });
+
+            document.getElementById('reactionPopup').classList.remove('hidden');
+        }
+
+        function closeReactionPopup() {
+            const popup = document.getElementById('reactionPopup');
+            if (popup) popup.remove();
+        }
+
+        // Copy Link Functionality
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        copyLinkBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const message = document.createElement('div');
+                message.id = 'copyMessage';
+                message.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                message.textContent = 'Copy link successfully';
+                document.body.appendChild(message);
+
+                setTimeout(() => {
+                    message.remove();
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy link:', err);
+            });
+        });
+    </script>
     <script type="module" src="./js/event.js"></script>
 </body>
 

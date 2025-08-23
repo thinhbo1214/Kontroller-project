@@ -2,11 +2,12 @@ import { APIAuth, APIUser, GameAPI, ReviewAPI } from './api.js';
 import { View } from './view.js';
 import { uploadImage } from './externalapi.js';
 import { Model, Pages } from './model.js';
- 
+
 
 export class Controller {
-
     // ====== API method =======
+
+    // ======= User =========
     static async Login(username, password) {
         if (!username || !password) {
             View.showWarning("Vui lòng nhập đầy đủ thông tin!");
@@ -100,7 +101,7 @@ export class Controller {
 
         const res = await api.PostForgetPassword(email);
         View.hideLoading();
-        
+
         if (!res.ok) {
             View.showWarning("Email chưa được đăng ký")
             return false;
@@ -109,39 +110,6 @@ export class Controller {
         View.showSuccess("Gửi mã thiết lập lại mật khẩu thành công")
         View.goTo(Pages.Page.AUTH);
         return true;
-    }
-    
-    static async GetGame(){
-        const api = new GameAPI();
-        View.showLoading();
-
-        const res = await api.GetGame();
-        View.hideLoading();
-
-        if (!res.ok){
-            View.showWarning("Gặp lỗi khi lấy dữ liệu game")
-            return false;
-        }
-
-        View.showGame(res.data)
-        return true;
-    }
-
-    static async GetReview(){
-        const api = new ReviewAPI();
-        View.showLoading();
-
-        const res = await api.GetReviewByUser()
-        View.hideLoading();
-
-        if(!res.ok){
-            View.showWarning("Gặp lỗi khi lấy dữ liệu reviews")
-            return false;
-        }
-
-        View.showReview(res.data)
-        return true;
-
     }
 
     static async DeleteAcc(password) {
@@ -167,22 +135,103 @@ export class Controller {
         return true;
     }
 
-    static async ShowUser(userID){
+    static async ShowBio() {
+        const api = new APIUser();
+
+        View.showLoading();
+        const userInfo = Model.getLocalStorageJSON('userInfo');
+
+        // Xác suất fetch lại (30% chẳng hạn)
+        const shouldRefetch = Math.random() < 0.5;
+
+        if (!userInfo || shouldRefetch) {
+            const res = await api.GetUser(); 
+            View.hideLoading();
+
+            if (!res.ok) {
+                View.showBio(userInfo);
+                return false;
+            }
+
+            Model.setLocalStorageJSON('userInfo', res.data);
+            View.showBio(res.data);
+            return true;
+        }
+
+        View.hideLoading();
+        View.showBio(userInfo);
+        return true;
+    }
+
+
+    static async ShowStat() {
         const api = new APIUser();
         View.showLoading();
 
-        const res = await api.GetUser(userID);
-        View.hideLoading();
+        const res1 = await api.GetUserFollower();
+        const res2 = await api.GetUserFollowing();
 
-        if (!res.ok){
-            View.showWarning('Lỗi xảy ra')
-            return false;
+        if (!res1.ok || !res2.ok) {
+
         }
 
-        View.goTo(Pages.Page.PROFILE)
+        View.updateStats()
         return true;
 
     }
+
+    // ========= Game ===========
+    static async GetGame() {
+        const api = new GameAPI();
+        View.showLoading();
+
+        const res = await api.GetGame();
+        View.hideLoading();
+
+        if (!res.ok) {
+            View.showWarning("Gặp lỗi khi lấy dữ liệu game")
+            return false;
+        }
+
+        View.showGame(res.data)
+        return true;
+    }
+
+    // ===========Review API===================
+    static async GetReview() {
+        const api = new ReviewAPI();
+        View.showLoading();
+
+        const res = await api.GetReviewByUser()
+        View.hideLoading();
+
+        if (!res.ok) {
+            View.showWarning("Gặp lỗi khi lấy dữ liệu reviews")
+            return false;
+        }
+
+        View.showReview(res.data)
+        return true;
+
+    }
+
+    static async SaveReview() {
+        const api = new ReviewAPI();
+        View.showLoading();
+
+        const res = await api.PostReview()
+        View.hideLoading();
+
+        if (!res.ok) {
+            View.showWarning("Găp sự cố khi save review");
+            return false;
+        }
+
+        View.goTo(Pages.Page.GAME_DETAIL)
+        return true;
+    }
+
+
     // ======== Web client logic method
     static resetIdleTimer() {
         clearTimeout(Model.idleTimer);

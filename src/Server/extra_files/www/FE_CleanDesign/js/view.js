@@ -1,34 +1,42 @@
 export class View {
-    constructor() {
-        View.init();
+    static showBio(userInfo) {
+        const avatar = document.getElementById('avatar');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
+        usernameDisplay.textContent  = userInfo.Username || "Unknown";
+    }
+    
+    static showUserInfo(userInfo) {
+        const avatar = document.getElementById('avatar');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
+        usernameDisplay.text = userInfo.Username || "Unknown";
     }
 
-    static init() {
-        View.createNotificationContainer();
-    }
-
-    static goTo(page) {
-        // Điều hướng thật
-        window.location.href = page;
-    }
-    static getPageNow() {
-        const path = window.location.pathname;
-        if (path === '/' || path === '') {
-            return 'index.html'; // chuẩn hóa thành index.html
+    static updateStats({ followers, following, games }) {
+        // Followers
+        if (followers !== undefined) {
+            const followersEl = document.querySelector('a[href="followers.html"] .text-xl');
+            if (followersEl) followersEl.textContent = followers;
         }
 
-        return path.substring(path.lastIndexOf('/') + 1);
-    }
-    // Existing notification methods...
-    static createNotificationContainer() {
-        if (!document.getElementById('notificationContainer')) {
-            const container = document.createElement('div');
-            container.id = 'notificationContainer';
-            container.className = 'fixed top-4 right-4 z-50 space-y-2';
-            document.body.appendChild(container);
+        // Following
+        if (following !== undefined) {
+            const followingEl = document.querySelector('a[href="following.html"] .text-xl');
+            if (followingEl) followingEl.textContent = following;
+        }
+
+        // Games
+        if (games !== undefined) {
+            const gamesEl = document.querySelector('a[href="games.html"] .text-xl');
+            if (gamesEl) gamesEl.textContent = games;
         }
     }
 
+
+    // ======== Review ==========
     //ShowReview
     static showReview(containerId, review) {
         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
@@ -103,16 +111,14 @@ export class View {
     }
 
 
-
-
     // GameId, Title, Poster
     static showGame(gameData) {
         const grid = document.getElementsByClassName('game-grid');
         if (!grid) return;
 
-        
+
         for (var i = 0; i < gameData.length; i++)
-        gameItem.innerHTML = `
+            gameItem.innerHTML = `
         <div class="game-item">
             <a href="game-detail.html?id=${gameData[i].GameId}" class="block">
                 <img src="${gameData[i].Poster}" 
@@ -126,6 +132,36 @@ export class View {
         grid.appendChild(gameItem);
     }
 
+
+    constructor() {
+        View.init();
+    }
+
+    static init() {
+        View.createNotificationContainer();
+    }
+
+    static goTo(page) {
+        // Điều hướng thật
+        window.location.href = page;
+    }
+    static getPageNow() {
+        const path = window.location.pathname;
+        if (path === '/' || path === '') {
+            return 'index.html'; // chuẩn hóa thành index.html
+        }
+
+        return path.substring(path.lastIndexOf('/') + 1);
+    }
+    // Existing notification methods...
+    static createNotificationContainer() {
+        if (!document.getElementById('notificationContainer')) {
+            const container = document.createElement('div');
+            container.id = 'notificationContainer';
+            container.className = 'fixed top-4 right-4 z-50 space-y-2';
+            document.body.appendChild(container);
+        }
+    }
 
     static showLoading(message = 'Processing...') {
         // Check if loading overlay exists, if not create it
@@ -389,7 +425,6 @@ export class View {
         notifications.forEach(notification => notification.remove());
     }
 
-    static 
 
 
 

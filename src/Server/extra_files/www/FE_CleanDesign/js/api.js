@@ -135,21 +135,30 @@ export class APIUser extends API {
   static baseUrl = '/api/user';
 
   async GetUser(userId = null, username = null) {
-    const query = API.buildQuery({ userId, username });
 
-    const res = await this.GET(query);
-    return res;
+    if (userId || username) {
+      const query = API.buildQuery({ userId, username });
+
+      const res = await this.GET(query);
+      return res;
+    }
+    else {
+      const query = API.buildQuery({});
+      const res = await this.GET(query);
+      return res;
+    }
+
   }
 
   async GetUserFollower(userId = null, page = 1, limit = 10) {
-    const query = API.buildPathWithQuery('follower', { page, limit, userId})
+    const query = API.buildPathWithQuery('follower', { page, limit, userId })
 
     const res = await this.GET(query);
     return res;
   }
 
   async GetUserFollowing(userId = null, page = 1, limit = 10) {
-    const query = API.buildPathWithQuery('following', { page, limit, userId})
+    const query = API.buildPathWithQuery('following', { page, limit, userId })
 
     const res = await this.GET(query);
     return res;
