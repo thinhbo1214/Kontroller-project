@@ -196,18 +196,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
+    listenIfExists('#tabReviews','click', ()=>{
+        const gameId = View.getParamValue('gameId')
+        Controller.ShowReviews(gameId);
+    })
+    
+    listenIfExists('#tabServices','click', ()=>{
+        const gameId = View.getParamValue('gameId')
+        Controller.ShowDetails(gameId);
+        
+    })
+    
+    listenIfExists('#tabGenres','click', ()=>{
+        console.log("Hello");
+        
+    })
+    
+    listenIfExists('#tabDetails','click', ()=>{
+        console.log("Hello");
+        
+    })
 
     // ========= Review =============
     listenIfExists('#clearFilters', 'click', () => {

@@ -306,7 +306,7 @@ export class View {
     static showGameDetail(game, elementId = "gameDetail") {
         const container = document.getElementById(elementId);
         if (!container) return;
-        
+
         container.innerHTML = `
         <!-- Backdrop Image -->
         <div class="relative h-96 bg-cover bg-center"
@@ -349,25 +349,26 @@ export class View {
     static renderReview(r, containerId = "review-list") {
         const container = document.getElementById(containerId);
         if (!container) return;
-
-
         
-        for (var i = 0; i < r.length; i++){
-        const reviewEl = document.createElement("div");
-        reviewEl.className = "bg-gray-800 rounded-lg p-6 review-content";
-        reviewEl.dataset.id = r[i].Id;
+        container.innerHTML = '';
+        
 
-        // r. NumberReaction
-        reviewEl.innerHTML = `
+        for (var i = 0; i < r.length; i++) {
+            const reviewEl = document.createElement("div");
+            reviewEl.className = "bg-gray-800 rounded-lg p-6 review-content";
+            reviewEl.dataset.id = r[i].Id;
+
+            // r. NumberReaction
+            reviewEl.innerHTML = `
             <div class="flex items-start space-x-4">
-                <img src="${r[i].Avatar}" alt="${r[i].UserName}" class="w-12 h-12 rounded-full">
+                <img src="${r[i].Avatar}" alt="${r[i].Username}" class="w-12 h-12 rounded-full">
                 <div class="flex-1">
                     <div class="flex items-center space-x-3 mb-2">
-                        <h3 class="font-semibold">${r.UserName}</h3>
+                        <h3 class="font-semibold">${r[i].Username}</h3>
                         <span class="text-green-400 text-2xl">
                             ${"★".repeat(r[i].Rating)}${"☆".repeat(10 - r[i].Rating)}
                         </span>
-                        <span class="text-sm text-gray-400">${r[i].Date}</span>
+                        <span class="text-sm text-gray-400">${r[i].DateCreated}</span>
                     </div>
                     <p class="text-gray-300 mb-3">${r[i].Content}</p>
                     <div class="flex items-center space-x-4">
@@ -383,13 +384,14 @@ export class View {
                 </div>
             </div>
         `;
+            container.appendChild(reviewEl);
         }
-        container.appendChild(reviewEl);
+
     }
 
 
     // này chắc để trong event mới đúng nhưng mà thôi kệ 
-     // 2. Khi bấm icon → tăng số
+    // 2. Khi bấm icon → tăng số
     static addReaction(reviewId, type) {
         const reviewEl = document.querySelector(`[data-id="${reviewId}"]`);
         if (!reviewEl) return;

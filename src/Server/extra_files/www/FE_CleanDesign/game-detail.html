@@ -47,11 +47,11 @@
             <!-- Game Title, Poster, and Date -->
             <div class="space-y-2">
                 <div class="flex items-center space-x-4">
-                    <img src="https://via.placeholder.com/100x150" alt="Game Poster" class="w-24 h-36 rounded-lg">
-                    <h2 class="text-2xl font-bold">Elden Ring <span class="text-gray-400 text-lg">2022</span></h2>
+                    <img src="https://via.placeholder.com" alt="Loading..." class="w-24 h-36 rounded-lg">
+                    <h2 class="text-2xl font-bold">Loading... <span class="text-gray-400 text-lg">Loading...</span></h2>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span id="dateLabel" class="text-sm text-gray-400">Date</span>
+                    <span id="dateLabel" class="text-sm text-gray-400">Loading...</span>
                     <p class="text-sm text-gray-400" id="reviewDate"></p>
                 </div>
             </div>
@@ -129,31 +129,29 @@
     </div>
 
     <!-- Tabs Section -->
-    <div class="bg-gray-800 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-6">
-            <nav class="flex space-x-8 overflow-x-auto">
-                <button class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium"
-                    data-tab="reviews">
-                    Reviews
-                </button>
-                <button
-                    class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
-                    data-tab="details">
-                    Details
-                </button>
-                <button
-                    class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
-                    data-tab="genres">
-                    Genres
-                </button>
-                <button
-                    class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
-                    data-tab="services">
-                    Services
-                </button>
-            </nav>
-        </div>
-    </div>
+        <nav class="flex space-x-8 overflow-x-auto">
+        <button id="tabReviews" 
+            class="tab-btn active py-4 px-2 border-b-2 border-blue-500 text-blue-400 font-medium"
+            data-tab="reviews">
+            Reviews
+        </button>
+        <button id="tabDetails"
+            class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
+            data-tab="details">
+            Details
+        </button>
+        <button id="tabGenres"
+            class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
+            data-tab="genres">
+            Genres
+        </button>
+        <button id="tabServices"
+            class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-300 hover:text-white font-medium"
+            data-tab="services">
+            Services
+        </button>
+    </nav>
+
 
     <!-- Tab Content -->
     <div class="max-w-7xl mx-auto px-6 py-8" id="reviews">
@@ -164,72 +162,28 @@
                 <!-- Review Item -->
                 <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
                     <div class="flex items-start space-x-4">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+                        <img src="https://via.placeholder.com"
                             alt="Reviewer" class="w-12 h-12 rounded-full">
                         <div class="flex-1">
                             <div class="flex items-center space-x-3 mb-2">
-                                <h3 class="font-semibold">John Doe</h3>
-                                <span class="text-green-400 text-2xl">★★★★★</span>
-                                <span class="text-sm text-gray-400">March 15, 2024</span>
+                                <h3 class="font-semibold">Loading....</h3>
+                                <span class="text-green-400 text-2xl">Loading....</span>
+                                <span class="text-sm text-gray-400">Loading....</span>
                             </div>
                             <p class="text-gray-300 mb-3">
-                                Elden Ring is a masterpiece that combines the best elements of Dark Souls with an
-                                expansive open world.
-                                The game's intricate world-building and challenging gameplay create an unforgettable
-                                experience.
+                                Loading.....
                             </p>
                             <div class="flex items-center space-x-4">
-                                <button onclick="event.preventDefault(); openReactionPopup('like', 15)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
+                                <button id="reactionBtn" onclick="event.preventDefault(); GameUI.openReactionPopup(1)" 
+                                    class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
                                     <i class="fas fa-thumbs-up"></i>
-                                    <span>15</span>
+                                    <span>Loading....</span>
                                 </button>
-                                <button onclick="event.preventDefault(); openReactionPopup('heart', 24)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                                    <i class="fas fa-heart"></i>
-                                    <span>24</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- More Review Items -->
-                <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
-                    <div class="flex items-start space-x-4">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-                            alt="Reviewer" class="w-12 h-12 rounded-full">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-3 mb-2">
-                                <h3 class="font-semibold">Sarah Wilson</h3>
-                                <span class="text-green-400 text-2xl">★★★★</span>
-                                <span class="text-sm text-gray-400">March 10, 2024</span>
-                            </div>
-                            <p class="text-gray-300 mb-3">
-                                Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming
-                                at times.
-                                Still, it's a game that rewards patience and skill.
-                            </p>
-                            <div class="flex items-center space-x-4">
-                                <button onclick="event.preventDefault(); openReactionPopup('like', 10)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span>10</span>
-                                </button>
-                                <button onclick="event.preventDefault(); openReactionPopup('heart', 12)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                                    <i class="fas fa-heart"></i>
-                                    <span>12</span>
-                                </button>
-                                <button onclick="event.preventDefault(); openReactionPopup('sad', 2)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                                    <i class="far fa-frown"></i>
-                                    <span>2</span>
-                                </button>
-                                <button onclick="event.preventDefault(); openReactionPopup('laugh', 5)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                                    <i class="far fa-laugh"></i>
-                                    <span>5</span>
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
 
         <!-- Details Tab -->

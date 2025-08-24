@@ -353,13 +353,12 @@ export class Controller {
     static async ShowGameDetail(gameId) {
         View.showLoading();
 
-        const gameData = Mode.getLocalStorageJSON('gameData');
+        const gameData = Model.getLocalStorageJSON('gameData');
 
         if (gameData) {
-            for (i = 0; i < gameDate.length; i++) {
+            for (let i = 0; i < gameData.length; i++) {
                 if (gameData[i].GameId == gameId) {
                     View.showGameDetail(gameData[i]);
-                    console.log(gameData[i]);
                     return true;
                 }
             }
@@ -382,15 +381,17 @@ export class Controller {
 
     static async ShowReviews(gameId) {
         View.showLoading();
-        const reviewOfGame = Mode.getLocalStorageJSON(gameId);
+        const reviewOfGame = Model.getLocalStorageJSON(gameId);
 
         // Xác suất fetch lại (15% chẳng hạn)
-        const shouldRefetch = Math.random() < 0.15;
+        const shouldRefetch = Math.random() > 0.15;
 
         if (reviewOfGame && shouldRefetch) {
             View.renderReview(reviewOfGame);
             return true;
         }
+
+        const api = new ReviewAPI();
 
         const res = await api.GetReviewByGame(gameId);
 
@@ -404,6 +405,41 @@ export class Controller {
         View.hideLoading();
         return true;
     }
+
+    static async ShowDetails(gameId) {
+        View.showLoading();
+        
+        const gameData = Model.getLocalStorageJSON('gameData');
+
+        
+        // Xác suất fetch lại (15% chẳng hạn)
+        const shouldRefetch = Math.random() > 0.15;
+
+        if (gameData && shouldRefetch ) {
+            for (let i = 0; i < gameData.length; i++) {
+                if (gameData[i].GameId == gameId) {
+                    View.renderDetailsTab(gameData[i].Descriptions ,gameData[i].Details );
+                    return true;
+                }
+            }
+        }
+
+        const api = new GameAPI();
+
+        const res = await api.GetGame(gameId);
+
+        if (!res.ok) {
+            View.showError('Có lỗi xảy ra!');
+            return false;
+        }
+
+        View.renderDetailsTab(res.data.Descriptions, res.data.Details);
+        View.hideLoading();
+        return true;
+    }
+
+
+
 
     static async LoadHomeContent(page, limit) {
         let gameData = Model.getLocalStorageJSON('gameData');
