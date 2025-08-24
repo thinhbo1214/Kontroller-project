@@ -351,35 +351,47 @@ export class Controller {
     }
 
     static async ShowGameDetail(gameId) {
-        const api = new GameAPI();
-
         View.showLoading();
+
+        const gameData = Mode.getLocalStorageJSON('gameData');
+
+        if (gameData) {
+            for (i = 0; i < gameDate.length; i++) {
+                if (gameData[i].GameId == gameId) {
+                    View.showGameDetail(gameData[i]);
+                    console.log(gameData[i]);
+                    return true;
+                }
+            }
+        }
+
+        const api = new GameAPI();
         const res = await api.GetGame(gameId);
 
         if (!res.ok) {
-            const gameData = Mode.getLocalStorageJSON('gameData');
-            if (gameData) {
-                for (i = 0; i < gameDate.length; i++) {
-                    if (gameData[i].GameId == gameId) {
-                        View.showGameDetail(gameData[i]);
-                        console.log(gameData[i]);
-                        return true;
-                    }
-                }
-            }
+            View.showError('Có lỗi xảy ra!');
             return false;
         }
 
         View.showGameDetail(res.data);
         View.hideLoading();
+
         return true;
 
     }
 
     static async ShowReviews(gameId) {
-        const api = new ReviewAPI();
-
         View.showLoading();
+        const reviewOfGame = Mode.getLocalStorageJSON(gameId);
+
+        // Xác suất fetch lại (15% chẳng hạn)
+        const shouldRefetch = Math.random() < 0.15;
+
+        if (reviewOfGame && shouldRefetch) {
+            View.renderReview(reviewOfGame);
+            return true;
+        }
+
         const res = await api.GetReviewByGame(gameId);
 
         if (!res.ok) {
@@ -387,10 +399,10 @@ export class Controller {
             return false;
         }
 
-        View.showReviews(res.data);
+        View.renderReview(res.data);
+        Model.setLocalStorageJSON(gameId, res.data);
         View.hideLoading();
         return true;
-
     }
 
     static async LoadHomeContent(page, limit) {

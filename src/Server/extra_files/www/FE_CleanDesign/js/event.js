@@ -321,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Controller.ShowGameDetail(gameId);
             Controller.ShowReviews(gameId);
         }
+        
 
         setTimeout(() => View.hideLoading(), 250);
     });

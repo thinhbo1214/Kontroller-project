@@ -306,7 +306,7 @@ export class View {
     static showGameDetail(game, elementId = "gameDetail") {
         const container = document.getElementById(elementId);
         if (!container) return;
-
+        
         container.innerHTML = `
         <!-- Backdrop Image -->
         <div class="relative h-96 bg-cover bg-center"
@@ -346,61 +346,81 @@ export class View {
 
 
     // reviews = [ { UserName, Avatar, Rating, Date, Content, Reactions } ]
-   static showReviews(reviews, elementId = "reviews") {
-    const container = document.getElementById(elementId);
-    if (!container) return;
+    static renderReview(r, containerId = "review-list") {
+        const container = document.getElementById(containerId);
+        if (!container) return;
 
-    // Reaction config: type → {icon, color, key}
-    const reactionsConfig = [
-        { type: 0, icon: "fas fa-thumbs-up", color: "hover:text-blue-400", key: "like" },
-        { type: 1, icon: "fas fa-heart", color: "hover:text-red-400", key: "heart" },
-        { type: 2, icon: "far fa-frown", color: "hover:text-yellow-400", key: "sad" },
-        { type: 3, icon: "far fa-laugh", color: "hover:text-yellow-400", key: "laugh" }
-    ];
 
-    let reviewsHTML = "";
-    for (const r of reviews) {
-        let reactionsHTML = "";
-        for (const cfg of reactionsConfig) {
-            reactionsHTML += `
-                <button onclick="event.preventDefault(); GameUI.openReactionPopup(${cfg.type}, ${r.Reactions[cfg.key]})" 
-                    class="flex items-center space-x-2 text-gray-400 ${cfg.color}">
-                    <i class="${cfg.icon}"></i>
-                    <span>${r.Reactions[cfg.key]}</span>
-                </button>
-            `;
-        }
+        
+        for (var i = 0; i < r.length; i++){
+        const reviewEl = document.createElement("div");
+        reviewEl.className = "bg-gray-800 rounded-lg p-6 review-content";
+        reviewEl.dataset.id = r[i].Id;
 
-        reviewsHTML += `
-            <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
-                <div class="flex items-start space-x-4">
-                    <img src="${r.Avatar}" alt="${r.UserName}" class="w-12 h-12 rounded-full">
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-3 mb-2">
-                            <h3 class="font-semibold">${r.UserName}</h3>
-                            <span class="text-green-400 text-2xl">
-                                ${"★".repeat(r.Rating)}${"☆".repeat(10 - r.Rating)}
+        // r. NumberReaction
+        reviewEl.innerHTML = `
+            <div class="flex items-start space-x-4">
+                <img src="${r[i].Avatar}" alt="${r[i].UserName}" class="w-12 h-12 rounded-full">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <h3 class="font-semibold">${r.UserName}</h3>
+                        <span class="text-green-400 text-2xl">
+                            ${"★".repeat(r[i].Rating)}${"☆".repeat(10 - r[i].Rating)}
+                        </span>
+                        <span class="text-sm text-gray-400">${r[i].Date}</span>
+                    </div>
+                    <p class="text-gray-300 mb-3">${r[i].Content}</p>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="GameUI.addReaction(${r[i].Id}, 'like')" 
+                            class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span onclick="event.stopPropagation(); GameUI.showReactionPopup(${r[i].Id}, 'like')">
+                                ${r[i].NumberReaction || 0} 
                             </span>
-                            <span class="text-sm text-gray-400">${r.Date}</span>
-                        </div>
-                        <p class="text-gray-300 mb-3">${r.Content}</p>
-                        <div class="flex items-center space-x-4">
-                            ${reactionsHTML}
-                        </div>
+                        </button>
+                        
                     </div>
                 </div>
             </div>
         `;
+        }
+        container.appendChild(reviewEl);
     }
 
-    container.innerHTML = `
-        <h2 class="text-2xl font-bold mb-6">Reviews</h2>
-        <div class="space-y-6">
-            ${reviewsHTML}
-        </div>
-    `;
+
+    // này chắc để trong event mới đúng nhưng mà thôi kệ 
+     // 2. Khi bấm icon → tăng số
+    static addReaction(reviewId, type) {
+        const reviewEl = document.querySelector(`[data-id="${reviewId}"]`);
+        if (!reviewEl) return;
+
+        const span = reviewEl.querySelector(`button[onclick*="'${type}'"] span`);
+        let count = parseInt(span.textContent) || 0;
+        span.textContent = count + 1;
+
+        // TODO: gọi API lưu reaction
+        console.log(`Added ${type} to review ${reviewId}`);
     }
 
+    // 3. Khi bấm vào số → hiện popup danh sách người react
+    static showReactionPopup(reviewId, type) {
+        // giả lập: gọi API để lấy danh sách người dùng
+        const users = ["Alice", "Bob", "Charlie", "David"];
+
+        const popup = document.createElement("div");
+        popup.className = "fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50";
+        popup.innerHTML = `
+            <div class="bg-gray-900 text-white rounded-xl p-6 w-80">
+                <h3 class="text-lg font-semibold mb-4">People who reacted with ${type}</h3>
+                <ul class="space-y-2 max-h-60 overflow-y-auto">
+                    ${users.map(u => `<li class="p-2 bg-gray-800 rounded">${u}</li>`).join("")}
+                </ul>
+                <button onclick="this.closest('.fixed').remove()" 
+                    class="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Close</button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+    }
 
 
 

@@ -160,7 +160,7 @@
         <!-- Reviews Tab -->
         <div id="reviews" class="tab-content">
             <h2 class="text-2xl font-bold mb-6">Reviews</h2>
-            <div class="space-y-6">
+            <div class="space-y-6" id="review-list">
                 <!-- Review Item -->
                 <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
                     <div class="flex items-start space-x-4">
@@ -186,14 +186,6 @@
                                 <button onclick="event.preventDefault(); openReactionPopup('heart', 24)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
                                     <i class="fas fa-heart"></i>
                                     <span>24</span>
-                                </button>
-                                <button onclick="event.preventDefault(); openReactionPopup('sad', 3)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                                    <i class="far fa-frown"></i>
-                                    <span>3</span>
-                                </button>
-                                <button onclick="event.preventDefault(); openReactionPopup('laugh', 8)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                                    <i class="far fa-laugh"></i>
-                                    <span>8</span>
                                 </button>
                             </div>
                         </div>
