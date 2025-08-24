@@ -5,6 +5,8 @@ export class Model {
     static CLOUDINARY_UPLOAD_PRESET = 'avatar_upload';
     static selectedFile = null;
 
+    static reviewRating = 0;
+
     // Idle detect
     static idleTimer;
     static idleLimit = 5 * 60 * 1000; // 5 phút

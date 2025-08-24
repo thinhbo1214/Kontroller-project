@@ -232,7 +232,7 @@ export class Controller {
         const userInfo = Model.getLocalStorageJSON('userInfo');
 
         // Xác suất fetch lại (30% chẳng hạn)
-        const shouldRefetch = Math.random() < 0.3;
+        const shouldRefetch = Math.random() < 0.15;
 
         if (!userInfo || shouldRefetch) {
             const res = await api.GetUser();
@@ -359,6 +359,7 @@ export class Controller {
             for (let i = 0; i < gameData.length; i++) {
                 if (gameData[i].GameId == gameId) {
                     View.showGameDetail(gameData[i]);
+                    View.hideLoading();
                     return true;
                 }
             }
@@ -388,6 +389,7 @@ export class Controller {
 
         if (reviewOfGame && shouldRefetch) {
             View.renderReview(reviewOfGame);
+            View.hideLoading();
             return true;
         }
 
@@ -397,6 +399,7 @@ export class Controller {
 
         if (!res.ok) {
             View.showError('Có lỗi xảy ra!');
+            View.hideLoading();
             return false;
         }
 
@@ -408,17 +411,18 @@ export class Controller {
 
     static async ShowDetails(gameId) {
         View.showLoading();
-        
+
         const gameData = Model.getLocalStorageJSON('gameData');
 
-        
+
         // Xác suất fetch lại (15% chẳng hạn)
         const shouldRefetch = Math.random() > 0.15;
 
-        if (gameData && shouldRefetch ) {
+        if (gameData && shouldRefetch) {
             for (let i = 0; i < gameData.length; i++) {
                 if (gameData[i].GameId == gameId) {
-                    View.renderDetailsTab(gameData[i].Descriptions ,gameData[i].Details );
+                    View.renderDetailsTab(gameData[i].Descriptions, gameData[i].Details);
+                    View.hideLoading();
                     return true;
                 }
             }
@@ -428,12 +432,83 @@ export class Controller {
 
         const res = await api.GetGame(gameId);
 
+
         if (!res.ok) {
             View.showError('Có lỗi xảy ra!');
+            View.hideLoading();
             return false;
         }
 
         View.renderDetailsTab(res.data.Descriptions, res.data.Details);
+        View.hideLoading();
+        return true;
+    }
+
+    static async ShowGenre(gameId) {
+        View.showLoading();
+
+        const gameData = Model.getLocalStorageJSON('gameData');
+
+
+        // Xác suất fetch lại (15% chẳng hạn)
+        const shouldRefetch = Math.random() > 0.15;
+
+        if (gameData && shouldRefetch) {
+            for (let i = 0; i < gameData.length; i++) {
+                if (gameData[i].GameId == gameId) {
+                    View.renderGenresTab(gameData[i].Genre);
+                    View.hideLoading();
+                    return true;
+                }
+            }
+        }
+
+        const api = new GameAPI();
+
+        const res = await api.GetGame(gameId);
+
+
+        if (!res.ok) {
+            View.showError('Có lỗi xảy ra!');
+            View.hideLoading();
+            return false;
+        }
+
+        View.renderGenresTab(gameData[i].Genre);
+        View.hideLoading();
+        return true;
+    }
+
+    static async ShowService(gameId) {
+        View.showLoading();
+
+        const gameData = Model.getLocalStorageJSON('gameData');
+
+        // Xác suất fetch lại (15% chẳng hạn)
+        const shouldRefetch = Math.random() > 0.15;
+
+        if (gameData && shouldRefetch) {
+            for (let i = 0; i < gameData.length; i++) {
+                if (gameData[i].GameId == gameId) {
+                    View.renderServicesTab(gameData[i].Services);
+                    View.hideLoading();
+                    return true;
+                }
+            }
+        }
+
+        const api = new GameAPI();
+
+        const res = await api.GetGame(gameId);
+
+
+        if (!res.ok) {
+            View.showError('Có lỗi xảy ra!');
+            View.hideLoading();
+            return false;
+        }
+
+        View.renderServicesTab(gameData[i].Services);
         View.hideLoading();
         return true;
     }
@@ -485,63 +560,51 @@ export class Controller {
 
     }
 
-    static async SaveReview() {
+    static async SaveReview(gameId, content, rating) {
         const api = new ReviewAPI();
         View.showLoading();
 
-        const res = await api.PostReview()
+        const res = await api.PostReview(gameId, content, rating);
         View.hideLoading();
 
-        if (!res.ok) {
-            View.showWarning("Găp sự cố khi save review");
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.Page.AUTH);
             return false;
         }
 
-        View.goTo(Pages.Page.GAME_DETAIL)
+        if (!res.ok) {
+            View.showWarning("Tạo review thất bại!");
+            return false;
+        }
+
+        View.showSuccess("Tạo review thành công!");
+
         return true;
     }
 
-    // save review 
-    static getGameIdFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get("id");
-    }
+    static async ShowReviewDetail(reviewId) {
+        const api = new ReviewAPI();
+        View.showLoading();
 
-    static getSelectedRating() {
-        const selected = document.querySelector(".star.text-yellow-400");
-        return selected ? Number(selected.dataset.value) : 0;
-    }
+        const res = await api.GetReview(reviewId);
 
-    static async saveReview() {
-        try {
-            const gameId = this.getGameIdFromUrl();
-            const rating = this.getSelectedRating();
-            const content = document.querySelector("#reviewModal textarea").value.trim();
-
-            if (!gameId || !rating || !content) {
-                alert("Please fill in all fields before saving.");
-                return;
-            }
-            const api = new ReviewAPI();
-            View.showLoading();
-
-            const res = await api.PostReview(gameId, content, rating)
+        if (!res.ok) {
+            View.showError('Có lỗi xảy ra!');
             View.hideLoading();
-            if (res && res.success) {
-                alert("Review saved successfully!");
-                this.closeReviewModal();
-            } else {
-                alert("Failed to save review.");
-            }
-        } catch (err) {
-            console.error("Error saving review:", err);
-            alert("Error saving review.");
+            return false;
         }
+
+        View.renderReviewCard(res.data);
+
+        View.hideLoading();
+        return true;
     }
 
     static closeReviewModal() {
         document.getElementById("reviewModal").classList.add("hidden");
     }
+
 
     //========= Game Detail =============
 

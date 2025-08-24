@@ -196,27 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    listenIfExists('#tabReviews','click', ()=>{
-        const gameId = View.getParamValue('gameId')
-        Controller.ShowReviews(gameId);
-    })
-    
-    listenIfExists('#tabServices','click', ()=>{
-        const gameId = View.getParamValue('gameId')
-        Controller.ShowDetails(gameId);
-        
-    })
-    
-    listenIfExists('#tabGenres','click', ()=>{
-        console.log("Hello");
-        
-    })
-    
-    listenIfExists('#tabDetails','click', ()=>{
-        console.log("Hello");
-        
-    })
-
     // ========= Review =============
     listenIfExists('#clearFilters', 'click', () => {
 
@@ -248,12 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======== Follower ============
 
 
+
     // ======== Following ===========
 
 
+
+
     // ======== Home ===========
-
-
     listenIfExists('#pagination', 'click', (e) => {
         const btn = e.target.closest('button');
         if (!btn) return;
@@ -287,11 +267,60 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+
     // ========  Game-Detail ==========
+
+    // Lưu rating hiện tại
+    Model.reviewRating = 0;
+
+    // Gắn sự kiện cho từng sao
+    for (let i = 1; i <= 10; i++) {
+        listenIfExists(`.star[data-value="${i}"]`, 'click', (e) => {
+            const value = parseInt(e.target.getAttribute('data-value'));
+
+            if (Model.reviewRating === value) {
+                Model.reviewRating = 0;
+            } else {
+                Model.reviewRating = value;
+            }
+        });
+    }
+
     listenIfExists('#Savebtn', 'click', () => {
-        // Controller.
+        const rateLabel = document.getElementById('rateLabel');
+        const contentReview = document.getElementById('contentReview')?.value || '';
+        const gameId = View.getParamValue('gameId');
+
+        if (rateLabel.textContent == "Rated" && contentReview.length > 0) {
+            Controller.SaveReview(gameId, contentReview, Model.reviewRating)
+        }
+        else {
+            View.showWarning("Bạn phải rate và viết content!");
+        }
+
+        document.getElementById('reviewModal').classList.add('hidden');
+    })
+    listenIfExists('#tabReviews', 'click', () => {
+        const gameId = View.getParamValue('gameId');
+        Controller.ShowReviews(gameId);
     })
 
+    listenIfExists('#tabServices', 'click', () => {
+        const gameId = View.getParamValue('gameId');
+        Controller.ShowService(gameId);
+    })
+
+    listenIfExists('#tabGenres', 'click', () => {
+        const gameId = View.getParamValue('gameId');
+        Controller.ShowGenre(gameId);
+    })
+
+    listenIfExists('#tabDetails', 'click', () => {
+        const gameId = View.getParamValue('gameId');
+        Controller.ShowDetails(gameId);
+
+    })
 
 
     // ======== Game-Review =========
@@ -329,7 +358,12 @@ document.addEventListener('DOMContentLoaded', () => {
             Controller.ShowGameDetail(gameId);
             Controller.ShowReviews(gameId);
         }
-        
+
+        if (curPage == Pages.Page.GAME_REVIEW) {
+            const reviewId = View.getParamValue('reviewId');
+            Controller.ShowReviewDetail(reviewId);
+        }
+
 
         setTimeout(() => View.hideLoading(), 250);
     });

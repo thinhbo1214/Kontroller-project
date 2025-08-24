@@ -13,7 +13,8 @@
     <!-- Back Button Bar -->
     <div class="bg-gray-800 border-b border-gray-700 py-2 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6">
-            <button onclick="window.location.href='game-detail.html'" class="flex items-center space-x-2 text-gray-400 hover:text-white">
+            <button onclick="window.location.href='game-detail.html'"
+                class="flex items-center space-x-2 text-gray-400 hover:text-white">
                 <i class="fas fa-arrow-left"></i>
                 <span>Back</span>
             </button>
@@ -51,7 +52,7 @@
     </header>
 
     <!-- Review Content -->
-    <main class="max-w-4xl mx-auto px-6 py-8">
+    <main class="max-w-4xl mx-auto px-6 py-8" id="reviews">
         <!-- Review Card -->
         <div class="bg-gray-800 rounded-lg p-8 shadow-xl">
             <div class="flex flex-col lg:flex-row lg:space-x-8">
@@ -146,19 +147,23 @@
                     <div class="flex items-center justify-between pt-6 border-t border-gray-700">
                         <!-- Reaction Buttons -->
                         <div class="flex items-center space-x-4" id="main-reactions">
-                            <button data-reaction="like" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+                            <button data-reaction="like"
+                                class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
                                 <i class="fas fa-thumbs-up text-lg"></i>
                                 <span class="font-semibold reaction-count">87</span>
                             </button>
-                            <button data-reaction="heart" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                            <button data-reaction="heart"
+                                class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
                                 <i class="fas fa-heart text-lg"></i>
                                 <span class="font-semibold reaction-count">24</span>
                             </button>
-                            <button data-reaction="sad" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                            <button data-reaction="sad"
+                                class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
                                 <i class="far fa-frown text-lg"></i>
                                 <span class="font-semibold reaction-count">5</span>
                             </button>
-                            <button data-reaction="laugh" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                            <button data-reaction="laugh"
+                                class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
                                 <i class="far fa-laugh text-lg"></i>
                                 <span class="font-semibold reaction-count">12</span>
                             </button>
@@ -214,19 +219,23 @@
                             </p>
                         </div>
                         <div class="flex items-center space-x-4 mt-2 comment-reactions" data-comment="comment1">
-                            <button data-reaction="like" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                            <button data-reaction="like"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
                                 <i class="fas fa-thumbs-up"></i>
                                 <span class="reaction-count">5</span>
                             </button>
-                            <button data-reaction="heart" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                            <button data-reaction="heart"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
                                 <i class="fas fa-heart"></i>
                                 <span class="reaction-count">3</span>
                             </button>
-                            <button data-reaction="sad" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="sad"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-frown"></i>
                                 <span class="reaction-count">1</span>
                             </button>
-                            <button data-reaction="laugh" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="laugh"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-laugh"></i>
                                 <span class="reaction-count">2</span>
                             </button>
@@ -250,19 +259,23 @@
                             </p>
                         </div>
                         <div class="flex items-center space-x-4 mt-2 comment-reactions" data-comment="comment2">
-                            <button data-reaction="like" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                            <button data-reaction="like"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
                                 <i class="fas fa-thumbs-up"></i>
                                 <span class="reaction-count">3</span>
                             </button>
-                            <button data-reaction="heart" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                            <button data-reaction="heart"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
                                 <i class="fas fa-heart"></i>
                                 <span class="reaction-count">2</span>
                             </button>
-                            <button data-reaction="sad" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="sad"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-frown"></i>
                                 <span class="reaction-count">0</span>
                             </button>
-                            <button data-reaction="laugh" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="laugh"
+                                class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-laugh"></i>
                                 <span class="reaction-count">1</span>
                             </button>
@@ -318,13 +331,13 @@
 
         // Handle main review reactions
         document.querySelectorAll('#main-reactions .reaction-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 const reactionType = this.dataset.reaction;
                 const countSpan = this.querySelector('.reaction-count');
                 let currentCount = parseInt(countSpan.textContent);
-                
+
                 // Toggle reaction
                 if (userReactions.main[reactionType]) {
                     userReactions.main[reactionType] = false;
@@ -335,8 +348,8 @@
                     userReactions.main[reactionType] = true;
                     currentCount++;
                     this.classList.remove('text-gray-400');
-                    
-                    switch(reactionType) {
+
+                    switch (reactionType) {
                         case 'like':
                             this.classList.add('text-blue-400');
                             break;
@@ -349,9 +362,9 @@
                             break;
                     }
                 }
-                
+
                 countSpan.textContent = currentCount;
-                
+
                 setTimeout(() => {
                     openReactionPopup(reactionType, currentCount);
                 }, 200);
@@ -360,14 +373,14 @@
 
         // Handle comment reactions
         document.querySelectorAll('.comment-reaction-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 const reactionType = this.dataset.reaction;
                 const commentId = this.closest('.comment-reactions').dataset.comment;
                 const countSpan = this.querySelector('.reaction-count');
                 let currentCount = parseInt(countSpan.textContent);
-                
+
                 if (userReactions[commentId][reactionType]) {
                     userReactions[commentId][reactionType] = false;
                     currentCount--;
@@ -377,8 +390,8 @@
                     userReactions[commentId][reactionType] = true;
                     currentCount++;
                     this.classList.remove('text-gray-400');
-                    
-                    switch(reactionType) {
+
+                    switch (reactionType) {
                         case 'like':
                             this.classList.add('text-blue-400');
                             break;
@@ -391,9 +404,9 @@
                             break;
                     }
                 }
-                
+
                 countSpan.textContent = currentCount;
-                
+
                 setTimeout(() => {
                     openReactionPopup(reactionType, currentCount);
                 }, 200);
@@ -423,7 +436,7 @@
 
             const list = document.getElementById('reactionList');
             const people = reactionData[type] || [];
-            
+
             if (people.length === 0) {
                 list.innerHTML = '<p class="text-gray-400 text-center">No reactions yet</p>';
             } else {
@@ -438,7 +451,7 @@
                 });
             }
 
-            reactionList.addEventListener('click', function(e) {
+            reactionList.addEventListener('click', function (e) {
                 if (e.target === reactionList) {
                     closeReactionPopup();
                 }
@@ -468,12 +481,13 @@
             });
         });
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeReactionPopup();
             }
         });
     </script>
+    <script type="module" src="./js/event.js"></script>
 </body>
 
 </html>

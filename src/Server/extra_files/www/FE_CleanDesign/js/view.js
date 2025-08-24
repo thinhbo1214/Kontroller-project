@@ -179,6 +179,99 @@ export class View {
     `;
     }
 
+    static renderReviewCard(data, elementId = "reviews") {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        // Tạo rating stars
+        const stars = Array.from({ length: 5 }, (_, i) => {
+            return `<i class="fas fa-star ${i < data.Rating ? "text-green-400" : "text-gray-600"}"></i>`;
+        }).join("");
+
+        // Tạo reactions
+        const reactionIcons = {
+            like: "fas fa-thumbs-up",
+            heart: "fas fa-heart",
+            sad: "far fa-frown",
+            laugh: "far fa-laugh"
+        };
+        const reactionHtml = Object.entries(data.N || {}).map(([key, value]) => `
+            <button data-reaction="${key}" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+                <i class="${reactionIcons[key]} text-lg"></i>
+                <span class="font-semibold reaction-count">${value}</span>
+            </button>
+        `).join("");
+
+        // Tạo review text (hỗ trợ nhiều đoạn)
+        const reviewText = (data.review || [])
+            .map(p => `<p class="mb-4">${p}</p>`)
+            .join("");
+
+        container.innerHTML += `
+        <!-- Review Card -->
+        <div class="bg-gray-800 rounded-lg p-8 shadow-xl mb-8">
+            <div class="flex flex-col lg:flex-row lg:space-x-8">
+                <!-- Left Side - Game Poster -->
+                <div class="flex-shrink-0 mb-6 lg:mb-0">
+                    <a href="game-detail.html" class="block hover:opacity-80 transition-opacity">
+                        <img src="${data.Poster}" alt="${data.Title}" 
+                            class="w-48 h-72 rounded-lg shadow-lg mx-auto lg:mx-0">
+                    </a>
+                </div>
+
+                <!-- Right Side - Review Content -->
+                <div class="flex-1">
+                    <!-- Header -->
+                    <div class="mb-6">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="${data.Avatar}" alt="${data.Username}" 
+                                class="w-12 h-12 rounded-full">
+                            <div>
+                                <h2 class="font-semibold text-lg">${data.Username}</h2>
+                                <p class="text-gray-400 text-sm">${data.DateCreated}</p>
+                            </div>
+                        </div>
+
+                        <!-- Game Title and Rating -->
+                        <div class="mb-4">
+                            <h1 class="text-3xl font-bold mb-2">${data.Title}</h1>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex text-xl">${stars}</div>
+                                </div>
+                                <span class="text-gray-400">•</span>
+                                <span class="text-gray-400">${data.year}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Text -->
+                    <div class="mb-6">
+                        <div class="prose prose-lg text-gray-300 max-w-none">
+                            ${reviewText}
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-700">
+                        <!-- Reaction Buttons -->
+                        <div class="flex items-center space-x-4" id="main-reactions">
+                            ${reactionHtml}
+                        </div>
+
+                        <!-- Copy Link Button -->
+                        <button class="text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="fas fa-copy text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+
 
 
     // Load tất cả comments trong trang
@@ -349,45 +442,44 @@ export class View {
     static renderReview(r, containerId = "review-list") {
         const container = document.getElementById(containerId);
         if (!container) return;
-        
+
         container.innerHTML = '';
-        
 
         for (var i = 0; i < r.length; i++) {
             const reviewEl = document.createElement("div");
-            reviewEl.className = "bg-gray-800 rounded-lg p-6 review-content";
-            reviewEl.dataset.id = r[i].Id;
+            reviewEl.className = " bg-gray-800 rounded-lg p-6 review-content";
+            reviewEl.dataset.id = r[i].ReviewId;
 
-            // r. NumberReaction
             reviewEl.innerHTML = `
-            <div class="flex items-start space-x-4">
-                <img src="${r[i].Avatar}" alt="${r[i].Username}" class="w-12 h-12 rounded-full">
-                <div class="flex-1">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <h3 class="font-semibold">${r[i].Username}</h3>
-                        <span class="text-green-400 text-2xl">
-                            ${"★".repeat(r[i].Rating)}${"☆".repeat(10 - r[i].Rating)}
+        <a href="game-review.html?reviewId=${r[i].ReviewId}" class="flex items-start space-x-4">
+            <img  src="${r[i].Avatar}" alt="${r[i].Username}" class="w-12 h-12 rounded-full">
+            <div class="flex-1">
+                <div class="flex items-center space-x-3 mb-2">
+                    <a class="font-semibold hover:underline">
+                        ${r[i].Username}
+                    </a>
+                    <span class="text-green-400 text-2xl">
+                        ${"★".repeat(r[i].Rating)}${"☆".repeat(10 - r[i].Rating)}
+                    </span>
+                    <span class="text-sm text-gray-400">${r[i].DateCreated}</span>
+                </div>
+                <p class="text-gray-300 mb-3">${r[i].Content}</p>
+                <div class="flex items-center space-x-4">
+                    <button onclick="GameUI.addReaction(${r[i].Id}, 'like')" 
+                        class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span onclick="event.stopPropagation(); GameUI.showReactionPopup(${r[i].Id}, 'like')">
+                            ${r[i].NumberReaction || 0} 
                         </span>
-                        <span class="text-sm text-gray-400">${r[i].DateCreated}</span>
-                    </div>
-                    <p class="text-gray-300 mb-3">${r[i].Content}</p>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="GameUI.addReaction(${r[i].Id}, 'like')" 
-                            class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span onclick="event.stopPropagation(); GameUI.showReactionPopup(${r[i].Id}, 'like')">
-                                ${r[i].NumberReaction || 0} 
-                            </span>
-                        </button>
-                        
-                    </div>
+                    </button>
                 </div>
             </div>
+        </a>
         `;
             container.appendChild(reviewEl);
         }
-
     }
+
 
 
     // này chắc để trong event mới đúng nhưng mà thôi kệ 
@@ -471,6 +563,33 @@ export class View {
             </div>
         `;
     }
+    // service 
+
+    static renderServicesTab(services, elementId = "services") {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        // Nếu services là string -> tách ra thành mảng
+        let serviceList = Array.isArray(services)
+            ? services
+            : services.split(",").map(s => s.trim()).filter(s => s.length > 0);
+
+        const serviceDivs = serviceList.map(s => `
+        <div class="p-3 bg-gray-700 rounded-lg text-center font-medium">
+            ${s}
+        </div>
+    `).join("");
+
+        container.innerHTML = `
+        <h2 class="text-2xl font-bold mb-6">Available On</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                ${serviceDivs}
+            </div>
+        </div>
+    `;
+    }
+
 
 
     //====================== Show Game in Home ================================
@@ -560,9 +679,6 @@ export class View {
             paginationContainer.appendChild(nextBtn);
         }
     }
-
-
-
 
 
 
@@ -875,6 +991,35 @@ export class View {
         const notifications = document.querySelectorAll('.notification');
         notifications.forEach(notification => notification.remove());
     }
+    
+    static showGamePagination(games) {
+    const container = document.getElementById('gameList');
+    if (!container) return;
+
+    // Append new games
+    games.forEach(game => {
+        const gameHTML = `
+            <div class="group cursor-pointer" data-game-id="${game.GameId}">
+                <div class="relative mb-3">
+                    <img src="${game.Poster || 'https://via.placeholder.com/200x300'}" alt="${game.Title}"
+                        class="game-poster rounded-lg shadow-lg group-hover:shadow-xl transition-shadow">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg"></div>
+                </div>
+                <div class="text-center">
+                    <div class="flex justify-center mb-2 text-green-400">
+                        ${'★'.repeat(Math.round(game.AvgRating))}${game.AvgRating > 0 ? '½'.repeat(Math.round((game.AvgRating % 1) * 2)) : ''}
+                    </div>
+                    <div class="flex justify-center space-x-3">
+                        <i class="fas fa-layer-group text-${game.AvgRating > 3 ? 'blue-400' : 'gray-600'} text-sm"></i>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', gameHTML);
+    });
+}
+
+
 
 
 
