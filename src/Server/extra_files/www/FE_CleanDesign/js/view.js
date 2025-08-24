@@ -7,10 +7,10 @@ export class View {
         const numberFollower = document.getElementById('numberFollower');
         const numberFollowing = document.getElementById('numberFollowing');
 
-        avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
-        usernameDisplay.textContent = userInfo.Username || "Unknown";
-        numberFollower.textContent = userInfo.NumberFollower || 0;
-        numberFollowing.textContent = userInfo.NumberFollowing || 0;
+        if (avatar) avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
+        if (usernameDisplay) usernameDisplay.textContent = userInfo.Username || "Unknown";
+        if (numberFollower) numberFollower.textContent = userInfo.NumberFollower || 0;
+        if (numberFollowing) numberFollowing.textContent = userInfo.NumberFollowing || 0;
     }
 
 
@@ -183,6 +183,9 @@ export class View {
         const container = document.getElementById(elementId);
         if (!container) return;
 
+        console.log(data);
+
+        container.innerHTML='';
         // Tạo rating stars
         const stars = Array.from({ length: 5 }, (_, i) => {
             return `<i class="fas fa-star ${i < data.Rating ? "text-green-400" : "text-gray-600"}"></i>`;
@@ -195,7 +198,7 @@ export class View {
             sad: "far fa-frown",
             laugh: "far fa-laugh"
         };
-        const reactionHtml = Object.entries(data.N || {}).map(([key, value]) => `
+        const reactionHtml = Object.entries(data.NumberReaction || {}).map(([key, value]) => `
             <button data-reaction="${key}" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
                 <i class="${reactionIcons[key]} text-lg"></i>
                 <span class="font-semibold reaction-count">${value}</span>
@@ -1018,22 +1021,6 @@ export class View {
         container.insertAdjacentHTML('beforeend', gameHTML);
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

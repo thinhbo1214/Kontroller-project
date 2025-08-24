@@ -37,6 +37,7 @@ namespace Server.Source.Data
         public string Avatar { get; set; }
 
         public Guid GameId { get; set; }
+        public string Poster { get; set; }
         public string Title { get; set; }
         public float AvgRating { get; set; }
 

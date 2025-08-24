@@ -2,6 +2,7 @@
 
 SELECT  G.gameId AS GameId,
 		G.title AS Title,
+        G.poster AS Poster,
         G.avgRating AS AvgRating,
         R.reviewId AS ReviewId,
         R.content AS Content,

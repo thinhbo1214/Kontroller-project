@@ -342,6 +342,7 @@ export class GameAPI extends API {
 
     return res;
   }
+  
   async GetGamePagination(page = 1, limit = 10) {
     const query = API.buildPathWithQuery('pagination', { page, limit });
 
