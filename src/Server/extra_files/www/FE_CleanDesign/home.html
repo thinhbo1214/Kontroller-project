@@ -83,10 +83,14 @@
             <!-- Main Navigation -->
             <nav class="flex space-x-4 overflow-x-auto pb-2">
                 <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">Home</a>
-                <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Profile</a>
-                <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Reviews</a>
-                <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Games</a>
-                <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Reaction</a>
+                <a href="profile.html"
+                    class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Profile</a>
+                <a href="reviews.html"
+                    class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Reviews</a>
+                <a href="games.html"
+                    class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Games</a>
+                <a href="reaction.html"
+                    class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap">Reaction</a>
             </nav>
         </div>
     </header>
@@ -106,7 +110,7 @@
             </div>
             <div class="bg-gray-800 rounded-b-lg py-6">
                 <div class="scroll-container">
-                    <div class="game-grid">
+                    <div id="gamePopular" class="game-grid">
                         <!-- Game Item 1 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
@@ -190,7 +194,7 @@
             </div>
             <div class="bg-gray-800 rounded-b-lg py-6">
                 <div class="scroll-container">
-                    <div class="game-grid">
+                    <div id="gameBest" class="game-grid">
                         <!-- Game Item 1 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
@@ -282,7 +286,7 @@
             </div>
             <div class="bg-gray-800 rounded-b-lg py-6">
                 <div class="scroll-container">
-                    <div class="game-grid">
+                    <div id="gamePagination" class="game-grid">
                         <!-- Game Item 1 -->
                         <div class="game-item">
                             <a href="game-detail.html" class="block">
@@ -374,12 +378,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center mt-4">
-                    <button id="loadMoreGames"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium">
-                        Load More Games
+                <div id="pagination" class="flex justify-center mt-4 space-x-2">
+                    <!-- Các số trang -->
+                    <button id="pageFirst"
+                        class="page-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium"
+                        data-page="1">
+                        1
+                    </button>
+                    <button id="pageSecond"
+                        class="page-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium"
+                        data-page="2">
+                        2
+                    </button>
+                    <button id="pageThird"
+                        class="page-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium"
+                        data-page="3">
+                        3
                     </button>
                 </div>
+
             </div>
         </section>
     </main>

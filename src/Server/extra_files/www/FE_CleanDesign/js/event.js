@@ -246,6 +246,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======== Home ===========
 
 
+    listenIfExists('#pagination', 'click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        const dataGame = Model.getLocalStorageJSON('gameData');
+        const numberPage = dataGame.length / 10;
+        // Nếu là nút số trang
+        if (btn.classList.contains('page-btn')) {
+            Model.currentPagination = parseInt(btn.dataset.page);
+
+            Controller.GetGamePagination(Model.getLocalStorageJSON('gameData'), Model.currentPagination, 10);
+            View.updatePaginationUI(Model.currentPagination, numberPage);
+        }
+
+        // Nếu là nút prev
+        if (btn.classList.contains('pagePrev')) {
+            // TODO: xử lý prev
+        }
+
+        // Nếu là nút next
+        if (btn.classList.contains('pageNext')) {
+            // TODO: xử lý next
+        }
+    });
+
+
     // ========  Game-Detail ==========
     listenIfExists('#Savebtn', 'click', () => {
         // Controller.
@@ -273,9 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 Model.deleteAuthToken();
                 if (page != Pages.Page.INDEX && page != Pages.Page.AUTH && page != Pages.Page.REGISTER)
                     View.goTo(Pages.Page.AUTH);
-
             }
         }
+
+        const curPage = View.getPageNow();
+        if (curPage == Pages.Page.HOME) {
+            Controller.LoadHomeContent(Model.currentPagination, 10);
+        }
+
         setTimeout(() => View.hideLoading(), 250);
     });
 

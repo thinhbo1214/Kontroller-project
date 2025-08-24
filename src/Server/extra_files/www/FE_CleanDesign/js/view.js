@@ -6,7 +6,7 @@ export class View {
         const numberFollowing = document.getElementById('numberFollowing');
 
         avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
-        usernameDisplay.textContent  = userInfo.Username || "Unknown";
+        usernameDisplay.textContent = userInfo.Username || "Unknown";
         numberFollower.textContent = userInfo.NumberFollower || 0;
         numberFollowing.textContent = userInfo.NumberFollowing || 0;
     }
@@ -33,7 +33,7 @@ export class View {
     //========= Game Review =====
     // Get review
     static getCommentReview(comments) {
-        const container = document.getElementById(game-review);
+        const container = document.getElementById(game - review);
         if (!container) return;
 
         // Xóa cũ (nếu muốn load lại)
@@ -146,10 +146,10 @@ export class View {
 
     //get reaction to comment 
     async renderCommentReactions(commentId, reactions) {
-    const container = document.querySelector(`.comment-reactions[data-comment="${commentId}"]`);
-    if (!container) return;
+        const container = document.querySelector(`.comment-reactions[data-comment="${commentId}"]`);
+        if (!container) return;
 
-    container.innerHTML = `
+        container.innerHTML = `
         <button data-reaction="like" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
             <i class="fas fa-thumbs-up"></i>
             <span class="reaction-count">${reactions.like || 0}</span>
@@ -172,10 +172,10 @@ export class View {
 
     //get reaction to review 
     async renderReviewReactions(reviewId, reactions) {
-    const container = document.getElementById("main-reactions");
-    if (!container) return;
+        const container = document.getElementById("main-reactions");
+        if (!container) return;
 
-    container.innerHTML = `
+        container.innerHTML = `
         <button data-reaction="like" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
             <i class="fas fa-thumbs-up text-lg"></i>
             <span class="font-semibold reaction-count">${reactions.like || 0}</span>
@@ -285,26 +285,249 @@ export class View {
     }
 
 
-    // GameId, Title, Poster
-    static showGame(gameData) {
-        const grid = document.getElementsByClassName('game-grid');
+    
+
+   
+    //=============== Gane-detail=======================
+    // reviews tab
+    static showGameDetail(game, elementId = "gameDetail") {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        container.innerHTML = `
+        <!-- Backdrop Image -->
+        <div class="relative h-96 bg-cover bg-center"
+            style="background-image: url('${game.Backdrop}')">
+            <div class="backdrop-overlay absolute inset-0"></div>
+
+            <!-- Game Card -->
+            <div class="absolute bottom-6 left-6 flex items-end space-x-6 z-10 game-card-container">
+                <!-- Poster -->
+                <div class="flex-shrink-0">
+                    <img src="${game.Poster}"
+                        alt="${game.Title}" class="w-48 h-72 rounded-lg shadow-2xl">
+                </div>
+
+                <!-- Game Info -->
+                <div class="pb-4 game-info">
+                    <h1 class="text-4xl font-bold mb-2">${game.Title}</h1>
+                    <div class="flex items-center space-x-6 mb-4 rating-container">
+                        <!-- Rating -->
+                        <div class="flex items-center space-x-3">
+                            <span class="text-3xl font-bold text-green-400">${game.Rating}</span>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="relative action-container">
+                            <button id="actionBtn" onclick="openReviewModal()"
+                                class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
+                                Write Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>`;
+    }
+
+    // reviews = [ { UserName, Avatar, Rating, Date, Content, Reactions } ]
+    static showReviews(reviews, elementId = "reviews") {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        container.innerHTML = `
+            <h2 class="text-2xl font-bold mb-6">Reviews</h2>
+            <div class="space-y-6">
+                ${reviews.map(r => `
+                    <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
+                        <div class="flex items-start space-x-4">
+                            <img src="${r.Avatar}" alt="${r.UserName}" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <h3 class="font-semibold">${r.UserName}</h3>
+                                    <span class="text-green-400 text-2xl">${"★".repeat(r.Rating)}${"☆".repeat(5 - r.Rating)}</span>
+                                    <span class="text-sm text-gray-400">${r.Date}</span>
+                                </div>
+                                <p class="text-gray-300 mb-3">
+                                    ${r.Content}
+                                </p>
+                                <div class="flex items-center space-x-4">
+                                    <button onclick="event.preventDefault(); openReactionPopup('like', ${r.Reactions.like})" 
+                                        class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <span>${r.Reactions.like}</span>
+                                    </button>
+                                    <button onclick="event.preventDefault(); openReactionPopup('heart', ${r.Reactions.heart})" 
+                                        class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
+                                        <i class="fas fa-heart"></i>
+                                        <span>${r.Reactions.heart}</span>
+                                    </button>
+                                    <button onclick="event.preventDefault(); openReactionPopup('sad', ${r.Reactions.sad})" 
+                                        class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
+                                        <i class="far fa-frown"></i>
+                                        <span>${r.Reactions.sad}</span>
+                                    </button>
+                                    <button onclick="event.preventDefault(); openReactionPopup('laugh', ${r.Reactions.laugh})" 
+                                        class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
+                                        <i class="far fa-laugh"></i>
+                                        <span>${r.Reactions.laugh}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join("")}
+            </div>
+        `;
+    }
+
+
+    // detail tab
+    static renderDetailsTab(details, elementId = "details") {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        container.innerHTML = `
+            <h2 class="text-2xl font-bold mb-6">Details</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold text-gray-400 mb-2">Studio</h3>
+                        <p class="text-white">${details.Studio}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-400 mb-2">Publisher</h3>
+                        <p class="text-white">${details.Publisher}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-400 mb-2">Release Date</h3>
+                        <p class="text-white">${details.ReleaseDate}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-400 mb-2">Country</h3>
+                        <p class="text-white">${details.Country}</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h3 class="font-semibold text-gray-400 mb-2">Languages</h3>
+                        <p class="text-white">${details.Languages}</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h3 class="font-semibold text-gray-400 mb-2">Description</h3>
+                        <p class="text-white">${details.Description}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+
+    //genre tab 
+    static renderGenresTab(genres, elementId = "genres") {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+
+        const genreSpans = genres.map(
+            g => `<span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">${g}</span>`
+        ).join("");
+
+        container.innerHTML = `
+            <h2 class="text-2xl font-bold mb-6">Genres</h2>
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="flex flex-wrap gap-3">
+                    ${genreSpans}
+                </div>
+            </div>
+        `;
+    }
+    // ======= Home =====
+    // ===== View =====
+    static updatePaginationUI(currentPage, totalPages) {
+        const paginationContainer = document.getElementById("pagination");
+        paginationContainer.innerHTML = ""; // xoá các nút cũ
+
+        const maxVisible = 3; // số nút hiển thị cùng lúc
+
+        // Tính toán phạm vi hiển thị
+        let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let end = start + maxVisible - 1;
+
+        if (end > totalPages) {
+            end = totalPages;
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        // Nút Previous
+        if (currentPage > 1) {
+            const prevBtn = document.createElement("button");
+            prevBtn.textContent = "«";
+            prevBtn.className = "prev-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium";
+            prevBtn.dataset.page = currentPage - 1;
+            paginationContainer.appendChild(prevBtn);
+        }
+
+        // Nút số trang
+        for (let i = start; i <= end; i++) {
+            const btn = document.createElement("button");
+            btn.textContent = i;
+            btn.dataset.page = i;
+            btn.className = "page-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium";
+            if (i === currentPage) {
+                btn.classList.add("bg-blue-800"); // active
+            }
+            paginationContainer.appendChild(btn);
+        }
+
+        // Nút Next
+        if (currentPage < totalPages) {
+            const nextBtn = document.createElement("button");
+            nextBtn.textContent = "»";
+            nextBtn.className = "next-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium";
+            nextBtn.dataset.page = currentPage + 1;
+            paginationContainer.appendChild(nextBtn);
+        }
+    }
+
+    //====================== Show Game in Home ================================
+
+     // GameId, Title, Poster
+    static showGame(gameData, elementId = 'gamePagination') {
+        const grid = document.getElementById(elementId);
         if (!grid) return;
 
+        // Xóa nội dung cũ (tránh trùng lặp khi load lại)
+        grid.innerHTML = "";
 
-        for (var i = 0; i < gameData.length; i++)
+        for (let i = 0; i < gameData.length; i++) {
+            // ✅ Tạo div làm game item
+            const gameItem = document.createElement('div');
+            gameItem.className = "game-item";
+
+            // ✅ Thêm nội dung
             gameItem.innerHTML = `
-        <div class="game-item">
-            <a href="game-detail.html?id=${gameData[i].GameId}" class="block">
-                <img src="${gameData[i].Poster}" 
-                     alt= "Game Poster" 
-                     class="game-poster rounded-lg">
-                <h3 class="text-sm font-medium mt-2 text-center">${gameData[i].Title}</h3>
-            </a>
-        </div>
-        `;
+                <a href="game-detail.html?id=${gameData[i].GameId}" class="block">
+                    <img src="${gameData[i].Poster}" 
+                        alt="Game Poster" 
+                        class="game-poster rounded-lg">
+                    <h3 class="text-sm font-medium mt-2 text-center">${gameData[i].Title}</h3>
+                </a>
+            `;
 
-        grid.appendChild(gameItem);
+            // ✅ Append vào grid
+            grid.appendChild(gameItem);
+        }
     }
+    static showGamePopular(gameData) {
+        View.showGame(gameData, 'gamePopular');
+    }
+
+    static showGameBest(gameData) {
+        View.showGame(gameData, 'gameBest');
+    }
+
+    static showGamePagination(gameData) {
+        View.showGame(gameData, 'gamePagination');
+    }
+
 
 
     constructor() {

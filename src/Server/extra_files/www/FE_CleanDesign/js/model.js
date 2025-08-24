@@ -9,6 +9,8 @@ export class Model {
     static idleTimer;
     static idleLimit = 5 * 60 * 1000; // 5 phút
 
+    static currentPagination = 1;
+
 
     // ============== Method ===============
     // ===== LocalStorage =====

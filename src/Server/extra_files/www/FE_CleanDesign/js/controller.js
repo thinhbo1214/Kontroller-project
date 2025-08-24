@@ -31,6 +31,7 @@ export class Controller {
         View.goTo(Pages.Page.HOME);
         return true;
     }
+
     static async Register(username, password, email) {
         if (!username || !password || !email) {
             View.showWarning("VView lòng nhập đầy đủ thông tin!");
@@ -224,8 +225,6 @@ export class Controller {
         return true;
     }
 
-
-
     static async ShowUserInfo() {
         const api = new APIUser();
 
@@ -278,17 +277,6 @@ export class Controller {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     // ========= Game Review ==============
     //reaction section
     static async reactToReview(reactionType, reviewId, btnEl) {
@@ -328,24 +316,64 @@ export class Controller {
 
 
 
-
-
-
     // ========= Game ===========
-    static async GetGame() {
-        const api = new GameAPI();
-        View.showLoading();
+    static async GetGamePopular(gameData) {
+        // Sort theo rating (giảm dần) và lấy 10 game
+        const popularGames = [...gameData]
+            .sort((a, b) => b.NumberReview - a.NumberReview) // sắp xếp theo thuộc tính
+            .slice(0, 10); // lấy 10 phần tử đầu tiên
 
-        const res = await api.GetGame();
-        View.hideLoading();
+        View.showGamePopular(popularGames)
+        return true;
+    }
 
-        if (!res.ok) {
-            View.showWarning("Gặp lỗi khi lấy dữ liệu game")
-            return false;
+    static async GetGameBest(gameData) {
+        // Sort theo rating (giảm dần) và lấy 10 game
+        const bestGames = [...gameData]
+            .sort((a, b) => b.AvgRating - a.AvgRating) // sắp xếp theo thuộc tính
+            .slice(0, 10); // lấy 10 phần tử đầu tiên
+
+        View.showGameBest(bestGames)
+        return true;
+    }
+
+    static async GetGamePagination(gameData, page, limit) {
+        // Tính index bắt đầu và kết thúc
+        const startIndex = (page - 1) * limit; // ví dụ page=1, limit=10 => start=0
+        const endIndex = page * limit;         // ví dụ page=1, limit=10 => end=10
+
+        // Cắt mảng dữ liệu
+        const paginatedData = gameData.slice(startIndex, endIndex);
+
+        // Truyền cho View để render
+        View.showGamePagination(paginatedData);
+        return true;
+    }
+
+    static async LoadHomeContent(page, limit) {
+        let gameData = Model.getLocalStorageJSON('gameData');
+        if (!gameData || gameData.length < 10) {
+            const api = new GameAPI();
+            View.showLoading();
+            const res = await api.GetGamePagination(1, 200);
+
+            if (!res.ok) {
+                View.showWarning("Gặp lỗi khi lấy dữ liệu game")
+                return false;
+            }
+
+            gameData = res.data;
+            Model.setLocalStorageJSON('gameData', gameData);
+            View.hideLoading();
         }
 
-        View.showGame(res.data)
-        return true;
+        Controller.GetGamePopular(gameData);
+        Controller.GetGameBest(gameData);
+        Controller.GetGamePagination(gameData, page, limit);
+        
+        const dataGame = Model.getLocalStorageJSON('gameData');
+        const numberPage = dataGame.length / 10;
+        View.updatePaginationUI(page, numberPage)
     }
 
     // ===========Review API===================
@@ -381,6 +409,8 @@ export class Controller {
         View.goTo(Pages.Page.GAME_DETAIL)
         return true;
     }
+
+
 
 
     // ======== Web client logic method
