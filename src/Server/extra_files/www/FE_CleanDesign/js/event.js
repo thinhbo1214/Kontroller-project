@@ -250,24 +250,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = e.target.closest('button');
         if (!btn) return;
 
-        const dataGame = Model.getLocalStorageJSON('gameData');
-        const numberPage = dataGame.length / 10;
+        const dataGame = Model.getLocalStorageJSON('gameData') || [];
+        const itemsPerPage = 10;
+        const numberPage = Math.ceil(dataGame.length / itemsPerPage); // Làm tròn lên để đảm bảo đủ trang
+
         // Nếu là nút số trang
         if (btn.classList.contains('page-btn')) {
             Model.currentPagination = parseInt(btn.dataset.page);
-
-            Controller.GetGamePagination(Model.getLocalStorageJSON('gameData'), Model.currentPagination, 10);
+            Controller.GetGamePagination(dataGame, Model.currentPagination, itemsPerPage);
             View.updatePaginationUI(Model.currentPagination, numberPage);
         }
 
         // Nếu là nút prev
-        if (btn.classList.contains('pagePrev')) {
-            // TODO: xử lý prev
+        if (btn.classList.contains('prev-btn')) {
+            if (Model.currentPagination > 1) {
+                Model.currentPagination -= 1; // Giảm trang hiện tại đi 1
+                Controller.GetGamePagination(dataGame, Model.currentPagination, itemsPerPage);
+                View.updatePaginationUI(Model.currentPagination, numberPage);
+            }
         }
 
         // Nếu là nút next
-        if (btn.classList.contains('pageNext')) {
-            // TODO: xử lý next
+        if (btn.classList.contains('next-btn')) {
+            if (Model.currentPagination < numberPage) {
+                Model.currentPagination += 1; // Tăng trang hiện tại lên 1
+                Controller.GetGamePagination(dataGame, Model.currentPagination, itemsPerPage);
+                View.updatePaginationUI(Model.currentPagination, numberPage);
+            }
         }
     });
 

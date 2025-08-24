@@ -1,4 +1,6 @@
 export class View {
+
+    // ========= User ==========
     static showUserInfo(userInfo) {
         const avatar = document.getElementById('avatar');
         const usernameDisplay = document.getElementById('usernameDisplay');
@@ -11,25 +13,7 @@ export class View {
         numberFollowing.textContent = userInfo.NumberFollowing || 0;
     }
 
-    static updateStats({ followers, following, games }) {
-        // Followers
-        if (followers !== undefined) {
-            const followersEl = document.querySelector('a[href="followers.html"] .text-xl');
-            if (followersEl) followersEl.textContent = followers;
-        }
-
-        // Following
-        if (following !== undefined) {
-            const followingEl = document.querySelector('a[href="following.html"] .text-xl');
-            if (followingEl) followingEl.textContent = following;
-        }
-
-        // Games
-        if (games !== undefined) {
-            const gamesEl = document.querySelector('a[href="games.html"] .text-xl');
-            if (gamesEl) gamesEl.textContent = games;
-        }
-    }
+    
     //========= Game Review =====
     // Get review
     static getCommentReview(comments) {
@@ -285,10 +269,10 @@ export class View {
     }
 
 
-    
 
-   
-    //=============== Gane-detail=======================
+
+
+    //=============== Game-detail=======================
     // reviews tab
     static showGameDetail(game, elementId = "gameDetail") {
         const container = document.getElementById(elementId);
@@ -329,6 +313,8 @@ export class View {
             </div>  
         </div>`;
     }
+
+
 
     // reviews = [ { UserName, Avatar, Rating, Date, Content, Reactions } ]
     static showReviews(reviews, elementId = "reviews") {
@@ -420,7 +406,6 @@ export class View {
         `;
     }
 
-
     //genre tab 
     static renderGenresTab(genres, elementId = "genres") {
         const container = document.getElementById(elementId);
@@ -439,8 +424,50 @@ export class View {
             </div>
         `;
     }
-    // ======= Home =====
-    // ===== View =====
+
+
+    //====================== Show Game in Home ================================
+
+    // GameId, Title, Poster
+    static showGame(gameData, elementId = 'gamePagination') {
+        const grid = document.getElementById(elementId);
+        if (!grid) return;
+
+        // Xóa nội dung cũ (tránh trùng lặp khi load lại)
+        grid.innerHTML = "";
+
+        for (let i = 0; i < gameData.length; i++) {
+            // Tạo div làm game item
+            const gameItem = document.createElement('div');
+            gameItem.className = "game-item";
+
+            // Thêm nội dung
+            gameItem.innerHTML = `
+                <a href="game-detail.html?id=${gameData[i].GameId}" class="block">
+                    <img src="${gameData[i].Poster}" 
+                        alt="Game Poster" 
+                        class="game-poster rounded-lg">
+                    <h3 class="text-sm font-medium mt-2 text-center">${gameData[i].Title}</h3>
+                </a>
+            `;
+
+            // Append vào grid
+            grid.appendChild(gameItem);
+        }
+    }
+    static showGamePopular(gameData) {
+        View.showGame(gameData, 'gamePopular');
+    }
+
+    static showGameBest(gameData) {
+        View.showGame(gameData, 'gameBest');
+    }
+
+    static showGamePagination(gameData) {
+        View.showGame(gameData, 'gamePagination');
+    }
+
+
     static updatePaginationUI(currentPage, totalPages) {
         const paginationContainer = document.getElementById("pagination");
         paginationContainer.innerHTML = ""; // xoá các nút cũ
@@ -487,49 +514,20 @@ export class View {
         }
     }
 
-    //====================== Show Game in Home ================================
-
-     // GameId, Title, Poster
-    static showGame(gameData, elementId = 'gamePagination') {
-        const grid = document.getElementById(elementId);
-        if (!grid) return;
-
-        // Xóa nội dung cũ (tránh trùng lặp khi load lại)
-        grid.innerHTML = "";
-
-        for (let i = 0; i < gameData.length; i++) {
-            // ✅ Tạo div làm game item
-            const gameItem = document.createElement('div');
-            gameItem.className = "game-item";
-
-            // ✅ Thêm nội dung
-            gameItem.innerHTML = `
-                <a href="game-detail.html?id=${gameData[i].GameId}" class="block">
-                    <img src="${gameData[i].Poster}" 
-                        alt="Game Poster" 
-                        class="game-poster rounded-lg">
-                    <h3 class="text-sm font-medium mt-2 text-center">${gameData[i].Title}</h3>
-                </a>
-            `;
-
-            // ✅ Append vào grid
-            grid.appendChild(gameItem);
-        }
-    }
-    static showGamePopular(gameData) {
-        View.showGame(gameData, 'gamePopular');
-    }
-
-    static showGameBest(gameData) {
-        View.showGame(gameData, 'gameBest');
-    }
-
-    static showGamePagination(gameData) {
-        View.showGame(gameData, 'gamePagination');
-    }
 
 
 
+
+
+
+
+
+
+
+
+
+
+    // ==========  View base ================
     constructor() {
         View.init();
     }
