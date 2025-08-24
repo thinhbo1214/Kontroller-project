@@ -59,7 +59,7 @@ namespace Server.Source.Handler
 
             if (sessionManager.Authorization(request, out string id, session) == false)
             {
-                ErrorHandle(session, "Chưa đăng nhập, không thể đăng xuất!");
+                ErrorHandle(session, status: 401);
                 return;
             }
 

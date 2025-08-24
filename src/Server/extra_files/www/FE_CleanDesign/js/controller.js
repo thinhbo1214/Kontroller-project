@@ -188,7 +188,7 @@ export class Controller {
         if (res.status === 401) {
             Model.deleteAuthToken();
             View.goTo(Pages.Page.AUTH);
-            return;
+            return true;
         }
         if (!res.ok) {
             View.showWarning("Đăng xuất không thành công")
