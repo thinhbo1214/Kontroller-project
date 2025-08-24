@@ -1,4 +1,4 @@
-import { APIAuth, APIUser, GameAPI, ReviewAPI, ReactionAPI } from './api.js';
+import { APIAuth, APIUser, GameAPI, ReviewAPI, ReactionAPI, CommentAPI } from './api.js';
 import { View } from './view.js';
 import { uploadImage } from './externalapi.js';
 import { Model, Pages } from './model.js';
@@ -587,16 +587,41 @@ export class Controller {
         const api = new ReviewAPI();
         View.showLoading();
 
-        const res = await api.GetReview(reviewId);
+        const resR = await api.GetReview(reviewId);
 
-        if (!res.ok) {
+        if (!resR.ok) {
             View.showError('Có lỗi xảy ra!');
             View.hideLoading();
             return false;
         }
 
-        View.renderReviewCard(res.data);
+        const reviewData = resR.data;
 
+        let commentData = Model.getLocalStorageJSON(reviewData.ReviewId);
+
+        // Xác suất fetch lại (15% chẳng hạn)
+        const shouldRefetch = Math.random() > 0.15;
+
+        if (commentData && shouldRefetch) {
+            View.renderReviewCard(reviewData, commentData);
+            View.hideLoading();
+            return true;
+        }
+
+        const apiC = new CommentAPI();
+        const resC = await apiC.GetCommentByReview(reviewId);
+        
+        commentData = resC.data;
+
+        if (!resC.ok) {
+            View.showError('Có lỗi xảy ra!');
+            View.hideLoading();
+            return true;
+        }
+
+        Model.setLocalStorageJSON(reviewId, commentData);
+        View.renderReviewCard(reviewData, commentData);
+        
         View.hideLoading();
         return true;
     }
@@ -607,9 +632,6 @@ export class Controller {
 
 
     //========= Game Detail =============
-
-
-
     // ======== Web client logic method
     static resetIdleTimer() {
         clearTimeout(Model.idleTimer);
@@ -618,5 +640,35 @@ export class Controller {
             Model.deleteAuthToken();
             View.goTo(Pages.Page.AUTH);
         }, Model.idleLimit);
+    }
+
+    static async LoadGamesContent(page, limit) {
+        let gameData = Model.getLocalStorageJSON('gameData');
+        if (!gameData || gameData.length < 10) {
+            const api = new GameAPI();
+            View.showLoading();
+            const res = await api.GetGamePagination(1, 200);
+
+            if (!res.ok) {
+                View.showWarning("Gặp lỗi khi lấy dữ liệu game");
+                View.hideLoading(); // Ensure loading is hidden on failure
+                return false;
+            }
+
+            gameData = res.data;
+            Model.setLocalStorageJSON('gameData', gameData);
+            View.hideLoading();
+        }
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const paginatedData = gameData.slice(startIndex, endIndex);
+        if (paginatedData.length === 0) {
+            View.showWarning("No games to display for this page");
+            View.hideLoading();
+            return false;
+        }
+        View.showGameListPagination(paginatedData);
+        return true;
     }
 }

@@ -392,3 +392,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     Controller.resetIdleTimer();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Load More Games button
+    listenIfExists('#loadMoreBtn', 'click', () => {
+        const dataGame = Model.getLocalStorageJSON('gameData') || [];
+        const itemsPerPage = 6; // Match the grid columns (6 items per page)
+        Model.currentPagination = Model.currentPagination || 1;
+        Model.currentPagination += 1;
+        const startIndex = (Model.currentPagination - 1) * itemsPerPage;
+        const endIndex = Model.currentPagination * itemsPerPage;
+        const newGames = dataGame.slice(startIndex, endIndex);
+        if (newGames.length > 0) {
+            View.showGameListPagination(newGames); 
+        } else {
+            document.getElementById('loadMoreBtn').disabled = true;
+        }
+    });
+});
+
+listenWindow('load', () => {
+    View.showLoading();
+    const page = View.getPageNow();
+    Controller.ShowUserInfo();
+
+    const token = Model.getAuthToken();
+    if (token != null) {
+        if (Model.isAuthTokenValid(token)) {
+            if (page == Pages.Page.INDEX || page == Pages.Page.AUTH || page == Pages.Page.REGISTER)
+                View.goTo(Pages.Page.HOME);
+        } else {
+            Model.deleteAuthToken();
+            if (page != Pages.Page.INDEX && page != Pages.Page.AUTH && page != Pages.Page.REGISTER)
+                View.goTo(Pages.Page.AUTH);
+        }
+    }
+
+    const curPage = View.getPageNow();
+    if (curPage == Pages.Page.GAMES) {
+        Controller.LoadGamesContent(Model.currentPagination || 1, 6); // Initial load with 6 items
+    } else if (curPage == Pages.Page.HOME) {
+        Controller.LoadHomeContent(Model.currentPagination || 1, 10);
+    } else if (curPage == Pages.Page.GAME_DETAIL) {
+        const gameId = View.getParamValue('gameId');
+        Controller.ShowGameDetail(gameId);
+        Controller.ShowReviews(gameId);
+    }
+
+    setTimeout(() => View.hideLoading(), 250);
+});
+
+// Game card click handler (event delegation for dynamic cards)
+document.addEventListener('click', (e) => {
+    const card = e.target.closest('.group');
+    if (card && card.dataset.gameId) {
+        const gameId = card.dataset.gameId;
+        window.location.href = `game-detail.html?gameId=${gameId}`;
+    }
+});

@@ -8,7 +8,10 @@ SELECT  R.reviewId AS ReviewId,
         R.numberComment AS NumberComment,
         U.username Username,
         U.avatar Avatar,
-        G.poster As Poster
+        G.poster As Poster,
+        G.title AS Title,
+        G.gameId AS GameId,
+        G.backdrop AS Backdrop
 FROM [Review_User] RU
 	JOIN [Reviews] R ON  R.reviewId = RU.reviewId
     JOIN [Users] U ON U.userId = RU.author

@@ -1,3 +1,5 @@
+import { Model } from './model.js';
+
 export class View {
 
     // ========= User ==========
@@ -15,9 +17,10 @@ export class View {
 
 
     //========= Game Review =====
+    
     // Get review
     static getCommentReview(comments) {
-        const container = document.getElementById(game - review);
+        const container = document.getElementById(game-review);
         if (!container) return;
 
         // Xóa cũ (nếu muốn load lại)
@@ -27,40 +30,26 @@ export class View {
             const commentHTML = `
              <div class="space-y-4" id ="game-review">
                 <div class="flex items-start space-x-4 mb-4">
-                    <img src="${comment.avatar}" 
-                         alt="${comment.author}" 
+                    <img src="${comment.Avatar}" 
+                         alt="${comment.Username}" 
                          class="w-10 h-10 rounded-full">
                     <div class="flex-1">
                         <div class="bg-gray-700 rounded-lg p-4">
                             <div class="flex items-center space-x-2 mb-2">
-                                <h4 class="font-semibold text-sm">${comment.author}</h4>
-                                <span class="text-gray-400 text-xs">${comment.date}</span>
+                                <h4 class="font-semibold text-sm">${comment.Username}</h4>
+                                <span class="text-gray-400 text-xs">${comment.DateCreated}</span>
                             </div>
                             <p class="text-gray-300 text-sm">
                                 ${comment.content}
                             </p>
                         </div>
                         <div class="flex items-center space-x-4 mt-2">
-                            <button onclick="event.preventDefault(); openReactionPopup('like', ${comment.reactions.like})" 
+                            <button onclick="event.preventDefault(); openReactionPopup('like', ${comment.NumberReaction})" 
                                     class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
                                 <i class="fas fa-thumbs-up"></i>
-                                <span>${comment.reactions.like}</span>
+                                <span>${comment.NumberReaction}</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('heart', ${comment.reactions.heart})" 
-                                    class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
-                                <i class="fas fa-heart"></i>
-                                <span>${comment.reactions.heart}</span>
-                            </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('sad', ${comment.reactions.sad})" 
-                                    class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
-                                <i class="far fa-frown"></i>
-                                <span>${comment.reactions.sad}</span>
-                            </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('laugh', ${comment.reactions.laugh})" 
-                                    class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
-                                <i class="far fa-laugh"></i>
-                                <span>${comment.reactions.laugh}</span>
-                            </button>
+                            
                         </div>
                     </div>
                 </div>
@@ -179,45 +168,48 @@ export class View {
     `;
     }
 
-    static renderReviewCard(data, elementId = "reviews") {
+    static renderReviewCard(dataReview, dataComment, elementId = "reviews") {
         const container = document.getElementById(elementId);
         if (!container) return;
 
-        console.log(data);
+        console.log(dataReview);
+        console.log(dataComment);
 
-        container.innerHTML='';
-        // Tạo rating stars
+        container.innerHTML = '';
+        
+
+        
+        
+        const body = document.querySelector("body");
+        if (dataReview.Backdrop) {
+            body.style.backgroundImage = `url(${dataReview .Backdrop})`;
+            body.style.backgroundSize = "cover";
+            body.style.backgroundPosition = "center";
+            body.style.backgroundRepeat = "no-repeat";
+
+            // Thêm lớp phủ mờ (overlay) nếu muốn chữ dễ đọc
+            body.style.backgroundColor = "rgba(0,0,0,0.7)";
+            body.style.backgroundBlendMode = "overlay";
+        } else {
+            // fallback: màu mặc định
+            body.style.background = "#111827"; // bg-gray-900
+        }
+
+
+
+        // ⭐ Tạo rating stars
         const stars = Array.from({ length: 5 }, (_, i) => {
-            return `<i class="fas fa-star ${i < data.Rating ? "text-green-400" : "text-gray-600"}"></i>`;
+            return `<i class="fas fa-star ${i < dataReview.Rating ? "text-green-400" : "text-gray-600"}"></i>`;
         }).join("");
 
-        // Tạo reactions
-        const reactionIcons = {
-            like: "fas fa-thumbs-up",
-            heart: "fas fa-heart",
-            sad: "far fa-frown",
-            laugh: "far fa-laugh"
-        };
-        const reactionHtml = Object.entries(data.NumberReaction || {}).map(([key, value]) => `
-            <button data-reaction="${key}" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
-                <i class="${reactionIcons[key]} text-lg"></i>
-                <span class="font-semibold reaction-count">${value}</span>
-            </button>
-        `).join("");
-
-        // Tạo review text (hỗ trợ nhiều đoạn)
-        const reviewText = (data.review || [])
-            .map(p => `<p class="mb-4">${p}</p>`)
-            .join("");
-
-        container.innerHTML += `
-        <!-- Review Card -->
+        // 🟢 Tạo review card
+        let html = `
         <div class="bg-gray-800 rounded-lg p-8 shadow-xl mb-8">
             <div class="flex flex-col lg:flex-row lg:space-x-8">
                 <!-- Left Side - Game Poster -->
                 <div class="flex-shrink-0 mb-6 lg:mb-0">
                     <a href="game-detail.html" class="block hover:opacity-80 transition-opacity">
-                        <img src="${data.Poster}" alt="${data.Title}" 
+                        <img src="${dataReview.Poster}" alt="${dataReview.Title}" 
                             class="w-48 h-72 rounded-lg shadow-lg mx-auto lg:mx-0">
                     </a>
                 </div>
@@ -226,25 +218,19 @@ export class View {
                 <div class="flex-1">
                     <!-- Header -->
                     <div class="mb-6">
-                        <!-- User Info -->
                         <div class="flex items-center space-x-4 mb-4">
-                            <img src="${data.Avatar}" alt="${data.Username}" 
+                            <img src="${dataReview.Avatar}" alt="${dataReview.Username}" 
                                 class="w-12 h-12 rounded-full">
                             <div>
-                                <h2 class="font-semibold text-lg">${data.Username}</h2>
-                                <p class="text-gray-400 text-sm">${data.DateCreated}</p>
+                                <h2 class="font-semibold text-lg">${dataReview.Username}</h2>
+                                <p class="text-gray-400 text-sm">${dataReview.DateCreated}</p>
                             </div>
                         </div>
 
-                        <!-- Game Title and Rating -->
                         <div class="mb-4">
-                            <h1 class="text-3xl font-bold mb-2">${data.Title}</h1>
+                            <h1 class="text-3xl font-bold mb-2">${dataReview.Title}</h1>
                             <div class="flex items-center space-x-4">
-                                <div class="flex items-center space-x-2">
-                                    <div class="flex text-xl">${stars}</div>
-                                </div>
-                                <span class="text-gray-400">•</span>
-                                <span class="text-gray-400">${data.year}</span>
+                                <div class="flex text-xl">${stars}</div>
                             </div>
                         </div>
                     </div>
@@ -252,18 +238,20 @@ export class View {
                     <!-- Review Text -->
                     <div class="mb-6">
                         <div class="prose prose-lg text-gray-300 max-w-none">
-                            ${reviewText}
+                            ${dataReview.Content}
                         </div>
                     </div>
 
                     <!-- Actions -->
                     <div class="flex items-center justify-between pt-6 border-t border-gray-700">
-                        <!-- Reaction Buttons -->
                         <div class="flex items-center space-x-4" id="main-reactions">
-                            ${reactionHtml}
+                            <button onclick="GameUI.addReaction(${dataReview.Id}, 'like')" 
+                                class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+                                <i class="fas fa-thumbs-up text-lg"></i>
+                                <span>${dataReview.NumberReaction || 0}</span>
+                            </button>
                         </div>
 
-                        <!-- Copy Link Button -->
                         <button class="text-gray-400 hover:text-blue-400 transition-colors">
                             <i class="fas fa-copy text-lg"></i>
                         </button>
@@ -272,7 +260,62 @@ export class View {
             </div>
         </div>
         `;
+
+        console.log(dataReview.NumberComment);
+        
+        // 🟡 Comments Section
+        let commentsHtml = `
+        <div class="mt-8 bg-gray-800 rounded-lg p-6">
+            <h3 class="text-xl font-bold mb-6">Comments ${dataReview.NumberComment}</h3>
+            <!-- Comment Form -->
+            <div class="mb-6">
+                <div class="flex items-start space-x-4">
+                    <img src="${Model.getLocalStorageJSON('userInfo').Avatar}" alt="Loading..." id="avatar" class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <textarea placeholder="Write a comment..."
+                            class="w-full bg-gray-700 text-white rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            rows="3"></textarea>
+                        <div class="flex justify-end mt-2">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                Post Comment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Comments List -->
+            <div class="space-y-4" id="game-review">
+        `;
+
+        // 🔵 Render từng comment trong dataComment
+        (dataComment || []).forEach(cmt => {
+            commentsHtml += `
+            <div class="flex items-start space-x-4">
+                <img src="${cmt.Avatar}" alt="${cmt.Username}" class="w-10 h-10 rounded-full">
+                <div class="flex-1">
+                    <div class="bg-gray-700 rounded-lg p-4">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <h4 class="font-semibold text-sm">${cmt.Username}</h4>
+                            <span class="text-gray-400 text-xs">${cmt.DateCreated}</span>
+                        </div>
+                        <p class="text-gray-300 text-sm">${cmt.Content}</p>
+                    </div>
+                    <div class="flex items-center space-x-4 mt-2 comment-reactions">
+                        <button class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>${cmt.NumberReaction || 0}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        });
+
+        commentsHtml += `</div></div>`;
+
+        // Gộp review + comments
+        container.innerHTML = html + commentsHtml;
     }
+
 
 
 
@@ -602,7 +645,6 @@ export class View {
         const grid = document.getElementById(elementId);
         if (!grid) return;
 
-        console.log(gameData);
         // Xóa nội dung cũ (tránh trùng lặp khi load lại)
         grid.innerHTML = "";
 
@@ -634,7 +676,6 @@ export class View {
     }
 
     static showGamePagination(gameData) {
-        console.log('Debug1');
         View.showGame(gameData, 'gamePagination');
     }
 
@@ -997,7 +1038,7 @@ export class View {
         notifications.forEach(notification => notification.remove());
     }
     
-    static _showGamePagination(games) {
+    static showGameListPagination(games) {
     const container = document.getElementById('gameList');
     if (!container) return;
 
