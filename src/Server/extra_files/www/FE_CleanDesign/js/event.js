@@ -19,12 +19,10 @@ function listenWindow(event, handler) {
     }
 }
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
-
-
     // ========== Element event ===========
-
-
     // ========== Auth ===========
     // Đăng nhập
     listenIfExists('#button-auth', 'click', () => {
@@ -32,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('loginPassword')?.value || '';
         Controller.Login(username, password);
     });
-
 
 
     // ========== Register ===========
@@ -77,6 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Bạn có thể reset preview.src về ảnh avatar cũ ở đây
         }
     });
+    listenIfExists('#avatarPreview', 'click', () => {
+        const editAvatar = document.getElementById('editAvatar');
+        editAvatar.click();
+    });
 
     // xóa tài khoản 
     listenIfExists('#deleteAccount', 'click', () => {
@@ -101,24 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // EDIT PAGE
     listenIfExists('#editButton', 'click', () => {
         const editMode = document.getElementById('editMode');
-        const editName = document.getElementById('editName');
-        const avatarPreview = document.getElementById('avatarPreview');
-
         editMode.classList.remove('hidden');
-        editName.value = usernameDisplay.textContent;
-        avatarPreview.src = document.querySelector('header img').src; // Sync with header avatar
     });
 
-    listenIfExists('#editPassword', 'click', () => {
+    // Change Password logic
+    listenIfExists('#newPassword', 'input', () => {
+        const oldPassword = document.getElementById('oldPassword');
+        const newPassword = document.getElementById('newPassword');
 
-    });
-
-    listenIfExists('#editEmail', 'click', () => {
-
-    });
-
-    listenIfExists('#editName', 'click', () => {
-
+        if (newPassword.value.trim() !== '') {
+            oldPassword.removeAttribute('disabled');   // bật
+        } else {
+            oldPassword.setAttribute('disabled', true); // tắt
+            oldPassword.value = ''; // clear luôn cho chắc
+        }
     });
 
     listenIfExists('#cancelEdit', 'click', () => {
@@ -127,18 +124,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Lưu lại chỉnh sửa
-    listenIfExists('#saveEdit', 'click', () => {
+    listenIfExists('#saveEdit', 'click', async () => {
         const avatar = document.getElementById('avatar');
         const usernameDisplay = document.getElementById('usernameDisplay');
         const editName = document.getElementById('editName');
-
-        usernameDisplay.textContent = editName.value;
+        const editEmail = document.getElementById('editEmail');
+        const oldPassword = document.getElementById('oldPassword');
+        const newPassword = document.getElementById('newPassword');
+        const userInfo = Model.getLocalStorageJSON('userInfo') || {};
 
         // Kiểm tra xem có file nào đã được chọn không
         if (Model.selectedFile) {
             // Gọi hàm xử lý chính với file đã được lưu
-            Controller.ChangeAvatar(Model.selectedFile, avatar);
+            if (await Controller.ChangeAvatar(Model.selectedFile, avatar)) {
+                userInfo.Avatar = avatar.src;
+            }
         }
+
+        // Username
+        if (editName && editName.value.trim() !== '') {
+            if (await Controller.ChangeUsername(editName.value.trim())) {
+                userInfo.Username = editName?.value.trim() || userInfo.Username;
+                usernameDisplay.textContent = editName.value.trim();
+            }
+
+        }
+
+        // Password
+        if (newPassword && newPassword.value.trim() !== '') {
+            if (oldPassword && oldPassword.value.trim() !== '') {
+                if (await Controller.ChangePassword(oldPassword.value.trim(), newPassword.value.trim())) {
+                    userInfo.Password = newPassword?.value.trim() || userInfo.Password;
+                }
+            } else {
+                check = false;
+                View.showWarning("Vui lòng nhập mật khẩu cũ để đổi mật khẩu");
+            }
+        }
+
+        // Email
+        if (editEmail && editEmail.value.trim() !== '') {
+            if (await Controller.ChangeEmail(editEmail.value.trim())) {
+                userInfo.Email = editEmail?.value.trim() || userInfo.Email;
+            }
+
+        }
+
+        Model.setLocalStorageJSON('userInfo', userInfo);
 
         editMode.classList.add('hidden');
     });
@@ -163,6 +195,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
     });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // ========= Review =============
@@ -217,8 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========= Window event =========
     listenWindow('load', () => {
         View.showLoading();
-        Controller.ShowBio();
         const page = View.getPageNow();
+        Controller.ShowUserInfo();
 
         const token = Model.getAuthToken();
         if (token != null) {

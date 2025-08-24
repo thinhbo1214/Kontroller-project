@@ -364,6 +364,8 @@ export class CommentAPI extends API {
     return res;
   }
 
+
+  //Commment cuar ca nhana
   async GetCommentByUser(userId = null) {
     const query = API.buildPathWithQuery('user', { userId });
 
@@ -372,6 +374,8 @@ export class CommentAPI extends API {
     return res;
   }
 
+
+  //Comment cua review
   async GetCommentByReview(reviewId) {
     const query = API.buildPathWithQuery('review', { reviewId });
 

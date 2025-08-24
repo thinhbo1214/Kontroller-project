@@ -1,18 +1,14 @@
 export class View {
-    static showBio(userInfo) {
-        const avatar = document.getElementById('avatar');
-        const usernameDisplay = document.getElementById('usernameDisplay');
-
-        avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
-        usernameDisplay.textContent  = userInfo.Username || "Unknown";
-    }
-    
     static showUserInfo(userInfo) {
         const avatar = document.getElementById('avatar');
         const usernameDisplay = document.getElementById('usernameDisplay');
+        const numberFollower = document.getElementById('numberFollower');
+        const numberFollowing = document.getElementById('numberFollowing');
 
         avatar.src = userInfo.Avatar || "https://via.placeholder.com/50x50";
-        usernameDisplay.text = userInfo.Username || "Unknown";
+        usernameDisplay.textContent  = userInfo.Username || "Unknown";
+        numberFollower.textContent = userInfo.NumberFollower || 0;
+        numberFollowing.textContent = userInfo.NumberFollowing || 0;
     }
 
     static updateStats({ followers, following, games }) {
@@ -34,7 +30,185 @@ export class View {
             if (gamesEl) gamesEl.textContent = games;
         }
     }
+    //========= Game Review =====
+    // Get review
+    static getCommentReview(comments) {
+        const container = document.getElementById(game-review);
+        if (!container) return;
 
+        // Xóa cũ (nếu muốn load lại)
+        container.innerHTML = "";
+
+        comments.forEach(comment => {
+            const commentHTML = `
+             <div class="space-y-4" id ="game-review">
+                <div class="flex items-start space-x-4 mb-4">
+                    <img src="${comment.avatar}" 
+                         alt="${comment.author}" 
+                         class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <div class="bg-gray-700 rounded-lg p-4">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-semibold text-sm">${comment.author}</h4>
+                                <span class="text-gray-400 text-xs">${comment.date}</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                ${comment.content}
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <button onclick="event.preventDefault(); openReactionPopup('like', ${comment.reactions.like})" 
+                                    class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>${comment.reactions.like}</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('heart', ${comment.reactions.heart})" 
+                                    class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                                <i class="fas fa-heart"></i>
+                                <span>${comment.reactions.heart}</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('sad', ${comment.reactions.sad})" 
+                                    class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                                <i class="far fa-frown"></i>
+                                <span>${comment.reactions.sad}</span>
+                            </button>
+                            <button onclick="event.preventDefault(); openReactionPopup('laugh', ${comment.reactions.laugh})" 
+                                    class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                                <i class="far fa-laugh"></i>
+                                <span>${comment.reactions.laugh}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+            container.insertAdjacentHTML("beforeend", commentHTML);
+        });
+    }
+    //reaction pop up
+    static viewReactions(type, count) {
+        // Nếu popup đã có thì xóa trước
+        const oldPopup = document.getElementById('reactionPopup');
+        if (oldPopup) oldPopup.remove();
+
+        // Tạo khung popup
+        const reactionList = document.createElement('div');
+        reactionList.id = 'reactionPopup';
+        reactionList.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50';
+        reactionList.innerHTML = `
+            <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-md p-6 relative space-y-6">
+                <div class="flex justify-between items-center text-blue-400 font-semibold text-lg">
+                    <h2 id="reactionTitle" class="text-xl font-bold">
+                        ${type.charAt(0).toUpperCase() + type.slice(1)} Reactions (${count})
+                    </h2>
+                    <button onclick="ReactionUI.close()" 
+                            class="px-3 py-1 text-sm bg-gray-700 rounded hover:bg-gray-600">
+                        Close
+                    </button>
+                </div>
+                <div class="space-y-4 max-h-80 overflow-y-auto" id="reactionList"></div>
+            </div>
+        `;
+        document.body.appendChild(reactionList);
+
+        // Fake data (tạm để test)
+        const reactions = {
+            like: [
+                { name: 'John Doe', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Sarah Wilson', avatar: 'https://via.placeholder.com/40x40' }
+            ],
+            heart: [
+                { name: 'Mike Chen', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Emma Davis', avatar: 'https://via.placeholder.com/40x40' }
+            ],
+            sad: [
+                { name: 'Tom Brown', avatar: 'https://via.placeholder.com/40x40' }
+            ],
+            laugh: [
+                { name: 'Anna Lee', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Peter Smith', avatar: 'https://via.placeholder.com/40x40' }
+            ]
+        };
+
+        const people = reactions[type] || [];
+        const list = document.getElementById('reactionList');
+
+        people.forEach(person => {
+            const div = document.createElement('div');
+            div.className = 'flex items-center space-x-4';
+            div.innerHTML = `
+                <img src="${person.avatar}" alt="${person.name}" class="w-10 h-10 rounded-full">
+                <p class="font-semibold">${person.name}</p>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    //get reaction to comment 
+    async renderCommentReactions(commentId, reactions) {
+    const container = document.querySelector(`.comment-reactions[data-comment="${commentId}"]`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <button data-reaction="like" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+            <i class="fas fa-thumbs-up"></i>
+            <span class="reaction-count">${reactions.like || 0}</span>
+        </button>
+        <button data-reaction="heart" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+            <i class="fas fa-heart"></i>
+            <span class="reaction-count">${reactions.heart || 0}</span>
+        </button>
+        <button data-reaction="sad" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+            <i class="far fa-frown"></i>
+            <span class="reaction-count">${reactions.sad || 0}</span>
+        </button>
+        <button data-reaction="laugh" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+            <i class="far fa-laugh"></i>
+            <span class="reaction-count">${reactions.laugh || 0}</span>
+        </button>
+    `;
+    }
+
+
+    //get reaction to review 
+    async renderReviewReactions(reviewId, reactions) {
+    const container = document.getElementById("main-reactions");
+    if (!container) return;
+
+    container.innerHTML = `
+        <button data-reaction="like" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+            <i class="fas fa-thumbs-up text-lg"></i>
+            <span class="font-semibold reaction-count">${reactions.like || 0}</span>
+        </button>
+        <button data-reaction="heart" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+            <i class="fas fa-heart text-lg"></i>
+            <span class="font-semibold reaction-count">${reactions.heart || 0}</span>
+        </button>
+        <button data-reaction="sad" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+            <i class="far fa-frown text-lg"></i>
+            <span class="font-semibold reaction-count">${reactions.sad || 0}</span>
+        </button>
+        <button data-reaction="laugh" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+            <i class="far fa-laugh text-lg"></i>
+            <span class="font-semibold reaction-count">${reactions.laugh || 0}</span>
+        </button>
+    `;
+    }
+
+
+
+    // Load tất cả comments trong trang
+    static async loadAllCommentReactions() {
+        const commentDivs = document.querySelectorAll(".comment-reactions");
+        for (const div of commentDivs) {
+            const commentId = div.dataset.comment; // ví dụ: "comment1"
+            await ReactionHandler.loadCommentReactions(commentId);
+        }
+    }
+    static close() {
+        const popup = document.getElementById('reactionPopup');
+        if (popup) popup.remove();
+    }
 
     // ======== Review ==========
     //ShowReview

@@ -10,8 +10,18 @@
 </head>
 
 <body class="bg-gray-900 text-white min-h-screen">
+    <!-- Back Button Bar -->
+    <div class="bg-gray-800 border-b border-gray-700 py-2 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <button onclick="window.location.href='game-detail.html'" class="flex items-center space-x-2 text-gray-400 hover:text-white">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Main Toolbar -->
-    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+    <header class="bg-gray-800 border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <!-- Top Bar with Avatar, Username and Search -->
             <div class="flex items-center justify-between mb-4">
@@ -28,12 +38,8 @@
                     </div>
                 </div>
 
-                <!-- Right side: Search and Friends button -->
-                <!-- Parent có thể là flex row chứa cả phần trái (logo/links) -->
+                <!-- Right side: Search -->
                 <div class="flex items-center space-x-4 w-full">
-                    <!-- other left-side items here -->
-
-                    <!-- Wrapper search: ml-auto sẽ đẩy nó sang phải khi còn khoảng trống -->
                     <div class="relative ml-auto w-64 max-[520px]:w-full max-[520px]:max-w-[520px]">
                         <input type="text" placeholder="Search for games"
                             class="w-full bg-gray-700 text-white px-4 py-2 pr-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none" />
@@ -41,26 +47,11 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Main Navigation -->
-            <nav class="flex space-x-4 overflow-x-auto">
-                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Home</a>
-                <a href="profile.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Profile</a>
-                <a href="reviews.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reviews</a>
-                <a href="games.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Games</a>
-                <a href="reaction.html" class="px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">Reaction</a>
-            </nav>
         </div>
     </header>
 
     <!-- Review Content -->
     <main class="max-w-4xl mx-auto px-6 py-8">
-        <!-- Back Button -->
-        <button onclick="window.location.href='game-detail.html'" class="flex items-center space-x-2 text-gray-400 hover:text-white mb-6">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back</span>
-        </button>
-
         <!-- Review Card -->
         <div class="bg-gray-800 rounded-lg p-8 shadow-xl">
             <div class="flex flex-col lg:flex-row lg:space-x-8">
@@ -154,28 +145,28 @@
                     <!-- Actions -->
                     <div class="flex items-center justify-between pt-6 border-t border-gray-700">
                         <!-- Reaction Buttons -->
-                        <div class="flex items-center space-x-4">
-                            <button onclick="event.preventDefault(); openReactionPopup('like', 87)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
+                        <div class="flex items-center space-x-4" id="main-reactions">
+                            <button data-reaction="like" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors">
                                 <i class="fas fa-thumbs-up text-lg"></i>
-                                <span class="font-semibold">87</span>
+                                <span class="font-semibold reaction-count">87</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('heart', 24)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                            <button data-reaction="heart" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
                                 <i class="fas fa-heart text-lg"></i>
-                                <span class="font-semibold">24</span>
+                                <span class="font-semibold reaction-count">24</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('sad', 5)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                            <button data-reaction="sad" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
                                 <i class="far fa-frown text-lg"></i>
-                                <span class="font-semibold">5</span>
+                                <span class="font-semibold reaction-count">5</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('laugh', 12)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                            <button data-reaction="laugh" class="reaction-btn flex items-center space-x-2 text-gray-400 hover:text-yellow-400 transition-colors">
                                 <i class="far fa-laugh text-lg"></i>
-                                <span class="font-semibold">12</span>
+                                <span class="font-semibold reaction-count">12</span>
                             </button>
                         </div>
 
                         <!-- Copy Link Button -->
                         <button id="copyLinkBtn" class="text-gray-400 hover:text-blue-400 transition-colors">
-                            <i class="fas fa-arrow-right text-lg"></i>
+                            <i class="fas fa-copy text-lg"></i>
                         </button>
                     </div>
                 </div>
@@ -206,7 +197,7 @@
             </div>
 
             <!-- Comments List -->
-            <div class="space-y-4">
+            <div class="space-y-4" id="game-review">
                 <!-- Comment Item -->
                 <div class="flex items-start space-x-4">
                     <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
@@ -222,22 +213,22 @@
                                 managed to keep the challenging nature while making it more accessible.
                             </p>
                         </div>
-                        <div class="flex items-center space-x-4 mt-2">
-                            <button onclick="event.preventDefault(); openReactionPopup('like', 5)" class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                        <div class="flex items-center space-x-4 mt-2 comment-reactions" data-comment="comment1">
+                            <button data-reaction="like" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
                                 <i class="fas fa-thumbs-up"></i>
-                                <span>5</span>
+                                <span class="reaction-count">5</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('heart', 3)" class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                            <button data-reaction="heart" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
                                 <i class="fas fa-heart"></i>
-                                <span>3</span>
+                                <span class="reaction-count">3</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('sad', 1)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="sad" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-frown"></i>
-                                <span>1</span>
+                                <span class="reaction-count">1</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('laugh', 2)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="laugh" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-laugh"></i>
-                                <span>2</span>
+                                <span class="reaction-count">2</span>
                             </button>
                         </div>
                     </div>
@@ -258,22 +249,22 @@
                                 experience. The boss fights are epic!
                             </p>
                         </div>
-                        <div class="flex items-center space-x-4 mt-2">
-                            <button onclick="event.preventDefault(); openReactionPopup('like', 3)" class="flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
+                        <div class="flex items-center space-x-4 mt-2 comment-reactions" data-comment="comment2">
+                            <button data-reaction="like" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-blue-400 text-sm">
                                 <i class="fas fa-thumbs-up"></i>
-                                <span>3</span>
+                                <span class="reaction-count">3</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('heart', 2)" class="flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
+                            <button data-reaction="heart" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-red-400 text-sm">
                                 <i class="fas fa-heart"></i>
-                                <span>2</span>
+                                <span class="reaction-count">2</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('sad', 0)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="sad" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-frown"></i>
-                                <span>0</span>
+                                <span class="reaction-count">0</span>
                             </button>
-                            <button onclick="event.preventDefault(); openReactionPopup('laugh', 1)" class="flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
+                            <button data-reaction="laugh" class="comment-reaction-btn flex items-center space-x-1 text-gray-400 hover:text-yellow-400 text-sm">
                                 <i class="far fa-laugh"></i>
-                                <span>1</span>
+                                <span class="reaction-count">1</span>
                             </button>
                         </div>
                     </div>
@@ -281,18 +272,149 @@
             </div>
         </div>
     </main>
+
     <script>
+        // Track user reactions
+        let userReactions = {
+            main: {
+                like: false,
+                heart: false,
+                sad: false,
+                laugh: false
+            },
+            comment1: {
+                like: false,
+                heart: false,
+                sad: false,
+                laugh: false
+            },
+            comment2: {
+                like: false,
+                heart: false,
+                sad: false,
+                laugh: false
+            }
+        };
+
+        // Reaction data for popup
+        const reactionData = {
+            like: [
+                { name: 'John Doe', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Sarah Wilson', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Current User', avatar: 'https://via.placeholder.com/40x40' }
+            ],
+            heart: [
+                { name: 'Mike Chen', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Emma Davis', avatar: 'https://via.placeholder.com/40x40' }
+            ],
+            sad: [
+                { name: 'Tom Brown', avatar: 'https://via.placeholder.com/40x40' }
+            ],
+            laugh: [
+                { name: 'Anna Lee', avatar: 'https://via.placeholder.com/40x40' },
+                { name: 'Peter Smith', avatar: 'https://via.placeholder.com/40x40' }
+            ]
+        };
+
+        // Handle main review reactions
+        document.querySelectorAll('#main-reactions .reaction-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const reactionType = this.dataset.reaction;
+                const countSpan = this.querySelector('.reaction-count');
+                let currentCount = parseInt(countSpan.textContent);
+                
+                // Toggle reaction
+                if (userReactions.main[reactionType]) {
+                    userReactions.main[reactionType] = false;
+                    currentCount--;
+                    this.classList.remove('text-blue-400', 'text-red-400', 'text-yellow-400');
+                    this.classList.add('text-gray-400');
+                } else {
+                    userReactions.main[reactionType] = true;
+                    currentCount++;
+                    this.classList.remove('text-gray-400');
+                    
+                    switch(reactionType) {
+                        case 'like':
+                            this.classList.add('text-blue-400');
+                            break;
+                        case 'heart':
+                            this.classList.add('text-red-400');
+                            break;
+                        case 'sad':
+                        case 'laugh':
+                            this.classList.add('text-yellow-400');
+                            break;
+                    }
+                }
+                
+                countSpan.textContent = currentCount;
+                
+                setTimeout(() => {
+                    openReactionPopup(reactionType, currentCount);
+                }, 200);
+            });
+        });
+
+        // Handle comment reactions
+        document.querySelectorAll('.comment-reaction-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const reactionType = this.dataset.reaction;
+                const commentId = this.closest('.comment-reactions').dataset.comment;
+                const countSpan = this.querySelector('.reaction-count');
+                let currentCount = parseInt(countSpan.textContent);
+                
+                if (userReactions[commentId][reactionType]) {
+                    userReactions[commentId][reactionType] = false;
+                    currentCount--;
+                    this.classList.remove('text-blue-400', 'text-red-400', 'text-yellow-400');
+                    this.classList.add('text-gray-400');
+                } else {
+                    userReactions[commentId][reactionType] = true;
+                    currentCount++;
+                    this.classList.remove('text-gray-400');
+                    
+                    switch(reactionType) {
+                        case 'like':
+                            this.classList.add('text-blue-400');
+                            break;
+                        case 'heart':
+                            this.classList.add('text-red-400');
+                            break;
+                        case 'sad':
+                        case 'laugh':
+                            this.classList.add('text-yellow-400');
+                            break;
+                    }
+                }
+                
+                countSpan.textContent = currentCount;
+                
+                setTimeout(() => {
+                    openReactionPopup(reactionType, currentCount);
+                }, 200);
+            });
+        });
+
         // Reaction Popup
         function openReactionPopup(type, count) {
-            event.preventDefault(); // Prevent default link behavior
+            const existingPopup = document.getElementById('reactionPopup');
+            if (existingPopup) {
+                existingPopup.remove();
+            }
+
             const reactionList = document.createElement('div');
             reactionList.id = 'reactionPopup';
-            reactionList.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden';
+            reactionList.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50';
             reactionList.innerHTML = `
                 <div class="bg-gray-900 text-white rounded-lg shadow-xl w-full max-w-md p-6 relative space-y-6">
-                    <div class="flex justify-between text-blue-400 font-semibold text-lg">
-                        <h2 id="reactionTitle" class="text-xl font-bold">${type.charAt(0).toUpperCase() + type.slice(1)} Reactions (${count})</h2>
-                        <button onclick="closeReactionPopup()">Close</button>
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold">${type.charAt(0).toUpperCase() + type.slice(1)} Reactions (${count})</h2>
+                        <button onclick="closeReactionPopup()" class="text-blue-400 hover:text-blue-300 font-semibold">Close</button>
                     </div>
                     <div class="space-y-4 max-h-80 overflow-y-auto" id="reactionList"></div>
                 </div>
@@ -300,33 +422,27 @@
             document.body.appendChild(reactionList);
 
             const list = document.getElementById('reactionList');
-            const reactions = {
-                like: [
-                    { name: 'John Doe', avatar: 'https://via.placeholder.com/40x40' },
-                    { name: 'Sarah Wilson', avatar: 'https://via.placeholder.com/40x40' }
-                ],
-                heart: [
-                    { name: 'Mike Chen', avatar: 'https://via.placeholder.com/40x40' },
-                    { name: 'Emma Davis', avatar: 'https://via.placeholder.com/40x40' }
-                ],
-                sad: [
-                    { name: 'Tom Brown', avatar: 'https://via.placeholder.com/40x40' }
-                ],
-                laugh: [
-                    { name: 'Anna Lee', avatar: 'https://via.placeholder.com/40x40' },
-                    { name: 'Peter Smith', avatar: 'https://via.placeholder.com/40x40' }
-                ]
-            };
+            const people = reactionData[type] || [];
+            
+            if (people.length === 0) {
+                list.innerHTML = '<p class="text-gray-400 text-center">No reactions yet</p>';
+            } else {
+                people.forEach(person => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center space-x-4';
+                    div.innerHTML = `
+                        <img src="${person.avatar}" alt="User Avatar" class="w-10 h-10 rounded-full"> 
+                        <p class="font-semibold">${person.name}</p>
+                    `;
+                    list.appendChild(div);
+                });
+            }
 
-            const people = reactions[type] || [];
-            people.forEach(person => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center space-x-4';
-                div.innerHTML = `<img src="${person.avatar}" alt="User Avatar" class="w-10 h-10 rounded-full"> <p class="font-semibold">${person.name}</p>`;
-                list.appendChild(div);
+            reactionList.addEventListener('click', function(e) {
+                if (e.target === reactionList) {
+                    closeReactionPopup();
+                }
             });
-
-            document.getElementById('reactionPopup').classList.remove('hidden');
         }
 
         function closeReactionPopup() {
@@ -351,8 +467,13 @@
                 console.error('Failed to copy link:', err);
             });
         });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeReactionPopup();
+            }
+        });
     </script>
-    <script type="module" src="./js/event.js"></script>
 </body>
 
 </html>

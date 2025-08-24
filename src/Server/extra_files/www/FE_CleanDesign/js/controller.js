@@ -1,4 +1,4 @@
-import { APIAuth, APIUser, GameAPI, ReviewAPI } from './api.js';
+import { APIAuth, APIUser, GameAPI, ReviewAPI, ReactionAPI } from './api.js';
 import { View } from './view.js';
 import { uploadImage } from './externalapi.js';
 import { Model, Pages } from './model.js';
@@ -27,6 +27,7 @@ export class Controller {
         }
 
         View.showSuccess("Đăng nhập thành công!");
+
         View.goTo(Pages.Page.HOME);
         return true;
     }
@@ -76,7 +77,7 @@ export class Controller {
         if (res.status === 401) {
             Model.deleteAuthToken();
             View.goTo(Pages.Page.AUTH);
-            return;
+            return false;
         }
 
         if (!res.ok) {
@@ -85,11 +86,76 @@ export class Controller {
         }
 
         avatar.src = imageUrl;
-
         View.showSuccess("Đổi avatar thành công!")
         return true;
 
     }
+
+    static async ChangePassword(oldpassword, newPassword) {
+        const api = new APIUser();
+        View.showLoading();
+
+        const res = await api.PutUserPassword(oldpassword, newPassword)
+        View.hideLoading();
+
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.Page.AUTH);
+            return false;
+        }
+
+        if (!res.ok) {
+            View.showWarning("Đổi password thất bại!")
+            return false;
+        }
+
+        View.showSuccess("Đổi password thành công!")
+        return true;
+    }
+
+    static async ChangeUsername(username) {
+        const api = new APIUser();
+        View.showLoading();
+
+        const res = await api.PutUserUsername(username)
+        View.hideLoading();
+
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.Page.AUTH);
+            return false;
+        }
+
+        if (!res.ok) {
+            View.showWarning("Đổi username thất bại!")
+            return false;
+        }
+
+        View.showSuccess("Đổi username thành công!")
+        return true;
+    }
+
+    static async ChangeEmail(email) {
+        const api = new APIUser();
+        View.showLoading();
+
+        const res = await api.PutUserEmail(email)
+        View.hideLoading();
+
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.Page.AUTH);
+            return false;
+        }
+
+        if (!res.ok) {
+            View.showWarning("Đổi email thất bại!")
+            return false;
+        }
+        View.showSuccess("Đổi email thành công!")
+        return true;
+    }
+
 
     static async Forgot(email) {
         if (email == null) {
@@ -109,6 +175,29 @@ export class Controller {
 
         View.showSuccess("Gửi mã thiết lập lại mật khẩu thành công")
         View.goTo(Pages.Page.AUTH);
+        return true;
+    }
+
+    static async Logout() {
+        const api = new APIAuth();
+        View.showLoading();
+
+        const res = await api.PostLogout()
+        View.hideLoading();
+
+        if (res.status === 401) {
+            Model.deleteAuthToken();
+            View.goTo(Pages.Page.AUTH);
+            return;
+        }
+        if (!res.ok) {
+            View.showWarning("Đăng xuất không thành công")
+            return false;
+        }
+
+        View.showSuccess("Đăng xuất thành công")
+        Model.deleteAuthToken();
+        View.goTo(Pages.Page.INDEX)
         return true;
     }
 
@@ -135,31 +224,33 @@ export class Controller {
         return true;
     }
 
-    static async ShowBio() {
+
+
+    static async ShowUserInfo() {
         const api = new APIUser();
 
         View.showLoading();
         const userInfo = Model.getLocalStorageJSON('userInfo');
 
         // Xác suất fetch lại (30% chẳng hạn)
-        const shouldRefetch = Math.random() < 0.5;
+        const shouldRefetch = Math.random() < 0.3;
 
         if (!userInfo || shouldRefetch) {
-            const res = await api.GetUser(); 
+            const res = await api.GetUser();
             View.hideLoading();
 
             if (!res.ok) {
-                View.showBio(userInfo);
+                View.showUserInfo(userInfo);
                 return false;
             }
 
             Model.setLocalStorageJSON('userInfo', res.data);
-            View.showBio(res.data);
+            View.showUserInfo(res.data);
             return true;
         }
 
         View.hideLoading();
-        View.showBio(userInfo);
+        View.showUserInfo(userInfo);
         return true;
     }
 
@@ -179,6 +270,66 @@ export class Controller {
         return true;
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ========= Game Review ==============
+    //reaction section
+    static async reactToReview(reactionType, reviewId, btnEl) {
+        try {
+            const api = new ReactionAPI();
+            const res = await api.PostReactionForReview(reactionType, reviewId);
+
+            if (res.success) {
+                const countSpan = btnEl.querySelector("span");
+                if (countSpan) {
+                    let count = parseInt(countSpan.textContent) || 0;
+                    countSpan.textContent = count + 1;
+                }
+            }
+        } catch (err) {
+            console.error("Error reacting to review:", err);
+        }
+    }
+
+    static async reactToComment(reactionType, commentId, btnEl) {
+        try {
+            const api = new ReactionAPI();
+            const res = await api.PostReactionForComment(reactionType, commentId);
+
+            if (res.success) {
+                // tăng count trong UI
+                const countSpan = btnEl.querySelector("span");
+                if (countSpan) {
+                    let count = parseInt(countSpan.textContent) || 0;
+                    countSpan.textContent = count + 1;
+                }
+            }
+        } catch (err) {
+            console.error("Error reacting to comment:", err);
+        }
+    }
+
+
+
+
+
 
     // ========= Game ===========
     static async GetGame() {

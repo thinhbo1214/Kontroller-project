@@ -23,6 +23,16 @@
 </head>
 
 <body class="bg-gray-900 text-white min-h-screen">
+    <!-- Back Button Bar -->
+    <div class="bg-gray-800 border-b border-gray-700 py-2 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <button onclick="window.location.href='home.html'" class="flex items-center space-x-2 text-gray-400 hover:text-white">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Write Review Modal -->
     <div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden"
         style="align-items: center;">
@@ -108,22 +118,10 @@
 
                     <!-- Action Button -->
                     <div class="relative action-container">
-                        <button id="actionBtn"
+                        <button id="actionBtn" onclick="openReviewModal()"
                             class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors">
-                            Action
+                            Write Review
                         </button>
-
-                        <!-- Action Popup -->
-                        <div id="actionPopup"
-                            class="action-popup absolute top-full mt-2 left-0 bg-gray-800 rounded-lg shadow-xl border border-gray-700 min-w-48 z-20">
-                            <div class="p-2">
-                                <button onclick="openReviewModal()"
-                                    class="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center space-x-2">
-                                    <i class="fas fa-edit text-blue-400"></i>
-                                    <span>Write Review</span>
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -160,87 +158,87 @@
     <!-- Tab Content -->
     <div class="max-w-7xl mx-auto px-6 py-8">
         <!-- Reviews Tab -->
-            <div id="reviews" class="tab-content">
-    <h2 class="text-2xl font-bold mb-6">Reviews</h2>
-    <div class="space-y-6">
-        <!-- Review Item -->
-        <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
-            <div class="flex items-start space-x-4">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
-                    alt="Reviewer" class="w-12 h-12 rounded-full">
-                <div class="flex-1">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <h3 class="font-semibold">John Doe</h3>
-                        <span class="text-green-400 text-2xl">★★★★★</span>
-                        <span class="text-sm text-gray-400">March 15, 2024</span>
-                    </div>
-                    <p class="text-gray-300 mb-3">
-                        Elden Ring is a masterpiece that combines the best elements of Dark Souls with an
-                        expansive open world.
-                        The game's intricate world-building and challenging gameplay create an unforgettable
-                        experience.
-                    </p>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="event.preventDefault(); openReactionPopup('like', 15)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span>15</span>
-                        </button>
-                        <button onclick="event.preventDefault(); openReactionPopup('heart', 24)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                            <i class="fas fa-heart"></i>
-                            <span>24</span>
-                        </button>
-                        <button onclick="event.preventDefault(); openReactionPopup('sad', 3)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                            <i class="far fa-frown"></i>
-                            <span>3</span>
-                        </button>
-                        <button onclick="event.preventDefault(); openReactionPopup('laugh', 8)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                            <i class="far fa-laugh"></i>
-                            <span>8</span>
-                        </button>
+        <div id="reviews" class="tab-content">
+            <h2 class="text-2xl font-bold mb-6">Reviews</h2>
+            <div class="space-y-6">
+                <!-- Review Item -->
+                <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
+                    <div class="flex items-start space-x-4">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+                            alt="Reviewer" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="font-semibold">John Doe</h3>
+                                <span class="text-green-400 text-2xl">★★★★★</span>
+                                <span class="text-sm text-gray-400">March 15, 2024</span>
+                            </div>
+                            <p class="text-gray-300 mb-3">
+                                Elden Ring is a masterpiece that combines the best elements of Dark Souls with an
+                                expansive open world.
+                                The game's intricate world-building and challenging gameplay create an unforgettable
+                                experience.
+                            </p>
+                            <div class="flex items-center space-x-4">
+                                <button onclick="event.preventDefault(); openReactionPopup('like', 15)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>15</span>
+                                </button>
+                                <button onclick="event.preventDefault(); openReactionPopup('heart', 24)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
+                                    <i class="fas fa-heart"></i>
+                                    <span>24</span>
+                                </button>
+                                <button onclick="event.preventDefault(); openReactionPopup('sad', 3)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
+                                    <i class="far fa-frown"></i>
+                                    <span>3</span>
+                                </button>
+                                <button onclick="event.preventDefault(); openReactionPopup('laugh', 8)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
+                                    <i class="far fa-laugh"></i>
+                                    <span>8</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- More Review Items -->
-        <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
-            <div class="flex items-start space-x-4">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
-                    alt="Reviewer" class="w-12 h-12 rounded-full">
-                <div class="flex-1">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <h3 class="font-semibold">Sarah Wilson</h3>
-                        <span class="text-green-400 text-2xl">★★★★</span>
-                        <span class="text-sm text-gray-400">March 10, 2024</span>
-                    </div>
-                    <p class="text-gray-300 mb-3">
-                        Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming
-                        at times.
-                        Still, it's a game that rewards patience and skill.
-                    </p>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="event.preventDefault(); openReactionPopup('like', 10)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span>10</span>
-                        </button>
-                        <button onclick="event.preventDefault(); openReactionPopup('heart', 12)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                            <i class="fas fa-heart"></i>
-                            <span>12</span>
-                        </button>
-                        <button onclick="event.preventDefault(); openReactionPopup('sad', 2)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                            <i class="far fa-frown"></i>
-                            <span>2</span>
-                        </button>
-                        <button onclick="event.preventDefault(); openReactionPopup('laugh', 5)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                            <i class="far fa-laugh"></i>
-                            <span>5</span>
-                        </button>
+                <!-- More Review Items -->
+                <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
+                    <div class="flex items-start space-x-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                            alt="Reviewer" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="font-semibold">Sarah Wilson</h3>
+                                <span class="text-green-400 text-2xl">★★★★</span>
+                                <span class="text-sm text-gray-400">March 10, 2024</span>
+                            </div>
+                            <p class="text-gray-300 mb-3">
+                                Beautiful visuals and engaging combat, but the difficulty curve can be overwhelming
+                                at times.
+                                Still, it's a game that rewards patience and skill.
+                            </p>
+                            <div class="flex items-center space-x-4">
+                                <button onclick="event.preventDefault(); openReactionPopup('like', 10)" class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>10</span>
+                                </button>
+                                <button onclick="event.preventDefault(); openReactionPopup('heart', 12)" class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
+                                    <i class="fas fa-heart"></i>
+                                    <span>12</span>
+                                </button>
+                                <button onclick="event.preventDefault(); openReactionPopup('sad', 2)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
+                                    <i class="far fa-frown"></i>
+                                    <span>2</span>
+                                </button>
+                                <button onclick="event.preventDefault(); openReactionPopup('laugh', 5)" class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
+                                    <i class="far fa-laugh"></i>
+                                    <span>5</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
         <!-- Details Tab -->
         <div id="details" class="tab-content hidden">
@@ -335,17 +333,9 @@
 <script>
     // Action button popup
     const actionBtn = document.getElementById('actionBtn');
-    const actionPopup = document.getElementById('actionPopup');
 
     actionBtn.addEventListener('click', () => {
-        actionPopup.classList.toggle('show');
-    });
-
-    // Close popup when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!actionBtn.contains(e.target) && !actionPopup.contains(e.target)) {
-            actionPopup.classList.remove('show');
-        }
+        openReviewModal();
     });
 
     // Open Review Modal
@@ -354,7 +344,6 @@
         document.getElementById('reviewDate').textContent = new Date().toLocaleDateString('en-US', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
-        actionPopup.classList.remove('show');
     }
 
     // Close Review Modal
