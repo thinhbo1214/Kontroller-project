@@ -602,6 +602,7 @@ export class View {
         const grid = document.getElementById(elementId);
         if (!grid) return;
 
+        console.log(gameData);
         // Xóa nội dung cũ (tránh trùng lặp khi load lại)
         grid.innerHTML = "";
 
@@ -633,6 +634,7 @@ export class View {
     }
 
     static showGamePagination(gameData) {
+        console.log('Debug1');
         View.showGame(gameData, 'gamePagination');
     }
 
@@ -995,7 +997,7 @@ export class View {
         notifications.forEach(notification => notification.remove());
     }
     
-    static showGamePagination(games) {
+    static _showGamePagination(games) {
     const container = document.getElementById('gameList');
     if (!container) return;
 
