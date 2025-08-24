@@ -13,7 +13,7 @@ export class View {
         numberFollowing.textContent = userInfo.NumberFollowing || 0;
     }
 
-    
+
     //========= Game Review =====
     // Get review
     static getCommentReview(comments) {
@@ -273,6 +273,35 @@ export class View {
 
 
     //=============== Game-detail=======================
+
+    // Cập nhật modal review
+    static populateReviewModal(gameData) {
+        const gameId = this.getGameIdFromUrl();
+        if (!gameId) return;
+
+        // Tìm game theo id
+        const game = gameData.find(g => String(g.GameId) === String(gameId));
+        if (!game) return;
+
+        // Lấy modal elements
+        const modal = document.getElementById("reviewModal");
+        const titleEl = modal.querySelector("h2");
+        const posterEl = modal.querySelector("img");
+        const dateEl = modal.querySelector("#reviewDate");
+
+        // Cập nhật thông tin
+        if (titleEl) {
+            titleEl.innerHTML = `${game.Title} <span class="text-gray-400 text-lg">${game.Year}</span>`;
+        }
+        if (posterEl) {
+            posterEl.src = game.Poster || "https://via.placeholder.com/100x150";
+        }
+        if (dateEl) {
+            dateEl.textContent = new Date().toLocaleDateString();
+        }
+    }
+
+
     // reviews tab
     static showGameDetail(game, elementId = "gameDetail") {
         const container = document.getElementById(elementId);
@@ -298,7 +327,7 @@ export class View {
                     <div class="flex items-center space-x-6 mb-4 rating-container">
                         <!-- Rating -->
                         <div class="flex items-center space-x-3">
-                            <span class="text-3xl font-bold text-green-400">${game.Rating}</span>
+                            <span class="text-3xl font-bold text-green-400">${game.AvgRating}/10</span>
                         </div>
 
                         <!-- Action Button -->
@@ -317,59 +346,66 @@ export class View {
 
 
     // reviews = [ { UserName, Avatar, Rating, Date, Content, Reactions } ]
-    static showReviews(reviews, elementId = "reviews") {
-        const container = document.getElementById(elementId);
-        if (!container) return;
+   static showReviews(reviews, elementId = "reviews") {
+    const container = document.getElementById(elementId);
+    if (!container) return;
 
-        container.innerHTML = `
-            <h2 class="text-2xl font-bold mb-6">Reviews</h2>
-            <div class="space-y-6">
-                ${reviews.map(r => `
-                    <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
-                        <div class="flex items-start space-x-4">
-                            <img src="${r.Avatar}" alt="${r.UserName}" class="w-12 h-12 rounded-full">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <h3 class="font-semibold">${r.UserName}</h3>
-                                    <span class="text-green-400 text-2xl">${"★".repeat(r.Rating)}${"☆".repeat(5 - r.Rating)}</span>
-                                    <span class="text-sm text-gray-400">${r.Date}</span>
-                                </div>
-                                <p class="text-gray-300 mb-3">
-                                    ${r.Content}
-                                </p>
-                                <div class="flex items-center space-x-4">
-                                    <button onclick="event.preventDefault(); openReactionPopup('like', ${r.Reactions.like})" 
-                                        class="flex items-center space-x-2 text-gray-400 hover:text-blue-400">
-                                        <i class="fas fa-thumbs-up"></i>
-                                        <span>${r.Reactions.like}</span>
-                                    </button>
-                                    <button onclick="event.preventDefault(); openReactionPopup('heart', ${r.Reactions.heart})" 
-                                        class="flex items-center space-x-2 text-gray-400 hover:text-red-400">
-                                        <i class="fas fa-heart"></i>
-                                        <span>${r.Reactions.heart}</span>
-                                    </button>
-                                    <button onclick="event.preventDefault(); openReactionPopup('sad', ${r.Reactions.sad})" 
-                                        class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                                        <i class="far fa-frown"></i>
-                                        <span>${r.Reactions.sad}</span>
-                                    </button>
-                                    <button onclick="event.preventDefault(); openReactionPopup('laugh', ${r.Reactions.laugh})" 
-                                        class="flex items-center space-x-2 text-gray-400 hover:text-yellow-400">
-                                        <i class="far fa-laugh"></i>
-                                        <span>${r.Reactions.laugh}</span>
-                                    </button>
-                                </div>
-                            </div>
+    // Reaction config: type → {icon, color, key}
+    const reactionsConfig = [
+        { type: 0, icon: "fas fa-thumbs-up", color: "hover:text-blue-400", key: "like" },
+        { type: 1, icon: "fas fa-heart", color: "hover:text-red-400", key: "heart" },
+        { type: 2, icon: "far fa-frown", color: "hover:text-yellow-400", key: "sad" },
+        { type: 3, icon: "far fa-laugh", color: "hover:text-yellow-400", key: "laugh" }
+    ];
+
+    let reviewsHTML = "";
+    for (const r of reviews) {
+        let reactionsHTML = "";
+        for (const cfg of reactionsConfig) {
+            reactionsHTML += `
+                <button onclick="event.preventDefault(); GameUI.openReactionPopup(${cfg.type}, ${r.Reactions[cfg.key]})" 
+                    class="flex items-center space-x-2 text-gray-400 ${cfg.color}">
+                    <i class="${cfg.icon}"></i>
+                    <span>${r.Reactions[cfg.key]}</span>
+                </button>
+            `;
+        }
+
+        reviewsHTML += `
+            <div class="bg-gray-800 rounded-lg p-6 review-content" data-href="game-review.html">
+                <div class="flex items-start space-x-4">
+                    <img src="${r.Avatar}" alt="${r.UserName}" class="w-12 h-12 rounded-full">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <h3 class="font-semibold">${r.UserName}</h3>
+                            <span class="text-green-400 text-2xl">
+                                ${"★".repeat(r.Rating)}${"☆".repeat(10 - r.Rating)}
+                            </span>
+                            <span class="text-sm text-gray-400">${r.Date}</span>
+                        </div>
+                        <p class="text-gray-300 mb-3">${r.Content}</p>
+                        <div class="flex items-center space-x-4">
+                            ${reactionsHTML}
                         </div>
                     </div>
-                `).join("")}
+                </div>
             </div>
         `;
     }
 
+    container.innerHTML = `
+        <h2 class="text-2xl font-bold mb-6">Reviews</h2>
+        <div class="space-y-6">
+            ${reviewsHTML}
+        </div>
+    `;
+    }
+
+
+
 
     // detail tab
-    static renderDetailsTab(details, elementId = "details") {
+    static renderDetailsTab(description, details, elementId = "details") {
         const container = document.getElementById(elementId);
         if (!container) return;
 
@@ -377,41 +413,30 @@ export class View {
             <h2 class="text-2xl font-bold mb-6">Details</h2>
             <div class="bg-gray-800 rounded-lg p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-semibold text-gray-400 mb-2">Studio</h3>
-                        <p class="text-white">${details.Studio}</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-400 mb-2">Publisher</h3>
-                        <p class="text-white">${details.Publisher}</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-400 mb-2">Release Date</h3>
-                        <p class="text-white">${details.ReleaseDate}</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-400 mb-2">Country</h3>
-                        <p class="text-white">${details.Country}</p>
-                    </div>
-                    <div class="md:col-span-2">
-                        <h3 class="font-semibold text-gray-400 mb-2">Languages</h3>
-                        <p class="text-white">${details.Languages}</p>
-                    </div>
                     <div class="md:col-span-2">
                         <h3 class="font-semibold text-gray-400 mb-2">Description</h3>
-                        <p class="text-white">${details.Description}</p>
+                        <p class="text-white">${description}</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h3 class="font-semibold text-gray-400 mb-2">Details</h3>
+                        <p class="text-white">${details}</p>
                     </div>
                 </div>
             </div>
         `;
     }
 
-    //genre tab 
+    // genre tab 
     static renderGenresTab(genres, elementId = "genres") {
         const container = document.getElementById(elementId);
         if (!container) return;
 
-        const genreSpans = genres.map(
+        // Nếu genres là string -> tách ra thành mảng
+        let genreList = Array.isArray(genres)
+            ? genres
+            : genres.split(",").map(g => g.trim()).filter(g => g.length > 0);
+
+        const genreSpans = genreList.map(
             g => `<span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium">${g}</span>`
         ).join("");
 
@@ -443,7 +468,7 @@ export class View {
 
             // Thêm nội dung
             gameItem.innerHTML = `
-                <a href="game-detail.html?id=${gameData[i].GameId}" class="block">
+                <a href="game-detail.html?gameId=${gameData[i].GameId}" class="block">
                     <img src="${gameData[i].Poster}" 
                         alt="Game Poster" 
                         class="game-poster rounded-lg">
@@ -547,6 +572,15 @@ export class View {
         }
 
         return path.substring(path.lastIndexOf('/') + 1);
+    }
+
+    static getParamValue(param) {
+        // Lấy query string từ URL
+        const params = new URLSearchParams(window.location.search);
+        // Lấy giá trị của id
+        const value = params.get(param);
+        return value;
+
     }
     // Existing notification methods...
     static createNotificationContainer() {

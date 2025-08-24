@@ -350,6 +350,49 @@ export class Controller {
         return true;
     }
 
+    static async ShowGameDetail(gameId) {
+        const api = new GameAPI();
+
+        View.showLoading();
+        const res = await api.GetGame(gameId);
+
+        if (!res.ok) {
+            const gameData = Mode.getLocalStorageJSON('gameData');
+            if (gameData) {
+                for (i = 0; i < gameDate.length; i++) {
+                    if (gameData[i].GameId == gameId) {
+                        View.showGameDetail(gameData[i]);
+                        console.log(gameData[i]);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        View.showGameDetail(res.data);
+        View.hideLoading();
+        return true;
+
+    }
+
+    static async ShowReviews(gameId) {
+        const api = new ReviewAPI();
+
+        View.showLoading();
+        const res = await api.GetReviewByGame(gameId);
+
+        if (!res.ok) {
+            View.showError('Có lỗi xảy ra!');
+            return false;
+        }
+
+        View.showReviews(res.data);
+        View.hideLoading();
+        return true;
+
+    }
+
     static async LoadHomeContent(page, limit) {
         let gameData = Model.getLocalStorageJSON('gameData');
         if (!gameData || gameData.length < 10) {
@@ -370,7 +413,7 @@ export class Controller {
         Controller.GetGamePopular(gameData);
         Controller.GetGameBest(gameData);
         Controller.GetGamePagination(gameData, page, limit);
-        
+
         const dataGame = Model.getLocalStorageJSON('gameData');
         const numberPage = dataGame.length / 10;
         View.updatePaginationUI(page, numberPage)
@@ -410,6 +453,49 @@ export class Controller {
         return true;
     }
 
+    // save review 
+    static getGameIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("id");
+    }
+
+    static getSelectedRating() {
+        const selected = document.querySelector(".star.text-yellow-400");
+        return selected ? Number(selected.dataset.value) : 0;
+    }
+
+    static async saveReview() {
+        try {
+            const gameId = this.getGameIdFromUrl();
+            const rating = this.getSelectedRating();
+            const content = document.querySelector("#reviewModal textarea").value.trim();
+
+            if (!gameId || !rating || !content) {
+                alert("Please fill in all fields before saving.");
+                return;
+            }
+            const api = new ReviewAPI();
+            View.showLoading();
+
+            const res = await api.PostReview(gameId, content, rating)
+            View.hideLoading();
+            if (res && res.success) {
+                alert("Review saved successfully!");
+                this.closeReviewModal();
+            } else {
+                alert("Failed to save review.");
+            }
+        } catch (err) {
+            console.error("Error saving review:", err);
+            alert("Error saving review.");
+        }
+    }
+
+    static closeReviewModal() {
+        document.getElementById("reviewModal").classList.add("hidden");
+    }
+
+    //========= Game Detail =============
 
 
 

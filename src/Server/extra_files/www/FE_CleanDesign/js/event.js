@@ -279,12 +279,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
-
     // ========  Game-Detail ==========
     listenIfExists('#Savebtn', 'click', () => {
         // Controller.
     })
+
+
 
     // ======== Game-Review =========
 
@@ -314,6 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const curPage = View.getPageNow();
         if (curPage == Pages.Page.HOME) {
             Controller.LoadHomeContent(Model.currentPagination, 10);
+        }
+
+        if (curPage == Pages.Page.GAME_DETAIL) {
+            const gameId = View.getParamValue('gameId')
+            Controller.ShowGameDetail(gameId);
+            Controller.ShowReviews(gameId);
         }
 
         setTimeout(() => View.hideLoading(), 250);
